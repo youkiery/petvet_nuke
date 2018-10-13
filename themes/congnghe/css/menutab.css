@@ -1,0 +1,130 @@
+#menutab, #menutab ul, #menutab li {
+    border: 0 none;
+    font-size: 12px;
+    margin: 0;
+    padding: 0;
+}
+#menutab {
+    
+    position: relative;
+    z-index: 10;
+    float: right;
+
+}
+#menutab li {
+    display: inline;
+    float: left;
+    list-style: none outside none;
+    position: relative;
+}
+
+#menutab li a {
+    cursor: pointer;
+    display: block;
+    color: #000;
+    white-space: nowrap;
+}
+#menutab li a span.ih {
+    padding: 0 5px;
+}
+#menutab li ul {
+    box-shadow: 5px 5px 5px #AAAAAA;
+    left: 0;
+    margin-top: 0;
+    position: absolute;
+    visibility: hidden;
+    z-index: 20;
+}
+#menutab li li ul {
+    left: 0;
+    top: -1px;
+}
+#menutab li:hover ul {
+    visibility: visible;
+}
+#menutab li:hover ul li ul {
+    visibility: hidden;
+}
+#menutab li:hover li:hover ul {
+    left: 100%;
+    visibility: visible;
+}
+#menutab li {
+
+    z-index: 9999;
+}
+#menutab li li {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 0 none;
+    display: block;
+    float: none;
+    min-width: 140px;
+    border-top: 1px solid #e5e5e5;
+}
+#menutab ul {
+    opacity: 1;
+    z-index: 9999;
+}
+#menutab a {
+    background-position: left 50%;
+    background-repeat: no-repeat;
+    color: #000;
+    cursor: default;
+    line-height: 18px;
+    padding: 7px 0px;
+    text-decoration: none;
+    vertical-align: middle;
+    text-shadow: 1px 1px 1px #fff;
+}
+
+#menutab li.disabled a, #menu li.disabled:hover a {
+    background-color: transparent;
+    border-left-width: 0;
+    border-right-width: 0;
+    color: gray;
+    margin: 0;
+}
+#menutab ul a {
+    font-size: 1em;
+    font-weight: normal;
+    line-height: 1.2em;
+    padding-right: 20px;
+}
+#menutab li ul li.main a {
+    font-weight: bold;
+    padding-left: 5px;
+}
+#menutab li ul li a {
+    border: 0 none;
+    color: #FFFFFF;
+    font-weight: normal;
+    padding-bottom: 8px;
+    padding-right: 10px;
+    padding-top: 8px;
+}
+#menutab li:hover {
+    background: url("../images/bg_nav_hover.png") repeat-x scroll 0 0 transparent;
+    color: #FFFFFF;
+}
+#menutab li.select {
+    background: url("../images/nav_li_hover.png") repeat-x scroll 0 0 transparent;
+    color: #FFFFFF;
+}
+#menutab li:hover a ul li {
+    background: none repeat scroll 0 0 #008ad3;
+    color: #FFFFFF;
+}
+#menutab li:hover li a {
+    background: none repeat scroll 0 0 #008ad3;
+    border: 0 solid transparent;
+    text-align: left;
+    padding-left: 5px;
+}
+#menutab li:hover li:hover a {
+    background: none repeat scroll 0 0 #076ea5;
+    color: #FFFFFF;
+}
+#menutab li:hover li:hover li a {
+    background-color: transparent;
+    border-color: transparent;
+}

@@ -1,0 +1,104 @@
+/**
+ * @Project NUKEVIET 3.0
+ * @Author VINADES.,JSC (contact@vinades.vn)
+ * @Copyright (C) 2010 VINADES.,JSC. All rights reserved
+ * @Createdate Mon, 23 May 2011 05:30:42 GMT
+ */
+.articles_list {}
+.articles_list ul{}
+.articles_list ul li{ 
+	margin-bottom: 10px;
+	border-bottom:1px dotted #CCCCCC;
+}
+.articles_list ul li .time{ color:#666666 }
+.articles_list ul li a{
+	font-weight:bold;
+}
+.articles_list ul li a img{ 
+	float:left; margin-right:5px;
+	border:1px solid #F8F8F8; padding:1px
+}
+.articles_gird {}
+.articles_gird .items{ 
+	margin-bottom: 10px;
+	float:left;
+	height:220px;
+}
+.articles_gird .items .items_content{ 
+	padding:8px;
+}
+.articles_gird .items .time{ color:#666666 }
+.articles_gird .items a{
+	font-weight:bold;
+}
+.articles_gird .items a img{ 
+	float:left; margin-right:5px;
+	border:1px solid #F8F8F8; padding:1px
+}
+.articles_detail {}
+.articles_detail h2{ font-size:15px}
+.articles_detail p{ text-align:justify }
+.articles_detail .time{ color:#666666 }
+.articles_detail .hometext img{
+	float:left;
+	margin-right:5px;
+}
+.articles_other {
+	padding:10px;
+	background:#FDFDFD;
+	margin-top:10px; 
+	margin-bottom:10px;
+	border:2px #F4F4F4 solid; 
+}
+.articles_other ul { padding:5px }
+.articles_other ul li{ 
+	background:url(../images/articles/bullet-orange.png) no-repeat 0px 6px;
+	padding-left:8px;
+	line-height:20px;
+}
+.articles_other ul li a{}
+.articles_other h3{ border-bottom:#999999 2px solid}
+.articles_keywords { margin:10px 0px;}
+.articles_keywords a{ background:#FFFF00; padding:2px;}
+.articles_pages { text-align:right; padding:2px 0}
+.articles_pages a{ padding:2px 4px; border:1px solid #F5F5F5}
+.articles_pages strong{ padding:2px 4px; background:#FFFFCC; border:1px solid #F5F5F5}
+.articles_formcomment {
+}
+.articles_formcomment input{
+	color:#666666;
+	font-size:12px;
+	font-family:Arial;
+}
+.articles_formcomment textarea{
+	color:#666666;
+	font-family:Arial;
+	font-size:12px;
+}
+.articles_commment_list {
+	max-height:400px;
+	overflow:auto;
+	margin-bottom:10px;
+	margin-top:10px;
+}
+.articles_commment_list .time{ color:#999999; }
+.articles_commment_list ul{}
+.articles_commment_list ul li{
+	font-size:11px;
+	border:1px solid #F3F3F3;
+	padding:10px;
+	margin-bottom:2px;
+	background:#FFFFFF;
+}
+.articles_commment_list ul li strong{
+	color:#990000;
+	background:url(../images/articles/comments.png) no-repeat;
+	padding-left:20px;
+}
+.articles_commment_list ul li p{
+	font-size:12px;
+}
+.articles_showcomment { 
+	background:#FFFDFF; padding:8px; margin-bottom:5px;
+	border:2px solid #FFF2FF
+}

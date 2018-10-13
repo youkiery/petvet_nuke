@@ -1,0 +1,28 @@
+.online1 {
+	width:100%;
+	text-align:center;
+}
+.onlinea {
+	border:1px solid #D0D0D0;
+    border-radius: 5px 5px 5px 5px;
+    margin-bottom: 3px;
+	padding:4px;
+}
+.online_ht {
+	width:100%;
+    text-align: left;
+    font-weight: normal;
+	clear:both;
+}
+.online_col1 {
+	width:30%;
+	float:left;
+	text-align:center;
+}
+.online_col2 {
+	width:68%;
+	float:right;
+	text-align:justify;
+    font-weight: bold;
+}
+

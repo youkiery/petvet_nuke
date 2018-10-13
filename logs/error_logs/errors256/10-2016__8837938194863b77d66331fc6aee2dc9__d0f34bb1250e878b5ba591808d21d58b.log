@@ -1,0 +1,6 @@
+TIME: Fri, 07 Oct 2016 20:11:15 +0700
+IP: 68.180.230.118
+INFO: User Error(256): Curl error: Could not resolve host: www.myopenid.com
+FILE: /includes/class/openid.class.php
+LINE: 206
+USER-AGENT: Mozilla/5.0 (compatible; Yahoo! Slurp; http://help.yahoo.com/help/us/ysearch/slurp)

@@ -1,0 +1,75 @@
+/* FUNDAMENTAL */
+
+.noUiSlider,  .noUiSlider * {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	display: block;
+	cursor: default;
+}
+.noUiSlider {
+	position: relative;
+	top:10px;
+}
+.noUiSlider a {
+	position: absolute;
+	z-index: 1;
+}
+.noUiSlider a:nth-child(2) {
+	background: inherit !important;
+	
+	border-radius:4px;
+}
+.noUiSlider.horizontal a {
+	height: 100%;
+	right: 0;
+}
+.noUiSlider div {
+	height: 16px;
+	width: 16px;
+	background: url(../img/icon-range.png) 0 0 no-repeat;
+	cursor:pointer;
+}
+.noUiSlider.disabled div {
+	background: transparent;
+}
+.noUiSlider.horizontal {
+	border:#bababa 1px solid;
+	box-shadow:#cfcfcf inset 1px 0px 2px;
+	width: 100%;
+	height: 6px;
+	margin-bottom:30px;
+	background:#d7d7d7;
+	border-radius:4px;
+}
+.noUiSlider.horizontal a {background: url(../img/bg_range.png) 0 0 repeat-x;
+	border-radius:4px;}
+.noUiSlider.horizontal div {
+	margin:-5px 0 0 -5px;
+}
+
+ @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+.noUiSlider:before,  body.TOUCH,  .noUiSlider div {
+	/* http://blogs.msdn.com/b/ie/archive/2011/09/20/touch-input-for-ie10-and-metro-style-apps.aspx */
+	-ms-touch-action: none;
+}
+.noUiSlider:before {
+	display: block;
+	position: absolute;
+	width: 100%;
+	left: -25%;
+	height: 400%;
+	top: -150%;
+	content: "";
+	z-index: -1;
+}
+.noUiSlider.vertical:before {
+	width: 400%;
+	left: -150%;
+	height: 150%;
+	top: -25%;
+}
+}

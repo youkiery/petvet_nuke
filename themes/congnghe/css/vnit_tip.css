@@ -1,0 +1,102 @@
+#vtip { 
+    display: none; 
+    position: absolute; 
+    padding: 5px; 
+    left: 5px; 
+    font-size: 12px; 
+    background-color: #FFF;
+    border: 1px solid #a6c9e2; 
+    -moz-border-radius: 5px; 
+    -webkit-border-radius: 5px; 
+    z-index: 9999;
+    
+}
+#vtip .v-title{
+    background: #065996;
+    padding: 5px;
+    color: #FFF;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+}
+#vtip .v-title p.giaban{
+   font-weight: bold; 
+   text-align: center;
+}
+#vtip .v-title p.giaban span{
+    
+    font-size: 14px;
+}
+#vtip .vcontent{
+    border: 1px solid #e5e5e5;
+    padding: 0px;
+    overflow: hidden;
+}
+#vtip .v-title b{
+    color: #FFF;
+}
+#vtip .v-discount{
+    font-size: 12px;
+    padding: 5px;
+    color: #FF0000;
+    border-bottom : 1px solid #e5e5e5;
+    background: #e8e3e3;
+}
+#vtip .v-discount span{
+    font-weight: bold;
+    color: #FF0000;
+    font-size: 17px;
+}
+#vtip .v-discount b.label{
+    color: #0A5A8F;
+    font-size: 12px;
+}
+#vtip .tinhnang{
+    font-weight: bold;
+    font-size: 12px;
+    padding: 5px;
+    text-transform: uppercase;
+    color: #333;
+}
+#vtip .tangpham{
+    font-weight: bold;
+    font-size: 12px;
+    padding-bottom : 5px;
+    text-transform: uppercase;
+    color: #333;
+}
+#vtip .tangpham_title{
+   background: url(../images/bg_bullet.gif) no-repeat scroll 0px 7px; 
+   padding-left: 10px;
+}
+#vtip ul.tinnangnoibat li{
+    list-style: circle;
+    margin-left: 10px;
+    clear: both;
+    background: no-repeat;
+    height: auto;
+    width: auto;
+}
+
+#vtip .v-attr{
+    line-height: 20px;
+    padding: 3px;
+}
+table.tip{
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%; 
+    font-size: 11px;   
+} 
+table.tip td{
+    border: 1px solid #C2C4C4;
+    padding: 3px;
+    vertical-align: top;
+    color: #333;
+    background: #FFF;
+}
+table.tip td.label{
+    background: #f0f0f0;
+    width: 100px;
+    color: #333333;
+}

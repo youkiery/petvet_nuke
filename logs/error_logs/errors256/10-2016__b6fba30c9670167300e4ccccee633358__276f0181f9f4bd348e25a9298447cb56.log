@@ -1,0 +1,6 @@
+TIME: Wed, 19 Oct 2016 02:23:38 +0700
+IP: 66.249.71.156
+INFO: User Error(256): No servers found!
+FILE: /includes/class/openid.class.php
+LINE: 462
+USER-AGENT: Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)

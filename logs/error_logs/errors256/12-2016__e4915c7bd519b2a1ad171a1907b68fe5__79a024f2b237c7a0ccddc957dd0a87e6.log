@@ -1,0 +1,6 @@
+TIME: Thu, 22 Dec 2016 13:48:54 +0700
+IP: 157.55.39.236
+INFO: User Error(256): No servers found!
+FILE: /includes/class/openid.class.php
+LINE: 462
+USER-AGENT: Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)

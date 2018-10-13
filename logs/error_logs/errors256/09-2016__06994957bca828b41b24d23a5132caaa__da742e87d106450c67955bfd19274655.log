@@ -1,0 +1,6 @@
+TIME: Tue, 27 Sep 2016 02:32:15 +0700
+IP: 157.55.39.18
+INFO: User Error(256): Curl error: Could not resolve host: www.myopenid.com
+FILE: /includes/class/openid.class.php
+LINE: 206
+USER-AGENT: Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)

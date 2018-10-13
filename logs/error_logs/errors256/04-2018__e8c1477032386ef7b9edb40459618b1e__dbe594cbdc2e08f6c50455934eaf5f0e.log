@@ -1,0 +1,6 @@
+TIME: Sun, 22 Apr 2018 18:43:59 +0700
+IP: 66.249.82.219
+INFO: User Error(256): Incorrect IP address specified
+FILE: /includes/class/request.class.php
+LINE: 182
+USER-AGENT: Mozilla/5.0 (Linux; Android 7.1.2; Bphone B2017 Build/N2G47H) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.109 Mobile Safari/537.36

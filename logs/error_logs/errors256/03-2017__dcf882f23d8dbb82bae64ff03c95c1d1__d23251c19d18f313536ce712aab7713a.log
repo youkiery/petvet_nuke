@@ -1,0 +1,6 @@
+TIME: Tue, 14 Mar 2017 16:43:34 +0700
+IP: 173.252.123.146
+INFO: User Error(256): Sorry! Could not connect to mysql server (Code: 1040)
+FILE: /mainfile.php
+LINE: 292
+USER-AGENT: facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)

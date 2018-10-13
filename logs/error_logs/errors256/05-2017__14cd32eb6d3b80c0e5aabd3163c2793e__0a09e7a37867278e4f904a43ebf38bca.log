@@ -1,0 +1,6 @@
+TIME: Wed, 31 May 2017 23:58:09 +0700
+IP: 163.172.74.103
+INFO: User Error(256): Invalid request.
+FILE: /includes/class/openid.class.php
+LINE: 216
+USER-AGENT: Mozilla/5.0 (compatible; MJ12bot/v1.4.7; http://mj12bot.com/)

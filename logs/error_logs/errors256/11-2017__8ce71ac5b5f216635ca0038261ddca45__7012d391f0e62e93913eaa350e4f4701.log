@@ -1,0 +1,6 @@
+TIME: Wed, 08 Nov 2017 04:27:56 +0700
+IP: 88.198.67.69
+INFO: User Error(256): No servers found!
+FILE: /includes/class/openid.class.php
+LINE: 462
+USER-AGENT: Mozilla/5.0 (compatible; MJ12bot/v1.4.7; http://mj12bot.com/)

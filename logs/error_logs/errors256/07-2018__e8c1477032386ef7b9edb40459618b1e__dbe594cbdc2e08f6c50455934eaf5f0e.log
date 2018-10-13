@@ -1,0 +1,6 @@
+TIME: Fri, 13 Jul 2018 20:20:16 +0700
+IP: 66.249.82.219
+INFO: User Error(256): Incorrect IP address specified
+FILE: /includes/class/request.class.php
+LINE: 182
+USER-AGENT: Mozilla/5.0 (Linux; Android 7.0; Redmi Note 4 Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.158 Mobile Safari/537.36

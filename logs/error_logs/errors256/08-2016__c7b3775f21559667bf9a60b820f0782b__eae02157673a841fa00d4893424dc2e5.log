@@ -1,0 +1,6 @@
+TIME: Sat, 13 Aug 2016 03:42:28 +0700
+IP: 62.210.250.212
+INFO: User Error(256): No servers found!
+FILE: /includes/class/openid.class.php
+LINE: 462
+USER-AGENT: Mozilla/5.0 (compatible; MJ12bot/v1.4.5; http://www.majestic12.co.uk/bot.php?+)

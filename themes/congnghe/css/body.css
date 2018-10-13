@@ -1,0 +1,419 @@
+.news-content{
+    width: 700px;
+    float: left;
+    margin-left: 10px;
+}
+.news-right{
+    width: 270px;
+    float: right;
+    margin-right: 10px;
+}
+.h-new-top{
+    background: url(../images/news-t.png) no-repeat;
+    width: 700px;
+    height: 34px;
+}
+.h-new-mid{
+    background: url(../images/news-m.png) repeat-y;
+    padding: 15px 7px;
+    overflow: hidden;
+}
+.h-new-bot{
+    background: url(../images/news-b.png) no-repeat;
+    width: 700px;
+    height: 10px;
+    margin-bottom: 5px;
+}
+.h-new-top h2 {
+    background: url("../images/title-cat.png") no-repeat scroll left center transparent;
+    float: left;
+    font-size: 13px;
+    font-weight: bold;
+    height: 30px;
+    line-height: 30px;
+    margin-left: 5px;
+    margin-top: 4px;
+    padding-left: 5px;
+    padding-right: 15px;
+}
+.h-new-top  h2 a {
+    color: #FFFFFF;
+    text-transform: uppercase;
+}
+.h-new-top h4 {
+    float: right;
+    padding-right: 5px;
+    font-size: 12px;
+    margin-top: 15px;
+}
+.h-new-top h4 ul li {
+    float: left;
+    font-size: 12px;
+    padding: 0 3px;
+}
+.h-new-top h4 ul li a {
+    border-bottom: 2px solid #FB7922;
+}
+.h-new-top h4 ul li a:hover {
+    border-bottom: 2px solid #61A413;
+}
+.h-new-mid .colnews{
+    width: 345px;
+    float: left;
+}
+.h-new-mid .colproduct{
+    background: none repeat scroll 0 0 #F1F1F1;
+    float: right;
+    padding-left: 2px;
+    padding-top: 2px;
+    width: 334px;
+    padding-bottom: 5px;
+}
+.topnews{
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+.topnews .img{
+    display: block;
+    float: left;
+    height: 90px;
+    margin-right: 5px;
+    overflow: hidden;
+    width: 125px;
+    border: 1px solid #CCC;
+}
+.topnews .img img{
+    width: 125px;
+    min-height: 90px;
+
+}
+.topnews .introtext{
+    text-align: text-align;
+    margin-right: 5px;
+    font-size: 12px;
+}
+.topnews .introtext .title{
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+ul.top-lastnew{
+    padding-left: 5px;
+}
+ul.top-lastnew li{
+    background: url(../images/list_icon.gif) no-repeat scroll 0px 5px;
+    padding-left: 10px;
+}
+
+/*****************
+* Cat
+*/
+.list-news {
+    border-bottom: 1px dotted #E5E5E5;
+    margin: 5px 0;
+    overflow: hidden;
+    padding: 5px 0;
+}
+.list-news .img {
+    float: left;
+    margin-right: 10px;
+    overflow: hidden;
+}
+.list-news .img img {
+    border: 1px solid #E5E5E5;
+    padding: 5px;
+    width: 135px;
+    min-height: 90px;
+    max-height: 135px;
+}
+.list-news .title {
+    font-size: 14px;
+    font-weight: bold;
+}
+.list-news .date {
+    color: #C0C0C0;
+    font-size: 11px;
+}
+.news_detail{
+    overflow: hidden;
+    margin-top: 10px;
+}
+.news_detail .title{
+    font-size: 16px;
+    font-weight: bold;
+}
+.news_detail .date {
+    color: #C0C0C0;
+    font-size: 11px;
+    margin-bottom: 5px;
+}
+.news_detail .introtext{
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.news_detail .fulltext{
+    overflow: hidden;
+    display: block;
+}
+.news_detail .fulltext p{
+    margin-bottom: 5px;
+}
+.orther_news{
+    border-bottom: 1px dashed #CCCCCC;
+    height: 15px;
+    margin-bottom: 10px;
+    position: relative;
+}
+.orther_news span{
+     background: none repeat scroll 0 0 #FFFFFF;
+    font-family: Tahoma;
+    font-size: 14px;
+    font-weight: bold;
+    padding-right: 10px;
+    position: absolute;
+    top: 5px;
+}
+ul.list_orther li{
+    background: url("../images/list_icon.gif") no-repeat scroll 0 9px transparent;
+    padding-left: 10px;
+    margin-left: 10px;
+}
+.form_comment {
+    border: 1px solid #CCCCCC;
+    box-shadow: 1px 1px 5px #CCCCCC;
+    margin-top: 5px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+.icon_ykienbandoc {
+    background: url("../images/fyi.png") no-repeat scroll 0 -321px transparent;
+    height: 50px;
+    padding-left: 50px;
+}
+.form_add_comment {
+    background: none repeat scroll 0 0 #F7F5F6;
+    overflow: hidden;
+    padding: 5px;
+}
+.form_add_comment .comleft {
+    float: left;
+    width: 100px;
+}
+.form_add_comment .comright {
+    float: left;
+    width: 550px;
+}
+.comleft .title {
+    color: #FF0000;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 12px;
+}
+.listcomment {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    padding: 0px 10px;
+}
+.listcomment ul li {
+    list-style: none outside none;
+    overflow: hidden;
+}
+.listcomment ul li .commentuser {
+    border: 1px solid #CCCCCC;
+    box-shadow: 0 2px 5px #CCCCCC;
+    float: left;
+    height: 75px;
+    margin-right: 5px;
+    margin-top: 5px;
+    padding: 3px;
+    width: 75px;
+}
+.listcomment ul li .commentuser img {
+    height: 75px;
+    width: 75px;
+}
+.listcomment ul li .infocomment {
+    font-size: 12px;
+    overflow: hidden;
+    padding: 5px;
+    position: relative;
+}
+.listcomment ul li .infocomment .arrow {
+    background: url("../images/arrow_comment.png") repeat scroll 0 0 transparent;
+    height: 33px;
+    left: 0;
+    position: absolute;
+    top: 10px;
+    width: 18px;
+}
+.listcomment ul li .infocomment .boxcomment {
+    border: 1px solid #CCCCCC;
+    box-shadow: 0 2px 2px #CCCCCC;
+    margin-left: 12px;
+    min-height: 45px;
+    padding: 10px;
+}
+
+.listcomment ul li .info_user_comment {
+    margin-bottom: 5px;
+}
+.listcomment ul li .info_user_comment span {
+    color: #9EA0A2;
+}
+.comment-show-more {
+    text-align: center;
+}
+
+.news-right h3.title {
+    background: url("../images/h3.gif") no-repeat scroll right center transparent;
+    border-radius: 5px 5px 0 0;
+    color: #000;
+    font-size: 12px;
+    padding: 5px;
+    text-transform: uppercase;
+    box-shadow: 0 2px 2px #CCCCCC;
+    text-shadow: 1px 1px 1px #fff;
+}
+.news-right .box_modules {
+    border: 1px solid #CCCCCC;
+    border-radius: 0 0 5px 5px;
+    margin-bottom: 5px;
+    padding: 5px;
+    box-shadow: 0 2px 2px #CCCCCC;
+}
+ul.docnhieu li{
+    list-style: none;
+    margin-bottom: 5px;
+    overflow: hidden;
+	border-bottom: 1px dotted #CCCCCC;
+}
+ul.docnhieu li .img{
+    width: 95px;
+    
+    float: left;
+    margin-right: 5px;
+}
+ul.docnhieu li .img img{
+    border: 1px solid #CCCCCC;
+    margin-top: 2px;
+    max-height: 75px;
+    min-height: 50px;
+    padding: 5px;
+    width: 80px;
+}
+ul.docnhieu li .title{
+    font-weight: bold;
+}
+
+ul.docnhieu li .price {
+    display: block;
+    overflow: hidden;
+    padding: 2px 0;
+    text-align: right;
+    width: 100%;
+}
+.noibat{
+    overflow: hidden;
+    margin-bottom: 10px; 
+}
+.noibat .top{
+    width: 400px;
+    float: left;
+    height: 320px;
+    position: relative;
+    
+}
+.noibat .top .title{
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    padding: 5px;
+    background: none repeat scroll 0 0 #07589F;
+    width: 390px;
+    color: #FFF;
+}
+.noibat .top .title a.link{
+    font-size: 15px;
+    font-weight: bold;
+    color: #FFF;
+}
+.noibat .top img{
+    width: 400px;
+}
+.noibat .top a{
+    color: #FFF;
+}
+.noibat .list-noibat{
+    border-color: #297FB2 #D4D5D5 -moz-use-text-color;
+    border-style: solid solid none;
+    border-width: 5px 1px 0;
+    display: block;
+    float: right;
+    overflow: hidden;
+    width: 290px;
+}
+ul.lb li {
+    background: url("../images/bg_docnhieu.png") repeat-x scroll center bottom transparent;
+    border-bottom: 1px solid #D4D5D5;
+    height: 43px;
+    padding: 4px 5px;
+}
+ul.lb li .img {
+    display: block;
+    float: left;
+    height: 43px;
+    margin-right: 5px;
+    overflow: hidden;
+    width: 63px;
+}
+ul.product{
+    overflow: hidden;
+}
+ul.product li{
+    background: none repeat scroll 0 0 #FFFFFF;
+    float: left;
+    height: 140px;
+    list-style: none outside none;
+    margin: 2px;
+    width: 107px;
+    overflow: hidden;
+}
+ul.product li a{
+    color: #287bb4;
+}
+ul.productlist li{
+    background: url("../images/bg_bullet.gif") no-repeat scroll 0 8px transparent;
+    list-style: none outside none;
+    margin-left: 5px;
+    margin-top: 2px;
+    padding-left: 10px;
+}
+ul.productlist li a{
+    color: #287bb4;
+}
+
+p.img-ads{
+	clear: both;
+	width: 266px;
+	padding: 1px;
+	border: solid 1px #eee;
+	overflow: hidden;
+	margin-bottom: 10px;
+}
+
+p.img-ads a{
+	display: block;
+}
+
+.ads-news-r{
+	clear: both;
+	overflow: hidden;
+}
+.ads-news-r ul.items li{
+	clear: both;
+	width:266px;
+	padding: 1px;
+	overflow: hidden;
+	margin: 10px 0px;
+	border: solid 1px #eee;
+}

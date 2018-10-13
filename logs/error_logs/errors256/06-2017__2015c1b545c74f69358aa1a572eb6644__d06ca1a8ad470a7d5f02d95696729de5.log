@@ -1,0 +1,6 @@
+TIME: Sat, 03 Jun 2017 17:15:55 +0700
+IP: 141.8.142.32
+INFO: User Error(256): No servers found!
+FILE: /includes/class/openid.class.php
+LINE: 462
+USER-AGENT: Mozilla/5.0 (compatible; YandexBot/3.0; +http://yandex.com/bots)

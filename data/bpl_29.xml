@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plan>
+  <id>29</id>
+  <lang></lang>
+  <title>POPUP</title>
+  <form>sequential</form>
+  <width>800</width>
+  <height>800</height>
+  <banners>
+    <banners_item>
+      <id>34</id>
+      <title>POPUP</title>
+      <clid>0</clid>
+      <file_name>popuppetcoffee.png</file_name>
+      <file_ext>png</file_ext>
+      <file_mime>image/png</file_mime>
+      <file_width>1131</file_width>
+      <file_height>607</file_height>
+      <file_alt></file_alt>
+      <file_click>http://petcoffee.com/news/Tin-Sieu-thi-thu-cung-PETCOFFEE/Dang-ky-lam-the-Thanh-vien-9.html</file_click>
+    </banners_item>
+  </banners>
+</plan>

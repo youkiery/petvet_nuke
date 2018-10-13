@@ -1,0 +1,139 @@
+/*** ESSENTIAL STYLES ***/
+.sf-menu, .sf-menu * {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.sf-menu li {
+	position: relative;
+}
+.sf-menu ul {
+	position: absolute;
+	display: none;
+	top: 100%;
+	left: 0;
+	z-index: 99;
+}
+.sf-menu > li {
+	float: left;
+}
+.sf-menu li:hover > ul,
+.sf-menu li.sfHover > ul {
+	display: block;
+}
+
+.sf-menu a {
+	display: block;
+	position: relative;
+}
+.sf-menu a.active {
+	color:#ff0;
+}
+.sf-menu ul ul {
+	top: 0;
+	left: 100%;
+}
+
+
+/*** DEMO SKIN ***/
+.nav-top { position:relative;}
+
+.sf-menu {
+	float: left;
+	margin-bottom: 1em;
+	position:relative;
+	z-index:15;
+}
+
+.sf-menu ul {
+	box-shadow: 2px 2px 6px rgba(0,0,0,.2);
+	min-width: 12em; /* allow long menu items to determine submenu width */
+	*width: 12em; /* no auto sub width for IE7, see white-space comment below */
+}
+.sf-menu a {
+	height:43px; line-height:43px;
+	padding:0px 25px;
+	text-decoration: none;
+	zoom: 1; /* IE7 */
+}
+.sf-menu a {
+	color: #fff;
+}
+.sf-menu li {
+	background: url(../images/bg_menutop.png) right -172px no-repeat;
+	white-space: nowrap; /* no need for Supersubs plugin */
+	*white-space: normal; /* ...unless you support IE7 (let it wrap) */
+	text-transform:uppercase;
+}
+
+.sf-menu li.cart {background: url(../images/bg_menutop.png) right -258px no-repeat;}
+.sf-menu li:hover.cart {background: url(../images/bg_menutop.png) right -301px no-repeat;}
+.sf-menu li.cart a {padding:0px 65px 0px 25px;}
+.sf-menu li.cart a {text-decoration:none;}
+
+.sf-menu li:first-child {background: url(../images/bg_menutop.png) right 0px no-repeat;}
+.sf-menu li:first-child:hover {background: url(../images/bg_menutop.png) right -43px no-repeat;}
+
+.sf-menu li:last-child {background: url(../images/bg_menutop.png) right -86px no-repeat;}
+.sf-menu li:last-child:hover {background: url(../images/bg_menutop.png) right -129px no-repeat;}
+
+.sf-menu li ul li, .sf-menu li ul li ul li, .sf-menu li ul li:first-child, .sf-menu li ul li ul li:first-child, .sf-menu li ul li:last-child, .sf-menu li ul li ul li:last-child {
+	background: #fff;
+	border-bottom:#e9e9e9 1px solid;
+	text-transform:none;
+	
+}
+
+.sf-menu li ul li a, .sf-menu li ul li ul li a, .sf-menu li ul li:first-child a, .sf-menu li ul li ul li:first-child a, .sf-menu li ul li:last-child a, .sf-menu li ul li ul li:last-child a {height:33px; line-height:33px; color:#000;}
+
+.sf-menu li ul li a:hover, .sf-menu li ul li ul li a:hover, .sf-menu li ul li:first-child a:hover, .sf-menu li ul li ul li:first-child a:hover, .sf-menu li ul li:last-child a:hover, .sf-menu li ul li ul li:last-child a:hover {color:#2d7dc1;}
+
+.sf-menu ul ul li {
+	background: #9AAEDB;
+}
+.sf-menu li:hover,
+.sf-menu li.sfHover {
+	background: url(../images/bg_menutop.png) right -215px no-repeat;
+}
+
+.sf-menu li ul li:hover, .sf-menu li ul li ul li:hover, .sf-menu li ul li:first-child:hover, .sf-menu li ul li ul li:first-child:hover, .sf-menu li ul li:last-child:hover, .sf-menu li ul li ul li:last-child:hover {background:#f3f3f3;}
+
+.sf-menu li ul li ul {margin-left:0px;}
+
+/*** arrows (for all except IE7) **/
+.sf-arrows .sf-with-ul {
+	padding-right: 2.5em;
+	*padding-right: 1em; /* no CSS arrows for IE7 (lack pseudo-elements) */
+}
+/* styling for both css and generated arrows */
+.sf-arrows .sf-with-ul:after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	right: 1em;
+	margin-top: -3px;
+	height: 0;
+	width: 0;
+	/* order of following 3 rules important for fallbacks to work */
+	border: 5px solid transparent;
+	border-top-color: #dFeEFF; /* edit this to suit design (no rgba in IE8) */
+	border-top-color: rgba(255,255,255,.5);
+}
+.sf-arrows > li > .sf-with-ul:focus:after,
+.sf-arrows > li:hover > .sf-with-ul:after,
+.sf-arrows > .sfHover > .sf-with-ul:after {
+	border-top-color: white; /* IE8 fallback colour */
+}
+/* styling for right-facing arrows */
+.sf-arrows ul .sf-with-ul:after {
+	margin-top: -5px;
+	margin-right: -3px;
+	border-color: transparent;
+	border-left-color: #dFeEFF; /* edit this to suit design (no rgba in IE8) */
+	border-left-color: rgba(255,255,255,.5);
+}
+.sf-arrows ul li > .sf-with-ul:focus:after,
+.sf-arrows ul li:hover > .sf-with-ul:after,
+.sf-arrows ul .sfHover > .sf-with-ul:after {
+	border-left-color: white;
+}

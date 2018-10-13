@@ -1,0 +1,6 @@
+TIME: Tue, 23 May 2017 14:23:01 +0700
+IP: 163.172.74.103
+INFO: User Error(256): Sorry! Could not connect to mysql server (Code: 1040)
+FILE: /mainfile.php
+LINE: 292
+USER-AGENT: Mozilla/5.0 (compatible; MJ12bot/v1.4.7; http://mj12bot.com/)

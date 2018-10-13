@@ -1,0 +1,117 @@
+/*-- *** group-support-f *** --*/
+fieldset.group-banks{
+	clear:both;
+	width:998px;
+	overflow:hidden;
+	height:70px;
+	border:solid 1px #65c4f8;
+	display:block;
+	margin:0;
+	padding:0;
+}
+fieldset.group-banks legend{
+	font-weight:bold;
+	color:#0082c9;
+	padding:0px 3px;
+}
+/* CSS for new NL home */
+.nlh-partner { 
+	clear:both;
+	margin:auto;
+	width:989px;
+	margin-top:10px;
+
+}
+.nlh-partner ul { list-style-position:outside; list-style-type:none; margin:0px; padding:0px;}
+.nlh-partner li { padding: 0px 5px;float:left;}
+.nlh-partner li a { border:1px solid #ccc; display:block; float:left;}
+.nlh-partner li a:hover { border:1px solid #0081c9;}
+
+a.visacrd, a.mastercrd, a.america, a.jcb, a.paypal, a.softbank { display:block; height:35px;}
+a.visacrd { background:url(visa.png) no-repeat; width:35px;}
+a.visacrd:hover { background:url(visa_gr.png) no-repeat; width:35px;}
+
+a.mastercrd { background:url(mastercard.png) no-repeat; width:35px;}
+a.mastercrd:hover { background:url(mastercard_gr.png) no-repeat; width:35px;}
+
+a.america { background:url(america.png) no-repeat; width:71px;}
+a.america:hover { background:url(america_gr.png) no-repeat; width:71px;}
+
+a.jcb { background:url(jcb.png) no-repeat; width:45px;}
+a.jcb:hover { background:url(jcb_gr.png) no-repeat; width:45px;}
+
+a.paypal { background:url(paypal.png) no-repeat; width:35px;}
+a.paypal:hover { background:url(paypal_gr.png) no-repeat; width:35px;}
+
+a.softbank { background:url(softbank.png) no-repeat; width:117px;}
+a.softbank:hover { background:url(softbank_gr.png) no-repeat; width:117px;}
+
+a.vietcombank, a.techbk, a.dongabk, a.vietinbk, a.vibk, a.shbk, a.acbbk, a.sacombk, a.bidvbk, a.agrbk, a.mbk, a.vpbk, a.seabk, a.tienphongbk, a.maritbk, a.pgbk, a.vtcbk, a.vina, a.mobi { height:35px; display:block; width:35px}
+
+a.vietcombank { background:url(vietcombank.png) no-repeat;}
+a.vietcombank:hover {background:url(vietcombank_gr.png) no-repeat}
+
+a.techbk { background:url(techcombank.png) no-repeat;}
+a.techbk:hover { background:url(techcombank_gr.png) no-repeat;}
+
+a.dongabk {background:url(donga_bank.png) no-repeat;}
+a.dongabk:hover {background:url(donga_bank_gr.png) no-repeat;}
+
+a.vietinbk {background:url(viettinbank.png) no-repeat;}
+a.vietinbk:hover {background:url(viettinbank_gr.png) no-repeat;}
+
+a.vibk {background:url(vibbk.png) no-repeat;}
+a.vibk:hover {background:url(vibbk_gr.png) no-repeat;}
+
+a.shbk {background:url(shbbk.png) no-repeat;}
+a.shbk:hover {background:url(shbbk_gr.png) no-repeat;}
+
+a.acbbk {background:url(acbbank.png) no-repeat;}
+a.acbbk:hover {background:url(acbbank_gr.png) no-repeat;}
+
+a.sacombk {background:url(saigonbank.png) no-repeat;}
+a.sacombk:hover {background:url(saigonbank_gr.png) no-repeat;}
+
+a.bidvbk {background:url(bidvbank.png) no-repeat;}
+a.bidvbk:hover {background:url(bidvbank_gr.png) no-repeat;}
+
+a.agrbk {background:url(agribank.png) no-repeat;}
+a.agrbk:hover {background:url(agribank_gr.png) no-repeat;}
+
+a.mbk {background:url(mbbank.png) no-repeat;}
+a.mbk:hover {background:url(mbbank_gr.png) no-repeat;}
+
+a.vpbk {background:url(vpbank.png) no-repeat;}
+a.vpbk:hover {background:url(vpbank_gr.png) no-repeat;}
+
+a.seabk {background:url(seabank.png) no-repeat;}
+a.seabk:hover {background:url(seabank_gr.png) no-repeat;}
+
+a.tienphongbk {background:url(tienphongbank.png) no-repeat;}
+a.tienphongbk:hover {background:url(tienphongbank_gr.png) no-repeat;}
+
+a.maritbk {background:url(maritimebank.png) no-repeat;}
+a.maritbk:hover {background:url(maritimebank_gr.png) no-repeat;}
+
+a.pgbk {background:url(pgbank.png) no-repeat;}
+a.pgbk:hover {background:url(pgbank_gr.png) no-repeat;}
+
+a.vtcbk {background:url(vtcbank.png) no-repeat;}
+a.vtcbk:hover {background:url(vtcbank_gr.png) no-repeat;}
+a.mobi { background:url(mobi.png) no-repeat}
+a.mobi:hover { background:url(mobi_gr.png) no-repeat}
+a.vina { background:url(vina.png) no-repeat}
+a.vina:hover { background:url(vina_gr.png) no-repeat}
+a.guideicon { width:16px; height:16px; background:url(../icon/guide_icon.png) no-repeat; display:inline-block; vertical-align:middle; cursor:pointer}
+
+
+
+
+.registerLink { font-size:11px; margin-right:8px; border-top:1px dotted #dcdcdc; padding-top:5px; padding-bottom:5px}
+.pddtop7 { padding-top:7px}
+/* Clearing ------------------------------------------------------------ */
+.clearfix:after { clear:both; content:"."; display:block; height:0; visibility:hidden; overflow: hidden; }
+.clearfix { display:inline-block; }
+* html .clearfix { height:1%; }
+.clearfix { display:block; }
+.clear { clear:both; }

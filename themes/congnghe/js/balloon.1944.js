@@ -1,0 +1,1 @@
+var arrHelpGrps=new Array();var arrHelpProps=new Array({id:7142,c:"<p>M&aacute;y giặt sẽ b&aacute;o động khi nắp m&aacute;y giặt bị mở trong qu&aacute; tr&igrave;nh giặt</p>",t:"Khóa trẻ em"});

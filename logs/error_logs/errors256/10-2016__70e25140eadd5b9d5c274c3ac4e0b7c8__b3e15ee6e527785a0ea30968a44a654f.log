@@ -1,0 +1,6 @@
+TIME: Wed, 12 Oct 2016 10:23:10 +0700
+IP: 68.180.230.118
+INFO: User Error(256): No servers found!
+FILE: /includes/class/openid.class.php
+LINE: 462
+USER-AGENT: Mozilla/5.0 (compatible; Yahoo! Slurp; http://help.yahoo.com/help/us/ysearch/slurp)

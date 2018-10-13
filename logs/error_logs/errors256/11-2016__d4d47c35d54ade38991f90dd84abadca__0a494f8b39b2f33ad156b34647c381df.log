@@ -1,0 +1,6 @@
+TIME: Wed, 02 Nov 2016 05:49:11 +0700
+IP: 157.55.39.11
+INFO: User Error(256): Sorry! Could not connect to mysql server (Code: 2002)
+FILE: /mainfile.php
+LINE: 292
+USER-AGENT: Mozilla/5.0 (iPhone; CPU iPhone OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)

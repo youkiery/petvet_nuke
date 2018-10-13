@@ -1,0 +1,6 @@
+TIME: Fri, 15 Sep 2017 15:38:43 +0700
+IP: 151.80.31.153
+INFO: User Error(256): No servers found!
+FILE: /includes/class/openid.class.php
+LINE: 462
+USER-AGENT: Mozilla/5.0 (compatible; AhrefsBot/5.2; +http://ahrefs.com/robot/)
