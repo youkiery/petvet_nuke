@@ -44,7 +44,7 @@
               <p class="ul_li_price price2">Giá: Liên hệ</p>
             <!-- END: contact -->
           
-          <a class="icons mua_hang" href="javascript:void(0)" id="{id}"  onclick="cartorder_detail(this)" style="float:right;margin-right:59px;"></a>6
+          <a class="icons mua_hang" href="javascript:void(0)" id="{id}"  onclick="cartorder_detail(this)" style="float:right;margin-right:59px;"></a>
         </li>
        <!-- END: grid_rows -->       
 

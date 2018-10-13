@@ -33,7 +33,7 @@
                               <p class="ul_li_price price2">Giá: Liên hệ</p>
                             <!-- END: contact -->
 
-                            <a href="{link}" class="icons mua_hang"></a>2
+                            <a href="{link}" class="icons mua_hang"></a>
                           </li>
                            <!-- END: loop -->    
                          

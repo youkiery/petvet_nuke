@@ -19,7 +19,7 @@
                     <p class="ul_li_price price2">Giá: Liên hệ</p>
                   <!-- END: contact -->
 
-               <a class="icons mua_hang"  id="{ID}"  onclick="cartorder_detail(this)" style="float:right;margin-right:59px; cursor: pointer;"></a>4
+               <a class="icons mua_hang"  id="{ID}"  onclick="cartorder_detail(this)" style="float:right;margin-right:59px; cursor: pointer;"></a>
                     </li>
                     
                  <!-- END: items -->          
