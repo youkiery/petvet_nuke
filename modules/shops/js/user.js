@@ -193,22 +193,22 @@ function cartorder_detail(a_ob){
         // url: nv_siteroot + 'index.php?' + nv_lang_variable + '=' + nv_sitelang + '&' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=setcart' + '&id=' + id + "&nocache=" + new Date().getTime(),
         data: 'num=' + num,
         success: function(data){
-					window.location.href = nv_siteroot + 'index.php?' + nv_lang_variable + '=' + nv_sitelang + '&' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=cart';
-           /*
-		    var s = data.split('_');
-			var strText = s[1];
-			if ( strText != null )
-	        {
-	              var intIndexOfMatch = strText.indexOf('#@#');
-	              while (intIndexOfMatch != -1) {
-	                  strText = strText.replace('#@#', '_');
-	                  intIndexOfMatch = strText.indexOf('#@#');
-	              }
-	              alert_msg(strText);
-	              linkloadcart = nv_siteroot + 'index.php?' + nv_lang_variable + '=' + nv_sitelang + '&' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=loadcart';
-	              $("#cart_"+ nv_module_name).load(linkloadcart);
-	        }
-			*/
+					var s = data.split('_');
+					var strText = s[1];
+					
+					if (strText != null) {
+						var intIndexOfMatch = strText.indexOf('#@#');
+						while (intIndexOfMatch != -1) {
+							strText = strText.replace('#@#', '_');
+							intIndexOfMatch = strText.indexOf('#@#');
+						}
+						alert_msg(strText);
+						linkloadcart = nv_siteroot + 'index.php?' + nv_lang_variable + '=' + nv_sitelang + '&' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=loadcart';
+						$("#cart_"+ nv_module_name).load(linkloadcart);
+					}
+					else {
+						alert_msg("Lỗi không xác định, xin quý khách liên hệ cửa hàng để được tư vấn trực tiếp");
+					}
         }
     });
 }

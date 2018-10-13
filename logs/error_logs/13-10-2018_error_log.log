@@ -45,3 +45,6 @@
 [Sat, 13 Oct 2018 15:04:41 +0700] [::1] [Notice(8): Undefined variable: db] [FILE: /themes/congnghe/modules/shops/theme.php] [LINE: 243]
 [Sat, 13 Oct 2018 15:22:54 +0700] [::1] [Notice(8): Undefined offset: 3] [FILE: /modules/shops/functions.php] [LINE: 127]
 [Sat, 13 Oct 2018 16:03:24 +0700] [::1] [Notice(8): Undefined offset: 336] [FILE: /modules/shops/funcs/cart.php] [LINE: 15]
+[Sat, 13 Oct 2018 16:19:57 +0700] [::1] [Notice(8): Undefined variable: idcolor] [FILE: /themes/congnghe/modules/shops/theme.php] [LINE: 863]
+[Sat, 13 Oct 2018 17:03:51 +0700] [::1] [Notice(8): Undefined index: shops_cart] [FILE: /modules/shops/funcs/cart.php] [LINE: 23]
+[Sat, 13 Oct 2018 17:03:51 +0700] [::1] [Warning(2): Invalid argument supplied for foreach()] [FILE: /modules/shops/funcs/cart.php] [LINE: 23]

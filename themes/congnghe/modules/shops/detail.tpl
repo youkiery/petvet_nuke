@@ -105,6 +105,7 @@
 				<a class="icons mua_hang" id="{proid}" title="{title_pro}"  onclick="cartorder_detail(this)" style="float:left;margin-right:5px; cursor: pointer;"></a>
 			</p>
 			<div class="cls"></div>
+			<p id="msgshow" style="color: red"> </p>
 			{detail_note2}
 
 			<div class="product_info_km">
