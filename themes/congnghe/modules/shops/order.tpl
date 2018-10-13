@@ -15,7 +15,7 @@
 			value="{DATA.order_name}" /> {ERROR.order_name}</td>
 	</tr>
 	<tr>
-		<td>{LANG.order_email} (*)</td>
+		<td>{LANG.order_email}</td>
 		<td><input name="order_email" style="width: 40%"
 			value="{DATA.order_email}" /> {ERROR.order_email}</td>
 	</tr>
@@ -79,25 +79,9 @@
 </table>
 <table class="rows2" style="margin-top: 2px">
 	<tr>
-		<td><input type="checkbox" name="check" value="1" id="check" /><span id="idselect">{LANG.order_true_info}</span> <br /> {ERROR.order_check}</td>
 		<td align="right"><a class="btn_view" title="{LANG.order_submit_send}" href="#" id="submit_send"><span>{LANG.order_submit_send}</span></a></td>
 	</tr>
 </table>
 </form>
 </div>
-<script type="text/javascript">
-	 $("#submit_send").click(function(){
-		  $("#fpost").submit();
-		  return false;
-	 });
-	 $("#idselect").click(function(){
-		 if ($("#check").attr("checked")) {
-	         	$("#check").removeAttr("checked");//checked
-         }
-         else {
-        	 $("#check").attr("checked", "checked");//checked
-         }
-		  return false;
-	 });
-  </script>
 <!-- END: main -->

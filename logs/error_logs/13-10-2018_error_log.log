@@ -21,3 +21,7 @@
 [Sat, 13 Oct 2018 07:42:32 +0700] [::1] [Notice(8): Undefined offset: 32] [FILE: /modules/shops/funcs/cart.php] [LINE: 25]
 [Sat, 13 Oct 2018 07:42:40 +0700] [::1] [Notice(8): Undefined index: userid] [FILE: /modules/shops/funcs/order.php] [LINE: 20]
 [Sat, 13 Oct 2018 07:44:30 +0700] [::1] [Notice(8): Undefined variable: size] [FILE: /modules/shops/funcs/order.php] [LINE: 45]
+[Sat, 13 Oct 2018 09:14:07 +0700] [::1] [Warning(2): imagejpeg(): Filename cannot be empty] [FILE: /includes/core/cronjobs.php] [LINE: 83]
+[Sat, 13 Oct 2018 09:14:08 +0700] [::1] [Notice(8): Array to string conversion] [FILE: /includes/core/cache_functions.php] [LINE: 99]
+[Sat, 13 Oct 2018 09:53:50 +0700] [::1] [Notice(8): Undefined offset: 209] [FILE: /modules/shops/admin/items.php] [LINE: 234]
+[Sat, 13 Oct 2018 09:53:50 +0700] [::1] [Notice(8): Undefined offset: 209] [FILE: /modules/shops/admin/items.php] [LINE: 236]

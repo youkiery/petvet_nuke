@@ -66,17 +66,14 @@ if ( $post_order == 1 )
     $data_order['order_address'] = filter_text_input( 'order_address', 'post', '', 1 );
     $data_order['order_phone'] = filter_text_input( 'order_phone', 'post', '', 1, 20 );
     $data_order['order_note'] = filter_text_input( 'order_note', 'post', '', 1, 2000 );
-    $check = $nv_Request->get_int( 'check', 'post', 0 );
     $data_order['listid'] = $listid;
     $data_order['listnum'] = $listnum;
     $data_order['listprice'] = $listprice;
 	$data_order['listcolor'] = $listcolor;
     $data_order['order_total'] = $total;
     if ( empty( $data_order['order_name'] ) ) $error['order_name'] = $lang_module['order_name_err'];
-    elseif ( nv_check_valid_email( $data_order['order_email'] ) != "" ) $error['order_email'] = $lang_module['order_email_err'];
     elseif ( empty( $data_order['order_phone'] ) ) $error['order_phone'] = $lang_module['order_phone_err'];
     elseif ( empty( $data_order['order_address'] ) ) $error['order_address'] = $lang_module['order_address_err'];
-    elseif ( $check == 0 ) $error['order_check'] = $lang_module['order_check_err'];
     
     if ( empty( $error ) and $i > 0 )
     {
