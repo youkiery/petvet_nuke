@@ -30,16 +30,18 @@
 				<!-- END: nosize -->    
 				
 				<a class="link_product_list" href="{link}"><img class="ul_li_image" src="{src_img}" alt="{title}" /></a>
+
 				<!-- BEGIN: price -->     
-					<p class="{class_money}">Giá cũ: {product_price} VNĐ</p>
-					<span class="ul_li_code">(-{sale}%)</span>
-					<span class="ul_li_price">Giá: {product_discounts} VNĐ</span>
+				<p class="price1">Giá cũ: {product_price} VNĐ</p>
+				<span class="ul_li_code">(-{sale}%)</span>
+				<span class="ul_li_price">Giá: {product_discounts} VNĐ</span>
 				<!-- END: price -->    
 				<!-- BEGIN: price2 -->
-					<p class="ul_li_price price2">Giá: {product_price} VNĐ</p>
+				<p class="ul_li_price price3">Giá: {product_price} VNĐ</p>
 				<!-- END: price2 -->
 				<!-- BEGIN: contact -->
-					<p class="ul_li_price price2">Giá: Liên hệ</p>
+				<p class="price4">Giá tham khảo: {product_price} VNĐ</p>
+				<p class="ul_li_price price2">Giá: Liên hệ</p>
 				<!-- END: contact -->
 				
 				<a href="{link}" class="icons mua_hang"></a>

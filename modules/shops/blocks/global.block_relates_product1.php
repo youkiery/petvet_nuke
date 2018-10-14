@@ -145,9 +145,9 @@ if(!nv_function_exists('nv_relates_product1')) {
 			$xtpl->assign('hometext', $hometext_i);
 			$xtpl->assign('src_img', $thumb[0]);
 			$xtpl->assign('time', nv_date('d-m-Y h:i:s A', $l['addtime']));
+			$product_price = CurrencyConversion($l['product_price'], $l['money_unit'], $pro_config['money_unit'], $block_config);
+			$xtpl->assign('product_price', $product_price);
 			if($pro_config['active_price'] == '1' && $l['showprice'] == '1') {
-				$product_price = CurrencyConversion($l['product_price'], $l['money_unit'], $pro_config['money_unit'], $block_config);
-				$xtpl->assign('product_price', $product_price);
 				$xtpl->assign('money_unit', $pro_config['money_unit']);
 				if($l['product_discounts'] != 0) {					
 					$price_product_discounts = $l['product_price'] - ($l['product_price'] * ($l['product_discounts'] / 100));

@@ -403,10 +403,9 @@ if ($nv_Request -> get_int('save', 'post') == 1) {
 				for($i = 0; $i < $size_length; $i ++) {
 					if(!empty($array_price[$i]) && !empty($array_size[$i])) {
 						$check = false;
-						foreach($array_store as $store) {
+						foreach($array_store as $index => $store) {
 							if(!$store["check"] && $store["size"] == $array_size[$i]) {
-								$store["check"] == true;
-								$check = true;
+								$array_store[$index]["check"] = true;
 								if($store["product_price"] != $array_price[$i]) {
 									$sql2 = "update `" . $db_config['prefix'] . "_" . $module_data . "_size` set product_price = ". $array_price[$i] ." where size = '". $array_size[$i]."' and product_id = " . $rowcontent['id'];
 									$db->sql_query($sql2);
@@ -415,6 +414,7 @@ if ($nv_Request -> get_int('save', 'post') == 1) {
 							}
 						}
 						if(!$check) {
+							$array_store[$index]["check"] = true;
 							$sql2 = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_size` (product_id, size, product_price) values(".$rowcontent['id'].", '".$array_size[$i]."', ".$array_price[$i] .")";
 							$db->sql_query($sql2);
 							continue;

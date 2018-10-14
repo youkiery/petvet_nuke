@@ -275,7 +275,17 @@ a{text-decoration:none;color:#1e3885;}
 	margin:5px 0px;
 }
 /*zsize*/
+.price1 {
+	text-decoration: line-through;
+	line-height: 26px;
+}
 .price2 {
+	line-height: 8px;
+}
+.price3 {
+	line-height: 34px;
+}
+.price4 {
 	line-height: 26px;
 }
 

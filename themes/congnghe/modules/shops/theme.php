@@ -219,9 +219,9 @@ function view_search_all($data_content, $html_pages = "", $all_page) {
           $xtpl->parse('main.items.order');
         }
       }
+			$xtpl->assign('product_price', number_format($data_row['product_price'], 0, '.', ' ') . " " . $data_row['money_unit']);
       if ($pro_config['active_price'] == '1') {
         if ($data_row['showprice'] == '1') {
-          $xtpl->assign('product_price', number_format($data_row['product_price'], 0, '.', ' ') . " " . $data_row['money_unit']);
           if ($data_row['product_discounts'] != 0) {
             //$price_product_discounts = $data_row['product_price'] - ($data_row['product_price'] * ($data_row['product_discounts'] / 100));
             $price_product_discounts = $data_row['product_discounts'];
@@ -472,9 +472,9 @@ function viewcat_page_list($data_content, $pages) {
       //print_r($data_row);exit();
       //$xtpl->assign('codesp', $data_row['codesp']);
 
+			$xtpl->assign('product_price', CurrencyConversion($data_row['product_price'], $data_row['money_unit'], $pro_config['money_unit']));
       if ($pro_config['active_price'] == '1') {
         if ($data_row['showprice'] == '1') {
-          $xtpl->assign('product_price', CurrencyConversion($data_row['product_price'], $data_row['money_unit'], $pro_config['money_unit']));
           $xtpl->assign('money_unit', $pro_config['money_unit']);
           if ($data_row['product_discounts'] != 0) {
             //$price_product_discounts = $data_row['product_price'] - ($data_row['product_price'] * ($data_row['product_discounts'] / 100));

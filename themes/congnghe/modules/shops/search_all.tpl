@@ -20,17 +20,18 @@
 				<!-- END: nosize -->    
 				
 				<img alt="{TITLE0}" src="{IMG_SRC}" class="ul_li_image">
-				<!-- BEGIN: price -->     
-					<p class="{class_money}">Giá cũ: {product_price} VNĐ</p>
-					<span class="ul_li_price">Giá: {product_discounts} VNĐ</span>
+					<!-- BEGIN: price -->     
+					<p class="price1">Giá cũ: {product_price} VNĐ</p>
 					<span class="ul_li_code">(-{sale}%)</span>
-				<!-- END: price -->    
-				<!-- BEGIN: price2 -->
-					<p class="ul_li_price price2">Giá: {product_price} VNĐ</p>
-				<!-- END: price2 -->
-				<!-- BEGIN: contact -->
+					<span class="ul_li_price">Giá: {product_discounts} VNĐ</span>
+					<!-- END: price -->    
+					<!-- BEGIN: price2 -->
+					<p class="ul_li_price price3">Giá: {product_price} VNĐ</p>
+					<!-- END: price2 -->
+					<!-- BEGIN: contact -->
+					<p class="price4">Giá tham khảo: {product_price} VNĐ</p>
 					<p class="ul_li_price price2">Giá: Liên hệ</p>
-				<!-- END: contact -->
+					<!-- END: contact -->
 
 				<a class="icons mua_hang" href="javascript:void(0)" id="{ID}"  onclick="cartorder_detail(this)" style="float:right;margin-right:59px; cursor: pointer;"></a>
 			</li>
