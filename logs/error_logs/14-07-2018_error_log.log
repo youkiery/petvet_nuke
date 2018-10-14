@@ -1,8 +1,0 @@
-[Sat, 14 Jul 2018 04:23:27 +0700] [216.244.66.198] [Notice(8): Undefined offset:  1] [FILE: /modules/shops/functions.php] [LINE: 143]
-[Sat, 14 Jul 2018 04:34:47 +0700] [40.77.167.106] [Notice(8): Undefined index:  keywords] [FILE: /modules/shops/blocks/global.block_catalogs.php] [LINE: 124]
-[Sat, 14 Jul 2018 09:00:49 +0700] [113.161.29.17] [Notice(8): Undefined index:  keywords] [FILE: /modules/shops/blocks/global.block_catalogs.php] [LINE: 124]
-[Sat, 14 Jul 2018 11:19:56 +0700] [66.249.71.156] [Notice(8): Undefined index:  keywords] [FILE: /modules/shops/blocks/global.block_catalogs.php] [LINE: 124]
-[Sat, 14 Jul 2018 11:22:22 +0700] [27.2.129.141] [Notice(8): Undefined index:  keywords] [FILE: /modules/shops/blocks/global.block_catalogs.php] [LINE: 124]
-[Sat, 14 Jul 2018 14:07:26 +0700] [14.233.103.231] [Notice(8): Undefined index:  keywords] [FILE: /modules/shops/blocks/global.block_catalogs.php] [LINE: 124]
-[Sat, 14 Jul 2018 17:55:13 +0700] [66.249.71.157] [Notice(8): Undefined index:  keywords] [FILE: /modules/shops/blocks/global.block_catalogs.php] [LINE: 124]
-[Sat, 14 Jul 2018 21:55:24 +0700] [169.54.244.89] [User Error(256): We're sorry. The software you are using to access our website is not allowed. Some examples of this are e-mail harvesting programs and programs that will  copy websites to your hard drive. If you feel you have gotten this message  in error, please send an e-mail addressed to admin. Your I.P. address has been logged. Thanks.] [FILE: /mainfile.php] [LINE: 241]

@@ -1,6 +1,0 @@
-TIME: Fri, 21 Sep 2018 12:16:57 +0700
-IP: 5.9.154.69
-INFO: User Error(256): Curl error: Could not resolve host: www.myopenid.com
-FILE: /includes/class/openid.class.php
-LINE: 206
-USER-AGENT: Mozilla/5.0 (compatible; MJ12bot/v1.4.8; http://mj12bot.com/)

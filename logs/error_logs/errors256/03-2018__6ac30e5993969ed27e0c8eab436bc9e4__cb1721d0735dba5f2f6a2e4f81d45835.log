@@ -1,6 +1,0 @@
-TIME: Sun, 04 Mar 2018 17:50:55 +0700
-IP: 66.249.93.80
-INFO: User Error(256): Incorrect IP address specified
-FILE: /includes/class/request.class.php
-LINE: 182
-USER-AGENT: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.75 Safari/537.36 Google Favicon

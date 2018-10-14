@@ -1,6 +1,0 @@
-TIME: Mon, 11 Dec 2017 20:38:00 +0700
-IP: 64.233.173.48
-INFO: User Error(256): Incorrect IP address specified
-FILE: /includes/class/request.class.php
-LINE: 182
-USER-AGENT: Mozilla/5.0 (Linux; Android 6.0.1; SM-G935F Build/MMB29K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.98 Mobile Safari/537.36

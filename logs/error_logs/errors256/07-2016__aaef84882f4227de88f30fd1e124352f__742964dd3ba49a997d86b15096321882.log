@@ -1,6 +1,0 @@
-TIME: Thu, 28 Jul 2016 13:18:42 +0700
-IP: 116.110.20.218
-INFO: User Error(256): Sorry! Could not connect to mysql server (Code: 1045)
-FILE: /mainfile.php
-LINE: 292
-USER-AGENT: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36

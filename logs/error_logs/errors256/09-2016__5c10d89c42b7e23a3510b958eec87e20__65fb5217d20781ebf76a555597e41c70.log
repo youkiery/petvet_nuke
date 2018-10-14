@@ -1,6 +1,0 @@
-TIME: Fri, 02 Sep 2016 11:31:53 +0700
-IP: 5.9.73.227
-INFO: User Error(256): Curl error: Could not resolve host: www.myopenid.com
-FILE: /includes/class/openid.class.php
-LINE: 206
-USER-AGENT: Mozilla/5.0 (compatible; MJ12bot/v1.4.5; http://www.majestic12.co.uk/bot.php?+)

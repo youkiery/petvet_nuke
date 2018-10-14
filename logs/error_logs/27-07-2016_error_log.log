@@ -1,8 +1,0 @@
-[Wed, 27 Jul 2016 08:12:22 +0700] [::1] [Run-time notices(8192): preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead] [FILE: /includes/class/request.class.php] [LINE: 619]
-[Wed, 27 Jul 2016 08:12:22 +0700] [::1] [Run-time notices(8192): preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead] [FILE: /includes/class/request.class.php] [LINE: 621]
-[Wed, 27 Jul 2016 08:12:22 +0700] [::1] [Run-time notices(8192): preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead] [FILE: /includes/class/request.class.php] [LINE: 372]
-[Wed, 27 Jul 2016 08:12:22 +0700] [::1] [Run-time notices(8192): preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead] [FILE: /includes/class/request.class.php] [LINE: 393]
-[Wed, 27 Jul 2016 08:12:22 +0700] [::1] [Run-time notices(8192): mysql_connect(): The mysql extension is deprecated and will be removed in the future: use mysqli or PDO instead] [FILE: /includes/class/mysql.class.php] [LINE: 101]
-[Wed, 27 Jul 2016 08:12:22 +0700] [::1] [Warning(2): imagejpeg(): Filename cannot be empty] [FILE: /includes/core/cronjobs.php] [LINE: 83]
-[Wed, 27 Jul 2016 09:12:23 +0700] [::1] [Warning(2): get_headers(http://update.nukeviet.info/nukeviet.version.xml?lang=vi): failed to open stream: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
-] [FILE: /includes/class/geturl.class.php] [LINE: 124]

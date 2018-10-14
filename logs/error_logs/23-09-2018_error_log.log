@@ -1,8 +1,0 @@
-[Sun, 23 Sep 2018 02:33:05 +0700] [66.249.82.220] [Notice(8): Undefined index:  keywords] [FILE: /modules/shops/blocks/global.block_catalogs.php] [LINE: 124]
-[Sun, 23 Sep 2018 05:07:23 +0700] [157.55.39.110] [Notice(8): Undefined index:  3] [FILE: /modules/shops/functions.php] [LINE: 127]
-[Sun, 23 Sep 2018 06:30:49 +0700] [14.165.222.88] [Notice(8): Undefined index:  keywords] [FILE: /modules/shops/blocks/global.block_catalogs.php] [LINE: 124]
-[Sun, 23 Sep 2018 08:09:38 +0700] [171.255.130.226] [Notice(8): Undefined index:  keywords] [FILE: /modules/shops/blocks/global.block_catalogs.php] [LINE: 124]
-[Sun, 23 Sep 2018 08:16:17 +0700] [66.249.79.19] [Notice(8): Undefined index:  3] [FILE: /modules/shops/functions.php] [LINE: 127]
-[Sun, 23 Sep 2018 09:43:04 +0700] [66.249.71.158] [Notice(8): Undefined index:  3] [FILE: /modules/shops/functions.php] [LINE: 127]
-[Sun, 23 Sep 2018 12:59:12 +0700] [207.46.13.227] [Notice(8): Undefined index:  keywords] [FILE: /modules/shops/blocks/global.block_catalogs.php] [LINE: 124]
-[Sun, 23 Sep 2018 17:24:28 +0700] [66.249.82.114] [User Error(256): Incorrect IP address specified] [FILE: /includes/class/request.class.php] [LINE: 182]

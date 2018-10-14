@@ -1,6 +1,0 @@
-TIME: Mon, 22 Aug 2016 11:04:23 +0700
-IP: 66.249.71.242
-INFO: User Error(256): Curl error: Could not resolve host: www.myopenid.com
-FILE: /includes/class/openid.class.php
-LINE: 206
-USER-AGENT: Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)

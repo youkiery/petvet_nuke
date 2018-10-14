@@ -1,6 +1,0 @@
-TIME: Fri, 15 Jun 2018 14:03:54 +0700
-IP: 216.244.66.198
-INFO: User Error(256): Sorry! Could not connect to mysql server (Code: 2002)
-FILE: /mainfile.php
-LINE: 292
-USER-AGENT: Mozilla/5.0 (compatible; DotBot/1.1; http://www.opensiteexplorer.org/dotbot, help@moz.com)

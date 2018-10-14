@@ -1,5 +1,0 @@
-[Mon, 06 Aug 2018 01:17:03 +0700] [5.9.158.195] [Notice(8): Undefined index:  keywords] [FILE: /modules/shops/blocks/global.block_catalogs.php] [LINE: 124]
-[Mon, 06 Aug 2018 03:17:13 +0700] [92.156.117.116] [Notice(8): Undefined index:  keywords] [FILE: /modules/shops/blocks/global.block_catalogs.php] [LINE: 124]
-[Mon, 06 Aug 2018 15:18:40 +0700] [157.55.39.242] [Notice(8): Undefined index:  3] [FILE: /modules/shops/functions.php] [LINE: 127]
-[Mon, 06 Aug 2018 17:04:50 +0700] [195.201.150.200] [Notice(8): Undefined index:  keywords] [FILE: /modules/shops/blocks/global.block_catalogs.php] [LINE: 124]
-[Mon, 06 Aug 2018 22:57:07 +0700] [66.249.71.158] [Notice(8): Undefined index:  keywords] [FILE: /modules/shops/blocks/global.block_catalogs.php] [LINE: 124]

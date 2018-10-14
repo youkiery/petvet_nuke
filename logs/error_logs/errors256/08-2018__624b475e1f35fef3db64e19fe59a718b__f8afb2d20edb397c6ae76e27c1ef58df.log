@@ -1,6 +1,0 @@
-TIME: Thu, 09 Aug 2018 16:24:39 +0700
-IP: 54.36.149.73
-INFO: User Error(256): Sorry! Could not connect to mysql server (Code: 2002)
-FILE: /mainfile.php
-LINE: 292
-USER-AGENT: Mozilla/5.0 (compatible; AhrefsBot/5.2; +http://ahrefs.com/robot/)

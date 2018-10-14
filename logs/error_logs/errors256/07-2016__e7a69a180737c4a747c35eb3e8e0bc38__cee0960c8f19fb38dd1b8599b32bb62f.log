@@ -1,6 +1,0 @@
-TIME: Thu, 28 Jul 2016 13:26:50 +0700
-IP: 68.180.228.39
-INFO: User Error(256): Sorry! Could not connect to mysql server (Code: 1045)
-FILE: /mainfile.php
-LINE: 292
-USER-AGENT: Mozilla/5.0 (compatible; Yahoo! Slurp; http://help.yahoo.com/help/us/ysearch/slurp)

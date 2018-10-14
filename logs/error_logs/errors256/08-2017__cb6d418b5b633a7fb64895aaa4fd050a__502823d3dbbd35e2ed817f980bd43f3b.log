@@ -1,6 +1,0 @@
-TIME: Fri, 25 Aug 2017 09:53:54 +0700
-IP: 68.180.228.37
-INFO: User Error(256): Sorry! Could not connect to mysql server (Code: 1040)
-FILE: /mainfile.php
-LINE: 292
-USER-AGENT: Mozilla/5.0 (compatible; Yahoo! Slurp; http://help.yahoo.com/help/us/ysearch/slurp)
