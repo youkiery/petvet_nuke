@@ -405,6 +405,7 @@ if ($nv_Request -> get_int('save', 'post') == 1) {
 						$check = false;
 						foreach($array_store as $index => $store) {
 							if(!$store["check"] && $store["size"] == $array_size[$i]) {
+								$check = true;
 								$array_store[$index]["check"] = true;
 								if($store["product_price"] != $array_price[$i]) {
 									$sql2 = "update `" . $db_config['prefix'] . "_" . $module_data . "_size` set product_price = ". $array_price[$i] ." where size = '". $array_size[$i]."' and product_id = " . $rowcontent['id'];
