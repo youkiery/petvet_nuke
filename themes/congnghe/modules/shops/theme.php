@@ -959,9 +959,8 @@ function payment($data_content, $data_pro, $url_checkout, $intro_pay) {
     $xtpl->assign('product_unit', $pdata['product_unit']);
     $xtpl->assign('product_note', $pdata['product_note']);
     $xtpl->assign('link_pro', $pdata['link_pro']);
-		$xtpl->assign('pro_no', $i + 1);
-		if(!empty($pdata["size"]))
-    	$xtpl->assign('product_note_size', "Size: " . $pdata['size']);
+    $xtpl->assign('pro_no', $i + 1);
+    $xtpl->assign('product_note', "Size: " . $pdata['size']);
     if (!empty($pdata['color']))
       $xtpl->assign('color', $pdata['color']);
     else
@@ -977,7 +976,7 @@ function payment($data_content, $data_pro, $url_checkout, $intro_pay) {
   }
   if (!empty($data_content['order_note'])) {
     $xtpl->parse('main.order_note');
-	}
+  }
   $xtpl->assign('order_total', FormatNumber($data_content['order_total'], 2, '.', ','));
   $xtpl->assign('unit', $data_content['unit_total']);
   if (!empty($url_checkout)) {
