@@ -78,10 +78,12 @@
 				<!-- AddThis Button END -->
 			</div>
 			<!-- BEGIN: price -->
-			<p><span style="font-weight:bold;" class="{class_money}">Giá:</span> {product_price} VND</p>
+			<p class="price1">Giá cũ: {product_price} VNĐ</p>
+			<span class="product_info_price">Giá: {product_discounts} VNĐ</span>
+			<span class="ul_li_code">(-{SALE})</span>
 			<!-- END: price -->
 			<!-- BEGIN: price2 -->
-			<p class="product_info_price">Giá:  {product_discounts} VND</p>
+			<p class="product_info_price">Giá:  {product_price} VND</p>
 			<!-- END: price2 -->
 			<!-- BEGIN: contact -->
 			<p style="font-weight:bold;">Giá tham khảo:</span> {product_price} VND</p>
@@ -92,7 +94,6 @@
 			<p id="product_info_price" class="product_info_price">Size {size_min}, Giá {price_min} VND</p>
 			<!-- END: size_prince -->
 
-			<div class="cls"></div>
 			<div class="cls"></div>
 			<p>
 				<a class="icons mua_hang" id="{proid}" title="{title_pro}"  onclick="cartorder_detail(this)" style="float:left;margin-right:5px; cursor: pointer;"></a>
