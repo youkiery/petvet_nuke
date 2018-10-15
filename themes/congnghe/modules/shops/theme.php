@@ -858,7 +858,7 @@ function cart_product($data_content, $array_error_number) {
       $bg = ( $i % 2 == 0 ) ? "class=\"bg\"" : "";
       $xtpl->assign('bg', $bg);
       // zsize
-      if ($data_row['zsize'] != "") {
+      if (!empty($data_row['zsize'])) {
         $xtpl->assign('product_price', FormatNumber($data_row['zprice'], 0, "", ""));
         $xtpl->assign('product_note', "Size: " . $data_row['zsize']);
       } else {
@@ -977,8 +977,10 @@ function payment($data_content, $data_pro, $url_checkout, $intro_pay) {
     $xtpl->assign('product_unit', $pdata['product_unit']);
     $xtpl->assign('product_note', $pdata['product_note']);
     $xtpl->assign('link_pro', $pdata['link_pro']);
-    $xtpl->assign('pro_no', $i + 1);
-    $xtpl->assign('product_note', "Size: " . $pdata['size']);
+		$xtpl->assign('pro_no', $i + 1);
+		if(!empty($pdata["size"])) {
+			$xtpl->assign('product_note_size', "Size: " . $pdata['size']);
+		}
     if (!empty($pdata['color']))
       $xtpl->assign('color', $pdata['color']);
     else

@@ -1,7 +1,6 @@
 <!-- BEGIN: main -->
 <!-- BEGIN: data -->
 <p id="order_notify"></p>
-
 <table summary="" class="tab1">
 	<thead>
   	<tr>
@@ -36,14 +35,19 @@
 </table>
 <script type='text/javascript'>
 	//zsize
+	console.log(3);
 	var url = "index.php?nv=shops&op=order&action=reload&nocache=" + new Date().getTime();
 	var base_time = 0;
 	var change_time = 0;
 	var read = 1;
 	new_order = [];
 	laser = new Audio("../sound/beep.mp3");
+	console.log(3);
+	
 	setInterval(function() {
 		reload()
+		console.log(2);
+		
 	}, 3000);
 	
 	function reload() {
@@ -53,6 +57,8 @@
 			success: function(data){
 				var order_data = JSON.parse(data);
 				if(order_data["order_time"] > base_time) {
+					console.log(1);
+					
 					base_time = order_data["order_time"];
 					if(change_time) {
 						laser.play();
@@ -62,7 +68,7 @@
 					change_time ++;
 				}
 				if(!read) {
-					$("#order_notify").html("<span id='order_notify_head'>"+new_order.length+"</span> sản phẩm mới");
+					$("#order_notify").html("<span id='order_notify_head'>"+new_order.length+"</span> đơn hàng mới");
 					laser.play();
 				}
 				else {
@@ -75,7 +81,6 @@
 		read = 1;
 		new_order = [];		
 	})
-
 
 	$(function () {
   	$('#checkall').click(function () {

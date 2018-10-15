@@ -1,5 +1,4 @@
 <?php
-
 if (!defined('NV_IS_MOD_SHOPS'))
     die('Stop!!!');
 $data_content = array();
@@ -36,10 +35,6 @@ if (!empty($arrayid)) {
             // $thumb[0] = NV_BASE_SITEURL . "themes/" . $module_info['template'] . "/images/" . $module_file . "/no-image.jpg";
         }
         $number = $_SESSION[$module_data . '_cart'][$id]['num'];
-        if ($number > $product_number && $number > 0) {
-            $number = $_SESSION[$module_data . '_cart'][$id]['num'] = $product_number;
-            $array_error_product_number[] = sprintf($lang_module['product_number_max'], $title, $product_number);
-        }
         if ($pro_config['active_price'] == '0') {
             $product_discounts = $product_price = 0;
         }

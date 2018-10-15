@@ -295,6 +295,10 @@ a{text-decoration:none;color:#1e3885;}
 .price4 {
 	line-height: 26px;
 }
+.require {
+	color: red;
+	font-weight: bold;
+}
 
 .ul_li_km{
 	width:190px;

@@ -1,5 +1,4 @@
 <?php
-
 if (!defined('NV_IS_MOD_SHOPS'))
   die('Stop!!!');
 if (!defined('NV_IS_AJAX'))
@@ -50,12 +49,7 @@ if (!is_numeric($num) || $num < 0) {
       'num' => $num, 'zsize' => $zsize, 'zprice' => $zprice, 'order' => 0, 'price' => $price_product_discounts, 'store' => $data_content['product_number'], 'title' => $data_content[NV_LANG_DATA . '_title'], 'homeimgthumb' => $thumb[0]
       );
     } else {
-      if (( $_SESSION[$module_data . '_cart'][$id]['num'] + $num ) > $data_content['product_number']) {
-      $contents_msg = 'ERR_' . $lang_module['cart_set_err_num'] . ': ' . $data_content['product_number'];
-      $update_cart = false;
-      } else {
       $_SESSION[$module_data . '_cart'][$id]['num'] = $_SESSION[$module_data . '_cart'][$id]['num'] + $num;
-      }
     }
     if ($update_cart) {
       $title = str_replace("_", "#@#", $data_content[NV_LANG_DATA . '_title']);

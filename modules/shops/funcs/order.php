@@ -1,5 +1,5 @@
 <?php
-if !defined('NV_IS_MOD_SHOPS')) die('Stop!!!');
+if (!defined('NV_IS_MOD_SHOPS')) die('Stop!!!');
 $contents = "";
 $link1 = NV_BASE_SITEURL . "index.php?" . NV_LANG_VARIABLE . "=" . NV_LANG_DATA . "&amp;" . NV_NAME_VARIABLE . "=" . $module_name . "";
 $link = NV_BASE_SITEURL . "index.php?" . NV_LANG_VARIABLE . "=" . NV_LANG_DATA . "&amp;" . NV_NAME_VARIABLE . "=" . $module_name . "&amp;" . NV_OP_VARIABLE . "=";
@@ -7,7 +7,7 @@ $action = 0;
 $post_order = $nv_Request->get_int('postorder', 'post', 0);
 $error = array();
 $data_order = array(
-	"user_id" => $user_info["userid"], "order_name" => !empty($user_info["full_name"])) ? $user_info["full_name"] : $user_info["username"], "order_email" => $user_info["email"], "order_address" => $user_info["location"], "order_phone" => $user_info["telephone"], "order_note" => "", "listid" => "", "listnum" => "", "listprice" => "","listcolor"=>"", "admin_id" => 0, "shop_id" => 0, "who_is" => 0, "unit_total" => $pro_config['money_unit'], "order_total" => 0, "order_time" => NV_CURRENTTIME 
+	"user_id" => $user_info["userid"], "order_name" => (!empty($user_info["full_name"])) ? $user_info["full_name"] : $user_info["username"], "order_email" => $user_info["email"], "order_address" => $user_info["location"], "order_phone" => $user_info["telephone"], "order_note" => "", "listid" => "", "listnum" => "", "listprice" => "","listcolor"=>"", "admin_id" => 0, "shop_id" => 0, "who_is" => 0, "unit_total" => $pro_config['money_unit'], "order_total" => 0, "order_time" => NV_CURRENTTIME 
 );
 
 if ($post_order == 1) {
@@ -58,7 +58,6 @@ if ($post_order == 1) {
 	$data_order['order_total'] = $total;
 	if (empty($data_order['order_name'])) $error['order_name'] = $lang_module['order_name_err'];
 	elseif (empty($data_order['order_phone'])) $error['order_phone'] = $lang_module['order_phone_err'];
-	elseif (empty($data_order['order_address'])) $error['order_address'] = $lang_module['order_address_err'];
 	
 	if (empty($error) and $i > 0) {
 		$result = $db->sql_query("SHOW TABLE STATUS WHERE `Name`='" . $db_config['prefix'] . "_" . $module_data . "_orders'");
@@ -112,13 +111,13 @@ if ($action == 0) {
 		$arrayid[] = $pro_id;
 	}
 	// zsize
-	if !empty($arrayid)) {
+	if (!empty($arrayid)) {
 		$listid = implode(",", $arrayid);
 		$sql = "SELECT t1.id, t1.listcatid, t1.publtime, t1." . NV_LANG_DATA . "_title, t1." . NV_LANG_DATA . "_alias, t1." . NV_LANG_DATA . "_note, t1." . NV_LANG_DATA . "_hometext, t1.homeimgalt, t1.homeimgthumb, t1.product_price,t1.product_discounts,t2." . NV_LANG_DATA . "_title, t1.money_unit  FROM `" . $db_config['prefix'] . "_" . $module_data . "_rows` as t1 LEFT JOIN `" . $db_config['prefix'] . "_" . $module_data . "_units` as t2 ON t1.product_unit = t2.id WHERE  t1.id IN (" . $listid . ")  AND t1.status=1 AND t1.publtime < " . NV_CURRENTTIME . " AND (t1.exptime=0 OR t1.exptime>" . NV_CURRENTTIME . ")";
 		$result = $db->sql_query($sql);
 		while (list($id, $listcatid, $publtime, $title, $alias, $note, $hometext, $homeimgalt, $homeimgthumb, $product_price, $product_discounts, $unit, $money_unit) = $db->sql_fetchrow($result)) {
 			$thumb = explode("|", $homeimgthumb);
-			if !empty($thumb[0]) && ! nv_is_url($thumb[0])) {
+			if (!empty($thumb[0]) && ! nv_is_url($thumb[0])) {
 				$thumb[0] = NV_BASE_SITEURL . NV_UPLOADS_DIR . "/" . $module_name . "/" . $thumb[0];
 			}
 			else {

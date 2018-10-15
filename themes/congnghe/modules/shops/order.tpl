@@ -1,7 +1,7 @@
 <!-- BEGIN: main -->
 <div class="block clearfix">
   <div class="step_bar clearfix">
-		<a class="step step_current" title="{LANG.cart_check_cart}" href="{LINK_CART}"><span>1</span>{LANG.cart_check_cart}</a>
+    <a class="step step_current" title="{LANG.cart_check_cart}" href="{LINK_CART}"><span>1</span>{LANG.cart_check_cart}</a>
     <a class="step step_current" title="{LANG.cart_order}" href="#"><span>2</span>{LANG.cart_order}</a>
   </div>
   <div class="clear"></div>
@@ -10,9 +10,15 @@
       type="hidden" value="1" name="postorder">
     <table class="rows2" style="margin-bottom: 2px">
       <tr>
-        <td width="130px">{LANG.order_name} (*)</td>
+        <td width="130px">{LANG.order_name} <span class="require"> (*)</span></td>
         <td><input name="order_name" style="width: 40%"
                value="{DATA.order_name}" /> {ERROR.order_name}</td>
+      </tr>
+      <tr>
+        <td>{LANG.order_phone} <span class="require"> (*)</span></td>
+        <td><input type="number" name="order_phone" style="width: 40%" value="{DATA.order_phone}" />
+          {ERROR.order_phone}
+        </td>
       </tr>
       <tr>
         <td>{LANG.order_email}</td>
@@ -20,12 +26,7 @@
                value="{DATA.order_email}" /> {ERROR.order_email}</td>
       </tr>
       <tr>
-        <td>{LANG.order_phone} (*)</td>
-        <td><input name="order_phone" style="width: 40%"
-               value="{DATA.order_phone}" />{ERROR.order_phone}</td>
-      </tr>
-      <tr>
-        <td valign="top">{LANG.order_address} (*)</td>
+        <td valign="top">{LANG.order_address}</td>
         <td valign="top"><input name="order_address"
                     value="{DATA.order_address}" style="width: 90%" /> <br />
           {ERROR.order_address}</td>
@@ -84,4 +85,11 @@
     </table>
   </form>
 </div>
+<script>
+
+  $("#submit_send").click(function () {
+    $("#fpost").submit();
+    return false;
+  });
+</script>
 <!-- END: main -->
