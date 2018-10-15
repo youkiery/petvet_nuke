@@ -95,7 +95,7 @@ function view_home_cat($data_content, $html_pages = "") {
 }
 
 function view_home_all($data_content, $html_pages = "") {
-  global $module_info, $lang_module, $module_file, $global_config, $module_name, $pro_config, $sort_id;
+  global $db, $module_info, $lang_module, $module_file, $global_config, $module_name, $pro_config, $sort_id;
   $xtpl = new XTemplate("main_product.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
   $xtpl->assign('LANG', $lang_module);
   $xtpl->assign('TEMPLATE', $module_info['template']);
@@ -105,7 +105,6 @@ function view_home_all($data_content, $html_pages = "") {
   if (!empty($data_content)) {
     $i = 1;
     foreach ($data_content as $data_row) {
-
       $xtpl->assign('ID', $data_row['id']);
       $xtpl->assign('LINK', $data_row['link_pro']);
       $xtpl->assign('TITLE', $data_row['title']);
@@ -137,15 +136,15 @@ function view_home_all($data_content, $html_pages = "") {
           $xtpl->parse('main.items.order');
         }
       }
+			$xtpl->assign('product_price', CurrencyConversion($data_row['product_price'], $data_row['money_unit'], $pro_config['money_unit']));
       if ($pro_config['active_price'] == '1') {
-        if ($data_row['showprice'] == '1') {
-          $xtpl->assign('product_price', CurrencyConversion($data_row['product_price'], $data_row['money_unit'], $pro_config['money_unit']));
+				if ($data_row['showprice'] == '1') {
           $xtpl->assign('money_unit', $pro_config['money_unit']);
           if ($data_row['product_discounts'] != 0) {
+						$product_price_end = $data_row['product_price'] - $data_row['product_discounts'];
             //$price_product_discounts = $data_row['product_price'] - ($data_row['product_price'] * ($data_row['product_discounts'] / 100));						
             //$xtpl->assign('sale', CurrencyConversion($price_product_discounts, $data_row['money_unit'], $pro_config['money_unit']));
             $xtpl->assign('sale', $a);
-            $product_price_end = $data_row['product_price'] - $data_row['product_discounts'];
             $xtpl->assign('product_price_end', CurrencyConversion($product_price_end, $data_row['money_unit'], $pro_config['money_unit']));
             $price_product_discounts = $data_row['product_discounts'];
             $xtpl->assign('product_discounts', number_format($price_product_discounts, 0, '.', ' ') . " ");
@@ -155,11 +154,26 @@ function view_home_all($data_content, $html_pages = "") {
             $xtpl->parse('main.items.price');
           } else {
             $xtpl->parse('main.items.price2');
-            $xtpl->assign('class_money', 'ul_li_price');
           }
         } else {
           $xtpl->parse('main.items.contact');
         }
+      }
+      //zsize
+      $sql2 = "SELECT size FROM `vng_shops_size` WHERE product_id = " . $data_row["id"];
+      $result = $db->sql_query($sql2);
+      $size = array();
+      $check_size = false;
+      while ($row = $db->sql_fetch_assoc($result)) {
+        $check_size = true;
+        $size[] = $row["size"];
+      }
+      if ($check_size) {
+        $size_string = "Size (" . implode(", ", $size) . ")";
+        $xtpl->assign('size', $size_string);
+        $xtpl->parse('main.items.size');
+      } else {
+        $xtpl->parse('main.items.nosize');
       }
       if ($pro_config['active_tooltip'] == 1)
         $xtpl->parse('main.items.tooltip');
@@ -655,17 +669,14 @@ function detail_product($data_content, $data_unit, $data_comment, $num_comment, 
           $xtpl->parse('main.deal');
           $xtpl->parse('main.discounts_end');
           $xtpl->parse('main.discounts');
-        } else {
-          $xtpl->assign('class_money', 'product_info_price');
-        }
-
-        //		if ($data_content['showprice'] == '1')
-        $xtpl->parse('main.price');
-        //else
-      } else {
-        $xtpl->parse('main.contact');
-      }
-    }
+					$xtpl->parse('main.price');
+				} else {
+					$xtpl->parse('main.price2');
+				}
+			} else {
+				$xtpl->parse('main.contact');
+			}
+		}
     if ($data_content['product_number'] > 0) {
       $xtpl->assign('conhang', 'Còn Hàng');
       $xtpl->parse('main.number_on');

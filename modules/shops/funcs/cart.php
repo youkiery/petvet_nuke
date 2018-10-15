@@ -34,7 +34,11 @@ if (!empty($arrayid)) {
             $thumb[0] = $homeimgthumb;
             // $thumb[0] = NV_BASE_SITEURL . "themes/" . $module_info['template'] . "/images/" . $module_file . "/no-image.jpg";
         }
-        $number = $_SESSION[$module_data . '_cart'][$id]['num'];
+				$number = intval($_SESSION[$module_data . '_cart'][$id]['num']);
+				if($number < 1) {
+					$_SESSION[$module_data . '_cart'][$id]['num'] = 1;
+					$number = 1;
+				}
         if ($pro_config['active_price'] == '0') {
             $product_discounts = $product_price = 0;
         }

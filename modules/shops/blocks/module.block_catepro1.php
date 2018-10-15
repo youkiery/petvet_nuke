@@ -139,6 +139,22 @@ if ( ! nv_function_exists( 'nv_cate_product1' ) ) {
 				}
 			}
 			else {  $xtpl->parse( 'main.loop.contact' ); }
+      //zsize
+      $sql2 = "SELECT size FROM `vng_shops_size` WHERE product_id = " . $data_row["id"];
+      $result = $db->sql_query($sql2);
+      $size = array();
+      $check_size = false;
+      while ($row = $db->sql_fetch_assoc($result)) {
+        $check_size = true;
+        $size[] = $row["size"];
+      }
+      if ($check_size) {
+        $size_string = "Size (" . implode(", ", $size) . ")";
+        $xtpl->assign('size', $size_string);
+        $xtpl->parse('main.row.size');
+      } else {
+        $xtpl->parse('main.row.nosize');
+      }
 			if ($pro_config ['active_order'] == '1') {
 				if ($l['showprice'] == '1') {
 					$xtpl->parse ( 'main.loop.order' );

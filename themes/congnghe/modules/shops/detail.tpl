@@ -77,22 +77,14 @@
 				<script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-523824bb471c1b61" type="text/javascript"></script><div style="visibility: hidden; height: 1px; width: 1px; position: absolute; z-index: 100000;" id="_atssh"><iframe id="_atssh666" title="AddThis utility frame" style="height: 1px; width: 1px; position: absolute; z-index: 100000; border: 0px none; left: 0px; top: 0px;" src="//s7.addthis.com/static/r07/sh173.html#"></iframe></div><script type="text/javascript" src="http://s7.addthis.com/static/r07/core156.js"></script>
 				<!-- AddThis Button END -->
 			</div>
-			<!-- BEGIN: warranty -->
-			<p style="line-height: 25px;"><strong class="black">Bảo hành: </strong> {warranty}</p>
-			<!-- END: warranty -->
-			<!-- BEGIN: number_on -->
-			<p style="line-height: 25px;"><strong class="black">Tình trạng: </strong>{conhang}</p>
-			<!-- END: number_on -->  
-			<!-- BEGIN: number_off -->
-			<p style="line-height: 25px;color:#FF0000"><strong class="black">Tình trạng: </strong>{hethang}</p>
-			<!-- END: number_off -->  
 			<!-- BEGIN: price -->
-			<p><span style="font-weight:bold;" class="{class_money}">Giá thị trường:</span> {product_price} VND</p>
+			<p><span style="font-weight:bold;" class="{class_money}">Giá:</span> {product_price} VND</p>
 			<!-- END: price -->
-			<!-- BEGIN: discounts -->
+			<!-- BEGIN: price2 -->
 			<p class="product_info_price">Giá:  {product_discounts} VND</p>
-			<!-- END: discounts -->
+			<!-- END: price2 -->
 			<!-- BEGIN: contact -->
+			<p style="font-weight:bold;">Giá tham khảo:</span> {product_price} VND</p>
 			<p class="product_info_price">Giá: Liên hệ</p>
 			<!-- END: contact -->
 			<!-- BEGIN: size_prince -->
