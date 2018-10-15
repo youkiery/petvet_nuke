@@ -3,6 +3,7 @@
 	<i class="icons icons_arrow"></i>
 	{TITLE_CATALOG}
 </h3>
+<div id="msgshow" class="msgshow"></div>
 <select style="float:right;margin: 0px 5px 10px 20px;" class="select_order" name="sort" id="sort" onchange="changesort(this.value,'{OPST}','{view}')">
 	<!-- BEGIN: sort -->
 	<option {select} value="{sort}">{value}</option>
@@ -49,7 +50,7 @@
 				<p class="price4">Giá tham khảo: {product_price} VNĐ</p>
 				<p class="ul_li_price price2">Giá: Liên hệ</p>
 				<!-- END: contact -->
-				<a class="icons mua_hang" href="javascript:void(0)" id="{id}"  onclick="cartorder_detail(this)" style="float:right;margin-right:59px;"></a>
+				<div id="{id}" class="icons mua_hang" onclick="cartorder(this)"></div>
 			</li>
 		<!-- END: row -->   
 	</ul>

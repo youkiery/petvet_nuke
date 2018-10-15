@@ -5,6 +5,7 @@
 		{TITLE_CATALOG}
 		<a class="read_more" href="{LINK_CATALOG}" style="float:right">Xem thêm >></a>
 	</h3>
+	<div id="msgshow" class="msgshow"></div>
 	<div class="pro_slide_list product_list">
 		<ul id="mycarousel10" class="home_list_slide jcarousel-skin-tango10">
 			<!-- BEGIN: loop --> 
@@ -44,7 +45,7 @@
 				<p class="ul_li_price price2">Giá: Liên hệ</p>
 				<!-- END: contact -->
 				
-				<a href="{link}" class="icons mua_hang"></a>
+				<div id="{id}" class="icons mua_hang" onclick="cartorder(this)"></div>
 			</li>
 			<!-- END: loop -->    
 		</ul>

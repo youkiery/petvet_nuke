@@ -19,6 +19,7 @@
 			background: #5FABFF;
 			border-radius: 8px;
 			font-weight: bold;
+			cursor: pointer;
 		}
 		.selected {
 			border: 2px solid red;	

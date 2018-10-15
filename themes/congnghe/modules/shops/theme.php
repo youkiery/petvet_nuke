@@ -219,7 +219,8 @@ function view_search_all($data_content, $html_pages = "", $all_page) {
           $xtpl->parse('main.items.order');
         }
       }
-			$xtpl->assign('product_price', number_format($data_row['product_price'], 0, '.', ' ') . " " . $data_row['money_unit']);
+      $xtpl->assign('id', $data_row["id"]);
+      $xtpl->assign('product_price', number_format($data_row['product_price'], 0, '.', ' ') . " " . $data_row['money_unit']);
       if ($pro_config['active_price'] == '1') {
         if ($data_row['showprice'] == '1') {
           if ($data_row['product_discounts'] != 0) {
@@ -273,7 +274,7 @@ function view_search_all($data_content, $html_pages = "", $all_page) {
 }
 
 function viewcat_page_gird($data_content, $pages) {
-  global $module_info, $lang_module, $module_file, $module_name, $pro_config, $sort_id, $array_op, $nv_Request, $global_array_cat;
+  global $db, $module_info, $lang_module, $module_file, $module_name, $pro_config, $sort_id, $array_op, $nv_Request, $global_array_cat;
   $xtpl = new XTemplate("view_gird.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
   //print_r($global_array_cat[$data_content['id']]['title']);exit();
   $xtpl->assign('TEMPLATE', $module_info['template']);
@@ -345,9 +346,9 @@ function viewcat_page_gird($data_content, $pages) {
       $xtpl->assign('intro', nv_clean60($data_row['hometext'], 100));
       //$xtpl->assign('intro', $data_row['hometext']);
       $xtpl->assign('NUM_VIEW', $data_row['hitstotal']);
+      $xtpl->assign('product_price', CurrencyConversion($data_row['product_price'], $data_row['money_unit'], $pro_config['money_unit']));
       if ($pro_config['active_price'] == '1') {
         if ($data_row['showprice'] == '1') {
-          $xtpl->assign('product_price', CurrencyConversion($data_row['product_price'], $data_row['money_unit'], $pro_config['money_unit']));
           $xtpl->assign('money_unit', $pro_config['money_unit']);
           if ($data_row['product_discounts'] != 0) {
             //$price_product_discounts = $data_row['product_price'] - ($data_row['product_price'] * ($data_row['product_discounts'] / 100));
@@ -357,14 +358,31 @@ function viewcat_page_gird($data_content, $pages) {
             if ($pro_config['active_price'] == '1')
               $xtpl->parse('main.grid_rows.price.discounts');
             $xtpl->parse('main.grid_rows.price1.discounts1');
+						$xtpl->parse('main.grid_rows.price');
+						$xtpl->parse('main.grid_rows.price1');
           } else {
+						$xtpl->parse('main.grid_rows.price2');
             $xtpl->assign('class_money', 'ul_li_price');
           }
-          $xtpl->parse('main.grid_rows.price');
-          $xtpl->parse('main.grid_rows.price1');
         } else {
           $xtpl->parse('main.grid_rows.contact');
         }
+      }
+      //zsize
+      $sql2 = "SELECT size FROM `vng_shops_size` WHERE product_id = " . $data_row["id"];
+      $result = $db->sql_query($sql2);
+      $size = array();
+      $check_size = false;
+      while ($row = $db->sql_fetch_assoc($result)) {
+        $check_size = true;
+        $size[] = $row["size"];
+      }
+      if ($check_size) {
+        $size_string = "Size (" . implode(", ", $size) . ")";
+        $xtpl->assign('size', $size_string);
+        $xtpl->parse('main.row.size');
+      } else {
+        $xtpl->parse('main.row.nosize');
       }
 
       $pwidth = (int) (100 / $num_view);
@@ -472,7 +490,8 @@ function viewcat_page_list($data_content, $pages) {
       //print_r($data_row);exit();
       //$xtpl->assign('codesp', $data_row['codesp']);
 
-			$xtpl->assign('product_price', CurrencyConversion($data_row['product_price'], $data_row['money_unit'], $pro_config['money_unit']));
+      $xtpl->assign('product_price', CurrencyConversion($data_row['product_price'], $data_row['money_unit'], $pro_config['money_unit']));
+      $xtpl->assign('id', $data_row['id']);
       if ($pro_config['active_price'] == '1') {
         if ($data_row['showprice'] == '1') {
           $xtpl->assign('money_unit', $pro_config['money_unit']);
@@ -838,17 +857,16 @@ function cart_product($data_content, $array_error_number) {
       $xtpl->assign('link_remove', $data_row['link_remove']);
       $bg = ( $i % 2 == 0 ) ? "class=\"bg\"" : "";
       $xtpl->assign('bg', $bg);
-			// zsize
+      // zsize
       if ($data_row['zsize'] != "") {
         $xtpl->assign('product_price', FormatNumber($data_row['zprice'], 0, "", ""));
         $xtpl->assign('product_note', "Size: " . $data_row['zsize']);
       } else {
-				if($data_row['product_discounts'] != 0) {
-					$xtpl->assign('product_price', FormatNumber($data_row['product_discounts'], 0, "", ""));
-				}
-				else {
-					$xtpl->assign('product_price', FormatNumber($data_row['product_price'], 0, "", ""));					
-				}
+        if ($data_row['product_discounts'] != 0) {
+          $xtpl->assign('product_price', FormatNumber($data_row['product_discounts'], 0, "", ""));
+        } else {
+          $xtpl->assign('product_price', FormatNumber($data_row['product_price'], 0, "", ""));
+        }
       }
       if ($pro_config['active_price'] == '1')
         $xtpl->parse('main.rows.price2');

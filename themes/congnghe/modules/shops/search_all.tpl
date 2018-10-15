@@ -3,6 +3,7 @@
 		Kết quả tìm kiếm từ khóa :
 		<span style="color:#f00; font-weight:bold; font-size:14px;">{value_keyword}</span>
 	</div>
+	<div id="msgshow" class="msgshow"></div>
 <!-- END: form -->
 <!-- BEGIN: main -->
 	Tìm được  ({sa} sản phẩm)
@@ -33,7 +34,8 @@
 					<p class="ul_li_price price2">Giá: Liên hệ</p>
 					<!-- END: contact -->
 
-				<a class="icons mua_hang" href="javascript:void(0)" id="{ID}"  onclick="cartorder_detail(this)" style="float:right;margin-right:59px; cursor: pointer;"></a>
+          <div id="{id}" class="icons mua_hang" onclick="cartorder(this)"></div>
+					
 			</li>
 			<!-- END: items -->     
 			<div class="pages">

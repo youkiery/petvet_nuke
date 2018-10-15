@@ -275,6 +275,13 @@ a{text-decoration:none;color:#1e3885;}
 	margin:5px 0px;
 }
 /*zsize*/
+.msgshow {
+	position: fixed;
+	top: 0px;
+	right: 0px;
+	display: none;
+	height: fit-content;
+}
 .price1 {
 	text-decoration: line-through;
 	line-height: 26px;
@@ -307,6 +314,7 @@ a{text-decoration:none;color:#1e3885;}
 	width:84px;
 	height:23px;
 	background-position:-98px 0px;
+	cursor: pointer;
 }
 .link_product_list {
   width: 190px;
