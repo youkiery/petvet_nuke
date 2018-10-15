@@ -80,6 +80,7 @@
 	$("#order_notify").click(() => {
 		read = 1;
 		new_order = [];		
+		location.reload();
 	})
 
 	$(function () {
