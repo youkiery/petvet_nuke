@@ -944,3 +944,30 @@ html[xmlns] .clearfix {
     padding-left: 50px;
     padding-right: 10px;
 }
+/*zsize*/
+#order_notify {
+	color: red;
+	font-size: 20px;
+	font-weight: bold;
+}
+@-webkit-keyframes blinker {
+  from {opacity: 1.0;}
+  to {opacity: 0.0;}
+}
+@keyframes blinker {
+  from {opacity: 1.0;}
+  to {opacity: 0.0;}
+}
+#order_notify_head {
+	text-decoration: blink;
+	-webkit-animation-name: blinker;
+	-webkit-animation-duration: 0.6s;
+	-webkit-animation-iteration-count:infinite;
+	-webkit-animation-timing-function:ease-in-out;
+	-webkit-animation-direction: alternate;
+	animation-name: blinker;
+	animation-duration: 0.6s;
+	animation-iteration-count:infinite;
+	animation-timing-function:ease-in-out;
+	animation-direction: alternate;
+}
