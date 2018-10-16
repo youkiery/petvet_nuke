@@ -40,7 +40,8 @@ if (!is_numeric($num) || $num < 0) {
       if ($pro_config['active_order_number'] == '1') {
         $num = 0;
       }
-      $update_cart = true;
+			$update_cart = true;
+			
       if (!isset($_SESSION[$module_data . '_cart'][$id])) {
         $_SESSION[$module_data . '_cart'][$id] = array(
           //zsize
