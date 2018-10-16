@@ -822,74 +822,36 @@ function cart_product($data_content, $array_error_number) {
   $xtpl->assign('NV_BASE_SITEURL', NV_BASE_SITEURL);
   $price_total = 0;
   $i = 1;
-  //color
-  $array_color_cat = array();
-  $sql = "SELECT `cid`, `title` FROM `" . $db_config['prefix'] . "_" . $module_data . "_color` ORDER BY `weight` ASC";
-  $result = $db->sql_query($sql);
-  while (list( $cid_i, $title_i ) = $db->sql_fetchrow($result)) {
-    $array_color_cat[$cid_i] = $title_i;
-  }
 
   if (!empty($data_content)) {
-    $idcolor = array();
     foreach ($data_content as $data_row) {
       $xtpl->assign('id', $data_row['id']);
-      //color
-
-      if (!empty($data_row['color_id']) && ($data_row != ",")) {
-        $colorhtm = "";
-        $array_color = array();
-        $array_color = explode(",", $data_row['color_id']);
-        if (count($array_color_cat) > 0) {
-          foreach ($array_color_cat as $cid_i => $cid_title) {
-            if (in_array($cid_i, $array_color)) {
-              $colorhtm .= "<option value = \"" . $cid_i . "\">" . $cid_title . "</option>";
-            }
-          }
-
-          $idcolor[] = $data_row['id'];
-          $xtpl->assign('row_color', $colorhtm);
-          $xtpl->parse('main.rows.color');
-        }
-      }
-
+			
       $xtpl->assign('stt', $i);
 
-      $xtpl->assign('title_pro', $data_row['title']);
+      $xtpl->assign('title_pro', $data_row['vi_title']);
       $xtpl->assign('link_pro', $data_row['link_pro']);
       $xtpl->assign('img_pro', $data_row['homeimgthumb']);
-      $note = str_replace("|", ", ", $data_row['note']);
+      $note = str_replace("|", ", ", $data_row['vi_note']);
       $xtpl->assign('note', nv_clean60($note, 50));
-      $price_product_discounts = $data_row['product_price'] - ( $data_row['product_price'] * ( $data_row['product_discounts'] / 100 ) );
-      //die($data_row['product_price']."=" .$data_row['product_discounts'] );
-      $price_product_discounts = CurrencyConversionToNumber($price_product_discounts, $data_row['money_unit'], $pro_config['money_unit']);
+      $price = CurrencyConversionToNumber($price, $data_row['money_unit'], $pro_config['money_unit']);
+      $xtpl->assign('product_price', $data_row["price"]);
       $xtpl->assign('pro_num', $data_row['num']);
-      $xtpl->assign('product_unit', $data_row['product_unit']);
+      $xtpl->assign('product_unit', $data_row['unit']);
       $xtpl->assign('link_remove', $data_row['link_remove']);
       $bg = ( $i % 2 == 0 ) ? "class=\"bg\"" : "";
       $xtpl->assign('bg', $bg);
       // zsize
-      if (!empty($data_row['zsize'])) {
-        $xtpl->assign('product_price', FormatNumber($data_row['zprice'], 0, "", ""));
-        $xtpl->assign('product_note', "Size: " . $data_row['zsize']);
-      } else {
-        if ($data_row['product_discounts'] != 0) {
-          $xtpl->assign('product_price', FormatNumber($data_row['product_discounts'], 0, "", ""));
-        } else {
-          $xtpl->assign('product_price', FormatNumber($data_row['product_price'], 0, "", ""));
-        }
-      }
       if ($pro_config['active_price'] == '1')
         $xtpl->parse('main.rows.price2');
       if ($pro_config['active_order_number'] == '0')
         $xtpl->parse('main.rows.num2');
       $xtpl->parse('main.rows');
-      $price_total = $price_total + (double) ( $price_product_discounts ) * (int) ( $data_row['num'] );
+      $price_total = $price_total + (double) ( $price ) * (int) ( $data_row['num'] );
       $i ++;
     }
   }
 
-  $xtpl->assign('a', $idcolor);
   if (!empty($array_error_number)) {
     foreach ($array_error_number as $title_error) {
       $xtpl->assign('ERROR_NUMBER_PRODUCT', $title_error);
