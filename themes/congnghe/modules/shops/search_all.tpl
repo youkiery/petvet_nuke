@@ -19,8 +19,10 @@
 				<!-- BEGIN: nosize -->
 					<h3 class="ul_li_title2"><a style="font-size: 12px;" href="{LINK}">{TITLE0}</a></h3>
 				<!-- END: nosize -->    
+				<a class="link_product_list">
+					<img alt="{TITLE0}" src="{IMG_SRC}" class="ul_li_image">
+				</a>
 				
-				<img alt="{TITLE0}" src="{IMG_SRC}" class="ul_li_image">
 					<!-- BEGIN: price -->     
 					<p class="price1">Giá cũ: {product_price} VNĐ</p>
 					<span class="ul_li_code">(-{sale}%)</span>
