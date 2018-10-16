@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @Project NUKEVIET 3.0
- * @Author VINADES.,JSC (contact@vinades.vn)
- * @Copyright (C) 2010 VINADES.,JSC. All rights reserved
- * @Createdate 2-10-2010 18:49
- */
 $page_title = $lang_module['order_title'];
 $table_name = $db_config['prefix'] . "_" . $module_data . "_orders";
 
@@ -16,7 +10,8 @@ $save = $nv_Request->get_string('save', 'post', '');
 $re = $db->sql_query("SELECT *  FROM `" . $table_name . "` WHERE `order_id`=" . $order_id);
 $data_content = $db->sql_fetchrow($re, 2);
 if (empty($data_content))
-  Header("Location: " . NV_BASE_ADMINURL . "index.php?" . NV_NAME_VARIABLE . "=" . $module_name . "&" . NV_OP_VARIABLE . "=order");
+	Header("Location: " . NV_BASE_ADMINURL . "index.php?" . NV_NAME_VARIABLE . "=" . $module_name . "&" . NV_OP_VARIABLE . "=order");
+die(var_dump($data_content));
 if ($save == 1 and intval($data_content['transaction_status']) == - 1) {
   $order_id = $nv_Request->get_int('order_id', 'post', 0);
   $transaction_status = 0;
@@ -29,7 +24,9 @@ if ($save == 1 and intval($data_content['transaction_status']) == - 1) {
   if ($transaction_id > 0) {
     $db->sql_query("UPDATE `" . $db_config['prefix'] . "_" . $module_data . "_orders` SET transaction_status=" . $transaction_status . " , transaction_id = " . $transaction_id . " WHERE `order_id`=" . $order_id);
 
-    nv_insert_logs(NV_LANG_DATA, $module_name, 'log_process_product', "order_id " . $order_id, $admin_info['userid']);
+		nv_insert_logs(NV_LANG_DATA, $module_name, 'log_process_product', "order_id " . $order_id, $admin_info['userid']);
+		//zsize
+		product_number_order ($data_content["listid"], $data_content["listnum"]);
   }
   nv_del_moduleCache($module_name);
   Header("Location: " . NV_BASE_ADMINURL . "index.php?" . NV_NAME_VARIABLE . "=" . $module_name . "&" . NV_OP_VARIABLE . "=order");

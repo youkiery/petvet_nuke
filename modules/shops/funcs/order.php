@@ -85,10 +85,10 @@ if ($post_order == 1) {
 		$order_id = $db->sql_query_insert_id($sql);
 		
 		if ($order_id > 0) {
-			if ($pro_config['active_order_number'] == '0') {
-				product_number_order($data_order['listid'], $data_order['listnum']);
-			}
-			product_number_order ($data_order['listid'], $data_order['listnum']);
+			// if ($pro_config['active_order_number'] == '0') {
+			// 	product_number_order($data_order['listid'], $data_order['listnum']);
+			// }
+			// product_number_order ($data_order['listid'], $data_order['listnum']);
 			//*********** tru hang trong kho/////////////////
 			$order_code2 = vsprintf($pro_config['format_order_id'], $order_id);
 			if ($order_code != $order_code2) {

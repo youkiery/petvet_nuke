@@ -324,22 +324,19 @@ cong so luong trong kho $type = "+"
 $listid : danh sach cac id product
 $listnum : danh sach so luong tuong ung
  ********/
-function product_number_order ( $listid, $listnum, $type = "-" )
-{
-    global $db_config, $db, $module_data;
-    $arrayid = explode( "|", $listid);
-    $arraynum = explode( "|", $listnum );
-    $i = 0;
-    foreach ( $arrayid as $id )
-    {
-    	if ($id > 0)
-    	{
-        	if ( empty( $arraynum[$i] ) ) $arraynum[$i] = 0;
-        	$query = "UPDATE `" . $db_config['prefix'] . "_" . $module_data . "_rows` SET 
-                      `product_number` = `product_number` ".$type." ". intval( $arraynum[$i] ) . " WHERE `id` =" . $id . "";
-            $db->sql_query( $query );
-    	}
-        $i++;
-    }
+function product_number_order ($listid, $listnum, $type = "-") {
+  global $db_config, $db, $module_data;
+  $arrayid = explode( "|", $listid);
+  $arraynum = explode( "|", $listnum );
+  $i = 0;
+  foreach ($arrayid as $id) {
+  	if ($id > 0) {
+    	if (empty($arraynum[$i])) $arraynum[$i] = 0;
+    	$query = "UPDATE `" . $db_config['prefix'] . "_" . $module_data . "_rows` SET 
+      		`product_number` = `product_number` ".$type." ". intval( $arraynum[$i] ) . " WHERE `id` =" . $id . "";
+      $db->sql_query( $query );
+  	}
+    $i++;
+  }
 }
 ?>
