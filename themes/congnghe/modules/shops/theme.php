@@ -884,28 +884,20 @@ function uers_order($data_content, $data_order, $error) {
   $xtpl->assign('TEMPLATE', $module_info['template']);
   $xtpl->assign('NV_BASE_SITEURL', NV_BASE_SITEURL);
   $price_total = 0;
-  $i = 1;
+	$i = 1;
   if (!empty($data_content)) {
-    foreach ($data_content as $data_row) {
-      $xtpl->assign('id', $data_row['id']);
-      $xtpl->assign('title_pro', $data_row['title']);
+		foreach ($data_content as $data_row) {
+			$xtpl->assign('id', $data_row['id']);
+      $xtpl->assign('title_pro', $data_row["data"]['vi_title']);
       $xtpl->assign('link_pro', $data_row['link_pro']);
-      $note = str_replace("|", ", ", $data_row['note']);
+      $note = str_replace("|", ", ", $data_row['vi_note']);
       $xtpl->assign('note', nv_clean60($note, 50));
-      //$price_product_discounts = $data_row['product_price'] - ($data_row['product_price'] * ($data_row['product_discounts'] / 100));
-      if ($data_row['product_discounts'] > 0) {
-        $price_product_discounts = $data_row['product_discounts'];
-      } else {
-        $price_product_discounts = $data_row['product_price'];
-      }
-      $price_product_discounts = CurrencyConversionToNumber($price_product_discounts, $data_row['money_unit'], $pro_config['money_unit']);
-      $xtpl->assign('product_price', FormatNumber($price_product_discounts, 0, "", ""));
-      if ($data_row['color'] != 0)
-        $xtpl->assign('color', $global_array_color[$data_row['color']]['title']);
-      else
-        $xtpl->assign('color', '---');
-      $xtpl->assign('pro_num', $data_row['num']);
-      $xtpl->assign('product_unit', $data_row['product_unit']);
+			$price = CurrencyConversionToNumber($data_row['price'], $data_row['data']['money_unit'], $pro_config['money_unit']);
+			$price = FormatNumber($price, 0, "", "");
+      $xtpl->assign('product_price', $price);
+			
+			$xtpl->assign('pro_num', $data_row['num']);
+      $xtpl->assign('product_unit', $data_row["data"]['product_unit']);
       $xtpl->assign('pro_no', $i);
       $bg = ($i % 2 == 0) ? "class=\"bg\"" : "";
       $xtpl->assign('bg', $bg);
@@ -914,7 +906,7 @@ function uers_order($data_content, $data_order, $error) {
       if ($pro_config['active_order_number'] == '0')
         $xtpl->parse('main.rows.num2');
       $xtpl->parse('main.rows');
-      $price_total = $price_total + (double) ($price_product_discounts) * (int) ($data_row['num']);
+      $price_total = $price_total + (double) ($price) * (int) ($data_row['num']);
       $i++;
     }
   }
@@ -935,7 +927,7 @@ function uers_order($data_content, $data_order, $error) {
 
 function payment($data_content, $data_pro, $url_checkout, $intro_pay) {
   global $module_info, $lang_module, $module_file, $global_config, $module_name, $pro_config, $global_array_color;
-  $xtpl = new XTemplate("payment.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
+	$xtpl = new XTemplate("payment.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
   $xtpl->assign('LANG', $lang_module);
   $xtpl->assign('dateup', date("d-m-Y", $data_content['order_time']));
   $xtpl->assign('moment', date("h:i' ", $data_content['order_time']));
@@ -944,11 +936,11 @@ function payment($data_content, $data_pro, $url_checkout, $intro_pay) {
   ////////////////////////////////////////////////////////
   $i = 0;
   foreach ($data_pro as $pdata) {
-    $xtpl->assign('product_name', $pdata['title']);
-    $xtpl->assign('product_number', $pdata['product_number']);
-    $xtpl->assign('product_price', FormatNumber($pdata['product_price'], 2, '.', ','));
-    $xtpl->assign('product_unit', $pdata['product_unit']);
-    $xtpl->assign('product_note', $pdata['product_note']);
+    $xtpl->assign('product_name', $pdata['vi_title']);
+    $xtpl->assign('product_number', $pdata['num']);
+    $xtpl->assign('product_price', FormatNumber($pdata['price'], 2, '.', ','));
+    $xtpl->assign('product_unit', $pdata['unit']);
+    $xtpl->assign('product_note', $pdata['vi_note']);
     $xtpl->assign('link_pro', $pdata['link_pro']);
 		$xtpl->assign('pro_no', $i + 1);
 		if(!empty($pdata["size"])) {

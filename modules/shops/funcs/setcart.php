@@ -38,7 +38,6 @@ if (!is_numeric($num) || $num < 0) {
         $num = 0;
       }
 			$update_cart = true;
-			unset($_SESSION[$module_data . '_cart']);
       if (!isset($_SESSION[$module_data . '_cart'])) {
 				$_SESSION[$module_data . '_cart'] = array();
 			}

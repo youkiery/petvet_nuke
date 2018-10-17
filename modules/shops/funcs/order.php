@@ -18,30 +18,24 @@ if ($post_order == 1) {
 	$i = 0;
 	$total = 0;
 	
-	foreach ($_SESSION[$module_data . '_cart'] as $pro_id => $info) {
-		if ($pro_config['active_price'] == '0') { $info['price'] = 0; }
-		$test = "";
-		if ($_SESSION[$module_data . '_cart'][$pro_id]['order'] == 1) {
+	foreach ($_SESSION[$module_data . '_cart'] as $index => $info) {
+		if ($info['order'] == 1) {
 			// zsize
-			if(!empty($info["zsize"])) {
-				$info['price'] = intval($info['zprice']);
-			}
 			if ($i == 0) {
-				$listid .= $pro_id;
-				$size .= $info["zsize"];
+				$listid .= $info["id"];
+				$size .= $info["size"];
 				$listprice .= $info['price'];
 				$listnum .= $info['num'];
 				$listcolor .= $info['color'];
 			}
 			else {
-				$listid .= "|" . $pro_id;
-				$size .= "|" . $info["zsize"];
+				$listid .= "|" . $info["id"];
+				$size .= "|" . $info["size"];
 				$listnum .= "|" . $info['num'];
 				$listprice .= "|" . $info['price'];
 				$listcolor .= "|" . $info['color'];
 			}
 			$total = $total + ((int)$info['num'] * (double)$info['price']);
-			$test .= $info['num'] . ": " . $info['price'];
 			$i ++;
 		}
 	}
@@ -105,42 +99,33 @@ if ($post_order == 1) {
 
 if ($action == 0) {
 	$i = 0;
-	$arrayid = array();
+	foreach ($_SESSION[$module_data . '_cart'] as $pro_index => $pro_info) {
+		$i++;
+		$temp_data = $pro_info;
+		$temp_data["link_pro"] = $link . $global_array_cat[$listcatid]['alias'] . "/" . $alias . "-" . $id;
 
-	foreach ($_SESSION[$module_data . '_cart'] as $pro_id => $pro_info) {
-		$arrayid[] = $pro_id;
-	}
-	// zsize
-	if (!empty($arrayid)) {
-		$listid = implode(",", $arrayid);
-		$sql = "SELECT t1.id, t1.listcatid, t1.publtime, t1." . NV_LANG_DATA . "_title, t1." . NV_LANG_DATA . "_alias, t1." . NV_LANG_DATA . "_note, t1." . NV_LANG_DATA . "_hometext, t1.homeimgalt, t1.homeimgthumb, t1.product_price,t1.product_discounts,t2." . NV_LANG_DATA . "_title, t1.money_unit  FROM `" . $db_config['prefix'] . "_" . $module_data . "_rows` as t1 LEFT JOIN `" . $db_config['prefix'] . "_" . $module_data . "_units` as t2 ON t1.product_unit = t2.id WHERE  t1.id IN (" . $listid . ")  AND t1.status=1 AND t1.publtime < " . NV_CURRENTTIME . " AND (t1.exptime=0 OR t1.exptime>" . NV_CURRENTTIME . ")";
-		$result = $db->sql_query($sql);
-		while (list($id, $listcatid, $publtime, $title, $alias, $note, $hometext, $homeimgalt, $homeimgthumb, $product_price, $product_discounts, $unit, $money_unit) = $db->sql_fetchrow($result)) {
-			$thumb = explode("|", $homeimgthumb);
-			if (!empty($thumb[0]) && ! nv_is_url($thumb[0])) {
-				$thumb[0] = NV_BASE_SITEURL . NV_UPLOADS_DIR . "/" . $module_name . "/" . $thumb[0];
+		$temp_data["size"] = $pro_info["size"];
+		$temp_data["order"] = 1;
+		$check = true;
+		foreach ($data_content as $index => $value) {
+			if($value["id"] == $pro_info["id"] && $value["size"] == $_SESSION[$module_data . '_cart'][$pro_index]["size"]) {
+				$data_content[$index]["num"] = intval($value["num"]) + intval($_SESSION[$module_data . '_cart'][$pro_index]["num"]);
+				$check = false;
+				break;
 			}
-			else {
-				$thumb[0] = $homeimgthumb;
-				// $thumb[0] = NV_BASE_SITEURL . "themes/" . $module_info['template'] . "/images/" . $module_file . "/no-image.jpg";
-			}
-			if ($pro_config['active_price'] == '0') { $product_discounts = $product_price = 0; }
-			if(!empty($_SESSION[$module_data . '_cart'][$id]['zsize'])) {
-				$size = $_SESSION[$module_data . '_cart'][$id]['zsize'];
-				$product_price = $_SESSION[$module_data . '_cart'][$id]['zprice'];
-				$product_discounts = $_SESSION[$module_data . '_cart'][$id]['zprice'];
-			}
-			$data_content[] = array(
-				"id" => $id, "publtime" => $publtime, "title" => $title, "alias" => $alias, "note" => $note, "hometext" => $hometext, "homeimgalt" => $homeimgalt, "homeimgthumb" => $thumb[0], "product_price" => $product_price, "product_discounts" => $product_discounts, "product_unit" => $unit, "money_unit" => $money_unit, "link_pro" => $link . $global_array_cat[$listcatid]['alias'] . "/" . $alias . "-" . $id, "num" => $_SESSION[$module_data . '_cart'][$id]['num'] ,"color" =>$_SESSION[$module_data . '_cart'][$id]['color']
-			);
-			$i ++;
-		}        
+		}
+		if($check) {
+			$data_content[] = $temp_data;
+		}
 	}
 	if ($i == 0) {
 		Header("Location: " . NV_BASE_SITEURL . "index.php?" . NV_NAME_VARIABLE . "=" . $module_name . "&" . NV_OP_VARIABLE . "=cart");
 		die();
 	}
 	else {
+		unset($_SESSION[$module_data . '_cart']);
+		$_SESSION[$module_data . '_cart'] = $data_content;
+		
 		$contents = call_user_func("uers_order", $data_content, $data_order, $error);
 	}
 }

@@ -33,10 +33,9 @@ foreach ($_SESSION[$module_data . '_cart'] as $pro_index => $pro_info) {
 	$temp_data["num"] = $pro_info["num"];
 
 	$temp_data["price"] = $pro_info["price"];
-
 	$data_content[] = $temp_data;
 }
-	
+
 if (empty($array_error_product_number) and $nv_Request->isset_request('cart_order', 'post')) {
 	Header("Location: " . NV_BASE_SITEURL . "index.php?" . NV_NAME_VARIABLE . "=" . $module_name . "&" . NV_OP_VARIABLE . "=order");
 	die();
