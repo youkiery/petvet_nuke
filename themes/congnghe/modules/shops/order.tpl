@@ -37,9 +37,12 @@
         <td align="center" width="30px">{LANG.order_no_products}</td>
         <td class="prd">{LANG.cart_products}</td>
 
+				<td align="left">
+					{LANG.note}
+				</td>
         <!-- BEGIN: price1 -->
         <td class="price" align="right">{LANG.cart_price} ({unit_config})</td>
-        <!-- END: price1 -->
+				<!-- END: price1 -->
         <!-- BEGIN: num1 -->
         <td class="amount" align="center" width="60px">{LANG.cart_numbers}</td>
         <!-- END: num1 -->
@@ -51,9 +54,14 @@
           <td align="center">{pro_no}</td>
           <td class="prd"><a title="{title_pro}" href="{LINK}">{title_pro}</a></td>
 
+					<td>
+						<b>
+							{product_note}
+						</b>
+					</td>
           <!-- BEGIN: price2 -->
           <td class="money" align="right"><strong>{product_price}</strong></td>
-          <!-- END: price2 -->
+					<!-- END: price2 -->
           <!-- BEGIN: num2 -->
           <td class="amount" align="center">{pro_num}</td>
           <!-- END: num2 -->

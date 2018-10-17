@@ -110,12 +110,12 @@ if ( ! nv_function_exists( 'nv_cate_product1' ) ) {
 			$homeimgfile_i = NV_BASE_SITEURL . NV_UPLOADS_DIR . "/" . $module . "/" . $l['homeimgfile'];
 			$xtpl->assign( 'link', $link . $global_array_cat[$l['listcatid']]['alias'] . "/" . $l['alias'] . "-" . $l['id'] );            
 			$xtpl -> assign('TITLE_CATALOG', $global_array_cat[$block_config['catid']]['title']);
+			$xtpl -> assign('id', $l["id"]);
 			$xtpl -> assign('LINK_CATALOG', $global_array_cat[$block_config['catid']]['link']);
 			$title_i = nv_clean60( $l['title'], $cut_num );
 			$hometext_i = nv_clean60( $l['hometext'], 200 );
 			$xtpl->assign( 'title', $title_i );
 			$xtpl->assign( 'src_img', $thumb[0] );
-			$xtpl->assign( 'ID', $l['id'] );
 			$xtpl->assign( 'hometext', $hometext_i );
 			$xtpl->assign( 'SRC_PRO_LAGE', $l['homeimgfile'] );
 			$a= round ((100-(($l['product_discounts'])/($l['product_price']))*100));

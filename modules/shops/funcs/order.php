@@ -77,7 +77,7 @@ if ($post_order == 1) {
 		);				
 		";
 		$order_id = $db->sql_query_insert_id($sql);
-		
+
 		if ($order_id > 0) {
 			// if ($pro_config['active_order_number'] == '0') {
 			// 	product_number_order($data_order['listid'], $data_order['listnum']);
@@ -102,8 +102,7 @@ if ($action == 0) {
 	foreach ($_SESSION[$module_data . '_cart'] as $pro_index => $pro_info) {
 		$i++;
 		$temp_data = $pro_info;
-		$temp_data["link_pro"] = $link . $global_array_cat[$listcatid]['alias'] . "/" . $alias . "-" . $id;
-
+		$temp_data["link_pro"] = $link . $global_array_cat[$pro_info["data"]["listcatid"]]['alias'] . "/" . $pro_info["data"]["vi_alias"] . "-" . $pro_info["id"];
 		$temp_data["size"] = $pro_info["size"];
 		$temp_data["order"] = 1;
 		$check = true;
@@ -119,6 +118,7 @@ if ($action == 0) {
 		}
 	}
 	if ($i == 0) {
+		die();
 		Header("Location: " . NV_BASE_SITEURL . "index.php?" . NV_NAME_VARIABLE . "=" . $module_name . "&" . NV_OP_VARIABLE . "=cart");
 		die();
 	}

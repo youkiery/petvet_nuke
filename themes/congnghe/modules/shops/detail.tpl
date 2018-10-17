@@ -1,3 +1,4 @@
+<!-- detail -->
 <!-- BEGIN: main -->
 	<link media="screen" type="text/css" rel="stylesheet" href="{NV_BASE_SITEURL}themes/{TEMPLATE}/site_code/includes/tpl_script/magiczoom.css">
 	<script type="text/javascript" src="{NV_BASE_SITEURL}themes/{TEMPLATE}/site_code/includes/tpl_script/magiczoom.js"></script>

@@ -1,3 +1,4 @@
+<!-- detail suggest -->
 <!-- BEGIN: main -->
 <ul class="home_list_slide jcarousel-list jcarousel-list-horizontal" id="mycarousel7" style="overflow: hidden; position: relative; top: 0px; margin: 0px; padding: 0px; left: 0px; width: 1299px;">
 

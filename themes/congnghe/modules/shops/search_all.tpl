@@ -1,3 +1,4 @@
+<!-- search -->
 <!-- BEGIN: form -->
 	<div class="title_page_right cyan">
 		Kết quả tìm kiếm từ khóa :

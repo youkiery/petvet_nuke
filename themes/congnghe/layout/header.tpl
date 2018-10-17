@@ -61,14 +61,16 @@ window._fbq.push(['track', 'PixelInitialized', {}]);
  {THEME_MY_HEAD}
 </head>
   <style type="text/css">
-    .wrap {
+	body {
     width: 100%;
     height: 230px;
     z-index: -1;
-    background: #59BE30 url({NV_BASE_SITEURL}themes/{TEMPLATE}/site_code/bg_bg_bg_new2.jpg) center top no-repeat;
+    background: #fff url(/themes/congnghe/site_code/bg_bg_bg_new2.jpg) center top;
     position: absolute;
     background-size: cover;
-    }
+    background-repeat-x: repeat;
+    background-repeat-y: no-repeat;
+	}
   </style>
 <body>
   <div class="main_bg">

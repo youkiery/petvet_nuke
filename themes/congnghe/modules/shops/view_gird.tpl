@@ -1,3 +1,4 @@
+<!-- view main cat -->
 <!-- BEGIN: main -->
 <h3 style="width: 205px;background: #1e3885;border-radius: 5px 5px 0px 0px;color: #fff;margin-bottom: 1px;" class="pro_title"><i class="icons icons_arrow"></i> {TITLE_CATALOG}</h3>
 <div id="msgshow" class="msgshow"></div>

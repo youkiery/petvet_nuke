@@ -42,7 +42,7 @@ if ($order_id > 0 and $checkss == md5($order_id . $global_config['sitekey'] . se
 		$row["size"] = $size[$index];
 		$row["num"] = $listnum[$index];
 		$row["price"] = $listprice[$index];
-		$row["link_pro"] = $link . $global_array_cat[$listcatid]['alias'] . "/" . $row["alias"] . "-" . $row["id"];
+		$row["link_pro"] = $link . $global_array_cat[$row["listcatid"]]['alias'] . "/" . $row["vi_alias"] . "-" . $row["id"];
 		$data_pro[] = $row;
     $i ++;
 	}

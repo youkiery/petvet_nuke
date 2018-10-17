@@ -27,10 +27,13 @@ foreach ($_SESSION[$module_data . '_cart'] as $pro_index => $pro_info) {
 
 	$_SESSION[$module_data . '_cart'][$pro_index]['order'] = 1;
 	// zsize
+	$x = $pro_info["data"]["listcatid"];
+
 	$temp_data = $_SESSION[$module_data . '_cart'][$pro_index]["data"];
-	$temp_data["link_pro"] = $link . $global_array_cat[$listcatid]['alias'] . "/" . $alias . "-" . $id;
-	$temp_data["link_remove"] = $link . "remove&id=" . $id;
+	$temp_data["link_pro"] = $link . $global_array_cat[$pro_info["data"]["listcatid"]]['alias'] . "/" . $pro_info["data"]["vi_alias"] . "-" . $pro_info["id"];
+	$temp_data["link_remove"] = $link . "remove&id=" . $pro_info["id"];
 	$temp_data["num"] = $pro_info["num"];
+	$temp_data["size"] = $pro_info["size"];
 
 	$temp_data["price"] = $pro_info["price"];
 	$data_content[] = $temp_data;
@@ -40,7 +43,6 @@ if (empty($array_error_product_number) and $nv_Request->isset_request('cart_orde
 	Header("Location: " . NV_BASE_SITEURL . "index.php?" . NV_NAME_VARIABLE . "=" . $module_name . "&" . NV_OP_VARIABLE . "=order");
 	die();
 }
-// die(json_encode($data_content));
 $contents = call_user_func("cart_product", $data_content, $array_error_product_number);
 include ( NV_ROOTDIR . "/includes/header.php" );
 echo nv_site_theme($contents);

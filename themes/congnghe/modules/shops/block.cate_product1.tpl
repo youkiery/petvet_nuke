@@ -1,3 +1,4 @@
+<!-- main cat 2 -->
 <!-- BEGIN: main -->
 <div class="pro_slide">
   <h3 class="pro_title"><i class="icons icons_arrow"></i>{TITLE_CATALOG}<a class="read_more" href="{LINK_CATALOG}" style="float:right">Xem thêm >></a></h3>

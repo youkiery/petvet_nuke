@@ -26,7 +26,7 @@
 .autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
 
 body{font:12px Tahoma,Geneva,sans-serif;line-height:18px;color:#333}
-img{border:0}
+img{border:0; max-width: 100%;}
 ul{list-style-type:none;}
 a{text-decoration:none;color:#1e3885;}
 .icons{display:inline-block;background:url(../images/icons.png) no-repeat;}

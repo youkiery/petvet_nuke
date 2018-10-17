@@ -833,7 +833,10 @@ function cart_product($data_content, $array_error_number) {
       $xtpl->assign('link_pro', $data_row['link_pro']);
       $xtpl->assign('img_pro', $data_row['homeimgthumb']);
       $note = str_replace("|", ", ", $data_row['vi_note']);
-      $xtpl->assign('note', nv_clean60($note, 50));
+			$xtpl->assign('note', nv_clean60($note, 50));
+			if(!empty($data_row["size"])) {
+				$xtpl->assign('product_note', "Size: ". $data_row["size"]);
+			}
       $price = CurrencyConversionToNumber($price, $data_row['money_unit'], $pro_config['money_unit']);
       $xtpl->assign('product_price', $data_row["price"]);
       $xtpl->assign('pro_num', $data_row['num']);
@@ -841,8 +844,8 @@ function cart_product($data_content, $array_error_number) {
       $xtpl->assign('link_remove', $data_row['link_remove']);
       $bg = ( $i % 2 == 0 ) ? "class=\"bg\"" : "";
       $xtpl->assign('bg', $bg);
-      // zsize
-      if ($pro_config['active_price'] == '1')
+
+			if ($pro_config['active_price'] == '1')
         $xtpl->parse('main.rows.price2');
       if ($pro_config['active_order_number'] == '0')
         $xtpl->parse('main.rows.num2');
@@ -885,15 +888,23 @@ function uers_order($data_content, $data_order, $error) {
   $xtpl->assign('NV_BASE_SITEURL', NV_BASE_SITEURL);
   $price_total = 0;
 	$i = 1;
+	// die(var_dump($data_content));
   if (!empty($data_content)) {
+		$test = "";
 		foreach ($data_content as $data_row) {
+			$test .= $data_row["size"]. "<br>"; 
 			$xtpl->assign('id', $data_row['id']);
-      $xtpl->assign('title_pro', $data_row["data"]['vi_title']);
-      $xtpl->assign('link_pro', $data_row['link_pro']);
+			$xtpl->assign('title_pro', $data_row["data"]['vi_title']);
+      $xtpl->assign('LINK', $data_row['link_pro']);
       $note = str_replace("|", ", ", $data_row['vi_note']);
-      $xtpl->assign('note', nv_clean60($note, 50));
+			$xtpl->assign('note', nv_clean60($note, 50));
+			if(!empty($data_row["size"])) {
+				$xtpl->assign('product_note', "Size: " . $data_row["size"]);
+			}
+			$price_total = $price_total + (double) $data_row['price'] * (int) ($data_row['num']);
 			$price = CurrencyConversionToNumber($data_row['price'], $data_row['data']['money_unit'], $pro_config['money_unit']);
 			$price = FormatNumber($price, 0, "", "");
+
       $xtpl->assign('product_price', $price);
 			
 			$xtpl->assign('pro_num', $data_row['num']);
@@ -906,10 +917,12 @@ function uers_order($data_content, $data_order, $error) {
       if ($pro_config['active_order_number'] == '0')
         $xtpl->parse('main.rows.num2');
       $xtpl->parse('main.rows');
-      $price_total = $price_total + (double) ($price) * (int) ($data_row['num']);
       $i++;
-    }
-  }
+		}
+	}
+	$price = CurrencyConversionToNumber($price_total, $data_row['data']['money_unit'], $pro_config['money_unit']);
+	
+
   $xtpl->assign('price_total', FormatNumber($price_total, 2, '.', ','));
   $xtpl->assign('unit_config', $pro_config['money_unit']);
   $xtpl->assign('DATA', $data_order);
@@ -941,7 +954,7 @@ function payment($data_content, $data_pro, $url_checkout, $intro_pay) {
     $xtpl->assign('product_price', FormatNumber($pdata['price'], 2, '.', ','));
     $xtpl->assign('product_unit', $pdata['unit']);
     $xtpl->assign('product_note', $pdata['vi_note']);
-    $xtpl->assign('link_pro', $pdata['link_pro']);
+    $xtpl->assign('LINK', $pdata['link_pro']);
 		$xtpl->assign('pro_no', $i + 1);
 		if(!empty($pdata["size"])) {
 			$xtpl->assign('product_note_size', "Size: " . $pdata['size']);

@@ -49,7 +49,10 @@ if (!is_numeric($num) || $num < 0) {
         $contents = sprintf($lang_module['set_cart_success'], $title);
         $contents_msg = 'OK_' . $contents;
       }
-    }
+		}
+		else {
+			die(json_encode($id));
+		}
   } else {
     if ($id > 0) {
 			foreach ($_SESSION[$module_data . '_cart'] as $index => $cart) {
@@ -60,6 +63,9 @@ if (!is_numeric($num) || $num < 0) {
 				}
 			}
     }
+		else {
+			die(json_encode($id));
+		}
   }
 }
 include ( NV_ROOTDIR . "/includes/header.php" );
