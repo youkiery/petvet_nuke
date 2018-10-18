@@ -579,7 +579,6 @@ function detail_product($data_content, $data_unit, $data_comment, $num_comment, 
   $xtpl->assign('TEMPLATE', $module_info['template']);
   $xtpl->assign('NV_BASE_SITEURL', NV_BASE_SITEURL);
   if (!empty($data_content)) {
-    // zsize
     $sql = "SELECT * from `" . $db_config['prefix'] . "_" . $module_data . "_size` where product_id = " . $data_content["id"] . " ORDER BY `product_price` ASC";
     $result = $db->sql_query($sql);
     $html_size = "";
@@ -834,8 +833,15 @@ function cart_product($data_content, $array_error_number) {
       $xtpl->assign('img_pro', $data_row['homeimgthumb']);
       $note = str_replace("|", ", ", $data_row['vi_note']);
 			$xtpl->assign('note', nv_clean60($note, 50));
-			if(!empty($data_row["size"])) {
-				$xtpl->assign('product_note', "Size: ". $data_row["size"]);
+			foreach ($data_row["size_type"] as $index => $size_data) {
+				$xtpl->assign('size_index', $index);
+				$xtpl->assign('size_name', $size_data["size"]);
+				$xtpl->assign('size_price', $size_data["product_price"]);
+				$xtpl->parse('main.rows.size_select.size_option');
+			}
+
+			if(count($data_row["size_type"])) {
+				$xtpl->parse('main.rows.size_select');
 			}
       $price = CurrencyConversionToNumber($price, $data_row['money_unit'], $pro_config['money_unit']);
       $xtpl->assign('product_price', $data_row["price"]);
@@ -890,15 +896,13 @@ function uers_order($data_content, $data_order, $error) {
 	$i = 1;
 	// die(var_dump($data_content));
   if (!empty($data_content)) {
-		$test = "";
 		foreach ($data_content as $data_row) {
-			$test .= $data_row["size"]. "<br>"; 
 			$xtpl->assign('id', $data_row['id']);
 			$xtpl->assign('title_pro', $data_row["data"]['vi_title']);
       $xtpl->assign('LINK', $data_row['link_pro']);
       $note = str_replace("|", ", ", $data_row['vi_note']);
 			$xtpl->assign('note', nv_clean60($note, 50));
-			if(!empty($data_row["size"])) {
+			if(!empty($data_row["size_type"])) {
 				$xtpl->assign('product_note', "Size: " . $data_row["size"]);
 			}
 			$price_total = $price_total + (double) $data_row['price'] * (int) ($data_row['num']);

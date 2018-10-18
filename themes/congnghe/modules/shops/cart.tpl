@@ -36,7 +36,7 @@
 			</tr>
 			<tbody>
 			<!-- BEGIN: rows -->
-				<tr id="{id}" {bg}>
+				<tr id="{stt}" {bg}>
 					<td align="center">{stt}</td>
 					<td align="center">
 						<img src="{img_pro}" alt="{link_pro}" class="imgpro"/>
@@ -45,7 +45,13 @@
 						<a title="{title_pro}" href="{link_pro}">{title_pro}</a>
 					</td>
 					<td class="note">
-						<strong>{product_note}</strong>
+					<!-- BEGIN: size_select -->
+						<select name="size[{stt}]" class="change_size" prop_id="{stt}">
+						<!-- BEGIN: size_option -->
+							<option value="{size_index}" price="{size_price}">{size_name}</option>
+						<!-- END: size_option -->
+						</select>
+					<!-- END: size_select -->						
 					</td>
 					<!-- BEGIN: price2 -->
 						<td class="money" align="right">
@@ -54,7 +60,7 @@
 					<!-- END: price2 -->
 					<!-- BEGIN: num2 -->
 						<td class="amount" align="center">
-							<input size="1" value="{pro_num}" name="listproid[{id}]" id="{id}" class="btnum"/>
+							<input size="1" value="{pro_num}" name="listproid[{stt}]" id="{stt}" class="btnum"/>
 						</td>
 					<!-- END: num2 -->
 					<td class="unit">{product_unit}</td>
@@ -92,6 +98,7 @@
 	<script type="text/javascript">
 		var urload = nv_siteroot + 'index.php?' + nv_lang_variable + '=' + nv_sitelang + '&' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=loadcart';
 			//$("#total").load(urload+'&t=2');
+		
 		$(function(){
 			//zsize
 			function zsize_change() {
@@ -100,7 +107,7 @@
 					if(index) {
 						var number = Number(trim($(this).find("input.btnum").val()))
 						var price = Number(trim($(this).find("td.money").text()).replace(".", ""))
-						total += price * number;           
+						total += price * number;
 					}
 				})
 				total = total.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");            
@@ -109,6 +116,15 @@
 			zsize_change();
 			$(".btnum").keyup(() => {
 					zsize_change();
+			})
+			$(".change_size").change((e) => {
+				console.log(e);
+				var x = e.currentTarget;
+				var y =	x.options[x.selectedIndex];			
+				var id = x.getAttribute("prop_id");
+				var price = y.getAttribute("price");
+				$("tr#" + id).find("td.money").text(price.toString());
+				zsize_change();
 			})
 	
 			$("a.remove_cart").click(function(){
