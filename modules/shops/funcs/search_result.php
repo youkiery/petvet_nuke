@@ -75,17 +75,17 @@ if ($keyword != "") {
 	$search = " AND `" . NV_LANG_DATA . "_title` like '%" . $db->dblikeescape($keyword) . "%' ";
 }
 
+
 if (($price1 >= 0 && $price2 > 0)) {
 	$search .= " AND product_discounts BETWEEN " . $price1 . " AND " . $price2 . " ";
 }
-
 elseif ($price2 == -1 && $price1 >= 0) {
 	$search .= " AND product_discounts >= " . $price1 . " ";	
 }
-
 elseif ($price1 == -1 && $price2 > 0) {
 	$search .= " AND product_discounts >= " . $price2 . " ";	
 }
+
 
 if (!empty($typemoney)) {
   $search .= " AND `money_unit` = " . $db->dbescape($typemoney) . "";
