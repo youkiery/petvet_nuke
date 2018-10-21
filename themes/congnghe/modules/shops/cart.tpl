@@ -48,7 +48,7 @@
 					<!-- BEGIN: size_select -->
 						<select name="size[{stt}]" class="change_size" prop_id="{stt}">
 						<!-- BEGIN: size_option -->
-							<option value="{size_index}" price="{size_price}">{size_name}</option>
+							<option value="{size_index}" price="{size_price}" {size_selected}>{size_name}</option>
 						<!-- END: size_option -->
 						</select>
 					<!-- END: size_select -->						
@@ -65,7 +65,7 @@
 					<!-- END: num2 -->
 					<td class="unit">{product_unit}</td>
 					<td align="center">
-						<a class="remove_cart" title="{LANG.cart_remove_pro}" href="{link_remove}">
+						<a class="remove_cart" remove="{stt}" title="{LANG.cart_remove_pro}" href="{link_remove}">
 							<img src="{NV_BASE_SITEURL}themes/{TEMPLATE}/images/shops/24x24-no.png" style="width: 18px"/>
 						</a>
 					</td>
@@ -118,7 +118,6 @@
 					zsize_change();
 			})
 			$(".change_size").change((e) => {
-				console.log(e);
 				var x = e.currentTarget;
 				var y =	x.options[x.selectedIndex];			
 				var id = x.getAttribute("prop_id");
@@ -133,11 +132,11 @@
 					type: "GET",
 					url: href,
 					data: '',
-					success: function(data){
+					success: data =>{
 						if (data != '') {
-							$("#" + data).html('');
-							$("#cart_"+nv_module_name).load(urload);
-							$("#total").load(urload+'&t=2');
+							var id = $(this).attr("remove");
+							$("#" + id).remove();
+							zsize_change();
 						}
 					}
 				});

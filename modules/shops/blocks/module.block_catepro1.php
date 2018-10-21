@@ -111,7 +111,7 @@ if ( ! nv_function_exists( 'nv_cate_product1' ) ) {
 			$xtpl->assign( 'link', $link . $global_array_cat[$l['listcatid']]['alias'] . "/" . $l['alias'] . "-" . $l['id'] );            
 			$xtpl -> assign('TITLE_CATALOG', $global_array_cat[$block_config['catid']]['title']);
 			$xtpl -> assign('id', $l["id"]);
-			$xtpl -> assign('LINK_CATALOG', $global_array_cat[$block_config['catid']]['link']);
+			$xtpl -> assign('LINK_CATALOG', $global_array_cat[$block_config['catid']]['link'] . "&sort=1");
 			$title_i = nv_clean60( $l['title'], $cut_num );
 			$hometext_i = nv_clean60( $l['hometext'], 200 );
 			$xtpl->assign( 'title', $title_i );

@@ -118,7 +118,6 @@ if ($action == 0) {
 		}
 	}
 	if ($i == 0) {
-		die();
 		Header("Location: " . NV_BASE_SITEURL . "index.php?" . NV_NAME_VARIABLE . "=" . $module_name . "&" . NV_OP_VARIABLE . "=cart");
 		die();
 	}

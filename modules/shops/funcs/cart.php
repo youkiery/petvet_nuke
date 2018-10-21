@@ -10,9 +10,10 @@ if ($nv_Request->get_int('save', 'post', 0) == 1) {
   $listsizeid = $nv_Request->get_array('size', 'post', '');
 	// $listcolorid = $nv_Request->get_array('listcolorid', 'post', '');
   if (!empty($listproid)) {
-    foreach ($listproid as $pro_id => $number) {
-      if (!empty($_SESSION[$module_data . '_cart'][$pro_id]) and $number >= 0) {
-				$$_SESSION[$module_data . '_cart'][$pro_id]['num'] = $number;
+		foreach ($listproid as $pro_id => $number) {
+			$pro_id --;
+			if (!empty($_SESSION[$module_data . '_cart'][$pro_id]) and $number >= 0) {
+				$_SESSION[$module_data . '_cart'][$pro_id]['num'] = $number;
 			}
     }
     foreach ($listsizeid as $pro_id => $size) {
@@ -40,16 +41,6 @@ foreach ($_SESSION[$module_data . '_cart'] as $pro_index => $pro_info) {
 	$temp_data["size_type"] = $pro_info["size_type"];
 	$temp_data["size"] = $pro_info["size"];
 	$temp_data["price"] = $pro_info["price"];
-	if(!empty($temp_data["size_type"]) && (empty($temp_data["size"]) || empty($temp_data["price"]))) {
-    $size_min = 0;
-    $price_min = 0;
-		foreach ($temp_data["size_type"] as $index => $size_data) {
-			if ($price_min == 0 || $size_data['product_price'] < $price_min) {
-				$temp_data["size"] = $size_data["size"];
-				$temp_data["price"] = $size_data["product_price"];
-			}
-		}
-	}
 	$data_content[] = $temp_data;
 }
 if (empty($array_error_product_number) and $nv_Request->isset_request('cart_order', 'post')) {

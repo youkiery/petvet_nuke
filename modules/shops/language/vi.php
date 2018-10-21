@@ -705,6 +705,6 @@ $lang_module['sort3'] = "Giá bán tăng dần";
 $lang_module['sort4'] = "Giá bán giảm dần";
 
 //zsize
-$lang_module['note'] = "Ghi chú";
+$lang_module['note'] = "Tùy chọn";
 
 ?>

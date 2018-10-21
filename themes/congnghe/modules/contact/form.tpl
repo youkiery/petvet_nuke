@@ -2,9 +2,6 @@
 <div class="box-border">
     <div class="content-box">
         <!-- BEGIN: bodytext -->
-            <p>
-                {LANG.note}
-            </p>
             {CONTENT.bodytext}
             <br /><br />
         <!-- END: bodytext -->

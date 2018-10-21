@@ -1,55 +1,43 @@
 <!-- BEGIN: main -->
 <div id="products">
 	<!-- BEGIN: catalogs -->
-	<div class="title-content">
-		<p class="mang">
-			<a href="{LINK_CATALOG}" title="{TITLE_CATALOG}">{TITLE_CATALOG}</a>
-		</p>
-		<div class="tab-items-i"></div>
-	</div>
-	<section class="group-index-pro">
-		<aside class="col-mid-i">
-			<ul class="items-p-i" id="thumb">
+	<h3 class="pro_title z_viewlist">
+		<i class="icons icons_arrow"></i>
+		{TITLE_CATALOG}
+	</h3>
+	<div id="msgshow" class="msgshow"></div>
+	<div class="compare-button"> </div>
+		<section class="group-index-pro">
+		<div style="width: 788px;" class="pro_slide_list product_list">
+			<ul class="home_list_slide" id="thumb">
 				<!-- BEGIN: items -->
-				<li id="tip_1422" class="vnit_tip">
-					<div class="img" align="center">
-						<a title="{TITLE}" href="{LINK}"> <img height="120" src="{IMG_SRC}" id="zoom" alt="{TITLE}"> </a>
-					</div>
-					<p class="name">
-						<a title="{TITLE}" href="{LINK}">{TITLE0}</a>
-					</p>
-					<!-- BEGIN: price -->
-					<div class="sales-off">
-						<p class="{class_money}">
-							<span>{product_price} {money_unit}</span>
-						</p>
-						<!-- BEGIN: discounts -->
-						<p class="discount">
-							{LANG.deal_savings}: {product_price_end} {money_unit}
-						</p>
-						<p class="price">
-							<span>{product_discounts} {money_unit}</span>
-						</p>
-						<!-- END: discounts -->
-					</div>
-					<!-- END: price -->
+        <li style="border-bottom: 1px solid #bababa;width: 196px;">
+					<!-- BEGIN: size -->
+						<h3 class="ul_li_title"><a style="font-size: 12px;" href="{link}">{title}</a></h3>
+						<p class="ul_li_size"><a style="font-size: 12px;" href="{link}">{size}</a></p>
+					<!-- END: size -->
+					<!-- BEGIN: nosize -->
+						<h3 class="ul_li_title2"><a style="font-size: 12px;" href="{link}">{title}</a></h3>
+					<!-- END: nosize -->    
+
+					<a class="link_product_list" href="{link}">
+						<img class="ul_li_image" src="{img_src}" alt="{title}" />
+					</a>
+
+					<!-- BEGIN: price -->     
+					<p class="price1">Giá cũ: {product_price} VNĐ</p>
+					<span class="ul_li_code">(-{sale}%)</span>
+					<span class="ul_li_price">Giá: {product_discounts} VNĐ</span>
+					<!-- END: price -->    
+					<!-- BEGIN: price2 -->
+					<p class="ul_li_price price3">Giá: {product_price} VNĐ</p>
+					<!-- END: price2 -->
 					<!-- BEGIN: contact -->
-					<p class="price">
-						<span>{LANG.detail_pro_price}: </span><strong>{LANG.price_contact}</strong>
-					</p>
+					<p class="price4">Giá tham khảo: {product_price} VNĐ</p>
+					<p class="ul_li_price price2">Giá: Liên hệ</p>
 					<!-- END: contact -->
-					<!-- BEGIN: tooltip -->
-					<div id="vtip">
-						<div class="v-title">
-							<p>
-								{TITLE0}
-							</p>
-						</div>
-						<div class="vcontent">
-							{hometext}
-						</div>
-					</div>
-					<!-- END: tooltip -->
+
+          <div id="{id}" class="icons mua_hang" onclick="cartorder(this)"></div>
 				</li>
 				<!-- END: items -->
 			</ul>

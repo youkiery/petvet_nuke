@@ -79,7 +79,7 @@ if (! nv_function_exists('nv_cate_product')) {
 		$xtpl->assign('LANG', $lang_module);
 		$xtpl->assign('STYLE', $block_config['style_cat']);
 		$xtpl->assign('TITLE_CATALOG', $global_array_cat[$block_config['catid']]['title']);
-		$xtpl->assign('LINK_CATALOG', $global_array_cat[$block_config['catid']]['link']);
+		$xtpl->assign('LINK_CATALOG', $global_array_cat[$block_config['catid']]['link'] );
 		$xtpl->assign('IMG_CATALOG', $global_array_cat[$block_config['catid']]['image']);
 		$xtpl->assign('ICON_CATALOG', $global_array_cat[$block_config['catid']]['icon']);
 		$xtpl->assign('IDCAT', $block_config['catid']);
@@ -111,7 +111,7 @@ if (! nv_function_exists('nv_cate_product')) {
 			$homeimgfile_i = NV_BASE_SITEURL . NV_UPLOADS_DIR . "/" . $module . "/" . $l['homeimgfile'];
 			$xtpl->assign('link', $link . $global_array_cat[$l['listcatid']]['alias'] . "/" . $l['alias'] . "-" . $l['id']);            
 			$xtpl->assign('TITLE_CATALOG', $global_array_cat[$block_config['catid']]['title']);
-			$xtpl->assign('LINK_CATALOG', $global_array_cat[$block_config['catid']]['link']);
+			$xtpl->assign('LINK_CATALOG', $global_array_cat[$block_config['catid']]['link'] . "&sort=1");
 			$title_i = nv_clean60($l['title'], $cut_num);
 			$hometext_i = nv_clean60($l['hometext'], 200);
 			$xtpl->assign('title', $title_i);

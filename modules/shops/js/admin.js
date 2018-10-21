@@ -460,10 +460,10 @@ function nv_add_size() {
 	var row_length = rows.length;
 	if(row_length) {
 		var row_id = Number((rows[rows.length - 1].id).slice(-1)) + 1;
-		var newitem = "<tr id='size_"+row_id+"' class='size_row'><td><input type='text' maxlength='5' class='zsize' name='zsize[]' style='width: 100px;' /></td><td><input type='number' maxlength='50' class='zprice' name='zprice[]' style='width: 80px;' /><input type='button' id='remove_"+row_id+"' value='Bỏ' onclick='nv_remove_size(this)' /></td></tr>";
+		var newitem = "<tr id='size_"+row_id+"' class='size_row'><td><input type='text' class='zsize' name='zsize[]' style='width: 100px;' /></td><td><input type='number' maxlength='50' class='zprice' name='zprice[]' style='width: 80px;' /><input type='button' id='remove_"+row_id+"' value='Bỏ' onclick='nv_remove_size(this)' /></td></tr>";
 	}
 	else {
-		var newitem = "<tr id='size_1' class='size_row'><td><input type='text' maxlength='5' class='zsize' name='zsize[]' style='width: 100px;' /></td><td><input type='number' maxlength='50' class='zprice' name='zprice[]' style='width: 80px;' /><input type='button' value='Bỏ' id='remove_1' onclick='nv_remove_size(this)' /></td></tr>";
+		var newitem = "<tr id='size_1' class='size_row'><td><input type='text' class='zsize' name='zsize[]' style='width: 100px;' /></td><td><input type='number' maxlength='50' class='zprice' name='zprice[]' style='width: 80px;' /><input type='button' value='Bỏ' id='remove_1' onclick='nv_remove_size(this)' /></td></tr>";
 	}
 	$( "#zsize" ).append( newitem );
 }

@@ -150,7 +150,7 @@ if ( ! function_exists( 'nv_tab_product' ) )
             }
         }
         
-        $xtpl = new XTemplate( "block_tabs_products.tpl", NV_ROOTDIR . "/themes/" . $block_theme . "/modules/" . $module );
+				$xtpl = new XTemplate( "block_tabs_products.tpl", NV_ROOTDIR . "/themes/" . $block_theme . "/modules/" . $module );
         $xtpl->assign( 'LANG', $lang_module );
         $xtpl->assign( 'NV_BASE_SITEURL', NV_BASE_SITEURL );
         $xtpl->assign( 'TEMPLATE', $module_info['template'] );       

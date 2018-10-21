@@ -41,11 +41,11 @@
 					
 			</li>
 			<!-- END: items -->     
+			<div style="clear:left"></div>
 			<div class="pages">
 				{generate_page}    
 			</div>
 		</ul>
-		<div style="clear:left"></div>
 		<div class="pagination page-top">
 		<ul class="paging clearfix"></ul>
 	</div>

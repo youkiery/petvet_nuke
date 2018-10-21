@@ -110,8 +110,6 @@ if (empty($search)) {
 
 $show_price = "";
 
-if ($pro_config['active_price']) $show_price = "AND showprice=1";
-
 $sql = "SELECT SQL_CALC_FOUND_ROWS id,listcatid, publtime, " . NV_LANG_DATA . "_title," . NV_LANG_DATA . "_alias, " . NV_LANG_DATA . "_hometext, " . NV_LANG_DATA . "_address, homeimgalt, homeimgthumb, product_price,product_discounts, money_unit,showprice, homeimgfile  FROM `" . $db_config['prefix'] . "_" . $module_data . "_rows` WHERE inhome=1 " . $search . " AND status=1 ". $show_price." AND publtime < " . NV_CURRENTTIME . " AND (exptime=0 OR exptime>" . NV_CURRENTTIME . ") ORDER BY ID DESC LIMIT " . $page . "," . $per_page . "";
 $result = $db->sql_query($sql);
 $result_page = $db->sql_query("SELECT FOUND_ROWS()");

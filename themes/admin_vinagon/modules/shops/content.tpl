@@ -108,7 +108,7 @@
 						<!-- BEGIN: zsize -->					
 							<tr id='size_{id}' class='size_row'>
 								<td>
-								<input type="text" maxlength="5" value="{zsize}" class="zsize" name="zsize[]" style="width: 100px;" />
+								<input type="text" value="{zsize}" class="zsize" name="zsize[]" style="width: 100px;" />
 								</td>
 								<td>
 								<input type="number" maxlength="50" value="{zprice}" class="zprice" name="zprice[]" style="width: 80px;" />

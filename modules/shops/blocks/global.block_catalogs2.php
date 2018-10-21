@@ -98,7 +98,7 @@ if (!function_exists('nv_pro_catalogs2')) {
 		foreach ($array_cat_shops as $cat) {
 			if ($cat['parentid'] == 0) {
 				if ($cat['inhome'] == '1') {
-					$html .= "<li><a  href=\"" . $cat['link'] . "\">» " . $cat['title'] . "</a></li>\n";
+					$html .= "<li><a  href=\"" . $cat['link']  . "&sort=1\">» " . $cat['title'] . "</a></li>\n";
 					//if (!empty($cat['subcatid'])){
 					//	$html .= html_viewsub2($cat['subcatid'], $block_config);
 					//	}

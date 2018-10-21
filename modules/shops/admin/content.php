@@ -390,41 +390,56 @@ if ($nv_Request -> get_int('save', 'post') == 1) {
 				$array_price = $nv_Request -> get_typed_array('zprice', 'post', 'string');
 				$array_size = json_decode(strtoupper(json_encode($array_size)));				
 				$size_length = count($array_size);
-				$array_store = array();
+				$array_update = array();
 				
 				$sql = "SELECT * FROM `" . $db_config['prefix'] . "_" . $module_data . "_size` where product_id = " . $rowcontent['id'];
 				$result_size = $db -> sql_query($sql);
 				
 				while ($row = $db -> sql_fetch_assoc($result_size)) {
-					$row["check"] = false;
-					array_push($array_store, $row);
+					$temp = array();
+					$temp["size"] = $row["size"];
+					$temp["price"] = $row["product_price"];
+					$temp["action"] = 0; // 0: remove, 1: insert, 2: update
+					$array_update[] = $temp;
 				}
-
-				for($i = 0; $i < $size_length; $i ++) {
-					if(!empty($array_price[$i]) && !empty($array_size[$i])) {
-						$check = false;
-						foreach($array_store as $index => $store) {
-							if(!$store["check"] && $store["size"] == $array_size[$i]) {
-								$array_store[$index]["check"] = true;
-								if($store["product_price"] != $array_price[$i]) {
-									$sql2 = "update `" . $db_config['prefix'] . "_" . $module_data . "_size` set product_price = ". $array_price[$i] ." where size = '". $array_size[$i]."' and product_id = " . $rowcontent['id'];
-									$db->sql_query($sql2);
-									continue;
-								}
-							}
-						}
-						if(!$check) {
-							$array_store[$index]["check"] = true;
-							$sql2 = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_size` (product_id, size, product_price) values(".$rowcontent['id'].", '".$array_size[$i]."', ".$array_price[$i] .")";
-							$db->sql_query($sql2);
-							continue;
+				
+				foreach ($array_size as $si => $s) {
+					$temp = array();
+					$temp["size"] = $s;
+					$temp["price"] = $array_price[$si];
+					$check = false;
+					$uid = -1;
+					foreach ($array_update as $key => $value) {
+						if($value["size"] == $s) {
+							$uid = $key;
+							$temp["action"] = 2;
+							$check = true;
+							break;
 						}
 					}
+					if(!$check) {
+						$temp["action"] = 1;
+						$array_update[] = $temp;
+					}
+					if($uid >= 0) {
+						$array_update[$uid] = $temp;
+					}
 				}
-				foreach($array_store as $store) {
-					if(!$store["check"]) {
-						$sql2 = "delete from `" . $db_config['prefix'] . "_" . $module_data . "_size` where size = '".$store["size"]."' and product_id = " . $rowcontent['id'];
-						$db->sql_query($sql2);
+
+				foreach ($array_update as $sdi => $sd) {
+					switch ($sd["action"]) {
+						case 1:
+							$sql2 = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_size` (product_id, size, product_price) values(".$rowcontent['id'].", '" . $sdi . "', ".$sd["price"] .")";
+							$db->sql_query($sql2);	
+						break;
+						case 2:
+							$sql2 = "update `" . $db_config['prefix'] . "_" . $module_data . "_size` set product_price = ". $sd["price"] ." where size = '" . $sd["size"] . "' and product_id = " . $rowcontent['id'];
+							$db->sql_query($sql2);
+						break;
+						default:
+							$sql2 = "delete from `" . $db_config['prefix'] . "_" . $module_data . "_size` where size = '" . $sd["size"] . "' and product_id = " . $rowcontent['id'];
+							echo $sql2 . "<br>";
+							$db->sql_query($sql2);
 					}
 				}
 			} else {

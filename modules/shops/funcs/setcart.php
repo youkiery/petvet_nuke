@@ -20,11 +20,13 @@ if (!is_numeric($num) || $num < 0) {
 } else {
   if ($ac == 0) {
     if ($id > 0) {
-      $query = $db->sql_query("SELECT * FROM `" . $db_config['prefix'] . "_" . $module_data . "_rows` WHERE `id` = " . $id . "");
-      $data_content = $db->sql_fetchrow($query, 2);
+			$sql = "SELECT a.id, a.listcatid, a.product_number, a.product_price, a.product_discounts, a.money_unit, a.homeimgfile, a.homeimgthumb, a.showprice, a.vi_title, a.vi_alias, a.vi_codesp, b.vi_title as unit FROM `" . $db_config['prefix'] . "_" . $module_data . "_rows` a inner join `" . $db_config['prefix'] . "_" . $module_data . "_units` b on a.product_unit = b.id WHERE a.`id` = " . $id;
+			$query = $db->sql_query($sql);
+
+            $data_content = $db->sql_fetchrow($query, 2);
 
 			$size_type = array();
-			$query = $db->sql_query("SELECT * FROM `" . $db_config['prefix'] . "_" . $module_data . "_size` WHERE `product_id` = " . $id . "");
+			$query = $db->sql_query("SELECT * FROM `" . $db_config['prefix'] . "_" . $module_data . "_size` WHERE `product_id` = " . $id);
 			while($row = $db->sql_fetch_assoc($query)) {
 				$size_type[] = $row;
 			}
@@ -38,16 +40,32 @@ if (!is_numeric($num) || $num < 0) {
       if (!isset($_SESSION[$module_data . '_cart'])) {
 				$_SESSION[$module_data . '_cart'] = array();
 			}
+			$idp = count($_SESSION[$module_data . '_cart']);
+
+			if($data_content["product_discounts"] > 0) {
+				$price = $data_content["product_discounts"];
+			}
+			else {
+				$price = $data_content["product_price"];
+			}
+			if(!empty($size_type)) {
+				$size_min = 0;
+				$price_min = 0;
+				foreach ($size_type as $index => $size_data) {
+					if ($price_min == 0 || $size_data['product_price'] < $price_min) {
+						$size = $size_data["size"];
+						$price = $size_data["product_price"];
+					}
+				}
+			}
+
 			$_SESSION[$module_data . '_cart'][] = array(
-				'id' => $id, 'num' => 1, 'size' => $size, 'price' => $price, 'size_type' => $size_type, 'order' => 0, 'data' => $data_content, 'link_pro' => $link . $global_array_cat[$data_content["listcatid"]]['alias'] . "/" . $data_content["vi_alias"] . "-" . $data_content["id"], "link_remove" => $link . "remove&id=" . $data_content["id"]
+				'id' => $id, 'num' => 1, 'size' => $size, 'price' => $price, 'size_type' => $size_type, 'order' => 0, 'data' => $data_content, 'link_pro' => $link . $global_array_cat[$data_content["listcatid"]]['alias'] . "/" . $data_content["vi_alias"] . "-" . $data_content["id"], "link_remove" => $link . "remove&id=" . $idp
 			);
 			$title = str_replace("_", "#@#", $data_content[NV_LANG_DATA . '_title']);
 			$contents = sprintf($lang_module['set_cart_success'], $title);
 			$contents_msg = 'OK_' . $contents;
 		}
-		// else {
-		// 	die(json_encode($id));
-		// }
   } else {
     if ($id > 0) {
 			foreach ($_SESSION[$module_data . '_cart'] as $index => $cart) {
@@ -58,9 +76,6 @@ if (!is_numeric($num) || $num < 0) {
 				}
 			}
     }
-		// else {
-		// 	die(json_encode($id));
-		// }
   }
 }
 include ( NV_ROOTDIR . "/includes/header.php" );

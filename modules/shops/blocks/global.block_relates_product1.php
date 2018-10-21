@@ -132,7 +132,7 @@ if(!nv_function_exists('nv_relates_product1')) {
 			}
 							
 			//print_r($row);exit();
-			$xtpl->assign('LINK_FULL',$link . $row['vi_alias'] );
+			$xtpl->assign('LINK_FULL', $link . $row['vi_alias'] . "&sort=1");
 			$xtpl->assign('TITLE',$row['vi_title'] );
 			
 			$xtpl->assign('link', $link . $row['vi_alias'] . "/" . $l['alias'] . "-" . $l['id']);
