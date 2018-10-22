@@ -305,13 +305,12 @@ define('NV_REFSTAT_TABLE', NV_PREFIXLANG . '_referer_stats');
 $sql = "SELECT `module`, `config_name`, `config_value` FROM `" . NV_CONFIG_GLOBALTABLE . "` WHERE `lang`='" . NV_LANG_DATA . "' ORDER BY `module` ASC";
 $list = nv_db_cache($sql, '', 'settings');
 foreach ($list as $row) {
-  if ($row['module'] == "global") {
-    $global_config[$row['config_name']] = $row['config_value'];
+	if ($row['module'] == "global") {
+		$global_config[$row['config_name']] = $row['config_value'];
   } else {
-    $module_config[$row['module']][$row['config_name']] = $row['config_value'];
+		$module_config[$row['module']][$row['config_name']] = $row['config_value'];
   }
 }
-
 if (!isset($global_config['upload_checking_mode']) or ! in_array($global_config['upload_checking_mode'], array("mild", "lite", "none"))) {
   $global_config['upload_checking_mode'] = "strong";
 }

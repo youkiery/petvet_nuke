@@ -11,7 +11,6 @@ $re = $db->sql_query("SELECT *  FROM `" . $table_name . "` WHERE `order_id`=" . 
 $data_content = $db->sql_fetchrow($re, 2);
 if (empty($data_content))
 	Header("Location: " . NV_BASE_ADMINURL . "index.php?" . NV_NAME_VARIABLE . "=" . $module_name . "&" . NV_OP_VARIABLE . "=order");
-die(var_dump($data_content));
 if ($save == 1 and intval($data_content['transaction_status']) == - 1) {
   $order_id = $nv_Request->get_int('order_id', 'post', 0);
   $transaction_status = 0;

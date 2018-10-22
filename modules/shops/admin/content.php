@@ -388,7 +388,6 @@ if ($nv_Request -> get_int('save', 'post') == 1) {
 				// zsize insert
 				$array_size = $nv_Request -> get_typed_array('zsize', 'post', 'string');
 				$array_price = $nv_Request -> get_typed_array('zprice', 'post', 'string');
-				$array_size = json_decode(strtoupper(json_encode($array_size)));				
 				$size_length = count($array_size);
 				$array_update = array();
 				
@@ -402,10 +401,9 @@ if ($nv_Request -> get_int('save', 'post') == 1) {
 					$temp["action"] = 0; // 0: remove, 1: insert, 2: update
 					$array_update[] = $temp;
 				}
-				
 				foreach ($array_size as $si => $s) {
 					$temp = array();
-					$temp["size"] = $s;
+					$temp["size"] = mb_strtoupper($s);
 					$temp["price"] = $array_price[$si];
 					$check = false;
 					$uid = -1;
@@ -429,7 +427,7 @@ if ($nv_Request -> get_int('save', 'post') == 1) {
 				foreach ($array_update as $sdi => $sd) {
 					switch ($sd["action"]) {
 						case 1:
-							$sql2 = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_size` (product_id, size, product_price) values(".$rowcontent['id'].", '" . $sdi . "', ".$sd["price"] .")";
+							$sql2 = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_size` (product_id, size, product_price) values(".$rowcontent['id'].", '" . $sd["size"] . "', ".$sd["price"] .")";
 							$db->sql_query($sql2);	
 						break;
 						case 2:

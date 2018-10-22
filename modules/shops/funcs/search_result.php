@@ -75,15 +75,14 @@ if ($keyword != "") {
 	$search = " AND `" . NV_LANG_DATA . "_title` like '%" . $db->dblikeescape($keyword) . "%' ";
 }
 
-
 if (($price1 >= 0 && $price2 > 0)) {
-	$search .= " AND product_discounts BETWEEN " . $price1 . " AND " . $price2 . " ";
+	$search .= " AND product_discounts BETWEEN " . $price1 . " AND " . $price2 . " or product_price BETWEEN " . $price1 . " AND " . $price2;
 }
 elseif ($price2 == -1 && $price1 >= 0) {
-	$search .= " AND product_discounts >= " . $price1 . " ";	
+	$search .= " AND product_discounts >= " . $price1 . " or product_price BETWEEN " . $price1 . " AND " . $price2;	
 }
 elseif ($price1 == -1 && $price2 > 0) {
-	$search .= " AND product_discounts >= " . $price2 . " ";	
+	$search .= " AND product_discounts >= " . $price2 . " or product_price BETWEEN " . $price1 . " AND " . $price2;	
 }
 
 
@@ -108,7 +107,6 @@ if (empty($search)) {
 	exit();
 }
 
-$show_price = "";
 
 $sql = "SELECT SQL_CALC_FOUND_ROWS id,listcatid, publtime, " . NV_LANG_DATA . "_title," . NV_LANG_DATA . "_alias, " . NV_LANG_DATA . "_hometext, " . NV_LANG_DATA . "_address, homeimgalt, homeimgthumb, product_price,product_discounts, money_unit,showprice, homeimgfile  FROM `" . $db_config['prefix'] . "_" . $module_data . "_rows` WHERE inhome=1 " . $search . " AND status=1 ". $show_price." AND publtime < " . NV_CURRENTTIME . " AND (exptime=0 OR exptime>" . NV_CURRENTTIME . ") ORDER BY ID DESC LIMIT " . $page . "," . $per_page . "";
 $result = $db->sql_query($sql);

@@ -4,7 +4,7 @@
  * @Project NUKEVIET 3.0
  * @Author VINADES.,JSC (contact@vinades.vn)
  * @Copyright (C) 2010 VINADES.,JSC. All rights reserved
- * @Createdate Thu, 04 Aug 2016 15:47:16 GMT
+ * @Createdate Sun, 21 Oct 2018 08:08:57 GMT
  */
 
 if ( ! defined( 'NV_MAINFILE' ) )
