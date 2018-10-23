@@ -40,8 +40,10 @@
 			<!-- BEGIN: customer -->		
 			<tr id="customer_{index}">
 				<td id="customer_name_{index}">
-					{name}
-				</td>				
+					<a href="{detail_link}">
+						{name}
+					</a>
+				</td>
 				<td id="customer_phone_{index}">
 					{phone}
 				</td>				

@@ -10,32 +10,31 @@
 						{lang.petname}
 					</th>				
 					<th>
-						{lang.note}
-					</th>				
+						{lang.customer}
+					</th>
 					<th>
-						
+						{lang.phone}
 					</th>
 				</tr>
 			</thead>
 			<tbody id="vac_body">
 				<!-- BEGIN: patient -->		
 				<tr id="patient_{index}">
-					<td id="patient_name_{index}">
-						{name}
+					<td id="patient_index_{index}">
+						{index}
+					</td>				
+					<td>
+						<a href="{detail_link}"  id="patient_petname_{index}">
+							{petname}
+						</a>
+					</td>				
+					<td>
+						<a href="{detail_link2}"  id="patient_customer_{index}">
+							{customer}
+						</a>
 					</td>				
 					<td id="patient_phone_{index}">
 						{phone}
-					</td>				
-					<td id="patient_note_{index}">
-						{note}
-					</td>
-					<td>
-						<button onclick="vac_remove_patient({index})">
-							{lang.remove}
-						</button>
-						<button onclick="vac_get_update_patient({index}, '{name}', '{phone}', '{note}')">
-							{lang.update}
-						</button>
 					</td>
 				</tr>
 				<!-- END: patient -->

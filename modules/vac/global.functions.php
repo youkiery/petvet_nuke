@@ -45,12 +45,42 @@ function getVaccineTable($id, $time) {
 }
 function getPatientsList() {
 	global $db, $db_config, $module_name;
-	$sql = "select b.name as petname, c.name as customer, c.phone as phone from " . $db_config['prefix'] . "_" . $module_name . "_pets b inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id";
+	$sql = "select b.id, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone from " . $db_config['prefix'] . "_" . $module_name . "_pets b inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id";
 	$result = $db->sql_query($sql);
 	$patients = array();
 	while($row = $db->sql_fetch_assoc($result)) {
 		$patients[] = $row;
 	}
 	return $patients;
+}
+function getPatientsList2($customerid) {
+	global $db, $db_config, $module_name;
+	$sql = "select * from " . $db_config['prefix'] . "_" . $module_name . "_customers where id = $customerid";
+	$result = $db->sql_query($sql);
+	$patients = $db->sql_fetch_assoc($result);
+	$patients["data"] = array();
+	$sql = "select name as petname, id from " . $db_config['prefix'] . "_" . $module_name . "_pets where customerid = $customerid";
+	$result = $db->sql_query($sql);
+	$diseases = getDiseaseList();
+	while($row = $db->sql_fetch_assoc($result)) {
+		$petid = $row["id"];
+		$sql = "SELECT * from	( (select *, 1 as disease from vng_vac_1 LIMIT 1) UNION  (select *, 2 as disease  from vng_vac_2 LIMIT 1) UNION  (select *, 3 as disease from vng_vac_3 LIMIT 1) ) as a limit 1";
+		$result2 = $db->sql_query($sql);
+		$row2 = $db->sql_fetch_assoc($result2);
+		if(!empty($row2)) {
+			$patients["data"][] = array("petid" => $row["id"], "petname" => $row["petname"], "lastcome" => $row2["cometime"], "lastname" => $diseases[$row2["disease"] - 1]);
+		}
+		else {
+			$patients["data"][] = array("petid" => $row["id"], "petname" => $row["petname"], "lastcome" => "", "lastname" => "");
+		}
+	}
+	return $patients;
+}
+
+function getPatientDetail($petid) {
+	global $db, $db_config, $module_name;
+	$sql = "select b.name as petname, c.name as customer, c.phone as phone from " . $db_config['prefix'] . "_" . $module_name . "_pets b inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.id = $petid and b.customerid = c.id";
+	$result = $db->sql_query($sql);
+	return $db->sql_fetch_assoc($result);
 }
 ?>

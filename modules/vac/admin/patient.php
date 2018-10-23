@@ -7,8 +7,9 @@
 */
 
 if (!defined('NV_IS_VAC_ADMIN')) die('Stop!!!');
+$link = NV_BASE_ADMINURL . "index.php?" . NV_NAME_VARIABLE . "=" . $module_name . "&" . NV_OP_VARIABLE . "=";
 
-$id = $nv_Request->get_string('id', 'get', "");
+$petid = $nv_Request->get_string('petid', 'get', "");
 $action = $nv_Request->get_string('action', 'post', "");
 
 if($action) {
@@ -52,14 +53,14 @@ if($action) {
 	// die();
 }
 
-if (!empty($id)) {
-	// $page_title = $lang_module["patient_title1"];
-	// $patient = getPatientDetail();
-	// $xtpl = new XTemplate("patient1.tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file);
-	// $xtpl->assign("lang", $lang_module);
-	// $xtpl->assign("name", $patient["name"]);
-	// $xtpl->assign("customer", $patient["customer"]);
-	// $xtpl->assign("phone", $patient["phone"]);
+if (!empty($petid)) {
+	$page_title = $lang_module["patient_title1"];
+	$patient = getPatientDetail($petid);
+	$xtpl = new XTemplate("patient1.tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file);
+	$xtpl->assign("lang", $lang_module);
+	$xtpl->assign("name", $patient["petname"]);
+	$xtpl->assign("customer", $patient["customer"]);
+	$xtpl->assign("phone", $patient["phone"]);
 
 	// foreach ($patient["data"] as $key => $patient_data) {
 	// 	$cometime = date("d/m/Y H:i", $patient_data["cometime"]);
@@ -69,23 +70,6 @@ if (!empty($id)) {
 	// 	$xtpl->assign("name", $cometime);
 	// 	$xtpl->assign("customer", $calltime);
 	// 	$xtpl->assign("phone", $confirm);
-	// 	$xtpl->parse("main.vac");
-	// }
-}
-else if (!empty($customerid)) {
-	// $page_title = $lang_module["patient_title2"];
-	// $patients = getPatientsList($customerid);
-	// $xtpl = new XTemplate("patient2.tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file);
-	// $xtpl->assign("lang", $lang_module);
-	// $xtpl->assign("name", $patient["name"]);
-	// $xtpl->assign("phone", $patient["phone"]);
-	// $xtpl->assign("note", $patient["note"]);
-
-	// foreach ($patients["data"] as $key => $patient_data) {
-	// 	$lasttime = date("d/m/Y H:i", $patient_data["lasttime"]);
-	// 	$xtpl->assign("petname", $patient_data["petname"]);
-	// 	$xtpl->assign("lasttime", $lasttime);
-	// 	$xtpl->assign("lastname", $patient_data["lastname"]);
 	// 	$xtpl->parse("main.vac");
 	// }
 }
@@ -100,9 +84,11 @@ else {
 		$xtpl->assign("index", $index);
 		$xtpl->assign("id", $patient_data["id"]);
 		$xtpl->assign("petname", $patient_data["petname"]);
+		$xtpl->assign("detail_link", $link  . "patient&petid=" . $patient_data["id"]);
+		$xtpl->assign("detail_link2", $link  . "customer&customerid=" . $patient_data["customerid"]);
 		$xtpl->assign("customer", $patient_data["customer"]);
 		$xtpl->assign("phone", $patient_data["phone"]);
-		$xtpl->parse("main.vac");
+		$xtpl->parse("main.patient");
 		$index ++;
 	}
 }
