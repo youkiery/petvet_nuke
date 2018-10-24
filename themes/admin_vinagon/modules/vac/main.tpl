@@ -3,7 +3,7 @@
 	<table class="vng_vacbox tab1">
 		<thead>
 			<tr>
-				<th colspan="4" class="vng_vacbox_title" style="text-align: center">
+				<th colspan="6" class="vng_vacbox_title" style="text-align: center">
 					{title}
 				</th>
 			</tr>
@@ -20,23 +20,39 @@
 				<th>
 					{lang.phone}
 				</th>				
+				<th>
+					{lang.cometime}
+				</th>				
+				<th>
+					{lang.calltime}
+				</th>				
 			</tr>
 		</thead>
 		<tbody>
 			<!-- BEGIN: vac_body -->		
 			<tr>
-				<th>
+				<td>
 					{index}
-				</th>				
-				<th>
-					{petname}
-				</th>				
-				<th>
-					{customer}
-				</th>				
-				<th>
+				</td>				
+				<td>
+					<a href="{pet_link}">
+						{petname}
+					</a>
+				</td>				
+				<td>
+					<a href="{customer_link}">
+						{customer}
+					</a>
+				</td>				
+				<td>
 					{phone}
-				</th>				
+				</td>				
+				<td>
+					{cometime}
+				</td>				
+				<td>
+					{calltime}
+				</td>				
 			</tr>
 			<!-- END: vac_body -->
 		</tbody>

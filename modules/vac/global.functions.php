@@ -20,6 +20,7 @@ function getDiseaseList() {
 	}
 	return $diseases;
 }
+
 function getCustomerList() {
 	global $db, $db_config, $module_name;
 	$sql = "select * from " . $db_config['prefix'] . "_" . $module_name . "_customers";
@@ -30,12 +31,13 @@ function getCustomerList() {
 	}
 	return $customers;
 }
+
 function getVaccineTable($id, $time) {
 	// next a week
 	global $db, $db_config, $module_name;
 	$next_week = $time + NV_NEXTWEEK;
 	
-	$sql = "select b.name as petname, c.name as customer, c.phone as phone from " . $db_config['prefix'] . "_" . $module_name . "_" . $id . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime between " . $time . " and " . $next_week . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on a.customerid = c.id";
+	$sql = "select b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime from " . $db_config['prefix'] . "_" . $module_name . "_" . $id . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime between " . $time . " and " . $next_week . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id";
 	$result = $db->sql_query($sql);
 	$vaccines = array();
 	while($row = $db->sql_fetch_assoc($result)) {
@@ -43,6 +45,7 @@ function getVaccineTable($id, $time) {
 	}
 	return $vaccines;
 }
+
 function getPatientsList() {
 	global $db, $db_config, $module_name;
 	$sql = "select b.id, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone from " . $db_config['prefix'] . "_" . $module_name . "_pets b inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id";
@@ -53,6 +56,7 @@ function getPatientsList() {
 	}
 	return $patients;
 }
+
 function getPatientsList2($customerid) {
 	global $db, $db_config, $module_name;
 	$sql = "select * from " . $db_config['prefix'] . "_" . $module_name . "_customers where id = $customerid";
@@ -64,7 +68,14 @@ function getPatientsList2($customerid) {
 	$diseases = getDiseaseList();
 	while($row = $db->sql_fetch_assoc($result)) {
 		$petid = $row["id"];
-		$sql = "SELECT * from	( (select *, 1 as disease from vng_vac_1 LIMIT 1) UNION  (select *, 2 as disease  from vng_vac_2 LIMIT 1) UNION  (select *, 3 as disease from vng_vac_3 LIMIT 1) ) as a limit 1";
+		$union = array();
+		foreach ($diseases as $key => $value) {
+			$key ++;
+			$union[] = "(select *, $key as disease from vng_vac_$key where petid = $petid order by cometime LIMIT 1)";
+		}
+		// $sql = "SELECT * from	( (select *, 1 as disease from vng_vac_1 LIMIT 1) UNION  (select *, 2 as disease  from vng_vac_2 LIMIT 1) UNION  (select *, 3 as disease from vng_vac_3 LIMIT 1) ) as a limit 1";
+		$sql = "SELECT * from	( " . implode(" union ", $union) . ") as a limit 1";
+		// die($sql);
 		$result2 = $db->sql_query($sql);
 		$row2 = $db->sql_fetch_assoc($result2);
 		if(!empty($row2)) {
@@ -81,6 +92,21 @@ function getPatientDetail($petid) {
 	global $db, $db_config, $module_name;
 	$sql = "select b.name as petname, c.name as customer, c.phone as phone from " . $db_config['prefix'] . "_" . $module_name . "_pets b inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.id = $petid and b.customerid = c.id";
 	$result = $db->sql_query($sql);
-	return $db->sql_fetch_assoc($result);
+	$patients = $db->sql_fetch_assoc($result);
+	$patients["data"] = array();
+	
+	$diseases = getDiseaseList();
+	$union = array();
+	foreach ($diseases as $key => $value) {
+		$key ++;
+		$union[] = "(select *, $key as disease from vng_vac_$key where petid = $petid)";
+	}
+	$sql = "SELECT * from	( " . implode(" union ", $union) . ") as a";
+	$result = $db->sql_query($sql);
+	while($row = $db->sql_fetch_assoc($result)) {
+		$patients["data"][] = $row;
+	}
+	return $patients;
 }
+
 ?>

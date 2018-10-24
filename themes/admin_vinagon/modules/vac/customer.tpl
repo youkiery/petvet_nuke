@@ -1,22 +1,46 @@
 <!-- BEGIN: main -->
-<form id="vac_panel" onsubmit="return vac_add_customer()">
-	<label for="customer">
-		{lang.customer}
-	</label>
-	<input class="vac_val" style="display: block;" type="text" name="customer" id="customer">
-	<label for="phone">
-		{lang.phone}
-	</label>
-	<input class="vac_val" style="display: block;" type="number" maxlength="15" name="phone" id="phone">
-	<label for="note">
-		{lang.note}
-	</label>
-	<input class="vac_val" style="display: block;" type="text" name="note" id="note">
-	<input type="submit" id="vac_button_panel" value="{lang.add}">
+<form id="vac_panel"  onsubmit="return vac_add_customer()">
+	<table class="tab1">
+		<tbody>
+			<tr>
+				<td>
+					<label for="customer">
+						{lang.customer}
+					</label>
+				</td>
+				<td>
+					<input class="vac_val" style="display: block;" type="text" name="customer" id="customer">
+				</td>
+				<td rowspan="2">
+					<label for="note">
+						{lang.note}
+					</label>
+				</td>
+				<td rowspan="2">
+					<input class="vac_val" style="display: block; height: 40px;" type="text" name="note" id="note">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="phone">
+						{lang.phone}
+					</label>
+				</td>
+				<td>
+					<input class="vac_val" style="display: block;" type="number" maxlength="15" name="phone" id="phone">
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4" style="text-align: center;">
+					<input type="submit" id="vac_button_panel" value="{lang.add}">
+					<button id="update" onclick="vac_update_customer(-1)">
+						{lang.update}
+					</button>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 </form>
-<button id="update" onclick="vac_update_customer(-1)">
-	{lang.update}
-</button>
 <div id="vac_notify" style="color: orange; background: gray; width: fit-content; display: none;"> Chọn hành động </div>
 <div class="vng_body" style="height: 426px;overflow-y: scroll;">
 	<table class="vng_vacbox tab1">
@@ -39,8 +63,8 @@
 		<tbody id="vac_body">
 			<!-- BEGIN: customer -->		
 			<tr id="customer_{index}">
-				<td id="customer_name_{index}">
-					<a href="{detail_link}">
+				<td>
+					<a href="{detail_link}" id="customer_name_{index}">
 						{name}
 					</a>
 				</td>

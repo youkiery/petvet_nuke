@@ -5,29 +5,30 @@
 * @Copyright (C) 2011
 * @Createdate 26-01-2011 14:43
 */
-
 if (!defined('NV_IS_VAC_ADMIN')) die('Stop!!!');
 $link = NV_BASE_ADMINURL . "index.php?" . NV_NAME_VARIABLE . "=" . $module_name . "&" . NV_OP_VARIABLE . "=";
 
 $petid = $nv_Request->get_string('petid', 'get', "");
 $action = $nv_Request->get_string('action', 'post', "");
-
 if($action) {
-	// switch ($action) {
-	// 	case "add":
-	// 		$name = $nv_Request -> get_string('customer', 'post', '');
-	// 		$phone = $nv_Request -> get_string('phone', 'post', '');
-	// 		$note = $nv_Request -> get_string('note', 'post', '');
-	// 		if(!(empty($name) || empty($phone))) {
-	// 			$sql2 .= "insert into `" . $db_config['prefix'] . "_" . $module_data . "_customers` (name, phone, note) values('$name', '$phone', '$note');";
-				
-	// 			$id = $db->sql_query_insert_id($sql2);
-	// 			if($id){
-	// 				$row = array("id" => $id, "name" => $name, "phone" => $phone, "note" => $note);
-	// 				echo json_encode($row);
-	// 			}
-	// 		}
-	// 	break;
+	switch ($action) {
+		case "addvac":
+			$petid = $nv_Request->get_string('petid', 'post', '');
+			$diseaseid = $nv_Request->get_string('diseaseid', 'post', '');
+			$cometime = $nv_Request->get_string('cometime', 'post', '');
+			$calltime = $nv_Request->get_string('calltime', 'post', '');
+			if(!(empty($petid) || empty($diseaseid) || empty($cometime) || empty($calltime))) {
+				$cometime = strtotime($cometime);
+				$calltime = strtotime($calltime);
+				$sql2 = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_$diseaseid` (petid, cometime, calltime, confirm) values('$petid', $cometime, $calltime, false);";
+				$id = $db->sql_query_insert_id($sql2);
+
+				if($id){
+					$row = array("id" => $id, "cometime" => date("d/m/Y", $cometime), "calltime" => date("d/m/Y", $calltime), "confirm" => $lang_module["no"]);
+					echo json_encode($row);
+				}
+			}
+		break;
 	// 	case "remove":
 	// 		$id = $nv_Request->get_string('id', 'post', '');
 	// 		if(!empty($id)) {
@@ -48,9 +49,9 @@ if($action) {
 	// 			}
 	// 		}
 	// 	break;
-	// } 
+	} 
 
-	// die();
+	die();
 }
 
 if (!empty($petid)) {
@@ -58,20 +59,32 @@ if (!empty($petid)) {
 	$patient = getPatientDetail($petid);
 	$xtpl = new XTemplate("patient1.tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file);
 	$xtpl->assign("lang", $lang_module);
+	$xtpl->assign("id", $petid);
 	$xtpl->assign("name", $patient["petname"]);
 	$xtpl->assign("customer", $patient["customer"]);
 	$xtpl->assign("phone", $patient["phone"]);
+	$xtpl->assign("time", date("Y-m-j"));
+	$xtpl->assign("time2", date("Y-m-j", (NV_CURRENTTIME + 30 * 24 * 60 * 60)));
+	$diseases = getDiseaseList();
 
-	// foreach ($patient["data"] as $key => $patient_data) {
-	// 	$cometime = date("d/m/Y H:i", $patient_data["cometime"]);
-	// 	$calltime = date("d/m/Y H:i", $patient_data["calltime"]);
-	// 	if ($patient_data["confirm"]) $confirm = $lang_module["yes"];
-	// 	else $confirm = $lang_module["no"];
-	// 	$xtpl->assign("name", $cometime);
-	// 	$xtpl->assign("customer", $calltime);
-	// 	$xtpl->assign("phone", $confirm);
-	// 	$xtpl->parse("main.vac");
-	// }
+	foreach ($diseases as $key => $value) {
+		$xtpl->assign("diseaseid", $value["id"]);
+		$xtpl->assign("diseasename", $value["name"]);
+		$xtpl->parse("main.option");
+	}
+
+	foreach ($patient["data"] as $key => $patient_data) {
+		$cometime = date("d/m/Y", $patient_data["cometime"]);
+		$calltime = date("d/m/Y", $patient_data["calltime"]);
+		if ($patient_data["confirm"]) $confirm = $lang_module["yes"];
+		else $confirm = $lang_module["no"];
+		$xtpl->assign("index", $patient_data["id"]);
+		$xtpl->assign("disease", $diseases[$patient_data["disease"] - 1]["name"]);
+		$xtpl->assign("cometime", $cometime);
+		$xtpl->assign("calltime", $calltime);
+		$xtpl->assign("confirm", $confirm);
+		$xtpl->parse("main.vac");
+	}
 }
 else {
 	$page_title = $lang_module["patient_title3"];

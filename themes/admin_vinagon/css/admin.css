@@ -971,3 +971,22 @@ html[xmlns] .clearfix {
 	animation-timing-function:ease-in-out;
 	animation-direction: alternate;
 }
+table.tab1 tbody tr:nth-child(even) {background: #F7F7F7}
+table.tab1 tbody tr:nth-child(odd) {background: #EEE}
+table.tab1 tbody tr:hover {
+	background: #E4E4E4;
+}
+.vac_list {
+	list-style-type: none;
+	margin: 4px 0px;
+}
+.vac_list li {
+	height: 1.5em;
+	line-height: 1.5em;
+	padding: 4px;
+}
+.vac_list li:nth-child(even) {background: #F7F7F7}
+.vac_list li:nth-child(odd) {background: #EEE}
+.vac_list:hover {
+	background: #E4E4E4;
+}

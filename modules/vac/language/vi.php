@@ -8,8 +8,10 @@ $lang_translator['langtype'] = "lang_module";
 
 // main
 $lang_module["main_title"] = "Danh sách nhắc tiêm phòng";
+$lang_module["submit"] = "Xác nhận";
 $lang_module["index"] = "STT";
 $lang_module["phone"] = "Số liên hệ";
+$lang_module["address"] = "Địa chỉ";
 //disease
 $lang_module["disease_title"] = "Quản lý tiêm phòng";
 $lang_module["disease"] = "Loại tiêm phòng";

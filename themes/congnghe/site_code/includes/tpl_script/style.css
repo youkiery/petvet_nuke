@@ -1260,3 +1260,11 @@ display: inline;
     margin-top: 24px;
     padding-top: 5px; }
 .dt_ndung .dt_cttk .dt_font16 { font-weight:bold}
+
+.vac tbody tr td, .vac thead tr th {
+	text-align: center;
+}
+.vac tbody tr td input, .vac tbody tr td textarea {
+	padding: 4px;
+	width: 90%;
+}

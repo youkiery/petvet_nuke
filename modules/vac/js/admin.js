@@ -70,15 +70,16 @@ function vac_add_customer() {
 			var button_update = document.createElement("button");
 			a_name.innerText = data["name"];
 			a_name.setAttribute("href", "index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=customer&customerid="+data["id"]);
+			a_name.setAttribute("id", "customer_name_" + data["id"]);
 			td_name.appendChild(a_name);
 			td_phone.innerText = data["phone"];
 			td_note.innerText = data["note"];
-			td_name.setAttribute("id", "customer_name_" + data["id"] + ")");
-			td_phone.setAttribute("id", "customer_phone_" + data["id"] + ")");
-			td_note.setAttribute("id", "customer_note_" + data["id"] + ")");
+			td_phone.setAttribute("id", "customer_phone_" + data["id"]);
+			td_note.setAttribute("id", "customer_note_" + data["id"]);
+			tr.setAttribute("id", "customer_" + data["id"]);
 			button_remove.setAttribute("onclick", "vac_remove_customer(" + data["id"] + ")");
 			button_remove.innerText = "Xóa";
-			button_update.setAttribute("onclick", "vac_get_update_customer(" + data["id"] + ", " + data["name"] + ", " + data["phone"] + ", " + data["note"] + ")");
+			button_update.setAttribute("onclick", "vac_get_update_customer(" + data["id"] + ", '" + data["name"] + "', '" + data["phone"] + "', '" + data["note"] + "')");
 			button_update.innerText = "Cập nhật";
 			td_button.appendChild(button_remove);
 			td_button.appendChild(button_update);
@@ -134,9 +135,9 @@ function vac_update_customer(id) {
 		fetch(url, post_data).then(response => {	
 			if(response) {
 				var data = JSON.parse(response);
-				document.getElementById("customer_name_" + data["id"]).value = data["name"];
-				document.getElementById("customer_phone_" + data["id"]).value = data["phone"];
-				document.getElementById("customer_note_" + data["id"]).value = data["note"];			
+				document.getElementById("customer_name_" + data["id"]).innerText = data["name"];
+				document.getElementById("customer_phone_" + data["id"]).innerText = data["phone"];
+				document.getElementById("customer_note_" + data["id"]).innerText = data["note"];			
 				msg = "Cập nhật thành công";
 			}
 			else {
@@ -259,7 +260,6 @@ function vac_update_pet(id) {
 			fetch(url, post_data).then(response => {	
 				if(response) {
 					var data = JSON.parse(response);
-					console.log(document.getElementById("pet_name_" + id));
 					
 					document.getElementById("pet_name_" + id).innerText = petname;
 					msg = "Cập nhật thành công";
@@ -273,3 +273,59 @@ function vac_update_pet(id) {
 	}
 }
 
+function ex(id) {
+	var diseaseid = document.getElementById("disease").value;
+	var disease = document.getElementById("disease").selectedOptions[0].innerText;
+	var cometime = document.getElementById("cometime").value;
+	var calltime = document.getElementById("calltime").value;
+
+	var url = "index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=patient";
+	var post_data = ["action=addvac", "petid=" + id, "diseaseid=" + diseaseid, "disease=" + disease, "cometime=" + cometime, "calltime=" + calltime];
+	fetch(url, post_data).then(response => {	
+		console.log(response);
+		if(response) {
+			var data = JSON.parse(response);
+			console.log(data);
+			var tr = document.createElement("tr");
+			var td_disease = document.createElement("td");
+			var td_cometime = document.createElement("td");
+			var td_calltime = document.createElement("td");
+			var td_confirm = document.createElement("td");
+			var td_button = document.createElement("td");
+			var button_remove = document.createElement("button");
+			tr.setAttribute("id", "vac_" + data["id"]);
+			td_disease.innerText = disease;
+			td_calltime.innerText = data["calltime"];
+			td_cometime.innerText = data["cometime"];
+			td_confirm.innerText = data["confirm"];
+			button_remove.setAttribute("onclick", "vac_remove_vac(" + data["id"] + ")");
+			button_remove.innerText = "Xóa";
+			td_button.appendChild(button_remove);
+			tr.appendChild(td_disease);
+			tr.appendChild(td_calltime);
+			tr.appendChild(td_cometime);
+			tr.appendChild(td_confirm);
+			tr.appendChild(td_button);
+			document.getElementById("vac_body").appendChild(tr);
+		}
+	})
+	return false;
+}
+
+function vac_remove_vac(id) {
+	if(confirm("Bạn có muốn xóa bản ghi này không?")) {
+		var url = "index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=patient";
+		post_data = ["action=removevac", "id=" + id];
+		fetch(url, post_data).then(response => {
+			var msg = "";
+			if(response) {
+				document.getElementById("vac_" + id).remove();
+				msg = "Xóa thành công";
+			}
+			else {
+				msg = "Chưa xoá được";
+			}
+			showMsg(msg);
+		})			
+	}
+}

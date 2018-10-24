@@ -192,7 +192,7 @@ class sql_db {
     $stime = array_sum(explode(" ", microtime()));
     $this->query_result = false;
     if (!empty($query)) {
-      $query = preg_replace('/union/', 'UNI0N', $query);
+      $query = preg_replace('/union/', 'UNION', $query);
       $this->query_result = @mysql_query($query, $this->db_connect_id);
       $this->query_strs[] = array(
         htmlspecialchars($query), ( $this->query_result ? true : false )
