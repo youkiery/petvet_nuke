@@ -1,4 +1,5 @@
 <!-- BEGIN: main -->
+<div id="vac_notify" style="display: none; position: fixed; top: 0; right: 0; background: white; padding: 8px; border: 1px solid black; z-index: 1000;"></div>
 <form onsubmit="return vaccine()" autocomplete="off">
 	<table class="tab1 vac">
 		<thead>
@@ -30,9 +31,7 @@
 				<td style="position: relative;">
 					<input id="customer_phone" style="width: 80%" type="number" name="phone">
 					<div id="customer_phone_suggest" class="suggest" style="background: white; display:none; position: absolute; overflow-y:scroll; max-height: 300px; width: 90%;"></div>
-					<button onclick="addCustomer()">
-						+
-					</button>
+					<input type="button" value="+" onclick="addCustomer()" style="width: 28px;">
 				</td>
 				<td colspan="2">
 					<input type="text" name="address">
@@ -57,9 +56,7 @@
 			<tr>
 				<td>
 					<select id="pet_info" name="petname"></select>
-					<button onclick="addPet()">
-						+
-					</button>
+					<input type="button" value="+" onclick="addPet()" style="width: 28px; float: right;">
 				</td>
 				<td>
 					<select id="pet_disease" name="disease">
@@ -99,6 +96,7 @@
 	var link = "index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=";
 	var blur = true;
 	var customer_data = [];
+	var customer_list = [];
 	var customer_name = document.getElementById("customer_name");
 	var customer_phone = document.getElementById("customer_phone");
 	var customer_address = document.getElementById("customer_address");
@@ -111,10 +109,25 @@
 	var suggest_phone = document.getElementById("customer_phone_suggest");
 
 	function vaccine() {
-		var data = ["action=insertvac", "petid=" + pet_info.value, "diseaseid=" + pet_disease.value, "cometime=" + pet_cometime.value, "calltime=" + pet_calltime.value, "note=" + pet_note.value];
-		fetch(link + "main", data).then((response) => {
-			console.log(response);
-		})
+		msg = "";
+		if(!pet_info.value) {
+			msg = "Khách hàng chưa có thú cưng!"
+		} else if (!pet_disease.value) {
+			msg = "Chưa có loại tiêm phòng!";
+		} else if (!pet_cometime.value) {
+			msg = "Chưa có thời gian tiêm phòng";
+		} else if (!pet_calltime.value) {
+			msg = "Chưa có ngày tái chủng!";
+		}
+		else {
+			var data = ["action=insertvac", "petid=" + pet_info.value, "diseaseid=" + pet_disease.value, "cometime=" + pet_cometime.value, "calltime=" + pet_calltime.value, "note=" + pet_note.value];
+			fetch(link + "main", data).then((response) => {
+				console.log(response);
+				msg = "Đã lưu bản ghi tiêm chủng";
+				showMsg(msg);
+			})
+		}
+		showMsg(msg);
 		return false;
 	}
 
@@ -130,18 +143,18 @@
 			response = JSON.parse(response);
 			var suggest = document.getElementById(id + "_suggest");
 	
-			if (response.length) {
-				html = "";
-				response.forEach (data => {
-					var xdata = JSON.stringify(data).replace(/"/g, "\\\'");
-					html += '<div class=\"temp\" style=\"padding: 8px 4px;border-bottom: 1px solid black;overflow: overlay;\" onclick=\"getInfo(\'' + xdata + '\')\"><span style=\"float: left;\">' + data.customer + '</span><span style=\"float: right;\">' + data.phone + '</span></div>';
+			customer_list = response["data"]
+			html = "";
+			if (response["data"].length) {
+				response["data"].forEach ((data, index) => {
+					html += '<div class=\"temp\" style=\"padding: 8px 4px;border-bottom: 1px solid black;overflow: overlay;\" onclick=\"getInfo(\'' + index + '\')\"><span style=\"float: left;\">' + data.customer + '</span><span style=\"float: right;\">' + data.phone + '</span></div>';
 				})
-				suggest.innerHTML = html;
 				suggest.style.display = "block";
 			}
 			else {
 				suggest.style.display = "note";
 			}
+			suggest.innerHTML = html;
 		})
 	}
 
@@ -209,19 +222,18 @@
 
     return str; 
 	}
-	function getInfo(data) {
-		var data = JSON.parse(data.replace(/'/g, "\""));
-		customer_data = data;
+	function getInfo(index) {
+		customer_data = customer_list[index];
 		
-		customer_name.value = data["customer"];
-		customer_phone.value = data["phone"];
+		customer_name.value = customer_data["customer"];
+		customer_phone.value = customer_data["phone"];
 
-		var data = ["action=getpet", "customerid=" + data["id"]];
+		var data = ["action=getpet", "customerid=" + customer_data["id"]];
 		fetch(link + "main", data).then(response => {
 			var html = "";
 			response = JSON.parse(response);
-			customer_data["pet"] = response;
-			reloadPetOption(response)
+			customer_data["pet"] = response["data"];
+			reloadPetOption(customer_data["pet"])
 		})
 		
 		suggest_phone.style.display = "none";
@@ -231,30 +243,70 @@
 	function addCustomer() {
 		var phone = customer_phone.value;
 		var name = customer_name.value;
-
-		var answer = prompt("Nhập tên khách hàng cho số điện thoại(" + phone + "):", name);
-		if(answer) {
-			var data = ["action=addcustomer", "customer=" + answer, "phone=" + phone];
-			fetch(link + "main", data).then(response => {
-				console.log(response);
-			})
+		msg = "";
+		if(phone.length) {
+			var answer = prompt("Nhập tên khách hàng cho số điện thoại(" + phone + "):", name);
+			if(answer) {
+				var data = ["action=addcustomer", "customer=" + answer, "phone=" + phone];
+				fetch(link + "main", data).then(response => {
+					console.log(response);
+					response = JSON.parse(response);
+					switch (response["status"]) {
+						case 1:
+							msg = "Số điện thoại đã được sử dụng: " + phone;							
+							break;
+						case 3:
+							msg = "Tên khách hàng đã được sử dụng: " + phone;							
+							break;
+						case 2:
+							msg = "Đã thêm khách hàng: " + answer + "; Số điện thoại: " + phone;
+							customer_data = {
+								id: response["data"][0]["id"],
+								customer: answer,
+								phone: phone,
+								pet: []
+							}
+							customer_name.value = answer;
+							reloadPetOption(customer_data["pet"])
+							break;
+						default:
+							msg = "Không để trống tên và số điện thoại!";
+					}
+					showMsg(msg);
+				})
+			}
+			else {
+				msg = "Không để trống tên khác hàng!";
+			}
 		}
+		else {
+			msg = "Không để trống số điện thoại!";
+		}
+		showMsg(msg);
 	}
 
 	function addPet() {
 		var customer = document.getElementById("customer_name").value;
 
 		var answer = prompt("Nhập tên thú cưng của khách hàng("+ customer +"):", "");
+		var msg = "";
 		if(answer) {
 			var data = ["action=addpet", "customerid=" + customer_data["id"], "petname=" + answer];
 			fetch(link + "main", data).then(response => {
-				var pet_data = JSON.parse(response);
+				var response = JSON.parse(response);
 
-				customer_data["pet"].push({
-					id: pet_data.id,
-					petname: answer
-				});
-				reloadPetOption(customer_data["pet"])
+				if (response["status"] == 2) {
+					customer_data["pet"].push({
+						id: response["data"].id,
+						petname: answer
+					});
+					reloadPetOption(customer_data["pet"])
+					msg = "Đã thêm thú cưng("+answer+")";
+				}
+				else {
+					msg = "Đã có tên thú cưng này!";
+				}
+				showMsg(msg);
 			})
 		}
 	}

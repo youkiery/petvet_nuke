@@ -9,6 +9,7 @@
 if ( ! defined( 'NV_IS_MOD_VAC' ) ) die( 'Stop!!!' );
 
 $action = $nv_Request->get_string('action', 'post', '');
+$ret = array("status" => 0, "data" => array());
 if (!empty($action)) {
 	switch ($action) {
 		case 'getcustomer':
@@ -22,9 +23,9 @@ if (!empty($action)) {
 			}
 
 			$result = $db->sql_query($sql);
-			$ret = array();
 			while ($row = $db->sql_fetch_assoc($result)) {
-				$ret[] = $row;
+				$ret["data"][] = $row;
+				$ret["status"] = 2;
 			}
 			echo json_encode($ret);
 		break;
@@ -33,9 +34,9 @@ if (!empty($action)) {
 			$sql = "select * from `" . $db_config['prefix'] . "_" . $module_data . "_pets` where customerid = $customerid";
 
 			$result = $db->sql_query($sql);
-			$ret = array();
 			while ($row = $db->sql_fetch_assoc($result)) {
-				$ret[] = $row;
+				$ret["data"][] = $row;
+				$ret["status"] = 2;
 			}
 			echo json_encode($ret);
 		break;
@@ -45,24 +46,48 @@ if (!empty($action)) {
 			$address = $nv_Request->get_string('address', 'post', '');
 
 			if (!(empty($customer) || empty($phone))) {
-				$sql = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_customers` (customer, phone, address) values ('$customer', $phone, '$address');";
-				if ($id = $db->sql_query_insert_id($sql)) {
-					$result = array("id" => $id);
-					echo json_encode($result);
+				$sql = "select * from `" . $db_config['prefix'] . "_" . $module_data . "_customers` where phone = '$phone'";
+				$result = $db->sql_query($sql);
+				if(!$db->sql_numrows($result)) {
+					$sql = "select * from `" . $db_config['prefix'] . "_" . $module_data . "_customers` where customer = '$customer'";
+					$result = $db->sql_query($sql);
+					if(!$db->sql_numrows($result)) {
+						$sql = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_customers` (customer, phone, address) values ('$customer', $phone, '$address');";
+						if ($id = $db->sql_query_insert_id($sql)) {
+							$ret["status"] = 2;	
+							$ret["data"][] = array("id" => $id);
+						}
+					}
+					else {
+						$ret["status"] = 3;
+					}
+				}
+				else {
+					$ret["status"] = 1;	
 				}
 			}
+			
+			echo json_encode($ret);
 		break;
 		case 'addpet':
 			$customerid = $nv_Request->get_string('customerid', 'post', '');
 			$petname = $nv_Request->get_string('petname', 'post', '');
 
 			if (!(empty($customerid) || empty($petname))) {
-				$sql = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_pets` (petname, customerid) values ('$petname', $customerid);";
-				if ($id = $db->sql_query_insert_id($sql)) {
-					$result = array("id" => $id);
-					echo json_encode($result);
+				$sql = "select * from `" . $db_config['prefix'] . "_" . $module_data . "_pets` where petname = '$petname' and customerid = $customerid";
+				$result = $db->sql_query($sql);
+				if(!$db->sql_numrows($result)) {	
+					$sql = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_pets` (petname, customerid) values ('$petname', $customerid);";
+					if ($id = $db->sql_query_insert_id($sql)) {
+						$ret["status"] = 2;	
+						$ret["data"][] = array("id" => $id);
+					}
+				} else {
+					$ret["status"] = 1;	
 				}
 			}
+
+			echo json_encode($ret);
 		break;
 		case 'insertvac':
 			$petid = $nv_Request->get_string('petid', 'post', '');
@@ -72,14 +97,20 @@ if (!empty($action)) {
 			$note = $nv_Request->get_string('note', 'post', '');
 
 			if (!(empty($petid) || empty($diseaseid) || empty($cometime) || empty($calltime))) {
-				$cometime = strtotime($cometime);
-				$calltime = strtotime($calltime);
-				$sql = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_$diseaseid` (petid, cometime, calltime, note) values ($petid, $cometime, $calltime, '$note');";
-				if ($id = $db->sql_query_insert_id($sql)) {
-					$result = array("id" => $id);
-					echo json_encode($result);
+				$sql = "select * from `" . $db_config['prefix'] . "_" . $module_data . "_customers` where petname = '$petname' and customerid = $customerid";
+				$result = $db->sql_query($sql);
+				if(!$db->sql_numrows($result)) {	
+					$cometime = strtotime($cometime);
+					$calltime = strtotime($calltime);
+					$sql = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_$diseaseid` (petid, cometime, calltime, note) values ($petid, $cometime, $calltime, '$note');";
+					if ($id = $db->sql_query_insert_id($sql)) {
+						$ret["status"] = 2;	
+						$ret["data"][] = array("id" => $id);
+					}
 				}
 			}
+
+			echo json_encode($ret);
 		break;
 	}
 	die();
