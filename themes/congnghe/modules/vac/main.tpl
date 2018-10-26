@@ -56,13 +56,13 @@
 			<!-- pet input -->
 			<tr>
 				<td>
-					<select id="pet_name" name="petname"></select>
+					<select id="pet_info" name="petname"></select>
 					<button onclick="addPet()">
 						+
 					</button>
 				</td>
 				<td>
-					<select name="disease">
+					<select id="pet_disease" name="disease">
 						<!-- BEGIN: option -->
 						<option value="{disease_id}">
 							{disease_name}
@@ -71,16 +71,16 @@
 					</select>
 				</td>
 				<td>
-					<input type="date" name="cometime" value="{now}">
+					<input id="pet_cometime" type="date" name="cometime" value="{now}">
 				</td>
 				<td>
-					<input type="date" name="calltime" value="{calltime}">
+					<input id="pet_calltime" type="date" name="calltime" value="{calltime}">
 				</td>
 			</tr>
 			<!-- note & submit -->
 			<tr>
 				<td colspan="3">
-					<textarea rows="3">{lang.note}</textarea>
+					<textarea id="pet_note" rows="3">{lang.note}</textarea>
 				</td>
 				<td>
 					<input type="submit" value="{lang.submit}">
@@ -97,114 +97,86 @@
 </style>
 <script>
 	var link = "index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=";
-	function vaccine() {
-		return false;
-	}
-	var customer_data = [{
-		name: "anh bay",
-		phone: "01234567890",
-		pet: ["cún a1", "cún a2", "cún a3"]
-	},
-	{
-		name: "chi hong",
-		phone: "097784755",
-		pet: ["cún b1", "cún b2", "cún b3", "cún b3"]
-	},
-	{
-		name: "chu tu",
-		phone: "0979124648",
-		pet: ["cún c1"]
-	},
-	{
-		name: "bac quang",
-		phone: "033879554",
-		pet: ["cún d1", "cún d2", "cún d3"]
-	},
-	{
-		name: "ong sau",
-		phone: "038453255",
-		pet: ["cún f1", "cún f2"]
-	},
-	{
-		name: "chi tuyết",
-		phone: "036487915",
-	}];
-	customer_data.forEach(data => {
-		data["name"] = vi(data["name"])
-	})
 	var blur = true;
+	var customer_data = [];
+	var customer_name = document.getElementById("customer_name");
+	var customer_phone = document.getElementById("customer_phone");
+	var customer_address = document.getElementById("customer_address");
+	var pet_info = document.getElementById("pet_info");
+	var pet_disease = document.getElementById("pet_disease");
+	var pet_cometime = document.getElementById("pet_cometime");
+	var pet_calltime = document.getElementById("pet_calltime");
+	var pet_note = document.getElementById("pet_note");
 	var suggest_name = document.getElementById("customer_name_suggest");
 	var suggest_phone = document.getElementById("customer_phone_suggest");
 
-
-	document.getElementById("customer_name").addEventListener("keydown", (e) => {
-		var name = vi(e.target.value);
-		var search_result = customer_data.filter(data => {
-			return data.name.search(name) >= 0
+	function vaccine() {
+		var data = ["action=insertvac", "petid=" + pet_info.value, "diseaseid=" + pet_disease.value, "cometime=" + pet_cometime.value, "calltime=" + pet_calltime.value, "note=" + pet_note.value];
+		fetch(link + "main", data).then((response) => {
+			console.log(response);
 		})
-		if(search_result.length) {
-			html = "";
-			search_result.forEach(data => {
-				var xdata = JSON.stringify(data).replace(/"/g, "\\\'");
-				html += '<div class=\"temp\" style=\"padding: 8px 4px;border-bottom: 1px solid black;overflow: overlay;\" onclick=\"getInfo(\'' + xdata + '\')\"><span style=\"float: left;\">' + data.name + '</span><span style=\"float: right;\">' + data.phone + '</span></div>';
-			})
-			suggest_name.style.display = "block";
-			suggest_name.innerHTML = html
+		return false;
+	}
+
+	function showSuggest (id, type) {
+		var name = "", phone = "";
+		if(type) {
+			name = vi(document.getElementById("customer_name").value);
+		} else {
+			phone = String(document.getElementById("customer_phone").value);
 		}
-		else {
-			suggest_name.style.display = "none";
-		}
-		console.log(search_result);
-		
-		// fetch(link + "vaccine", ["name="])
+		var data = ["action=getcustomer", "customer=" + name, "phone=" + phone];
+		fetch(link + "main", data).then(response => {
+			response = JSON.parse(response);
+			var suggest = document.getElementById(id + "_suggest");
+	
+			if (response.length) {
+				html = "";
+				response.forEach (data => {
+					var xdata = JSON.stringify(data).replace(/"/g, "\\\'");
+					html += '<div class=\"temp\" style=\"padding: 8px 4px;border-bottom: 1px solid black;overflow: overlay;\" onclick=\"getInfo(\'' + xdata + '\')\"><span style=\"float: left;\">' + data.customer + '</span><span style=\"float: right;\">' + data.phone + '</span></div>';
+				})
+				suggest.innerHTML = html;
+				suggest.style.display = "block";
+			}
+			else {
+				suggest.style.display = "note";
+			}
+		})
+	}
+
+	customer_name.addEventListener("keyup", (e) => {
+		showSuggest(e.target.getAttribute("id"), true);
 	})
 
-	document.getElementById("customer_phone").addEventListener("keydown", (e) => {
-		var phone = String(e.target.value);
-		var search_result = customer_data.filter(data => {
-			return data.phone.search(phone) >= 0
-		})
-		if(search_result.length) {
-			suggest_phone.style.display = "block";
-			html = "";
-			search_result.forEach(data => {
-				var xdata = JSON.stringify(data).replace(/"/g, "\\\'");
-				html += '<div class=\"temp\" style=\"padding: 8px 4px;border-bottom: 1px solid black;overflow: overlay;\" onclick=\"getInfo(\'' + xdata + '\')\"><span style=\"float: left;\">' + data.name + '</span><span style=\"float: right;\">' + data.phone + '</span></div>';
-			})
-			suggest_phone.innerHTML = html
-		}
-		else {
-			suggest_phone.style.display = "none";
-		}
-		console.log(search_result);
-		
-		// fetch(link + "vaccine", ["name="])
+	customer_phone.addEventListener("keyup", (e) => {
+		showSuggest(e.target.getAttribute("id"), false);
 	})
 
-	document.getElementById("customer_name_suggest").addEventListener("mouseenter", (e) => {
+	suggest_name.addEventListener("mouseenter", (e) => {
 		blur = false;
 	})
-	document.getElementById("customer_name_suggest").addEventListener("mouseleave", (e) => {
+	suggest_name.addEventListener("mouseleave", (e) => {
 		blur = true;
 	})
-	document.getElementById("customer_name").addEventListener("focus", (e) => {
+	customer_name.addEventListener("focus", (e) => {
 		suggest_name.style.display = "block";
 	})
-	document.getElementById("customer_name").addEventListener("blur", (e) => {
+	customer_name.addEventListener("blur", (e) => {
 		if(blur) {
 			suggest_name.style.display = "none";
 		}
 	})
-	document.getElementById("customer_phone_suggest").addEventListener("mouseenter", (e) => {
+	suggest_phone.addEventListener("mouseenter", (e) => {
 		blur = false;
 	})
-	document.getElementById("customer_phone_suggest").addEventListener("mouseleave", (e) => {
+	suggest_phone.addEventListener("mouseleave", (e) => {
 		blur = true;
 	})
-	document.getElementById("customer_phone").addEventListener("focus", (e) => {
+	customer_phone.addEventListener("focus", (e) => {
 		suggest_phone.style.display = "block";
 	})
-	document.getElementById("customer_phone").addEventListener("blur", (e) => {
+	customer_phone.addEventListener("blur", (e) => {
 		if(blur) {
 			suggest_phone.style.display = "none";
 		}
@@ -239,30 +211,32 @@
 	}
 	function getInfo(data) {
 		var data = JSON.parse(data.replace(/'/g, "\""));
+		customer_data = data;
 		
-		document.getElementById("customer_name").value = data["name"];
-		document.getElementById("customer_phone").value = data["phone"];
-		var html = "";
-		console.log(data);
-		
-		data["pet"].forEach((petname, index) => {
-			html += "<option value='"+index+"'>" + petname + "</option>";
+		customer_name.value = data["customer"];
+		customer_phone.value = data["phone"];
+
+		var data = ["action=getpet", "customerid=" + data["id"]];
+		fetch(link + "main", data).then(response => {
+			var html = "";
+			response = JSON.parse(response);
+			customer_data["pet"] = response;
+			reloadPetOption(response)
 		})
-		document.getElementById("pet_name").innerHTML = html;
+		
 		suggest_phone.style.display = "none";
 		suggest_name.style.display = "none";
 	}
 
 	function addCustomer() {
-		var phone = document.getElementById("customer_phone").value;
-		var name = document.getElementById("customer_name").value;
+		var phone = customer_phone.value;
+		var name = customer_name.value;
 
 		var answer = prompt("Nhập tên khách hàng cho số điện thoại(" + phone + "):", name);
 		if(answer) {
-			customer_data.push({
-				name: answer,
-				phone: phone,
-				pet: []
+			var data = ["action=addcustomer", "customer=" + answer, "phone=" + phone];
+			fetch(link + "main", data).then(response => {
+				console.log(response);
 			})
 		}
 	}
@@ -272,16 +246,25 @@
 
 		var answer = prompt("Nhập tên thú cưng của khách hàng("+ customer +"):", "");
 		if(answer) {
-			var x = customer_data.filter(data => {
-				return data["name"] == customer
+			var data = ["action=addpet", "customerid=" + customer_data["id"], "petname=" + answer];
+			fetch(link + "main", data).then(response => {
+				var pet_data = JSON.parse(response);
+
+				customer_data["pet"].push({
+					id: pet_data.id,
+					petname: answer
+				});
+				reloadPetOption(customer_data["pet"])
 			})
-			
-			x[0]["pet"].push(answer)
-			x[0]["pet"].forEach((petname, index) => {
-				html += "<option value='"+index+"'>" + petname + "</option>";
-			})
-			document.getElementById("pet_name").innerHTML = html;
 		}
+	}
+
+	function reloadPetOption(petlist) {
+		html = "";
+		petlist.forEach((pet_data, petid) => {
+			html += "<option value='"+ pet_data["id"] +"'>" + pet_data["petname"] + "</option>";
+		})
+		document.getElementById("pet_info").innerHTML = html;
 	}
 
 </script>

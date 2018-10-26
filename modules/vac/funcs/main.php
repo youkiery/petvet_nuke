@@ -8,6 +8,83 @@
 
 if ( ! defined( 'NV_IS_MOD_VAC' ) ) die( 'Stop!!!' );
 
+$action = $nv_Request->get_string('action', 'post', '');
+if (!empty($action)) {
+	switch ($action) {
+		case 'getcustomer':
+			$customer = $nv_Request->get_string('customer', 'post', '');
+			$phone = $nv_Request->get_string('phone', 'post', '');
+
+			if (!empty($customer)) {
+				$sql = "select * from `" . $db_config['prefix'] . "_" . $module_data . "_customers` where customer like '%$customer%'";
+			} else {
+				$sql = "select * from `" . $db_config['prefix'] . "_" . $module_data . "_customers` where phone like '%$phone%'";
+			}
+
+			$result = $db->sql_query($sql);
+			$ret = array();
+			while ($row = $db->sql_fetch_assoc($result)) {
+				$ret[] = $row;
+			}
+			echo json_encode($ret);
+		break;
+		case 'getpet':
+			$customerid = $nv_Request->get_string('customerid', 'post', '');
+			$sql = "select * from `" . $db_config['prefix'] . "_" . $module_data . "_pets` where customerid = $customerid";
+
+			$result = $db->sql_query($sql);
+			$ret = array();
+			while ($row = $db->sql_fetch_assoc($result)) {
+				$ret[] = $row;
+			}
+			echo json_encode($ret);
+		break;
+		case 'addcustomer':
+			$customer = $nv_Request->get_string('customer', 'post', '');
+			$phone = $nv_Request->get_string('phone', 'post', '');
+			$address = $nv_Request->get_string('address', 'post', '');
+
+			if (!(empty($customer) || empty($phone))) {
+				$sql = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_customers` (customer, phone, address) values ('$customer', $phone, '$address');";
+				if ($id = $db->sql_query_insert_id($sql)) {
+					$result = array("id" => $id);
+					echo json_encode($result);
+				}
+			}
+		break;
+		case 'addpet':
+			$customerid = $nv_Request->get_string('customerid', 'post', '');
+			$petname = $nv_Request->get_string('petname', 'post', '');
+
+			if (!(empty($customerid) || empty($petname))) {
+				$sql = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_pets` (petname, customerid) values ('$petname', $customerid);";
+				if ($id = $db->sql_query_insert_id($sql)) {
+					$result = array("id" => $id);
+					echo json_encode($result);
+				}
+			}
+		break;
+		case 'insertvac':
+			$petid = $nv_Request->get_string('petid', 'post', '');
+			$diseaseid = $nv_Request->get_string('diseaseid', 'post', '');
+			$cometime = $nv_Request->get_string('cometime', 'post', '');
+			$calltime = $nv_Request->get_string('calltime', 'post', '');
+			$note = $nv_Request->get_string('note', 'post', '');
+
+			if (!(empty($petid) || empty($diseaseid) || empty($cometime) || empty($calltime))) {
+				$cometime = strtotime($cometime);
+				$calltime = strtotime($calltime);
+				$sql = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_$diseaseid` (petid, cometime, calltime, note) values ($petid, $cometime, $calltime, '$note');";
+				if ($id = $db->sql_query_insert_id($sql)) {
+					$result = array("id" => $id);
+					echo json_encode($result);
+				}
+			}
+		break;
+	}
+	die();
+}
+
 $page_default = true;
 if (!empty($array_op[0])) {
 	$page = $array_op[0];
@@ -32,7 +109,7 @@ if ($page_default) {
 	$diseases = getDiseaseList();
 	foreach ($diseases as $key => $value) {
 		$xtpl->assign("disease_id", $value["id"]);		
-		$xtpl->assign("disease_name", $value["name"]);	
+		$xtpl->assign("disease_name", $value["disease"]);	
 		$xtpl->parse("main.option");	
 	}
 }
