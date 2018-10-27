@@ -110,7 +110,11 @@
 
 	function vaccine() {
 		msg = "";
-		if(!pet_info.value) {
+		if(!customer_name) {
+			msg = "Chưa nhập tên khách hàng!"
+		} else if(!customer_phone.value) {
+			msg = "Chưa nhập số điện thoại!"
+		} else if(!pet_info.value) {
 			msg = "Khách hàng chưa có thú cưng!"
 		} else if (!pet_disease.value) {
 			msg = "Chưa có loại tiêm phòng!";
@@ -120,10 +124,26 @@
 			msg = "Chưa có ngày tái chủng!";
 		}
 		else {
-			var data = ["action=insertvac", "petid=" + pet_info.value, "diseaseid=" + pet_disease.value, "cometime=" + pet_cometime.value, "calltime=" + pet_calltime.value, "note=" + pet_note.value];
+			var data = ["action=insertvac", "customer=" + customer_name.value, "phone=" + customer_phone.value, "petid=" + pet_info.value, "diseaseid=" + pet_disease.value, "cometime=" + pet_cometime.value, "calltime=" + pet_calltime.value, "note=" + pet_note.value];
 			fetch(link + "main", data).then((response) => {
-				console.log(response);
-				msg = "Đã lưu bản ghi tiêm chủng";
+				response = JSON.parse(response);
+				switch (response["status"]) {
+					case 2:
+						msg = "Đã lưu bản ghi tiêm chủng";
+
+						customer_name.value = ""
+						customer_phone.value = ""
+						pet_info.innerHTML = ""
+						pet_note.value = "Ghi chú"						
+					case 3:
+						msg = "Thú cưng không tồn tại!";
+						break;
+					case 4:
+						msg = "Khách hàng không tồn tại!";
+						break;
+					default:
+						msg = "lỗi không xác định"
+				}
 				showMsg(msg);
 			})
 		}
@@ -297,7 +317,7 @@
 
 				if (response["status"] == 2) {
 					customer_data["pet"].push({
-						id: response["data"].id,
+						id: response["data"][0].id,
 						petname: answer
 					});
 					reloadPetOption(customer_data["pet"])
@@ -314,6 +334,8 @@
 	function reloadPetOption(petlist) {
 		html = "";
 		petlist.forEach((pet_data, petid) => {
+			console.log(pet_data);
+			
 			html += "<option value='"+ pet_data["id"] +"'>" + pet_data["petname"] + "</option>";
 		})
 		document.getElementById("pet_info").innerHTML = html;

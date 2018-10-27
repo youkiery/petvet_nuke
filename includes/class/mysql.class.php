@@ -454,6 +454,26 @@ class sql_db {
   }
 
   /**
+   * sql_db::sql_fetch_all()
+   * 
+   * @param integer $query_id
+   * @return
+   */
+  public function sql_fetch_all($query_id = 0) {
+    $stime = array_sum(explode(" ", microtime()));
+    if (empty($query_id))
+      $query_id = $this->query_result;
+
+    if (!empty($query_id)) {
+      $this->row['' . $query_id . ''] = @mysql_fetch_all($query_id);
+      $this->time += ( array_sum(explode(" ", microtime())) - $stime );
+      return $this->row['' . $query_id . ''];
+    }
+    $this->time += ( array_sum(explode(" ", microtime())) - $stime );
+    return false;
+  }
+
+  /**
    * sql_db::sql_freeresult()
    * 
    * @param integer $query_id

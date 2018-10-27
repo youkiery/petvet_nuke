@@ -8,13 +8,12 @@
 
 $page_title = $lang_module["main_title"];
 
-$xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file);
+$xtpl = new XTemplate("list.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
 $xtpl->assign("lang", $lang_module);
 
 $diseases = getDiseaseList();
 foreach ($diseases as $disease_index => $disease_data) {
-	$xtpl->assign("title", $disease_data["name"]);
-	// var_dump($disease_data["id"]); die();
+	$xtpl->assign("title", $disease_data["disease"]);
 	$vac_row = getVaccineTable($disease_data["id"], NV_CURRENTTIME);
 	$i = 1;
 	foreach ($vac_row as $vac_index => $vac_data) {
@@ -25,15 +24,9 @@ foreach ($diseases as $disease_index => $disease_data) {
 		$xtpl->assign("cometime", date("d/m/Y", $vac_data["cometime"]));
 		$xtpl->assign("calltime", date("d/m/Y", $vac_data["calltime"]));
 		$i++;
-		$xtpl->parse("main.vac_body");
+		$xtpl->parse("main.disease.vac_body");
 	}
 
-	$xtpl->parse("main");
+	$xtpl->parse("main.disease");
 }
-
-$contents = $xtpl->text("main");
-
-include (NV_ROOTDIR . "/includes/header.php");
-echo nv_admin_theme($contents);
-include (NV_ROOTDIR . "/includes/footer.php");
 ?>
