@@ -1277,3 +1277,16 @@ display: inline;
 .vac_select_max {
 	width: 100%;
 }
+.vac_input {
+	height: 1.5em;
+}
+.vac_button {
+	height: 1.8em;
+	padding: 0px 4px;
+}
+.vac_select {
+	height: 1.8em;
+}
+.vac_form {
+	margin: 8px 0px;
+}

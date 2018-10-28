@@ -47,6 +47,35 @@ function getVaccineTable($id, $time) {
 	return $vaccines;
 }
 
+function filter($path, $lang, $fromtime, $amount_time, $sort) {
+	$xtpl = new XTemplate("list-1.tpl", $path);
+	$xtpl->assign("lang", $lang);
+	
+	$fromtime = strtotime($fromtime);
+
+	$diseases = getDiseaseList();
+	foreach ($diseases as $disease) {
+		$xtpl->assign("title", $disease["disease"]);
+		$vaclist = filterVac($fromtime, $amount_time, $sort, $disease["id"]);
+		$i = 1;
+		$xtpl->assign("diseaseid", $disease["id"]);
+		foreach ($vaclist as $row) {
+			$xtpl->assign("index", $i);
+			$xtpl->assign("petname", $row["petname"]);
+			$xtpl->assign("vacid", $row["id"]);
+			$xtpl->assign("customer", $row["customer"]);
+			$xtpl->assign("phone", $row["phone"]);
+			$xtpl->assign("confirm", $lang["confirm_" . $row["status"]]);
+			$xtpl->assign("cometime", date("d/m/Y", $row["cometime"]));
+			$xtpl->assign("calltime", date("d/m/Y", $row["calltime"]));
+			$i++;
+			$xtpl->parse("disease.vac_body");
+		}
+		$xtpl->parse("disease");
+	}
+	return $xtpl->text("disease");
+}
+
 function filterVac($fromtime, $amount_time, $sort, $diseaseid) {
 	global $db, $db_config, $module_name;
 	$endtime = $fromtime + $amount_time;

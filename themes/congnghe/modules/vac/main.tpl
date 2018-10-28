@@ -62,7 +62,7 @@
 					<input type="button" value="+" onclick="addPet()" style="width: 28px; float: right;">
 				</td>
 				<td>
-					<select id="pet_disease" class="vac_select_max" name="disease">
+					<select id="pet_disease" class="vac_select_max" style="text-transform: capitalize;" name="disease">
 						<!-- BEGIN: option -->
 						<option value="{disease_id}">
 							{disease_name}
@@ -80,7 +80,7 @@
 			<!-- note & submit -->
 			<tr>
 				<td colspan="3">
-					<textarea id="pet_note" rows="3">{lang.note}</textarea>
+					<textarea id="pet_note" rows="3" style="width: 98%;">{lang.note}</textarea>
 				</td>
 				<td>
 					<input type="submit" value="{lang.submit}">
@@ -253,6 +253,7 @@
 		
 		customer_name.value = customer_data["customer"];
 		customer_phone.value = customer_data["phone"];
+		customer_address.value = customer_data["address"];
 
 		var data = ["action=getpet", "customerid=" + customer_data["id"]];
 		fetch(link, data).then(response => {
@@ -269,6 +270,7 @@
 	function addCustomer() {
 		var phone = customer_phone.value;
 		var name = customer_name.value;
+		var address = address.value;
 		msg = "";
 		if(phone.length) {
 			var answer = prompt("Nhập tên khách hàng cho số điện thoại(" + phone + "):", name);

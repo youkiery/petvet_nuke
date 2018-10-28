@@ -130,37 +130,12 @@ if (!empty($action)) {
 			$ret = array("status" => 0, "data" => array());
 		
 			if (!(empty($fromtime) || empty($time_amount) || empty($sort))) {
+				$_SESSION["vac_filter"]["sort"] = $sort;
+				$_SESSION["vac_filter"]["time_amount"] = $time_amount;
 				$ret["status"] = 1;
-				$ret["data"] = "";
-				$xtpl = new XTemplate("list-1.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
-				$xtpl->assign("lang", $lang_module);
-				
-				$fromtime = strtotime($fromtime);
-		
-				$diseases = getDiseaseList();
-				foreach ($diseases as $disease) {
-					$xtpl->assign("title", $disease["disease"]);
-					$vaclist = filterVac($fromtime, $time_amount, $sort, $disease["id"]);
-					$i = 1;
-					$xtpl->assign("diseaseid", $disease["id"]);
-					foreach ($vaclist as $row) {
-						$xtpl->assign("index", $i);
-						$xtpl->assign("petname", $row["petname"]);
-						$xtpl->assign("vacid", $row["id"]);
-						$xtpl->assign("customer", $row["customer"]);
-						$xtpl->assign("phone", $row["phone"]);
-						$xtpl->assign("confirm", $lang_module["confirm_" . $row["status"]]);
-						$xtpl->assign("cometime", date("d/m/Y", $row["cometime"]));
-						$xtpl->assign("calltime", date("d/m/Y", $row["calltime"]));
-						$i++;
-						$xtpl->parse("disease.vac_body");
-					}
-					$xtpl->parse("disease");
-				}
-				
+				$ret["data"] = filter(NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file, $lang_module, $fromtime, $time_amount, $sort);
 			}
 			
-			$ret["data"] = $xtpl->text("disease");
 			echo json_encode($ret);
 			die();
 		break;

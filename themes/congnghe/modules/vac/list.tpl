@@ -3,106 +3,30 @@
 <a href="/index.php?nv=vac">
 	{lang.disease_title}
 </a>
-<form onsubmit="return search()">
-  <input type="text" id="customer_key">
-  <input type="submit" value="{lang.search}">
+<form class="vac_form" onsubmit="return search()">
+  <input type="text" id="customer_key" class="vac_input">
+  <input type="submit" class="vac_button" value="{lang.search}">
 </form>
-<form onsubmit="return filter()">
-  <select id="f_sort">
-    <option value="1">
-      Thời gian tiêm phòng giảm dần
+<form class="vac_form" onsubmit="return filter()">
+  <select id="f_sort" class="vac_select">
+    <!-- BEGIN: fs_time -->
+    <option value="{sort_value}" {fs_select}>
+      {sort_name}
     </option>
-    <option value="2">
-      Thời gian tiêm phòng tăng dần
-    </option>
-    <option value="3">
-      Thời gian tái chủng giảm dần
-    </option>
-    <option value="4">
-      Thời gian tái chủng tăng dần
-    </option>
+    <!-- END: fs_time -->
   </select>
-  <input type="date" id="f_fromtime" value="{fromtime}">
-  <select id="f_moment">
+  <input type="date" id="f_fromtime" class="vac_input" value="{fromtime}">
+  <select id="f_moment" class="vac_select">
     <!-- BEGIN: fo_time -->
-    <option value="{time_amount}">
+    <option value="{time_amount}" {fo_select}>
       {time_name}
     </option>
     <!-- END: fo_time -->
   </select>
-  <input type="submit" value="{lang.filter}">
+  <input type="submit" class="vac_button" value="{lang.filter}">
 </form>
 <div id="disease_display">
-  <!-- BEGIN: disease -->
-  <table class="vng_vacbox tab1">
-    <thead>
-      <tr>
-        <th colspan="7" class="vng_vacbox_title" style="text-align: center">
-          {title}
-        </th>
-      </tr>
-      <tr>
-        <th>
-          {lang.index}
-        </th>  
-        <th>
-          {lang.petname}
-        </th>  
-        <th>
-          {lang.customer}
-        </th>  
-        <th>
-          {lang.phone}
-        </th>  
-        <th>
-          {lang.cometime}
-        </th>  
-        <th>
-          {lang.calltime}
-        </th>  
-      	<th>
-        	{lang.confirm}
-      	</th>    
-      </tr>
-    </thead>
-    <tbody>
-      <!-- BEGIN: vac_body -->  
-      <tr>
-        <td>
-          {index}
-        </td>  
-        <td>
-          {petname}
-        </td>  
-        <td>
-          {customer}
-        </td>  
-        <td>
-          {phone}
-        </td>  
-        <td>
-          {cometime}
-        </td>  
-        <td>
-          {calltime}
-        </td>  
-				<td>
-					<button onclick="confirm_lower({index}, {vacid}, {diseaseid})">
-						&lt;
-					</button>
-          <div id="vac_confirm_{index}">
-            {confirm}
-          </div>
-					<button onclick="confirm_upper({index}, {vacid}, {diseaseid})">
-						&gt;
-					</button>
-				</td>
-      </tr>
-      <!-- END: vac_body -->
-    </tbody>
-  </table>
-	<br>
-	<!-- END: disease -->
+  {content}
 </div>
 <script>
   var link = "/index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=";
@@ -112,7 +36,7 @@
     fetch(link +"confirm&act=up&value=" + trim(value.innerText) + "&vacid=" + vacid + "&diseaseid=" + diseaseid, []).then(response => {
       console.log(response);
       response = JSON.parse(response);
-      value.innerText = response["data"];
+      if(response["status"]) value.innerText = response["data"];
     })
   }
 
@@ -121,7 +45,7 @@
     fetch(link +"confirm&act=low&value=" + trim(value.innerText) + "&vacid=" + vacid + "&diseaseid=" + diseaseid, []).then(response => {
       console.log(response);
       response = JSON.parse(response);
-      value.innerText = response["data"];
+      if(response["status"]) value.innerText = response["data"];
     })
   }
 

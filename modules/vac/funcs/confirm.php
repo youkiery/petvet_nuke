@@ -15,7 +15,7 @@ if(!(empty($act) || empty($value) || empty($vacid) || empty($diseaseid))) {
 	if (in_array($value, $lang_module["confirm_value"])) {
 		$confirmid = array_search($value, $lang_module["confirm_value"]);
 		$confirmid += $mod;
-		if(!($confirmid > count($lang_module["confirm_value"]) || $confirmid < 0)) {
+		if(!empty($lang_module["confirm_value"][$confirmid])) {
 			$sql = "update vng_vac_$diseaseid set status = $confirmid where id = $vacid";
 			$result = $db->sql_query($sql);
 			if($result) {

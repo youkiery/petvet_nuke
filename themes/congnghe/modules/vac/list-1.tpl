@@ -1,5 +1,5 @@
 <!-- BEGIN: disease -->
-<table class="vng_vacbox tab1">
+	<table class="vng_vacbox tab1">
   	<thead>
     	<tr>
       	<th colspan="7" class="vng_vacbox_title" style="text-align: center">
@@ -7,24 +7,24 @@
       	</th>
     	</tr>
     	<tr>
-      	<th>
-        	{lang.index}
-      	</th>    
-      	<th>
-        	{lang.petname}
-      	</th>    
-      	<th>
-        	{lang.customer}
-      	</th>    
-      	<th>
-        	{lang.phone}
-      	</th>    
-      	<th>
-        	{lang.cometime}
-      	</th>    
-      	<th>
-        	{lang.calltime}
-      	</th>    
+        <th style="width: 20px;">
+          {lang.index}
+        </th>  
+        <th style="width: 120px;">
+          {lang.petname}
+        </th>  
+        <th style="width: 140px;">
+          {lang.customer}
+        </th>  
+        <th style="width: 100px;">
+          {lang.phone}
+        </th>  
+        <th style="width: 100px;">
+          {lang.cometime}
+        </th>  
+        <th style="width: 100px;">
+          {lang.calltime}
+        </th>  
       	<th>
         	{lang.confirm}
       	</th>    
@@ -51,14 +51,14 @@
       	<td>
         	{calltime}
 				</td>    
-				<td>
-					<button onclick="confirm_lower({index}, {vacid}, {diseaseid})">
+				<td style="text-align: center;">
+					<button style="float: left;" onclick="confirm_lower({index}, {vacid}, {diseaseid})">
 						&lt;
 					</button>
-          <div id="vac_confirm_{index}">
+          <span id="vac_confirm_{index}">
             {confirm}
-          </div>
-					<button onclick="confirm_upper({index}, {vacid}, {diseaseid})">
+          </span>
+					<button style="float: right;" onclick="confirm_upper({index}, {vacid}, {diseaseid})">
 						&gt;
 					</button>
 				</td>
@@ -66,6 +66,5 @@
     	<!-- END: vac_body -->
   	</tbody>
 	</table>
-</div>
 <br>
 <!-- END: disease -->
