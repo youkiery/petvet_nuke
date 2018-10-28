@@ -37,7 +37,7 @@
 					<input type="button" value="+" onclick="addCustomer()" style="width: 28px;">
 				</td>
 				<td colspan="2">
-					<input type="text" name="address">
+					<input id="customer_address" type="text" name="address">
 				</td>
 			</tr>
 			<!-- pet vaccine -->
@@ -58,7 +58,7 @@
 			<!-- pet input -->
 			<tr>
 				<td>
-					<select id="pet_info" name="petname"></select>
+					<select id="pet_info" style="text-transform: capitalize;" name="petname"></select>
 					<input type="button" value="+" onclick="addPet()" style="width: 28px; float: right;">
 				</td>
 				<td>
@@ -173,7 +173,7 @@
 			html = "";
 			if (response["data"].length) {
 				response["data"].forEach ((data, index) => {
-					html += '<div class=\"temp\" style=\"padding: 8px 4px;border-bottom: 1px solid black;overflow: overlay;\" onclick=\"getInfo(\'' + index + '\')\"><span style=\"float: left;\">' + data.customer + '</span><span style=\"float: right;\">' + data.phone + '</span></div>';
+					html += '<div class=\"temp\" style=\"padding: 8px 4px;border-bottom: 1px solid black;overflow: overlay; text-transform: capitalize;\" onclick=\"getInfo(\'' + index + '\')\"><span style=\"float: left;\">' + data.customer + '</span><span style=\"float: right;\">' + data.phone + '</span></div>';
 				})
 				suggest.style.display = "block";
 			}
@@ -270,7 +270,7 @@
 	function addCustomer() {
 		var phone = customer_phone.value;
 		var name = customer_name.value;
-		var address = address.value;
+		var address = customer_address.value;
 		msg = "";
 		if(phone.length) {
 			var answer = prompt("Nhập tên khách hàng cho số điện thoại(" + phone + "):", name);
@@ -301,9 +301,6 @@
 					}
 					showMsg(msg);
 				})
-			}
-			else {
-				msg = "Không để trống tên khác hàng!";
 			}
 		}
 		else {

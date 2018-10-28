@@ -136,10 +136,11 @@ function getvaccustomer($customer, $fromtime, $amount_time, $sort, $diseaseid) {
 }
 
 function getcustomer($customer, $phone) {
+	global $db, $db_config, $module_name;
 	if (!empty($customer)) {
-		$sql = "select * from `" . $db_config['prefix'] . "_" . $module_data . "_customers` where customer like '%$customer%'";
+		$sql = "select * from `" . $db_config['prefix'] . "_" . $module_name . "_customers` where customer like '%$customer%'";
 	} else {
-		$sql = "select * from `" . $db_config['prefix'] . "_" . $module_data . "_customers` where phone like '%$phone%'";
+		$sql = "select * from `" . $db_config['prefix'] . "_" . $module_name . "_customers` where phone like '%$phone%'";
 	}
 
 	$result = $db->sql_query($sql);
