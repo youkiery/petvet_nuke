@@ -1271,3 +1271,9 @@ display: inline;
 	font-size: 1.1em;
 	font-weight: bold;
 }
+.vac tbody tr td select {
+	height: 2.5em;
+}
+.vac_select_max {
+	width: 100%;
+}

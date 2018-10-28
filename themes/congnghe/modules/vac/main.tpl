@@ -1,11 +1,14 @@
 <!-- BEGIN: main -->
 <div id="vac_notify" style="display: none; position: fixed; top: 0; right: 0; background: white; padding: 8px; border: 1px solid black; z-index: 1000;"></div>
+<a href="/index.php?nv=vac&op=list">
+	{lang.main_title}
+</a>
 <form onsubmit="return vaccine()" autocomplete="off">
 	<table class="tab1 vac">
 		<thead>
 			<tr>
 				<th colspan="4">
-					{lang.main_title}
+					{lang.disease_title}
 				</th>
 			</tr>
 		</thead>
@@ -59,7 +62,7 @@
 					<input type="button" value="+" onclick="addPet()" style="width: 28px; float: right;">
 				</td>
 				<td>
-					<select id="pet_disease" name="disease">
+					<select id="pet_disease" class="vac_select_max" name="disease">
 						<!-- BEGIN: option -->
 						<option value="{disease_id}">
 							{disease_name}
@@ -93,7 +96,7 @@
 	}
 </style>
 <script>
-	var link = "index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=";
+	var link = "/index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=main&act=post";
 	var blur = true;
 	var customer_data = [];
 	var customer_list = [];
@@ -125,7 +128,7 @@
 		}
 		else {
 			var data = ["action=insertvac", "customer=" + customer_name.value, "phone=" + customer_phone.value, "petid=" + pet_info.value, "diseaseid=" + pet_disease.value, "cometime=" + pet_cometime.value, "calltime=" + pet_calltime.value, "note=" + pet_note.value];
-			fetch(link + "main", data).then((response) => {
+			fetch(link, data).then((response) => {
 				response = JSON.parse(response);
 				switch (response["status"]) {
 					case 2:
@@ -141,8 +144,11 @@
 					case 4:
 						msg = "Khách hàng không tồn tại!";
 						break;
+					case 5:
+						msg = "lỗi không xác định!";
+						break;
 					default:
-						msg = "lỗi không xác định"
+						msg = "lỗi không xác định!"
 				}
 				showMsg(msg);
 			})
@@ -159,7 +165,7 @@
 			phone = String(document.getElementById("customer_phone").value);
 		}
 		var data = ["action=getcustomer", "customer=" + name, "phone=" + phone];
-		fetch(link + "main", data).then(response => {
+		fetch(link, data).then(response => {
 			response = JSON.parse(response);
 			var suggest = document.getElementById(id + "_suggest");
 	
@@ -249,7 +255,7 @@
 		customer_phone.value = customer_data["phone"];
 
 		var data = ["action=getpet", "customerid=" + customer_data["id"]];
-		fetch(link + "main", data).then(response => {
+		fetch(link, data).then(response => {
 			var html = "";
 			response = JSON.parse(response);
 			customer_data["pet"] = response["data"];
@@ -268,8 +274,7 @@
 			var answer = prompt("Nhập tên khách hàng cho số điện thoại(" + phone + "):", name);
 			if(answer) {
 				var data = ["action=addcustomer", "customer=" + answer, "phone=" + phone];
-				fetch(link + "main", data).then(response => {
-					console.log(response);
+				fetch(link, data).then(response => {
 					response = JSON.parse(response);
 					switch (response["status"]) {
 						case 1:
@@ -312,7 +317,7 @@
 		var msg = "";
 		if(answer) {
 			var data = ["action=addpet", "customerid=" + customer_data["id"], "petname=" + answer];
-			fetch(link + "main", data).then(response => {
+			fetch(link, data).then(response => {
 				var response = JSON.parse(response);
 
 				if (response["status"] == 2) {
@@ -334,8 +339,6 @@
 	function reloadPetOption(petlist) {
 		html = "";
 		petlist.forEach((pet_data, petid) => {
-			console.log(pet_data);
-			
 			html += "<option value='"+ pet_data["id"] +"'>" + pet_data["petname"] + "</option>";
 		})
 		document.getElementById("pet_info").innerHTML = html;

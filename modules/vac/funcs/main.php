@@ -13,21 +13,14 @@ $ret = array("status" => 0, "data" => array());
 if (!empty($action)) {
 	switch ($action) {
 		case 'getcustomer':
-			$customer = $nv_Request->get_string('customer', 'post', '');
-			$phone = $nv_Request->get_string('phone', 'post', '');
+		$customer = $nv_Request->get_string('customer', 'post', '');
+		$phone = $nv_Request->get_string('phone', 'post', '');
 
-			if (!empty($customer)) {
-				$sql = "select * from `" . $db_config['prefix'] . "_" . $module_data . "_customers` where customer like '%$customer%'";
-			} else {
-				$sql = "select * from `" . $db_config['prefix'] . "_" . $module_data . "_customers` where phone like '%$phone%'";
-			}
-
-			$result = $db->sql_query($sql);
-			while ($row = $db->sql_fetch_assoc($result)) {
-				$ret["data"][] = $row;
-				$ret["status"] = 2;
-			}
-			echo json_encode($ret);
+		$ret["data"] = getcustomer($customer, $phone);
+		if(count($ret["data"])) {
+			$ret["status"] = 2;
+		}
+		echo json_encode($ret);
 		break;
 		case 'getpet':
 			$customerid = $nv_Request->get_string('customerid', 'post', '');
@@ -110,10 +103,14 @@ if (!empty($action)) {
 					if($db->sql_numrows($result)) {
 						$cometime = strtotime($cometime);
 						$calltime = strtotime($calltime);
-						$sql = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_$diseaseid` (petid, cometime, calltime, note) values ($petid, $cometime, $calltime, '$note');";
+						$sql = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_$diseaseid` (petid, cometime, calltime, note, status) values ($petid, $cometime, $calltime, '$note', 0);";
 						if ($id = $db->sql_query_insert_id($sql)) {
-							$ret["status"] = 2;	
+							$ret["status"] = 2;
 							$ret["data"][] = array("id" => $id);
+						}
+						else {
+							die($sql);
+							$ret["status"] = 5;	
 						}
 					} else {
 						$ret["status"] = 3;
@@ -126,6 +123,47 @@ if (!empty($action)) {
 
 			echo json_encode($ret);
 		break;
+		case "filter":
+			$fromtime = $nv_Request->get_string('fromtime', 'post', '');
+			$time_amount = $nv_Request->get_string('time_amount', 'post', '');
+			$sort = $nv_Request->get_string('sort', 'post', '');
+			$ret = array("status" => 0, "data" => array());
+		
+			if (!(empty($fromtime) || empty($time_amount) || empty($sort))) {
+				$ret["status"] = 1;
+				$ret["data"] = "";
+				$xtpl = new XTemplate("list-1.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
+				$xtpl->assign("lang", $lang_module);
+				
+				$fromtime = strtotime($fromtime);
+		
+				$diseases = getDiseaseList();
+				foreach ($diseases as $disease) {
+					$xtpl->assign("title", $disease["disease"]);
+					$vaclist = filterVac($fromtime, $time_amount, $sort, $disease["id"]);
+					$i = 1;
+					$xtpl->assign("diseaseid", $disease["id"]);
+					foreach ($vaclist as $row) {
+						$xtpl->assign("index", $i);
+						$xtpl->assign("petname", $row["petname"]);
+						$xtpl->assign("vacid", $row["id"]);
+						$xtpl->assign("customer", $row["customer"]);
+						$xtpl->assign("phone", $row["phone"]);
+						$xtpl->assign("confirm", $lang_module["confirm_" . $row["status"]]);
+						$xtpl->assign("cometime", date("d/m/Y", $row["cometime"]));
+						$xtpl->assign("calltime", date("d/m/Y", $row["calltime"]));
+						$i++;
+						$xtpl->parse("disease.vac_body");
+					}
+					$xtpl->parse("disease");
+				}
+				
+			}
+			
+			$ret["data"] = $xtpl->text("disease");
+			echo json_encode($ret);
+			die();
+		break;
 	}
 	die();
 }
@@ -134,7 +172,7 @@ $page_default = true;
 if (!empty($array_op[0])) {
 	$page = $array_op[0];
 	$page_allowed = array(
-		"list"
+		"list", "search", "confirm"
 	);
 	if(in_array($page, $page_allowed)) {
 		$page_default = false;
