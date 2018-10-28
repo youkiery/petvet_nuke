@@ -276,13 +276,13 @@ function vac_update_pet(id) {
 
 function ex(id) {
 	var diseaseid = document.getElementById("disease").value;
-	var disease = document.getElementById("disease").selectedOptions[0].innerText;
+	var disease = trim(document.getElementById("disease").selectedOptions[0].innerText);
 	var cometime = document.getElementById("cometime").value;
 	var calltime = document.getElementById("calltime").value;
 
 	var url = "index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=patient";
 	var post_data = ["action=addvac", "petid=" + id, "diseaseid=" + diseaseid, "disease=" + disease, "cometime=" + cometime, "calltime=" + calltime];
-	fetch(url, post_data).then(response => {	
+	fetch(url, post_data).then(response => {
 		console.log(response);
 		if(response) {
 			var data = JSON.parse(response);
@@ -313,10 +313,10 @@ function ex(id) {
 	return false;
 }
 
-function vac_remove_vac(id) {
+function vac_remove_vac(id, diseaseid) {
 	if(confirm("Bạn có muốn xóa bản ghi này không?")) {
 		var url = "index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=patient";
-		post_data = ["action=removevac", "id=" + id];
+		post_data = ["action=removevac", "id=" + id, "diseaseid=" + diseaseid];
 		fetch(url, post_data).then(response => {
 			var msg = "";
 			if(response) {

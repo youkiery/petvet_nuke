@@ -33,6 +33,10 @@ $lang_module["remove"] = "Xóa";
 $lang_module["update"] = "Cập nhật";
 $lang_module["yes"] = "Đã xong";
 $lang_module["no"] = "Chưa xong";
+
+$lang_module["confirm_value"][0] = "Chưa gọi";
+$lang_module["confirm_value"][1] = "Đã gọi";
+$lang_module["confirm_value"][2] = "Đã tiêm";
 $lang_module["lasttime"] = "Lần cuối";
 $lang_module["lastname"] = "Loại tiêm phòng";
 ?>

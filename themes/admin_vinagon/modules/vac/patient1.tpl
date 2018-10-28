@@ -89,7 +89,7 @@
 					{confirm}
 				</td>
 				<td>
-					<button onclick="vac_remove_vac({index})">
+					<button onclick="vac_remove_vac({index}, {diseaseid})">
 						{lang.remove}
 					</button>
 				</td>

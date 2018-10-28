@@ -20,35 +20,43 @@ if($action) {
 			if(!(empty($petid) || empty($diseaseid) || empty($cometime) || empty($calltime))) {
 				$cometime = strtotime($cometime);
 				$calltime = strtotime($calltime);
-				$sql2 = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_$diseaseid` (petid, cometime, calltime, confirm) values('$petid', $cometime, $calltime, false);";
+				$sql2 = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_$diseaseid` (petid, cometime, calltime, note, status) values('$petid', $cometime, $calltime, '', 0);";
 				$id = $db->sql_query_insert_id($sql2);
 
 				if($id){
-					$row = array("id" => $id, "cometime" => date("d/m/Y", $cometime), "calltime" => date("d/m/Y", $calltime), "confirm" => $lang_module["no"]);
+					$row = array("id" => $id, "cometime" => date("d/m/Y", $cometime), "calltime" => date("d/m/Y", $calltime), "confirm" => $lang_module["confirm_value"][0]);
 					echo json_encode($row);
 				}
 			}
 		break;
-	// 	case "remove":
-	// 		$id = $nv_Request->get_string('id', 'post', '');
-	// 		if(!empty($id)) {
-	// 			$sql = "delete from `" . $db_config['prefix'] . "_" . $module_data . "_customers` where id = $id";
-	// 			if($db->sql_query($sql)) echo 1;
-	// 		}
-	// 	break;
-	// 	case "update":
-	// 		$id = $nv_Request->get_string('id', 'post', '');
-	// 		$name = $nv_Request -> get_string('customer', 'post', '');
-	// 		$phone = $nv_Request -> get_string('phone', 'post', '');
-	// 		$note = $nv_Request -> get_string('note', 'post', '');
-	// 		if(!(empty($id) || empty($name) || empty($phone))) {
-	// 			$sql = "update `" . $db_config['prefix'] . "_" . $module_data . "_customers` set name = '$name', phone = '$phone', note = '$note' where id = $id";
-	// 			if($db->sql_query($sql)) {
-	// 				$row = array("id" => $id, "name" => $name, "phone" => $phone, "note" => $note);
-	// 				echo json_encode($row);
-	// 			}
-	// 		}
-	// 	break;
+		case "remove":
+			$id = $nv_Request->get_string('id', 'post', '');
+			if(!empty($id)) {
+				$sql = "delete from `" . $db_config['prefix'] . "_" . $module_data . "_customers` where id = $id";
+				if($db->sql_query($sql)) echo 1;
+			}
+		break;
+		case "removevac":
+			$id = $nv_Request->get_string('id', 'post', '');
+			$diseaseid = $nv_Request->get_string('diseaseid', 'post', '');
+			if(!empty($id) && !empty($diseaseid)) {
+				$sql = "delete from `" . $db_config['prefix'] . "_" . $module_data . "_$diseaseid` where id = $id";
+				if($db->sql_query($sql)) echo 1;
+			}
+		break;
+		case "update":
+			$id = $nv_Request->get_string('id', 'post', '');
+			$name = $nv_Request -> get_string('customer', 'post', '');
+			$phone = $nv_Request -> get_string('phone', 'post', '');
+			$note = $nv_Request -> get_string('note', 'post', '');
+			if(!(empty($id) || empty($name) || empty($phone))) {
+				$sql = "update `" . $db_config['prefix'] . "_" . $module_data . "_customers` set name = '$name', phone = '$phone', note = '$note' where id = $id";
+				if($db->sql_query($sql)) {
+					$row = array("id" => $id, "name" => $name, "phone" => $phone, "note" => $note);
+					echo json_encode($row);
+				}
+			}
+		break;
 	} 
 
 	die();
@@ -76,8 +84,8 @@ if (!empty($petid)) {
 	foreach ($patient["data"] as $key => $patient_data) {
 		$cometime = date("d/m/Y", $patient_data["cometime"]);
 		$calltime = date("d/m/Y", $patient_data["calltime"]);
-		if ($patient_data["confirm"]) $confirm = $lang_module["yes"];
-		else $confirm = $lang_module["no"];
+		if (empty($patient_data["status"]) || $patient_data["status"] < 0 || $patient_data["status"] >= count($lang_module["confirm_value"])) $patient_data["status"] = 0;
+		$confirm = $lang_module["confirm_value"][$patient_data["status"]];
 		$xtpl->assign("index", $patient_data["id"]);
 		$xtpl->assign("disease", $diseases[$patient_data["disease"] - 1]["disease"]);
 		$xtpl->assign("cometime", $cometime);
