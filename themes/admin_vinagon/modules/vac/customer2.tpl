@@ -7,7 +7,7 @@
 			{lang.phone}: {phone}
 		</p>
 		<p>
-			{lang.note}: {note}
+			{lang.address}: {address}
 		</p>
 		<button onclick="vac_add_pet({customerid})">
 			{lang.add}

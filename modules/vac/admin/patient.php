@@ -93,7 +93,6 @@ else {
 	$xtpl->assign("lang", $lang_module);
 	$index = 1;
 	foreach ($patients as $key => $patient_data) {
-		$lasttime = date("d/m/Y H:i", $patient_data["lasttime"]);
 		$xtpl->assign("index", $index);
 		$xtpl->assign("id", $patient_data["id"]);
 		$xtpl->assign("petname", $patient_data["petname"]);

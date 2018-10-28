@@ -16,13 +16,13 @@ if($action) {
 		case "add":
 			$name = $nv_Request -> get_string('customer', 'post', '');
 			$phone = $nv_Request -> get_string('phone', 'post', '');
-			$note = $nv_Request -> get_string('note', 'post', '');
+			$address = $nv_Request -> get_string('address', 'post', '');
 			if(!(empty($name) || empty($phone))) {
-				$sql2 .= "insert into `" . $db_config['prefix'] . "_" . $module_data . "_customers` (name, phone, note) values('$name', '$phone', '$note');";
+				$sql2 .= "insert into `" . $db_config['prefix'] . "_" . $module_data . "_customers` (name, phone, address) values('$name', '$phone', '$address');";
 				
 				$id = $db->sql_query_insert_id($sql2);
 				if($id){
-					$row = array("id" => $id, "name" => $name, "phone" => $phone, "note" => $note);
+					$row = array("id" => $id, "name" => $name, "phone" => $phone, "address" => $address);
 					echo json_encode($row);
 				}
 			}
@@ -38,11 +38,11 @@ if($action) {
 			$id = $nv_Request->get_string('id', 'post', '');
 			$name = $nv_Request -> get_string('customer', 'post', '');
 			$phone = $nv_Request -> get_string('phone', 'post', '');
-			$note = $nv_Request -> get_string('note', 'post', '');
+			$address = $nv_Request -> get_string('address', 'post', '');
 			if(!(empty($id) || empty($name) || empty($phone))) {
-				$sql = "update `" . $db_config['prefix'] . "_" . $module_data . "_customers` set name = '$name', phone = '$phone', note = '$note' where id = $id";
+				$sql = "update `" . $db_config['prefix'] . "_" . $module_data . "_customers` set name = '$name', phone = '$phone', address = '$address' where id = $id";
 				if($db->sql_query($sql)) {
-					$row = array("id" => $id, "name" => $name, "phone" => $phone, "note" => $note);
+					$row = array("id" => $id, "name" => $name, "phone" => $phone, "address" => $address);
 					echo json_encode($row);
 				}
 			}
@@ -93,7 +93,7 @@ if (!empty($customerid)) {
 	$xtpl->assign("name", $patients["name"]);
 	$xtpl->assign("customerid", $customerid);
 	$xtpl->assign("phone", $patients["phone"]);
-	$xtpl->assign("note", $patients["note"]);
+	$xtpl->assign("address", $patients["address"]);
 	
 	foreach ($patients["data"] as $key => $patient_data) {
 		if(!empty($patient_data["lastcome"])) $lasttime = date("d/m/Y", $patient_data["lastcome"]);
@@ -115,10 +115,10 @@ else {
 	
 	foreach ($customers as $customer_index => $customer_data) {
 		$xtpl->assign("index", $customer_data["id"]);
-		$xtpl->assign("name", $customer_data["name"]);
+		$xtpl->assign("name", $customer_data["customer"]);
 		$xtpl->assign("detail_link", $link . "customer&customerid=" . $customer_data["id"]);
 		$xtpl->assign("phone", $customer_data["phone"]);
-		$xtpl->assign("note", $customer_data["note"]);
+		$xtpl->assign("address", $customer_data["adress"]);
 		$xtpl->parse("main.customer");
 	}
 }

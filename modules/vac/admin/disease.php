@@ -25,7 +25,7 @@ if($array_value) {
 			else {
 				$diseases[$index]["action"] = 2;
 			}
-			$diseases[$index]["name"] = $s;
+			$diseases[$index]["disease"] = $s;
 			$index ++;
 		}
 	}
@@ -34,10 +34,10 @@ if($array_value) {
 	foreach ($diseases as $sdi => $sd) {
 		switch ($sd["action"]) {
 			case 1:
-				$sql2 .= "insert into `" . $db_config['prefix'] . "_" . $module_data . "_diseases` (id, name) values(". $sdi . ", '" . $sd['name'] . "');";
+				$sql2 .= "insert into `" . $db_config['prefix'] . "_" . $module_data . "_diseases` (id, disease) values(". $sdi . ", '" . $sd['disease'] . "');";
 				break;
 			case 2:
-				$sql2 .= "update `" . $db_config['prefix'] . "_" . $module_data . "_diseases` set name = '". $sd["name"] ."' where id = " . $sdi . ";";
+				$sql2 .= "update `" . $db_config['prefix'] . "_" . $module_data . "_diseases` set disease = '". $sd["disease"] ."' where id = " . $sdi . ";";
 				break;
 			default:
 				$sql2 .= "delete `" . $db_config['prefix'] . "_" . $module_data . "_diseases` where id = " . $sdi . ";";
@@ -58,7 +58,7 @@ $xtpl->assign("lang", $lang_module);
 $index = 0;
 foreach ($diseases as $disease_index => $disease_data) {
 	$xtpl->assign("index", $index);
-	$xtpl->assign("name", $disease_data["name"]);
+	$xtpl->assign("name", $disease_data["disease"]);
 	$xtpl->parse("main.disease");
 	$index ++;
 }

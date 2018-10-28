@@ -153,7 +153,7 @@ function getcustomer($customer, $phone) {
 
 function getPatientsList() {
 	global $db, $db_config, $module_name;
-	$sql = "select b.id, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone from " . $db_config['prefix'] . "_" . $module_name . "_pets b inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id";
+	$sql = "select b.id, b.petname, c.id as customerid, c.customer, c.phone as phone from " . $db_config['prefix'] . "_" . $module_name . "_pets b inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id";
 	$result = $db->sql_query($sql);
 	$patients = array();
 	while($row = $db->sql_fetch_assoc($result)) {
@@ -168,7 +168,7 @@ function getPatientsList2($customerid) {
 	$result = $db->sql_query($sql);
 	$patients = $db->sql_fetch_assoc($result);
 	$patients["data"] = array();
-	$sql = "select name as petname, id from " . $db_config['prefix'] . "_" . $module_name . "_pets where customerid = $customerid";
+	$sql = "select petname, id from " . $db_config['prefix'] . "_" . $module_name . "_pets where customerid = $customerid";
 	$result = $db->sql_query($sql);
 	$diseases = getDiseaseList();
 	while($row = $db->sql_fetch_assoc($result)) {

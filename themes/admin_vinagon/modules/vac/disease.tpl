@@ -5,7 +5,7 @@
 	<input type="submit" value="{lang.save}">
 	<!-- BEGIN: disease -->
 	<div id="vac_remove_{index}">
-		<input class="vac_val" name="d_name[{index}]" type="text" value="{name}" />
+		<input style="text-transform:capitalize;" class="vac_val" name="d_name[{index}]" type="text" value="{name}" />
 		<input type="button" value="{lang.remove}" onclick="vac_disease_remove({index})">
 	</div>
 	<!-- END: disease -->

@@ -9,6 +9,7 @@ function vac_disease_add(e) {
 	input.setAttribute("name", "d_name[" + index + "]");
 	input.setAttribute("type", "text");
 	input.setAttribute("class", "vac_val");
+	input.setAttribute("style", 'style="text-transform:capitalize;"');
 	input.setAttribute("value", "");
 	var button = document.createElement("input");
 	button.setAttribute("type", "button");
@@ -64,7 +65,7 @@ function vac_add_customer() {
 			var td_name = document.createElement("td");
 			var a_name = document.createElement("a");
 			var td_phone = document.createElement("td");
-			var td_note = document.createElement("td");
+			var td_address = document.createElement("td");
 			var td_button = document.createElement("td");
 			var button_remove = document.createElement("button");
 			var button_update = document.createElement("button");
@@ -73,19 +74,19 @@ function vac_add_customer() {
 			a_name.setAttribute("id", "customer_name_" + data["id"]);
 			td_name.appendChild(a_name);
 			td_phone.innerText = data["phone"];
-			td_note.innerText = data["note"];
+			td_address.innerText = data["address"];
 			td_phone.setAttribute("id", "customer_phone_" + data["id"]);
-			td_note.setAttribute("id", "customer_note_" + data["id"]);
+			td_address.setAttribute("id", "customer_address_" + data["id"]);
 			tr.setAttribute("id", "customer_" + data["id"]);
 			button_remove.setAttribute("onclick", "vac_remove_customer(" + data["id"] + ")");
 			button_remove.innerText = "Xóa";
-			button_update.setAttribute("onclick", "vac_get_update_customer(" + data["id"] + ", '" + data["name"] + "', '" + data["phone"] + "', '" + data["note"] + "')");
+			button_update.setAttribute("onclick", "vac_get_update_customer(" + data["id"] + ", '" + data["name"] + "', '" + data["phone"] + "', '" + data["address"] + "')");
 			button_update.innerText = "Cập nhật";
 			td_button.appendChild(button_remove);
 			td_button.appendChild(button_update);
 			tr.appendChild(td_name);
 			tr.appendChild(td_phone);
-			tr.appendChild(td_note);
+			tr.appendChild(td_address);
 			tr.appendChild(td_button);
 			document.getElementById("vac_body").appendChild(tr);
 		}
@@ -116,10 +117,10 @@ function vac_remove_customer(id) {
 	}
 }
 
-function vac_get_update_customer(id, name, phone, note) {
+function vac_get_update_customer(id, name, phone, address) {
 	document.getElementById("customer").value = name;
 	document.getElementById("phone").value = phone;
-	document.getElementById("note").value = note;
+	document.getElementById("address").value = address;
 	document.getElementById("update").setAttribute("onclick", "vac_update_customer("+ id +")");
 }
 
@@ -137,7 +138,7 @@ function vac_update_customer(id) {
 				var data = JSON.parse(response);
 				document.getElementById("customer_name_" + data["id"]).innerText = data["name"];
 				document.getElementById("customer_phone_" + data["id"]).innerText = data["phone"];
-				document.getElementById("customer_note_" + data["id"]).innerText = data["note"];			
+				document.getElementById("customer_address_" + data["id"]).innerText = data["address"];			
 				msg = "Cập nhật thành công";
 			}
 			else {

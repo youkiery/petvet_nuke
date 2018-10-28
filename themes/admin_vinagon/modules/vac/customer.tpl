@@ -12,12 +12,12 @@
 					<input class="vac_val" style="display: block;" type="text" name="customer" id="customer">
 				</td>
 				<td rowspan="2">
-					<label for="note">
-						{lang.note}
+					<label for="address">
+						{lang.address}
 					</label>
 				</td>
 				<td rowspan="2">
-					<input class="vac_val" style="display: block; height: 40px;" type="text" name="note" id="note">
+					<input class="vac_val" style="display: block; height: 40px;" type="text" name="address" id="address">
 				</td>
 			</tr>
 			<tr>
@@ -53,7 +53,7 @@
 					{lang.phone}
 				</th>				
 				<th>
-					{lang.note}
+					{lang.address}
 				</th>				
 				<th>
 					
@@ -71,14 +71,14 @@
 				<td id="customer_phone_{index}">
 					{phone}
 				</td>				
-				<td id="customer_note_{index}">
-					{note}
+				<td id="customer_address_{index}">
+					{address}
 				</td>
 				<td>
 					<button onclick="vac_remove_customer({index})">
 						{lang.remove}
 					</button>
-					<button onclick="vac_get_update_customer({index}, '{name}', '{phone}', '{note}')">
+					<button onclick="vac_get_update_customer({index}, '{name}', '{phone}', '{address}')">
 						{lang.update}
 					</button>
 				</td>

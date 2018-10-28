@@ -23,19 +23,21 @@ function showMsg(msg) {
 	e_notify.innerText = msg;
 	e_notify.style.display = "block";
 	e_notify.style.opacity = 1;
-	clearInterval(interval);
-	setTimeout(() => {
-		timer = 0;
-		interval = setInterval(() => {
-			if(Math.floor(timer / 10)) {
-				clearInterval(interval);
-				e_notify.style.display = "none";
-				e_notify.style.opacity = 0;
-			}
-			timer ++;
-			console.log(timer);
-			
-			e_notify.style.opacity *= 0.75;
-		}, 30)
-	}, 1000)
+	
+	if(!timer) {
+		timer ++;
+		
+		setTimeout(() => {
+			interval = setInterval(() => {
+				timer ++;
+				e_notify.style.opacity *= 0.75;
+				if(Math.floor(timer / 10)) {
+					clearInterval(interval);
+					timer = 0;
+					e_notify.style.display = "none";
+					e_notify.style.opacity = 0;
+				}
+			}, 30)
+		}, 1000)
+	}
 }

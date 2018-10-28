@@ -25,6 +25,7 @@ $lang_module["confirm"] = "Đã tiêm";
 $lang_module["customer_title"] = "Quản lý khách hàng";
 // general
 $lang_module["note"] = "Ghi chú";
+$lang_module["address"] = "Địa chỉ";
 $lang_module["petname"] = "Tên thú cưng";
 $lang_module["customer"] = "Tên khách hàng";
 $lang_module["add"] = "Thêm";
