@@ -15,7 +15,7 @@ $xtpl->assign("lang", $lang_module);
 
 $diseases = getDiseaseList();
 foreach ($diseases as $disease_index => $disease_data) {
-	$xtpl->assign("title", $disease_data["name"]);
+	$xtpl->assign("title", $disease_data["disease"]);
 	// var_dump($disease_data["id"]); die();
 	$vac_row = getVaccineTable($disease_data["id"], NV_CURRENTTIME);
 	$i = 1;

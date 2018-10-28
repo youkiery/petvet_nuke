@@ -33,6 +33,8 @@ function showMsg(msg) {
 				e_notify.style.opacity = 0;
 			}
 			timer ++;
+			console.log(timer);
+			
 			e_notify.style.opacity *= 0.75;
 		}, 30)
 	}, 1000)

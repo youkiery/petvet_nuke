@@ -12,7 +12,8 @@
 		</li>
 	</ul>
 	<!-- <div style="display:none;"> -->
-	<form onsubmit="return ex({id})">
+			<div id="vac_notify" style="color: orange; background: gray; width: fit-content; display: none;"> Chọn hành động </div>
+			<form onsubmit="return ex({id})">
 		<table class="tab1">
 			<thead>
 				<tr>

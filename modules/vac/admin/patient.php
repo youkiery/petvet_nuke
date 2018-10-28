@@ -69,7 +69,7 @@ if (!empty($petid)) {
 
 	foreach ($diseases as $key => $value) {
 		$xtpl->assign("diseaseid", $value["id"]);
-		$xtpl->assign("diseasename", $value["name"]);
+		$xtpl->assign("diseasename", $value["disease"]);
 		$xtpl->parse("main.option");
 	}
 
@@ -79,7 +79,7 @@ if (!empty($petid)) {
 		if ($patient_data["confirm"]) $confirm = $lang_module["yes"];
 		else $confirm = $lang_module["no"];
 		$xtpl->assign("index", $patient_data["id"]);
-		$xtpl->assign("disease", $diseases[$patient_data["disease"] - 1]["name"]);
+		$xtpl->assign("disease", $diseases[$patient_data["disease"] - 1]["disease"]);
 		$xtpl->assign("cometime", $cometime);
 		$xtpl->assign("calltime", $calltime);
 		$xtpl->assign("confirm", $confirm);

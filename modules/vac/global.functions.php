@@ -36,9 +36,8 @@ function getCustomerList() {
 function getVaccineTable($id, $time) {
 	// next a week
 	global $db, $db_config, $module_name;
-	$next_week = $time + NV_NEXTWEEK;
 	
-	$sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status from " . $db_config['prefix'] . "_" . $module_name . "_" . $id . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime between " . $time . " and " . $next_week . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id";
+	$sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status from " . $db_config['prefix'] . "_" . $module_name . "_" . $id . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime > " . $time . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id";
 	$result = $db->sql_query($sql);
 	$vaccines = array();
 	while($row = $db->sql_fetch_assoc($result)) {
@@ -195,7 +194,7 @@ function getPatientsList2($customerid) {
 
 function getPatientDetail($petid) {
 	global $db, $db_config, $module_name;
-	$sql = "select b.name as petname, c.name as customer, c.phone as phone from " . $db_config['prefix'] . "_" . $module_name . "_pets b inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.id = $petid and b.customerid = c.id";
+	$sql = "select b.petname, c.customer, c.phone as phone from " . $db_config['prefix'] . "_" . $module_name . "_pets b inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.id = $petid and b.customerid = c.id";
 	$result = $db->sql_query($sql);
 	$patients = $db->sql_fetch_assoc($result);
 	$patients["data"] = array();
