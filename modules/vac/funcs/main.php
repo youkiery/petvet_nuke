@@ -89,6 +89,15 @@ if (!empty($action)) {
 
 			echo json_encode($ret);
 		break;
+		case 'moddefault':
+			$value = $nv_Request->get_string('value', 'post', '');
+
+			if(!empty($value)) {
+				$_SESSION["vac_filter"]["default"] = $value;
+			}
+
+			echo json_encode($ret);
+		break;
 		case 'insertvac':
 			$customer = $nv_Request->get_string('customer', 'post', '');
 			$phone = $nv_Request->get_string('phone', 'post', '');
@@ -165,11 +174,33 @@ if ($page_default) {
 	$page_title = $module_info['custom_title'];
 	$key_words = $module_info['keywords'];
 
+
 	$xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
 	$xtpl->assign("lang", $lang_module);
 	$xtpl->assign("now", date("Y-m-d", NV_CURRENTTIME));
+
+	$day = 24 * 60 * 60 * 1000;
+	$month = 30 * $day;
+	$season = 4 * $month;
+	$year = 4 * $season;
+	$default_option = array("1 tuần" => $day * 7, "2 tuần" => 14 * $day, "3 tuần" => 21 * $day, "1 tháng" => $month, "2 tháng" => 2 * $month, "3 tháng" => 3 * $month, "1 quý" => $season, "2 quý" => 2 * $season, "3 quý" => 3 * $season, "1 năm" => $year);
+
+	$index = 0;
+	$selected = "1 tuần";
+	foreach ($default_option as $name => $value) {
+		$xtpl->assign("index", $index);
+		$xtpl->assign("d_value", $value);
+		$xtpl->assign("d_name", $name);
+		if($value == $_SESSION["vac_filter"]["default"]) {
+			$xtpl->assign("d_select", "selected");
+			$selected = $name;
+		} else $xtpl->assign("d_select", "");
+		$xtpl->parse("main.d_option");
+		$index ++;
+	}
+
 	// note: nexttime take from config
-	$xtpl->assign("calltime", date("Y-m-d", NV_CURRENTTIME + 14 * 24 * 60 * 60));
+	$xtpl->assign("calltime", date("Y-m-d", NV_CURRENTTIME + $default_option[$selected] / 1000));
 
 	$diseases = getDiseaseList();
 	foreach ($diseases as $key => $value) {

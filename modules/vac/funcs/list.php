@@ -8,9 +8,11 @@
 
 $page_title = $lang_module["main_title"];
 	$xtpl = new XTemplate("list.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
-	$day = 24 * 60 * 60;
+	$day = 24 * 60 * 60 * 100;
 	$month = 30 * $day;
-	$date_option = array("1 week" => $day * 7, "2 week" => 14 * $day, "3 week" => 21 * $day, "4 week" => 28 * $day, "1 month" => $month, "2 month" => 2 * $month, "3 month" => 3 * $month);
+	$season = 4 * $month;
+	$year = 4 * $season;
+	$date_option = array("1 tuần" => $day * 7, "2 tuần" => 14 * $day, "3 tuần" => 21 * $day, "1 tháng" => $month, "2 tháng" => 2 * $month, "3 tháng" => 3 * $month, "1 quý" => $season, "2 quý" => 2 * $season, "3 quý" => 3 * $season, "1 năm" => $year);
 	$sort_option = array("1" => "Thời gian tiêm phòng giảm dần", "2" => "Thời gian tiêm phòng tăng dần", "3" => "Thời gian tái chủng giảm dần", "4" => "Thời gian tái chủng tăng dần");
 
 	$xtpl->assign("lang", $lang_module);

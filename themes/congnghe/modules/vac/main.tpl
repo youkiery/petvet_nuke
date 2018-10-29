@@ -15,8 +15,17 @@
 	<table class="tab1 vac">
 		<thead>
 			<tr>
-				<th colspan="4">
+				<th colspan="3">
 					{lang.disease_title}
+				</th>
+				<th>
+					<select id="default_change" onchange="defaultChange()">
+						<!-- BEGIN: d_option -->
+						<option id="default_{d_index}" value="{d_value}" {d_select}>
+							{d_name}
+						</option>
+						<!-- END: d_option -->
+					</select>
 				</th>
 			</tr>
 		</thead>
@@ -119,6 +128,19 @@
 	var pet_note = document.getElementById("pet_note");
 	var suggest_name = document.getElementById("customer_name_suggest");
 	var suggest_phone = document.getElementById("customer_phone_suggest");
+
+	function defaultChange() {
+		var x = document.getElementById("default_change");
+		var val = x.options[x.selectedIndex].value;
+		var now = new Date();
+		var next = new Date(Number(new Date(now.getFullYear(), now.getMonth(), now.getDate())) + Number(val));
+		var x = document.getElementById("pet_calltime").value = next.getFullYear() + "-" + (next.getMonth() < 10 ? "0" : "") + (next.getMonth() + 1) + "-" + (next.getDate() < 10 ? "0" : "") + next.getDate();
+		var data = ["action=moddefault", "value=" + val];
+		fetch(link, data).then((response) => {
+			console.log(response);
+			
+		})
+	}
 
 	function vaccine() {
 		msg = "";
