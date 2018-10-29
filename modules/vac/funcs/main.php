@@ -45,7 +45,7 @@ if (!empty($action)) {
 					$sql = "select * from `" . $db_config['prefix'] . "_" . $module_data . "_customers` where customer = '$customer'";
 					$result = $db->sql_query($sql);
 					if(!$db->sql_numrows($result)) {
-						$sql = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_customers` (customer, phone, address) values ('$customer', $phone, '$address');";
+						$sql = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_customers` (customer, phone, address) values ('$customer', '$phone', '$address');";
 						if ($id = $db->sql_query_insert_id($sql)) {
 							$ret["status"] = 2;	
 							$ret["data"][] = array("id" => $id);
@@ -66,19 +66,26 @@ if (!empty($action)) {
 			$customerid = $nv_Request->get_string('customerid', 'post', '');
 			$petname = $nv_Request->get_string('petname', 'post', '');
 
-			if (!(empty($customerid) || empty($petname))) {
-				$sql = "select * from `" . $db_config['prefix'] . "_" . $module_data . "_pets` where petname = '$petname' and customerid = $customerid";
-				$result = $db->sql_query($sql);
-				if(!$db->sql_numrows($result)) {	
-					$sql = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_pets` (petname, customerid) values ('$petname', $customerid);";
-					if ($id = $db->sql_query_insert_id($sql)) {
-						$ret["status"] = 2;	
-						$ret["data"][] = array("id" => $id);
+			if(!empty($customerid)) {
+				if (!empty($petname)) {
+					$sql = "select * from `" . $db_config['prefix'] . "_" . $module_data . "_pets` where petname = '$petname' and customerid = $customerid";
+					$result = $db->sql_query($sql);
+					if(!$db->sql_numrows($result)) {	
+						$sql = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_pets` (petname, customerid) values ('$petname', $customerid);";
+						if ($id = $db->sql_query_insert_id($sql)) {
+							$ret["status"] = 2;	
+							$ret["data"][] = array("id" => $id);
+						}
+					} else {
+						$ret["status"] = 1;	
 					}
 				} else {
-					$ret["status"] = 1;	
+					$ret["status"] = 3;
 				}
+			} else {
+				$ret["status"] = 4;
 			}
+
 
 			echo json_encode($ret);
 		break;

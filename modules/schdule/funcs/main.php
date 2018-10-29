@@ -6,7 +6,8 @@
 * @createdate 29/10/2018 09:17
 */
 
-if ( !defined('NV_IS_MOD_SCHDULE')) die('Stop!!!');
+if (!defined('NV_IS_MOD_SCHDULE')) die('Stop!!!');
+
 
 
 include(NV_ROOTDIR . "/includes/header.php");

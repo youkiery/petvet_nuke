@@ -3,6 +3,14 @@
 <a href="/index.php?nv=vac&op=list">
 	{lang.main_title}
 </a>
+<div style="float: right;">
+	<div style="width: 32px; height: 32px; cursor: pointer; display: inline-block; background-image: url('/themes/congnghe/images/vac/contact_add_small.png')" class="vac_icon" onclick="addCustomer()">
+		<img src="/themes/congnghe/images/vac/trans.png" title="Thêm khách hàng"> 
+	</div>
+	<div style="width: 32px; height: 32px; cursor: pointer; display: inline-block; background-image: url('/themes/congnghe/images/vac/pet_add.png')" class="vac_icon" tooltip="Thêm thú cưng" onclick="addPet()">
+		<img src="/themes/congnghe/images/vac/trans.png" title="Thêm thú cưng"> 
+	</div>
+</div>
 <form onsubmit="return vaccine()" autocomplete="off">
 	<table class="tab1 vac">
 		<thead>
@@ -29,12 +37,11 @@
 			<tr>
 				<td style="position: relative;">
 					<input id="customer_name" type="text" name="customer">
-					<div id="customer_name_suggest" class="suggest" style="background: white; display:none; position: absolute; overflow-y:scroll; max-height: 300px; width: 90%;"></div>
+					<div id="customer_name_suggest" class="suggest" style="background: white; display:none; position: absolute; overflow-y:scroll; max-height: 300px; width: 110%;"></div>
 				</td>
 				<td style="position: relative;">
-					<input id="customer_phone" style="width: 80%" type="number" name="phone">
-					<div id="customer_phone_suggest" class="suggest" style="background: white; display:none; position: absolute; overflow-y:scroll; max-height: 300px; width: 90%;"></div>
-					<input type="button" value="+" onclick="addCustomer()" style="width: 28px;">
+					<input id="customer_phone" style="width: 90%" type="number" name="phone">
+					<div id="customer_phone_suggest" class="suggest" style="background: white; display:none; position: absolute; overflow-y:scroll; max-height: 300px; width: 110%;"></div>
 				</td>
 				<td colspan="2">
 					<input id="customer_address" type="text" name="address">
@@ -59,7 +66,6 @@
 			<tr>
 				<td>
 					<select id="pet_info" style="text-transform: capitalize;" name="petname"></select>
-					<input type="button" value="+" onclick="addPet()" style="width: 28px; float: right;">
 				</td>
 				<td>
 					<select id="pet_disease" class="vac_select_max" style="text-transform: capitalize;" name="disease">
@@ -90,6 +96,9 @@
 	</table>
 </form>
 <style>
+	.vac_icon:hover {
+		background-position-x: 32px;
+	}
 	.suggest div:hover {
 		background: #afa;
 		cursor: pointer;
@@ -275,7 +284,7 @@
 		if(phone.length) {
 			var answer = prompt("Nhập tên khách hàng cho số điện thoại(" + phone + "):", name);
 			if(answer) {
-				var data = ["action=addcustomer", "customer=" + answer, "phone=" + phone];
+				var data = ["action=addcustomer", "customer=" + answer, "phone=" + phone, "address=" + address];
 				fetch(link, data).then(response => {
 					response = JSON.parse(response);
 					switch (response["status"]) {
@@ -319,16 +328,26 @@
 			fetch(link, data).then(response => {
 				var response = JSON.parse(response);
 
-				if (response["status"] == 2) {
-					customer_data["pet"].push({
-						id: response["data"][0].id,
-						petname: answer
-					});
-					reloadPetOption(customer_data["pet"])
-					msg = "Đã thêm thú cưng("+answer+")";
-				}
-				else {
-					msg = "Đã có tên thú cưng này!";
+				switch (response["status"]) {
+					case 1:
+						msg = "Khách hàng hoặc tên thú cưng không tồn tại";						
+						break;
+					case 2:
+						customer_data["pet"].push({
+							id: response["data"][0].id,
+							petname: answer
+						});
+						reloadPetOption(customer_data["pet"])
+						msg = "Đã thêm thú cưng("+answer+")";
+						break;
+					case 3:
+						msg = "Tên thú cưng không hợp lệ";
+						break;
+					case 4:
+						msg = "Tên khách hàng không hợp lệ";
+						break;
+					default:
+						msg = "Lỗi mạng!";
 				}
 				showMsg(msg);
 			})
