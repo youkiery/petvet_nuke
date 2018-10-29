@@ -30,24 +30,26 @@ if($array_value) {
 		}
 	}
 
-	$sql = "";
+	$check = true;
 	foreach ($diseases as $sdi => $sd) {
+		$sdi ++;
 		switch ($sd["action"]) {
 			case 1:
-				$sql2 .= "insert into `" . $db_config['prefix'] . "_" . $module_data . "_diseases` (id, disease) values(". $sdi . ", '" . $sd['disease'] . "');";
+				checkNewDisease($sdi);
+				$sql2 = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_diseases` (id, disease) values(". $sdi . ", '" . $sd['disease'] . "');";
 				break;
 			case 2:
-				$sql2 .= "update `" . $db_config['prefix'] . "_" . $module_data . "_diseases` set disease = '". $sd["disease"] ."' where id = " . $sdi . ";";
+				$sql2 = "update `" . $db_config['prefix'] . "_" . $module_data . "_diseases` set disease = '". $sd["disease"] ."' where id = " . $sdi . ";";
 				break;
 			default:
-				$sql2 .= "delete `" . $db_config['prefix'] . "_" . $module_data . "_diseases` where id = " . $sdi . ";";
+				$sql2 = "delete from `" . $db_config['prefix'] . "_" . $module_data . "_diseases` where id = " . $sdi . "; ";
+		}
+		if(empty($sql2) || !$db->sql_query($sql2)) {
+			$check = false;
 		}
 	}
-	if(!empty($sql2)) {
-		$db->sql_query($sql2);
-		die("1");
-	}
-	die("0");
+	if ($check) die("1");
+	else die("0");
 }
 
 $page_title = $lang_module["disease_title"];

@@ -4,7 +4,7 @@
 	$time_amount = $nv_Request->get_string('time_amount', 'get', '');
 	$sort = $nv_Request->get_string('sort', 'get', '');
 
-	if(!(empty($key) || empty($fromtime) || empty($time_amount) || empty($sort))) {
+	if(!(empty($fromtime) || empty($time_amount) || empty($sort))) {
 		$xtpl = new XTemplate("list-1.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
 		$xtpl->assign("lang", $lang_module);
 

@@ -11,6 +11,20 @@ if (!defined('NV_MAINFILE')) die('Stop!!!');
 define('NV_NEXTMONTH', 30 * 24 * 60 * 60);
 define('NV_NEXTWEEK', 7 * 24 * 60 * 60);
 
+function checkNewDisease($id) {
+	global $db, $db_config, $module_name;
+
+	$sql = array();
+	$sql[] = "CREATE TABLE IF NOT EXISTS " . $db_config['prefix'] . "_" . $module_name . "_$id ( `id` int(11) NOT NULL, `petid` int(11) NOT NULL, `cometime` int(11) NOT NULL, `calltime` int(11) NOT NULL, `status` tinyint(4) NOT NULL, `note` text NOT NULL ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+	$sql[] = "ALTER TABLE `" . $db_config['prefix'] . "_" . $module_name . "_$id` ADD PRIMARY KEY (`id`);";
+	$sql[] = "ALTER TABLE `" . $db_config['prefix'] . "_" . $module_name . "_$id` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;";
+	$check = true;
+	foreach ($sql as $value) {
+		if(!$db->sql_query($value)) $check = false;
+	}
+	return $check;
+}
+
 function getDiseaseList() {
 	global $db, $db_config, $module_name;
 	$sql = "select * from " . $db_config['prefix'] . "_" . $module_name . "_diseases";
