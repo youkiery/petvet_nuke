@@ -44,4 +44,8 @@ $lang_module["yes"] = "Đã xong";
 $lang_module["no"] = "Chưa xong";
 $lang_module["lasttime"] = "Lần cuối";
 $lang_module["lastname"] = "Loại tiêm phòng";
+$lang_module["recall"] = "Tái chủng";
+$lang_module["confirm_mess"] = "Thời gian tái chủng";
+$lang_module["doctor"] = "Người trực";
+
 ?>

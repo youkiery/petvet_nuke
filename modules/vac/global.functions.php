@@ -49,9 +49,10 @@ function getCustomerList() {
 
 function getVaccineTable($id, $time) {
 	// next a week
-	global $db, $db_config, $module_name;
-	
-	$sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status from " . $db_config['prefix'] . "_" . $module_name . "_" . $id . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime > " . $time . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id";
+	global $db, $db_config, $module_name, $global_config;
+	$next_time = $time + $global_config["filter_time"];
+
+	$sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status from " . $db_config['prefix'] . "_" . $module_name . "_" . $id . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime between " . $time . " and " . $next_time . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id";
 	$result = $db->sql_query($sql);
 	$vaccines = array();
 	while($row = $db->sql_fetch_assoc($result)) {
@@ -79,6 +80,18 @@ function filter($path, $lang, $fromtime, $amount_time, $sort) {
 			$xtpl->assign("customer", $row["customer"]);
 			$xtpl->assign("phone", $row["phone"]);
 			$xtpl->assign("confirm", $lang["confirm_" . $row["status"]]);
+			if($row["status"] == 2 && !$row["recall"]) $xtpl->parse("disease.vac_body.recall_link");
+			switch ($row["status"]) {
+				case '1':
+					$xtpl->assign("color", "orange");
+					break;
+				case '2':
+					$xtpl->assign("color", "green");
+					break;
+				default:
+					$xtpl->assign("color", "red");
+					break;
+			}
 			$xtpl->assign("cometime", date("d/m/Y", $row["cometime"]));
 			$xtpl->assign("calltime", date("d/m/Y", $row["calltime"]));
 			$i++;
@@ -92,6 +105,7 @@ function filter($path, $lang, $fromtime, $amount_time, $sort) {
 function filterVac($fromtime, $amount_time, $sort, $diseaseid) {
 	global $db, $db_config, $module_name;
 	$endtime = $fromtime + $amount_time;
+	$fromtime -= $amount_time;
 
 	$order = '';
 	switch ($sort) {
@@ -109,7 +123,7 @@ function filterVac($fromtime, $amount_time, $sort, $diseaseid) {
 		break;
 	}
 	
-	$sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status from " . $db_config['prefix'] . "_" . $module_name . "_" . $diseaseid . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id " . $order;
+	$sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status, doctorid, recall from " . $db_config['prefix'] . "_" . $module_name . "_" . $diseaseid . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id " . $order;
 	// var_dump($vaclist); die();
 	$result = $db->sql_query($sql);
 	$ret = array();

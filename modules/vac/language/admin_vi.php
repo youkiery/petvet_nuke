@@ -39,4 +39,6 @@ $lang_module["confirm_value"][1] = "Đã gọi";
 $lang_module["confirm_value"][2] = "Đã tiêm";
 $lang_module["lasttime"] = "Lần cuối";
 $lang_module["lastname"] = "Loại tiêm phòng";
+
+$lang_module["config"] = "Cấu hình";
 ?>

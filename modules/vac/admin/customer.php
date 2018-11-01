@@ -18,7 +18,7 @@ if($action) {
 			$phone = $nv_Request -> get_string('phone', 'post', '');
 			$address = $nv_Request -> get_string('address', 'post', '');
 			if(!(empty($name) || empty($phone))) {
-				$sql2 .= "insert into `" . $db_config['prefix'] . "_" . $module_data . "_customers` (name, phone, address) values('$name', '$phone', '$address');";
+				$sql2 .= "insert into `" . $db_config['prefix'] . "_" . $module_data . "_customers` (customer, phone, address) values('$name', '$phone', '$address');";
 				
 				$id = $db->sql_query_insert_id($sql2);
 				if($id){
@@ -40,7 +40,7 @@ if($action) {
 			$phone = $nv_Request -> get_string('phone', 'post', '');
 			$address = $nv_Request -> get_string('address', 'post', '');
 			if(!(empty($id) || empty($name) || empty($phone))) {
-				$sql = "update `" . $db_config['prefix'] . "_" . $module_data . "_customers` set name = '$name', phone = '$phone', address = '$address' where id = $id";
+				$sql = "update `" . $db_config['prefix'] . "_" . $module_data . "_customers` set customer = '$name', phone = '$phone', address = '$address' where id = $id";
 				if($db->sql_query($sql)) {
 					$row = array("id" => $id, "name" => $name, "phone" => $phone, "address" => $address);
 					echo json_encode($row);
@@ -51,7 +51,7 @@ if($action) {
 			$petname = $nv_Request -> get_string('petname', 'post', '');
 			$customerid = $nv_Request -> get_string('id', 'post', '');
 			if(!(empty($petname) || empty($customerid))) {
-				$sql2 .= "insert into `" . $db_config['prefix'] . "_" . $module_data . "_pets` (customerid, name) values('$customerid', '$petname');";
+				$sql2 .= "insert into `" . $db_config['prefix'] . "_" . $module_data . "_pets` (customerid, petname) values('$customerid', '$petname');";
 				
 				$id = $db->sql_query_insert_id($sql2);
 				if($id){
@@ -71,7 +71,7 @@ if($action) {
 			$id = $nv_Request->get_string('id', 'post', '');
 			$petname = $nv_Request -> get_string('petname', 'post', '');
 			if(!(empty($id) || empty($petname))) {
-				$sql = "update `" . $db_config['prefix'] . "_" . $module_data . "_pets` set name = '$petname' where id = $id";
+				$sql = "update `" . $db_config['prefix'] . "_" . $module_data . "_pets` set petname = '$petname' where id = $id";
 				if($db->sql_query($sql)) {
 					$row = array("id" => $id, "name" => $petname);
 					echo json_encode($row);
@@ -90,7 +90,7 @@ if (!empty($customerid)) {
 	$patients = getPatientsList2($customerid);
 	$xtpl = new XTemplate("customer2.tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file);
 	$xtpl->assign("lang", $lang_module);
-	$xtpl->assign("name", $patients["name"]);
+	$xtpl->assign("name", $patients["customer"]);
 	$xtpl->assign("customerid", $customerid);
 	$xtpl->assign("phone", $patients["phone"]);
 	$xtpl->assign("address", $patients["address"]);
@@ -118,7 +118,7 @@ else {
 		$xtpl->assign("name", $customer_data["customer"]);
 		$xtpl->assign("detail_link", $link . "customer&customerid=" . $customer_data["id"]);
 		$xtpl->assign("phone", $customer_data["phone"]);
-		$xtpl->assign("address", $customer_data["adress"]);
+		$xtpl->assign("address", $customer_data["address"]);
 		$xtpl->parse("main.customer");
 	}
 }

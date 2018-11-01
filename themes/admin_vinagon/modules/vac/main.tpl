@@ -1,4 +1,5 @@
 <!-- BEGIN: main -->
+<!-- BEGIN: disease -->
 <div class="vng_body">
 	<table class="vng_vacbox tab1">
 		<thead>
@@ -58,4 +59,5 @@
 		</tbody>
 	</table>
 </div>
+<!-- END: disease -->
 <!-- END: main -->

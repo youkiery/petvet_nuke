@@ -37,8 +37,7 @@
         <![endif]-->
         <script type="text/javascript" src="{NV_BASE_SITEURL}js/global.js">
         </script>
-        <script type="text/javascript" src="{NV_BASE_SITEURL}js/jquery/jquery.min.js">
-        </script>
+        <script type="text/javascript" src="{NV_BASE_SITEURL}js/jquery/jquery.min.js"></script>
         <script type="text/javascript" src="{NV_BASE_SITEURL}js/admin.js">
         </script>
         <!-- BEGIN: module_js -->

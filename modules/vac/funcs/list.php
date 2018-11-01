@@ -5,14 +5,12 @@
 * @Copyright (C) 2011
 * @Createdate 26-01-2011 14:43
 */
-
+if ( ! defined( 'NV_IS_MOD_VAC' ) ) die( 'Stop!!!' );
 $page_title = $lang_module["main_title"];
 	$xtpl = new XTemplate("list.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
-	$day = 24 * 60 * 60 * 100;
+	$day = 24 * 60 * 60;
 	$month = 30 * $day;
-	$season = 4 * $month;
-	$year = 4 * $season;
-	$date_option = array("1 tuần" => $day * 7, "2 tuần" => 14 * $day, "3 tuần" => 21 * $day, "1 tháng" => $month, "2 tháng" => 2 * $month, "3 tháng" => 3 * $month, "1 quý" => $season, "2 quý" => 2 * $season, "3 quý" => 3 * $season, "1 năm" => $year);
+	$date_option = array("1 week" => $day * 7, "2 week" => 14 * $day, "3 week" => 21 * $day, "4 week" => 28 * $day, "1 month" => $month, "2 month" => 2 * $month, "3 month" => 3 * $month);
 	$sort_option = array("1" => "Thời gian tiêm phòng giảm dần", "2" => "Thời gian tiêm phòng tăng dần", "3" => "Thời gian tái chủng giảm dần", "4" => "Thời gian tái chủng tăng dần");
 
 	$xtpl->assign("lang", $lang_module);
@@ -37,5 +35,13 @@ $page_title = $lang_module["main_title"];
 	}
 
 	$xtpl->assign("content", filter(NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file, $lang_module, date("Y-m-d", NV_CURRENTTIME), $time_amount, $sort));
+
+	$xtpl->parse("main");
+
+    $contents = $xtpl->text("main");
+    
+    include ( NV_ROOTDIR . "/includes/header.php" );
+    echo nv_site_theme( $contents );
+    include ( NV_ROOTDIR . "/includes/footer.php" );
 
 ?>

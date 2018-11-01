@@ -55,12 +55,15 @@
 					<button style="float: left;" onclick="confirm_lower({index}, {vacid}, {diseaseid})">
 						&lt;
 					</button>
-          <span id="vac_confirm_{index}">
+          <span id="vac_confirm_{index}" style="color: {color};">
             {confirm}
           </span>
 					<button style="float: right;" onclick="confirm_upper({index}, {vacid}, {diseaseid})">
 						&gt;
 					</button>
+					<!-- BEGIN: recall_link -->
+						<button onclick="recall({index}, {vacid}, {diseaseid})">{lang.recall}</button>
+					<!-- END: recall_link -->
 				</td>
     	</tr>
     	<!-- END: vac_body -->

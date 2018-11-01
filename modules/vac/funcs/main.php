@@ -7,7 +7,6 @@
 */
 
 if ( ! defined( 'NV_IS_MOD_VAC' ) ) die( 'Stop!!!' );
-
 $action = $nv_Request->get_string('action', 'post', '');
 $ret = array("status" => 0, "data" => array());
 if (!empty($action)) {
@@ -21,6 +20,43 @@ if (!empty($action)) {
 			$ret["status"] = 2;
 		}
 		echo json_encode($ret);
+		break;
+		case 'getrecall':
+			$vacid = $nv_Request->get_string('vacid', 'post', '');
+			$diseaseid = $nv_Request->get_string('diseaseid', 'post', '');
+			$sql = "select a.recall, b.doctor from `" . $db_config['prefix'] . "_" . $module_data . "_$diseaseid` a inner join `" . $db_config['prefix'] . "_" . $module_data . "_$diseaseid` b on id = $vacid where a.doctorid = b.id";
+
+			$result = $db->sql_query($sql);
+			$check = true;
+			$row = $db->sql_fetch_assoc($result);
+			if ($row["recall"]) {
+				$ret["status"] = 1;
+				$ret["data"] = $row;
+			} else {
+				$sql = "select * from `" . $db_config['prefix'] . "_" . $module_data . "_doctor`";
+				$result = $db->sql_query($sql);
+				$doctor = array();
+				while ($row = $db->sql_fetch_assoc($result)) {
+					$doctor[] = $row;
+				}
+				$ret["data"] = $doctor;
+			}
+			
+			echo json_encode($ret);
+		break;
+		case 'save':
+			$recall = $nv_Request->get_string('recall', 'post', '');
+			$doctor = $nv_Request->get_string('doctor', 'post', '');
+			$vacid = $nv_Request->get_string('vacid', 'post', '');
+			$diseaseid = $nv_Request->get_string('diseaseid', 'post', '');
+
+			$doctor ++;
+			$sql = "update `" . $db_config['prefix'] . "_" . $module_data . "_$diseaseid` set recall = '$recall', doctorid = $doctor where id = $vacid";
+			$result = $db->sql_query($sql);
+			// return set
+			$ret["data"] = $sql;
+
+			echo json_encode($ret);
 		break;
 		case 'getpet':
 			$customerid = $nv_Request->get_string('customerid', 'post', '');
@@ -66,35 +102,25 @@ if (!empty($action)) {
 			$customerid = $nv_Request->get_string('customerid', 'post', '');
 			$petname = $nv_Request->get_string('petname', 'post', '');
 
-			if(!empty($customerid)) {
-				if (!empty($petname)) {
-					$sql = "select * from `" . $db_config['prefix'] . "_" . $module_data . "_pets` where petname = '$petname' and customerid = $customerid";
-					$result = $db->sql_query($sql);
-					if(!$db->sql_numrows($result)) {	
-						$sql = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_pets` (petname, customerid) values ('$petname', $customerid);";
-						if ($id = $db->sql_query_insert_id($sql)) {
-							$ret["status"] = 2;	
-							$ret["data"][] = array("id" => $id);
-						}
-					} else {
-						$ret["status"] = 1;	
-					}
-				} else {
-					$ret["status"] = 3;
-				}
-			} else {
-				$ret["status"] = 4;
-			}
-
-
-			echo json_encode($ret);
-		break;
-		case 'moddefault':
-			$value = $nv_Request->get_string('value', 'post', '');
-
-			if(!empty($value)) {
-				$_SESSION["vac_filter"]["default"] = $value;
-			}
+    		if(!empty($customerid)) {
+    			if (!empty($petname)) {
+    				$sql = "select * from `" . $db_config['prefix'] . "_" . $module_data . "_pets` where petname = '$petname' and customerid = $customerid";
+    				$result = $db->sql_query($sql);
+    				if(!$db->sql_numrows($result)) {	
+    					$sql = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_pets` (petname, customerid) values ('$petname', $customerid);";
+    					if ($id = $db->sql_query_insert_id($sql)) {
+    						$ret["status"] = 2;	
+    						$ret["data"][] = array("id" => $id);
+    					}
+    				} else {
+    					$ret["status"] = 1;	
+    				}
+    			} else {
+    				$ret["status"] = 3;
+    			}
+    		} else {
+    			$ret["status"] = 4;
+    		}
 
 			echo json_encode($ret);
 		break;
@@ -174,37 +200,15 @@ if ($page_default) {
 	$page_title = $module_info['custom_title'];
 	$key_words = $module_info['keywords'];
 
-
 	$xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
 	$xtpl->assign("lang", $lang_module);
 	$xtpl->assign("now", date("Y-m-d", NV_CURRENTTIME));
-
-	$day = 24 * 60 * 60 * 1000;
-	$month = 30 * $day;
-	$season = 4 * $month;
-	$year = 4 * $season;
-	$default_option = array("1 tuần" => $day * 7, "2 tuần" => 14 * $day, "3 tuần" => 21 * $day, "1 tháng" => $month, "2 tháng" => 2 * $month, "3 tháng" => 3 * $month, "1 quý" => $season, "2 quý" => 2 * $season, "3 quý" => 3 * $season, "1 năm" => $year);
-
-	$index = 0;
-	$selected = "1 tuần";
-	foreach ($default_option as $name => $value) {
-		$xtpl->assign("index", $index);
-		$xtpl->assign("d_value", $value);
-		$xtpl->assign("d_name", $name);
-		if($value == $_SESSION["vac_filter"]["default"]) {
-			$xtpl->assign("d_select", "selected");
-			$selected = $name;
-		} else $xtpl->assign("d_select", "");
-		$xtpl->parse("main.d_option");
-		$index ++;
-	}
-
 	// note: nexttime take from config
-	$xtpl->assign("calltime", date("Y-m-d", NV_CURRENTTIME + $default_option[$selected] / 1000));
+	$xtpl->assign("calltime", date("Y-m-d", NV_CURRENTTIME + 14 * 24 * 60 * 60));
 
 	$diseases = getDiseaseList();
 	foreach ($diseases as $key => $value) {
-		$xtpl->assign("disease_id", $value["id"]);		
+		$xtpl->assign("disease_id", $value["id"]);
 		$xtpl->assign("disease_name", $value["disease"]);	
 		$xtpl->parse("main.option");	
 	}

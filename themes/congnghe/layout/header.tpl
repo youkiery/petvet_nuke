@@ -11,14 +11,17 @@
      {THEME_SITE_RSS}
      {THEME_SITE_JS}
     <link href="{NV_BASE_SITEURL}themes/{TEMPLATE}/site_code/includes/tpl_script/style.css" type="text/css" rel="stylesheet" />
-    <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js'></script>
-    <script type="text/javascript" src="{NV_BASE_SITEURL}themes/{TEMPLATE}/site_code/includes/tpl_script/p_tooltip.js"></script>
+    <script type="text/javascript" src="{NV_BASE_SITEURL}themes/{TEMPLATE}/site_code/jquery.min.js"></script>
+    <script type="text/javascript" src="{NV_BASE_SITEURL}js/jquery/jquery.ui.min.js"></script>
+
+  	<script type="text/javascript" src="{NV_BASE_SITEURL}themes/{TEMPLATE}/site_code/includes/tpl_script/p_tooltip.js"></script>
   	<script type="text/javascript" src="{NV_BASE_SITEURL}themes/{TEMPLATE}/site_code/includes/tpl_script/jquery.autocomplete.min.js"></script>
     <script type="text/javascript" src="{NV_BASE_SITEURL}themes/{TEMPLATE}/site_code/includes/js/common.js"></script>
     <script type="text/javascript" src="{NV_BASE_SITEURL}themes/{TEMPLATE}/site_code/includes/js/swfobject.js"></script>
   	
   	<link rel="stylesheet" href="{NV_BASE_SITEURL}themes/{TEMPLATE}/site_code/includes/tpl_script/skin.css" type="text/css" />
 	<script type="text/javascript" src="{NV_BASE_SITEURL}themes/{TEMPLATE}/site_code/includes/tpl_script/jquery.jcarousel.min.js"></script>
+  	<!--script type="text/javascript" src="/{NV_BASE_SITEURL}themes/{TEMPLATE}/site_code/includes/tpl_script/jqueryEasing.js"></script-->
   	<script type="text/javascript" src="{NV_BASE_SITEURL}themes/{TEMPLATE}/site_code/includes/tpl_script/mycarousel_fun.js"></script>
   	
     
@@ -37,7 +40,7 @@
       var js, fjs = d.getElementsByTagName(s)[0];
       if (d.getElementById(id)) return;
       js = d.createElement(s); js.id = id;
-      js.src = "http://connect.facebook.net/vi_VN/all.js#xfbml=1&appId=199828456846777";
+      js.src = "../connect.facebook.net/vi_VN/all.js#xfbml=1&appId=199828456846777";
       fjs.parentNode.insertBefore(js, fjs);
       }(document, 'script', 'facebook-jssdk'));
     </script>
@@ -46,7 +49,7 @@
   if (!_fbq.loaded) {
     var fbds = document.createElement('script');
     fbds.async = true;
-    fbds.src = 'http://connect.facebook.net/en_US/fbds.js';
+    fbds.src = '../connect.facebook.net/en_US/fbds.js';
     var s = document.getElementsByTagName('script')[0];
     s.parentNode.insertBefore(fbds, s);
     _fbq.loaded = true;

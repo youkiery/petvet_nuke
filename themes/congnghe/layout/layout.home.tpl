@@ -7,7 +7,7 @@
 <script type="text/javascript" src="{NV_BASE_SITEURL}themes/{TEMPLATE}/site_code/includes/tpl_script/popup.js"></script>
 
 <div id="popupContact">
-  <div id="popupContactClose" > <a style="cursor:pointer; font-size: 30px;color:white;">
+  <div id="popupContactClose" > <a style="cursor:pointer; font-size: 30px;color:white;" onclick='closePop();'>
     <img src="{NV_BASE_SITEURL}themes/{TEMPLATE}/site_code/includes/images/ico_close.png" alt="" /></a> </div>
   <p id="contactArea">[POPUP]</p>
 </div>
