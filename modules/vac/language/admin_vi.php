@@ -29,6 +29,7 @@ $lang_module["address"] = "Địa chỉ";
 $lang_module["petname"] = "Tên thú cưng";
 $lang_module["customer"] = "Tên khách hàng";
 $lang_module["add"] = "Thêm";
+$lang_module["edit"] = "Sửa";
 $lang_module["remove"] = "Xóa";
 $lang_module["update"] = "Cập nhật";
 $lang_module["yes"] = "Đã xong";
@@ -42,4 +43,7 @@ $lang_module["lastname"] = "Loại tiêm phòng";
 
 $lang_module["config"] = "Cấu hình";
 $lang_module["doctor_title"] = "Quản lý bác sĩ";
-?>
+$lang_module["doctor_config"] = "Cấu hình";
+$lang_module["doctor_manager"] = "Quản lý bác sĩ";
+$lang_module["doctor_list"] = "Danh sách bác sĩ";
+$lang_module["doctor_name"] = "Tên bác sĩ";

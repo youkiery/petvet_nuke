@@ -103,6 +103,35 @@ function filter($path, $lang, $fromtime, $amount_time, $sort) {
 	return $xtpl->text("disease");
 }
 
+function getdoctorlist() {
+	global $db, $db_config, $module_name;
+	$sql = "select * from " . $db_config['prefix'] . "_" . $module_name . "_doctor";
+	$result = $db->sql_query($sql);
+	$doctor = array();
+
+	while ($row = $db->sql_fetch_assoc($result)) {
+		$doctor[] = $row;
+	}
+	return $doctor;
+}
+
+function doctorlist($path) {
+	$xtpl = new XTemplate("doctor-2.tpl", $path);
+
+	$xtpl->assign("lang", $lang);
+
+	$doctors = getdoctorlist();
+	foreach ($doctors as $key => $doctor_data) {
+		echo
+		$xtpl->assign("index", $doctor_data["id"]);
+		$xtpl->assign("name", $doctor_data["doctor"]);
+		$xtpl->parse("main.doctor");
+	}
+	
+	$xtpl->parse("main");
+	return $xtpl->text("main");
+}
+
 function filterVac($fromtime, $amount_time, $sort, $diseaseid) {
 	global $db, $db_config, $module_name;
 	$endtime = $fromtime + $amount_time;

@@ -990,3 +990,8 @@ table.tab1 tbody tr:hover {
 .vac_list:hover {
 	background: #E4E4E4;
 }
+#e_notify {
+    text-align: left;
+    padding: 8px;
+    font-weight: bold;
+}

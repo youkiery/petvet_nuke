@@ -19,25 +19,9 @@ function fetch(url, data) {
 }
 
 function showMsg(msg) {
-	var e_notify = document.getElementById("vac_notify");
-	e_notify.innerText = msg;
-	e_notify.style.display = "block";
-	e_notify.style.opacity = 1;
-	
-	if(!timer) {
-		timer ++;
-		
-		setTimeout(() => {
-			interval = setInterval(() => {
-				timer ++;
-				e_notify.style.opacity *= 0.75;
-				if(Math.floor(timer / 10)) {
-					clearInterval(interval);
-					timer = 0;
-					e_notify.style.display = "none";
-					e_notify.style.opacity = 0;
-				}
-			}, 30)
-		}, 1000)
-	}
+	$("#e_notify").show();
+	$("#e_notify").text(msg);
+	setTimeout(() => {
+		$("#e_notify").fadeOut();
+	}, 1000);
 }

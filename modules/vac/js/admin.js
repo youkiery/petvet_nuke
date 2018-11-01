@@ -166,25 +166,6 @@ function fetch(url, data) {
 	})	
 }
 
-function showMsg(msg) {
-	var e_notify = document.getElementById("vac_notify");
-	e_notify.innerText = msg;
-	e_notify.style.display = "block";
-	e_notify.style.opacity = 1;
-	var timer = 0;
-	setTimeout(() => {
-		var interval = setInterval(() => {
-			if(timer == 5) {
-				clearInterval(interval);
-				e_notify.style.display = "none";
-				e_notify.style.opacity = 0;
-			}
-			timer ++;
-			e_notify.style.opacity *= 0.75;
-		}, 100)
-	}, 1000)
-}
-
 function vac_add_pet(customerid) {
 	var petname = prompt("Nhập tên thú cưng: ", "");
 	if(petname) {
@@ -329,4 +310,28 @@ function vac_remove_vac(id, diseaseid) {
 			showMsg(msg);
 		})			
 	}
+}
+
+
+function showMsg(msg, type = 0) {
+	if (msg) {
+		$("#e_notify").text(msg);
+		switch (type) {
+			case 1:
+				$("#e_notify").attr("style", "color: green;");
+				break;
+			default:
+				$("#e_notify").attr("style", "color: red;");
+		}
+		setTimeout(() => {
+			$("#e_notify").fadeOut();
+		}, 1000);
+	}
+}
+
+function grinError(e) {
+	e.css("border", "1px solid red");
+	setTimeout(() => {
+		e.css("border", "");
+	}, 1000);
 }
