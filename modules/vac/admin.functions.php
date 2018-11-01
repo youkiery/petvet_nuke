@@ -13,7 +13,8 @@ require_once NV_ROOTDIR . "/modules/" . $module_name . '/global.functions.php';
 $submenu['customer'] = $lang_module["customer_title"];
 $submenu['patient'] = $lang_module["patient_title3"];
 $submenu['disease'] = $lang_module["disease_title"];
+$submenu['doctor'] = $lang_module["doctor_title"];
 
-$allow_func = array('main', "disease", "patient", "customer"); 
+$allow_func = array('main', "disease", "patient", "customer", "doctor"); 
 define('NV_IS_VAC_ADMIN', true);
 ?>

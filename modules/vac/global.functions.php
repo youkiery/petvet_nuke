@@ -76,6 +76,7 @@ function filter($path, $lang, $fromtime, $amount_time, $sort) {
 		foreach ($vaclist as $row) {
 			$xtpl->assign("index", $i);
 			$xtpl->assign("petname", $row["petname"]);
+			$xtpl->assign("petid", $row["petid"]);
 			$xtpl->assign("vacid", $row["id"]);
 			$xtpl->assign("customer", $row["customer"]);
 			$xtpl->assign("phone", $row["phone"]);
@@ -154,7 +155,7 @@ function getvaccustomer($customer, $fromtime, $amount_time, $sort, $diseaseid) {
 		break;
 	}
 
-	$sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status from " . $db_config['prefix'] . "_" . $module_name . "_" . $diseaseid . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id where c.customer like '%$customer%' " . $order;
+	$sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status from " . $db_config['prefix'] . "_" . $module_name . "_" . $diseaseid . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id where c.customer like '%$customer%' or c.phone like '%$customer%' " . $order;
 	$result = $db->sql_query($sql);
 	$ret = array();
 	while ($row = $db->sql_fetch_assoc($result)) {

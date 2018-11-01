@@ -41,4 +41,5 @@ $lang_module["lasttime"] = "Lần cuối";
 $lang_module["lastname"] = "Loại tiêm phòng";
 
 $lang_module["config"] = "Cấu hình";
+$lang_module["doctor_title"] = "Quản lý bác sĩ";
 ?>

@@ -50,11 +50,22 @@ if (!empty($action)) {
 			$vacid = $nv_Request->get_string('vacid', 'post', '');
 			$diseaseid = $nv_Request->get_string('diseaseid', 'post', '');
 
+			$petid = $nv_Request->get_string('petid', 'post', '');
+			$cometime = time();
+			$calltime = strtotime($recall);
+
 			$doctor ++;
-			$sql = "update `" . $db_config['prefix'] . "_" . $module_data . "_$diseaseid` set recall = '$recall', doctorid = $doctor where id = $vacid";
-			$result = $db->sql_query($sql);
+			
+			if (!(empty($petid) || empty($recall) || empty($doctor) || empty($vacid) || empty($diseaseid))) {
+				$sql = "update `" . $db_config['prefix'] . "_" . $module_data . "_$diseaseid` set recall = '$recall', doctorid = $doctor where id = $vacid;";
+				if ($db->sql_query($sql)) {
+					$sql = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_$diseaseid` (petid, cometime, calltime, status, note, recall, doctorid) values ($petid, $cometime, $calltime, 0, '', 0, 0);";
+					if ($db->sql_query($sql)) {
+						$ret["status"] = 1;
+					}
+				}
+			}
 			// return set
-			$ret["data"] = $sql;
 
 			echo json_encode($ret);
 		break;

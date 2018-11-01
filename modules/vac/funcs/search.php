@@ -22,6 +22,18 @@
 				$xtpl->assign("customer", $row["customer"]);
 				$xtpl->assign("phone", $row["phone"]);
 				$xtpl->assign("confirm", $lang_module["confirm_" . $row["status"]]);
+				if($row["status"] == 2 && !$row["recall"]) $xtpl->parse("disease.vac_body.recall_link");
+				switch ($row["status"]) {
+					case '1':
+						$xtpl->assign("color", "orange");
+						break;
+					case '2':
+						$xtpl->assign("color", "green");
+						break;
+					default:
+						$xtpl->assign("color", "red");
+						break;
+				}
 				$xtpl->assign("cometime", date("d/m/Y", $row["cometime"]));
 				$xtpl->assign("calltime", date("d/m/Y", $row["calltime"]));
 				$i++;

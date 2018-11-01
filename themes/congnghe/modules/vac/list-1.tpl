@@ -33,7 +33,7 @@
   	<tbody>
     	<!-- BEGIN: vac_body -->  
     	<tr>
-      	<td id="vac_{id}">
+      	<td>
         	{index}
       	</td>    
       	<td>
@@ -52,17 +52,19 @@
         	{calltime}
 				</td>    
 				<td style="text-align: center;">
-					<button style="float: left;" onclick="confirm_lower({index}, {vacid}, {diseaseid})">
+					<button style="float: left;" onclick="confirm_lower({index}, {vacid}, {petid}, {diseaseid})">
 						&lt;
 					</button>
           <span id="vac_confirm_{index}" style="color: {color};">
             {confirm}
           </span>
-					<button style="float: right;" onclick="confirm_upper({index}, {vacid}, {diseaseid})">
+					<button style="float: right;" onclick="confirm_upper({index}, {vacid}, {petid}, {diseaseid})">
 						&gt;
 					</button>
 					<!-- BEGIN: recall_link -->
-						<button onclick="recall({index}, {vacid}, {diseaseid})">{lang.recall}</button>
+						<button id="recall_{index}" onclick="recall({index}, {vacid}, {petid}, {diseaseid})">
+							{lang.recall}
+						</button>
 					<!-- END: recall_link -->
 				</td>
     	</tr>

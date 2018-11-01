@@ -17,7 +17,11 @@ $page_title = $lang_module["main_title"];
 	$xtpl->assign("fromtime", date("Y-m-d", NV_CURRENTTIME));
 	$xtpl->assign("totime", date("Y-m-d", NV_CURRENTTIME + NV_NEXTMONTH));	
 	$sort = $_SESSION["vac_filter"]["sort"];
-	$time_amount = $_SESSION["vac_filter"]["time_amount"];
+	if(empty($_SESSION["vac_filter"]["time_amount"])) {
+		$time_amount = $_SESSION["vac_filter"]["time_amount"];
+	} else {
+		$time_amount = $date_option["2 week"];
+	}
 
 	foreach ($sort_option as $value => $name) {
 		$xtpl->assign("sort_value", $value);

@@ -68,54 +68,86 @@
 </div>
 <script>
   var link = "/index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=";
+  var g_index = -1;
   var g_vacid = -1;
   var g_disease = -1;
+  var g_petid = -1;
   $("#reman").click(() => {
     $("#vac_panel").fadeOut();
     $("#reman").hide();
   })
 
-  function confirm_upper(index, vacid, diseaseid) {
+  function confirm_upper(index, vacid, petid, diseaseid) {
     var value = document.getElementById("vac_confirm_" + index);
     fetch(link + "confirm&act=up&value=" + trim(value.innerText) + "&vacid=" + vacid + "&diseaseid=" + diseaseid, []).then(response => {
       response = JSON.parse(response);
-      change_color(value, response["data"]);
+      change_color(value, response["data"], index, vacid, petid, diseaseid);
     })
   }
 
-  function confirm_lower(index, vacid, diseaseid) {
+  function confirm_lower(index, vacid, petid, diseaseid) {
     var value = document.getElementById("vac_confirm_" + index);
     fetch(link + "confirm&act=low&value=" + trim(value.innerText) + "&vacid=" + vacid + "&diseaseid=" + diseaseid, []).then(response => {
       response = JSON.parse(response);
-      change_color(value, response["data"]);
+      change_color(value, response["data"], index, vacid, petid, diseaseid);
     })
   }
 
-  function change_color(e, value) {
-    color = "red";
+  function change_color(e, value, index, vacid, petid, diseaseid) {
+    check = 0;
+
     switch (value) {
       case "Đã gọi":
         color = "orange";
+        check = 1;
         break;
       case "Đã tiêm":
         color = "green";
+        check = 2;
+        break;
+      case "Chưa gọi":
+        color = "red";
+        check = 3;
         break;
     }
-    e.innerText = value;
-    e.style.color = color;
+    if (check) {
+      e.innerText = value;
+      e.style.color = color;
+    }
+    if (check === 1) {
+      $("#recall_" + index).remove();
+    } else if (check == 2) {
+      e.parentElement.innerHTML += "<button id='recall_" + index + "' onclick='recall(" + index + ", " + vacid + ", " + petid + ", " + diseaseid +")'>Tái chủng</button>";
+    }
   }
 
   function save_form() {
     $.post(
       link + "main&act=post",
-      {action: "save", recall: $("#confirm_recall").val(), doctor: $("#confirm_doctor").val(), vacid: g_vacid, diseaseid: g_disease},
+      {action: "save", petid: g_petid, recall: $("#confirm_recall").val(), doctor: $("#confirm_doctor").val(), vacid: g_vacid, diseaseid: g_disease},
       (data, status) => {
+        data = JSON.parse(data);
         console.log(data);
+        
+        if (data["status"]) {
+          $("#vac_panel").fadeOut();
+          $("#reman").hide();
+          console.log(g_index);
+          
+          $("#recall_" + g_index).remove();
+          g_vacid = -1;
+          g_disease = -1;
+          g_petid = -1;
+          g_index = -1;
+        }
+        else {
+          
+        }
       }
     )
   }
 
-  function recall(index, vacid, diseaseid) {
+  function recall(index, vacid, petid, diseaseid) {
     $("#reman").fadeIn();
     $("#vac_panel").fadeIn();
     $.post(link + "main&act=post",
@@ -125,6 +157,8 @@
         console.log(data);
         g_vacid = vacid
         g_disease = diseaseid
+        g_petid = petid
+        g_index = index
         if(data["status"]) {
           $("#confirm_recall").val(data["data"]["recall"]);
           $("#confirm_doctor").val(data["data"]["doctor"]);
