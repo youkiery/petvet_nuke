@@ -303,8 +303,9 @@ define('NV_SEARCHKEYS_TABLE', NV_PREFIXLANG . '_searchkeys');
 define('NV_REFSTAT_TABLE', NV_PREFIXLANG . '_referer_stats');
 
 $sql = "SELECT `module`, `config_name`, `config_value` FROM `" . NV_CONFIG_GLOBALTABLE . "` WHERE `lang`='" . NV_LANG_DATA . "' ORDER BY `module` ASC";
-$list = nv_db_cache($sql, '', 'settings');
-foreach ($list as $row) {
+// nv_del_moduleCache('setting');
+$list = $db->sql_query($sql);
+while ($row = $db->sql_fetch_assoc($list)) {
   if ($row['module'] == "global") {
     $global_config[$row['config_name']] = $row['config_value'];
   } else {

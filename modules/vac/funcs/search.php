@@ -1,10 +1,6 @@
 <?php
 	$key = $nv_Request->get_string('key', 'get', '');
-	$fromtime = $nv_Request->get_string('fromtime', 'get', '');
-	$time_amount = $nv_Request->get_string('time_amount', 'get', '');
-	$sort = $nv_Request->get_string('sort', 'get', '');
 
-	if(!(empty($fromtime) || empty($time_amount) || empty($sort))) {
 		$xtpl = new XTemplate("list-1.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
 		$xtpl->assign("lang", $lang_module);
 
@@ -12,7 +8,7 @@
 
 		foreach ($diseases as $disease) {
 			$xtpl->assign("title", $disease["disease"]);
-			$vacs = getvaccustomer($key, $fromtime, $time_amount, $sort, $disease["id"]);
+			$vacs = getvaccustomer($key, NV_CURRENTTIME, $global_config["filter_time"], $global_config["sort_type"], $disease["id"]);
 			$i = 1;
 
 			foreach ($vacs as $row) {
@@ -42,7 +38,6 @@
 			$xtpl->parse("disease");
 		}
 		echo $xtpl->text("disease");
-	}
 
 	die();
 ?>

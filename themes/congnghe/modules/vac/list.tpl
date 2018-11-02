@@ -45,24 +45,6 @@
   <input type="text" id="customer_key" class="vac_input">
   <input type="submit" class="vac_button" value="{lang.search}">
 </form>
-<form class="vac_form" onsubmit="return filter()">
-  <select id="f_sort" class="vac_select">
-    <!-- BEGIN: fs_time -->
-    <option value="{sort_value}" {fs_select}>
-      {sort_name}
-    </option>
-    <!-- END: fs_time -->
-  </select>
-  <input type="date" id="f_fromtime" class="vac_input" value="{fromtime}">
-  <select id="f_moment" class="vac_select">
-    <!-- BEGIN: fo_time -->
-    <option value="{time_amount}" {fo_select}>
-      {time_name}
-    </option>
-    <!-- END: fo_time -->
-  </select>
-  <input type="submit" class="vac_button" value="{lang.filter}">
-</form>
 <div id="disease_display">
   {content}
 </div>
@@ -166,7 +148,7 @@
           $("#confirm_doctor").attr("disabled", true);
         }
         else {
-          var now = new Date(Number(new Date()) + 3 * 24 * 60 * 60 * 1000);
+          var now = new Date(Number(new Date()) + 3 * 7 * 24 * 60 * 60 * 1000);
           timestring = now.getFullYear() + "-" + (((now.getMonth() + 1) < 10 ? "0" : "") + (now.getMonth() + 1)) + "-" + (now.getDate() < 10 ? "0" : "") + now.getDate();
           var html = "";
           
@@ -183,26 +165,13 @@
   }
 
   function search() {
+    
     var key = document.getElementById("customer_key").value;
-    var fromtime = document.getElementById("f_fromtime").value;
-    var time_amount = document.getElementById("f_moment").value;
-    var sort = document.getElementById("f_sort").value;
-    fetch(link + "search&key=" + key + "&fromtime=" + fromtime + "&time_amount=" + time_amount + "&sort=" + sort, []).then(response => {
+    fetch(link + "search&key=" + key, []).then(response => {
       document.getElementById("disease_display").innerHTML = response;
     })
     return false;
   }
 
-  function filter() {
-    var fromtime = document.getElementById("f_fromtime").value;
-    var time_amount = document.getElementById("f_moment").value;
-    var sort = document.getElementById("f_sort").value;
-    var data = ["action=filter", "fromtime=" + fromtime, "time_amount=" + time_amount, "sort=" + sort];
-    fetch(link + "main&act=post", data).then(response => {
-      data = JSON.parse(response);
-      document.getElementById("disease_display").innerHTML = data["data"];
-    })
-    return false;
-  }
 </script>
 <!-- END: main -->

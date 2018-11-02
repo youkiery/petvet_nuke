@@ -14,7 +14,8 @@ $submenu['customer'] = $lang_module["customer_title"];
 $submenu['patient'] = $lang_module["patient_title3"];
 $submenu['disease'] = $lang_module["disease_title"];
 $submenu['doctor'] = $lang_module["doctor_title"];
+$submenu['config'] = $lang_module["doctor_config"];
 
-$allow_func = array('main', "disease", "patient", "customer", "doctor"); 
+$allow_func = array('main', "disease", "patient", "customer", "doctor", "config"); 
 define('NV_IS_VAC_ADMIN', true);
 ?>
