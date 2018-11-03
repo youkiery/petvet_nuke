@@ -25,3 +25,9 @@ function showMsg(msg) {
 		$("#e_notify").fadeOut();
 	}, 1000);
 }
+
+function alert_msg(msg) {
+	$('#msgshow').html(msg); 
+	$('#msgshow').show('slide').delay(2000).hide('slow'); 
+}
+
