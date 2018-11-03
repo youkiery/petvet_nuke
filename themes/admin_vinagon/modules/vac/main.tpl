@@ -1,63 +1,40 @@
 <!-- BEGIN: main -->
-<!-- BEGIN: disease -->
-<div class="vng_body">
-	<table class="vng_vacbox tab1">
-		<thead>
-			<tr>
-				<th colspan="6" class="vng_vacbox_title" style="text-align: center">
-					{title}
-				</th>
-			</tr>
-			<tr>
-				<th>
-					{lang.index}
-				</th>				
-				<th>
-					{lang.petname}
-				</th>				
-				<th>
-					{lang.customer}
-				</th>				
-				<th>
-					{lang.phone}
-				</th>				
-				<th>
-					{lang.cometime}
-				</th>				
-				<th>
-					{lang.calltime}
-				</th>				
-			</tr>
-		</thead>
-		<tbody>
-			<!-- BEGIN: vac_body -->		
-			<tr>
-				<td>
-					{index}
-				</td>				
-				<td>
-					<a href="{pet_link}">
-						{petname}
-					</a>
-				</td>				
-				<td>
-					<a href="{customer_link}">
-						{customer}
-					</a>
-				</td>				
-				<td>
-					{phone}
-				</td>				
-				<td>
-					{cometime}
-				</td>				
-				<td>
-					{calltime}
-				</td>				
-			</tr>
-			<!-- END: vac_body -->
-		</tbody>
-	</table>
-</div>
-<!-- END: disease -->
+<form class="vac_form" method="GET">
+	<input type="hidden" name="nv" value="vac">
+	<p>
+		Từ khóa:
+		<input type="text" name="key">
+	</p>
+
+  <select id="f_sort" name="sort" class="vac_select">
+    <!-- BEGIN: fs_time -->
+    <option value="{sort_value}" {fs_select}>
+      {sort_name}
+    </option>
+    <!-- END: fs_time -->
+  </select>
+  <select id="f_moment" name="time" class="vac_select">
+    <!-- BEGIN: fo_time -->
+    <option value="{time_amount}" {fo_select}>
+      {time_name}
+    </option>
+    <!-- END: fo_time -->
+  </select>
+  <input type="submit" class="vac_button" value="{lang.save}">
+</form>
+{table}
+<script>
+  var link = "/adminpet/index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=main&act=post";
+  function filter() {
+		$.get(
+			link,
+			{sort: $("#f_sort").val(), time: $("#f_moment").val()},
+			(data, status) => {
+				console.log(data);
+				
+			}
+		)
+    return false;
+  }
+</script>
 <!-- END: main -->

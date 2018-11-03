@@ -11,6 +11,7 @@ if (!defined('NV_MAINFILE')) die('Stop!!!');
 define('NV_NEXTMONTH', 30 * 24 * 60 * 60);
 define('NV_NEXTWEEK', 7 * 24 * 60 * 60);
 
+
 function checkNewDisease($id) {
 	global $db, $db_config, $module_name;
 
@@ -47,22 +48,59 @@ function getCustomerList() {
 	return $customers;
 }
 
-function getVaccineTable($id, $time) {
+function getVaccineTable($path, $lang, $key, $sort, $time) {
 	// next a week
 	global $db, $db_config, $module_name, $global_config;
-	$next_time = $time + $global_config["filter_time"];
+	$fromtime = strtotime(date("Y-m-d", NV_CURRENTTIME)) - $global_config["filter_time"];
+	$endtime = $fromtime + 2 * $global_config["filter_time"];
+	$link = NV_BASE_ADMINURL . "index.php?" . NV_NAME_VARIABLE . "=" . $module_name . "&" . NV_OP_VARIABLE . "=";
 
-	$sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status from " . $db_config['prefix'] . "_" . $module_name . "_" . $id . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime between " . $time . " and " . $next_time . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id";
+	$sort_type[1] = 'order by cometime, customer asc';
+	$sort_type[2] = 'order by cometime, customer desc';
+	$sort_type[3] = 'order by calltime, customer asc';
+	$sort_type[4] = 'order by calltime, customer desc';
+	
+	if ($sort_type[$sort]) $order = $sort_type[$sort];
+	else $order = "";
+	$xtpl = new XTemplate("main-1.tpl", $path);
+	$xtpl->assign("lang", $lang);
+	
+	$diseases = getDiseaseList();
+	foreach ($diseases as $disease_index => $disease_data) {
+		$xtpl->assign("title", $disease_data["disease"]);
 
-	$endtime = $fromtime + $amount_time;
-	$fromtime -= $amount_time;
+		$sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status from " . $db_config['prefix'] . "_" . $module_name . "_" . $disease_data["id"] . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id where c.customer like '%$key%' or phone like '%$key%' " . $order;
 
-	$result = $db->sql_query($sql);
-	$vaccines = array();
-	while($row = $db->sql_fetch_assoc($result)) {
-		$vaccines[] = $row;
+		// $sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status, recall, doctorid from " . $db_config['prefix'] . "_" . $module_name . "_" . $id . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id";
+
+		$result = $db->sql_query($sql);
+		$vaccines = array();
+		while($row = $db->sql_fetch_assoc($result)) {
+			$vaccines[] = $row;
+		}
+		
+		$i = 1;
+		foreach ($vaccines as $vac_index => $vac_data) {
+			$xtpl->assign("index", $i);
+			$xtpl->assign("petname", $vac_data["petname"]);
+			$xtpl->assign("customer", $vac_data["customer"]);
+			$xtpl->assign("pet_link", $link . "patient&petid=" . $vac_data["petid"]);
+			$xtpl->assign("customer_link", $link . "customer&customerid=" . $vac_data["customerid"]);
+			$xtpl->assign("phone", $vac_data["phone"]);
+			$xtpl->assign("cometime", date("d/m/Y", $vac_data["cometime"]));
+			$xtpl->assign("calltime", date("d/m/Y", $vac_data["calltime"]));
+			$i++;
+			$xtpl->parse("main.disease.vac_body");
+		}
+		
+		$xtpl->parse("main.disease");
 	}
-	return $vaccines;
+	$xtpl->parse("main");
+	
+
+	// $sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status from " . $db_config['prefix'] . "_" . $module_name . "_" . $id . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime between " . $time . " and " . $next_time . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id" . $order;
+
+	return $xtpl->text("main");
 }
 
 function filter($path, $lang, $fromtime, $amount_time, $sort) {

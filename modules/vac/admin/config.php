@@ -61,7 +61,6 @@ foreach ($date_option as $name => $value) {
 	else $xtpl->assign("fo_select", "");
 	$xtpl->parse("main.fo_time");
 }
-$xtpl->assign("lang", $lang_module);
 $xtpl->assign("fromtime", date("Y-m-d", NV_CURRENTTIME));
 $xtpl->assign("totime", date("Y-m-d", NV_CURRENTTIME + NV_NEXTMONTH));	
 

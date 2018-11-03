@@ -25,27 +25,35 @@ if (!empty($action)) {
 
 $xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file);
 $xtpl->assign("lang", $lang_module);
+$day = 24 * 60 * 60;
+$month = 30 * $day;
+$date_option = array("1 tuần" => $day * 7, "2 tuần" => 14 * $day, "3 tuần" => 21 * $day, "1 tháng" => $month, "2 tháng" => 2 * $month, "3 tháng" => 3 * $month);
+$sort_option = array("1" => "Thời gian tiêm phòng giảm dần", "2" => "Thời gian tiêm phòng tăng dần", "3" => "Thời gian tái chủng giảm dần", "4" => "Thời gian tái chủng tăng dần");
 
-$diseases = getDiseaseList();
-foreach ($diseases as $disease_index => $disease_data) {
-	$xtpl->assign("title", $disease_data["disease"]);
-	$vac_row = getVaccineTable($disease_data["id"], NV_CURRENTTIME);
-	$i = 1;
-	foreach ($vac_row as $vac_index => $vac_data) {
-		$xtpl->assign("index", $i);
-		$xtpl->assign("petname", $vac_data["petname"]);
-		$xtpl->assign("customer", $vac_data["customer"]);
-		$xtpl->assign("pet_link", $link . "patient&petid=" . $vac_data["petid"]);
-		$xtpl->assign("customer_link", $link . "customer&customerid=" . $vac_data["customerid"]);
-		$xtpl->assign("phone", $vac_data["phone"]);
-		$xtpl->assign("cometime", date("d/m/Y", $vac_data["cometime"]));
-		$xtpl->assign("calltime", date("d/m/Y", $vac_data["calltime"]));
-		$i++;
-		$xtpl->parse("main.disease.vac_body");
-	}
+$key = $nv_Request->get_string('key', 'get', "");
+$sort = $nv_Request->get_string('sort', 'get', "");
+$time = $nv_Request->get_string('time', 'get', "");
 
-	$xtpl->parse("main.disease");
+
+if (empty($time)) $time = "1 tuần";
+if (empty($sort)) $sort = 1;
+
+foreach ($sort_option as $value => $name) {
+	$xtpl->assign("sort_value", $value);
+	$xtpl->assign("sort_name", $name);
+	if($value == $sort) $xtpl->assign("fs_select", "selected");
+	else $xtpl->assign("fs_select", "");
+	$xtpl->parse("main.fs_time");
 }
+foreach ($date_option as $name => $value) {
+	$xtpl->assign("time_amount", $value);
+	$xtpl->assign("time_name", $name);
+	if($value == $time) $xtpl->assign("fo_select", "selected");
+	else $xtpl->assign("fo_select", "");
+	$xtpl->parse("main.fo_time");
+}
+
+$xtpl->assign("table", getVaccineTable(NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file, $lang_module, $key, $sort, $time));
 
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
