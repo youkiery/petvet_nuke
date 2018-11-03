@@ -1,3 +1,9 @@
+<!-- BEGIN: overtime -->
+ <p>
+   Đã hết thời gian làm việc, xin hãy quay trở lại vào ngày mai!  
+ </p>
+ 
+<!-- END: overtime -->
 <!-- BEGIN: main -->
 <div id="vac_notify" style="display: none; position: fixed; top: 0; right: 0; background: white; padding: 8px; border: 1px solid black; z-index: 1000;"></div>
 <a href="/index.php?nv=vac&op=list">

@@ -53,6 +53,10 @@ function getVaccineTable($id, $time) {
 	$next_time = $time + $global_config["filter_time"];
 
 	$sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status from " . $db_config['prefix'] . "_" . $module_name . "_" . $id . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime between " . $time . " and " . $next_time . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id";
+
+	$endtime = $fromtime + $amount_time;
+	$fromtime -= $amount_time;
+
 	$result = $db->sql_query($sql);
 	$vaccines = array();
 	while($row = $db->sql_fetch_assoc($result)) {
@@ -62,27 +66,43 @@ function getVaccineTable($id, $time) {
 }
 
 function filter($path, $lang, $fromtime, $amount_time, $sort) {
+	$hex = array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f");
 	$xtpl = new XTemplate("list-1.tpl", $path);
 	$xtpl->assign("lang", $lang);
 	
 	$fromtime = strtotime($fromtime);
 
 	$diseases = getDiseaseList();
+	$now = strtotime(date("Y-m-d", NV_CURRENTTIME));
+	$today = date("d", $now);
+	$dom = date("t");
 	foreach ($diseases as $disease) {
 		$xtpl->assign("title", $disease["disease"]);
 		$vaclist = filterVac($fromtime, $amount_time, $sort, $disease["id"]);
 		$i = 1;
 		$xtpl->assign("diseaseid", $disease["id"]);
-		foreach ($vaclist as $row) {
+		$sort_order_left = array();
+		$sort_order_right = array();
+		foreach ($vaclist as $key => $row) {
+			if ($row["calltime"] <= $now) $sort_order_right[] = $key;
+			else $sort_order_left[] = $key;
+		}
+		// if ($disease["id"] == 2) {
+		// 	var_dump($vaclist);
+		// 	die();
+		// }
+		arsort($sort_order_left);
+		asort($sort_order_right);
+		foreach ($sort_order_left as $key => $value) {
 			$xtpl->assign("index", $i);
-			$xtpl->assign("petname", $row["petname"]);
-			$xtpl->assign("petid", $row["petid"]);
-			$xtpl->assign("vacid", $row["id"]);
-			$xtpl->assign("customer", $row["customer"]);
-			$xtpl->assign("phone", $row["phone"]);
-			$xtpl->assign("confirm", $lang["confirm_" . $row["status"]]);
-			if($row["status"] == 2 && !$row["recall"]) $xtpl->parse("disease.vac_body.recall_link");
-			switch ($row["status"]) {
+			$xtpl->assign("petname", $vaclist[$value]["petname"]);
+			$xtpl->assign("petid", $vaclist[$value]["petid"]);
+			$xtpl->assign("vacid", $vaclist[$value]["id"]);
+			$xtpl->assign("customer", $vaclist[$value]["customer"]);
+			$xtpl->assign("phone", $vaclist[$value]["phone"]);
+			$xtpl->assign("confirm", $lang["confirm_" . $vaclist[$value]["status"]]);
+			if($vaclist[$value]["status"] == 2 && !$vaclist[$value]["recall"]) $xtpl->parse("disease.vac_body.recall_link");
+			switch ($vaclist[$value]["status"]) {
 				case '1':
 					$xtpl->assign("color", "orange");
 					break;
@@ -93,8 +113,50 @@ function filter($path, $lang, $fromtime, $amount_time, $sort) {
 					$xtpl->assign("color", "red");
 					break;
 			}
-			$xtpl->assign("cometime", date("d/m/Y", $row["cometime"]));
-			$xtpl->assign("calltime", date("d/m/Y", $row["calltime"]));
+			$d = date("d", $vaclist[$value]["calltime"]);
+			if ($d - $today < 0) {
+				$c = $dom - $today + $d;
+			} else {
+				$c = $d - $today;
+			}
+			$c = 15 - round($c / 2);
+			$xtpl->assign("bgcolor", "#4" . $hex[$c] . "4");
+			$xtpl->assign("cometime", date("d/m/Y", $vaclist[$value]["cometime"]));
+			$xtpl->assign("calltime", date("d/m/Y", $vaclist[$value]["calltime"]));
+			$i++;
+			$xtpl->parse("disease.vac_body");
+		}
+		foreach ($sort_order_right as $key => $value) {
+			$xtpl->assign("index", $i);
+			$xtpl->assign("petname", $vaclist[$value]["petname"]);
+			$xtpl->assign("petid", $vaclist[$value]["petid"]);
+			$xtpl->assign("vacid", $vaclist[$value]["id"]);
+			$xtpl->assign("customer", $vaclist[$value]["customer"]);
+			$xtpl->assign("phone", $vaclist[$value]["phone"]);
+			$xtpl->assign("confirm", $lang["confirm_" . $vaclist[$value]["status"]]);
+			if($vaclist[$value]["status"] == 2 && !$vaclist[$value]["recall"]) $xtpl->parse("disease.vac_body.recall_link");
+			switch ($vaclist[$value]["status"]) {
+				case '1':
+					$xtpl->assign("color", "orange");
+					break;
+				case '2':
+					$xtpl->assign("color", "green");
+					break;
+				default:
+					$xtpl->assign("color", "red");
+					break;
+			}
+			$d = date("d", $vaclist[$value]["calltime"]);
+			if ($today - $d < 0) {
+				$c = $today + $dom -  $d;
+				// day of prv month
+			} else {
+				$c = $today - $d;
+			}
+			$c = 15 - round($c / 2);
+			$xtpl->assign("bgcolor", "#$hex[$c]$hex[$c]$hex[$c]");
+			$xtpl->assign("cometime", date("d/m/Y", $vaclist[$value]["cometime"]));
+			$xtpl->assign("calltime", date("d/m/Y", $vaclist[$value]["calltime"]));
 			$i++;
 			$xtpl->parse("disease.vac_body");
 		}
@@ -140,21 +202,25 @@ function filterVac($fromtime, $amount_time, $sort, $diseaseid) {
 	$order = '';
 	switch ($sort) {
 		case '1':
-		$order = 'order by cometime desc';
+			$order = 'order by cometime, customer asc';
 		break;
 		case '2':
-		$order = 'order by cometime asc';
+			$order = 'order by cometime, customer desc';
 		break;
 		case '3':
-		$order = 'order by calltime desc';
+			$order = 'order by calltime, customer asc';
 		break;
 		case '4':
-		$order = 'order by calltime asc';
+			$order = 'order by calltime, customer desc';
 		break;
 	}
 	
 	$sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status, doctorid, recall from " . $db_config['prefix'] . "_" . $module_name . "_" . $diseaseid . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id " . $order;
-	// var_dump($vaclist); die();
+
+	// if ($diseaseid == 2) {
+	// 	die($sql);
+	// }
+
 	$result = $db->sql_query($sql);
 	$ret = array();
 	while ($row = $db->sql_fetch_assoc($result)) {
@@ -165,26 +231,32 @@ function filterVac($fromtime, $amount_time, $sort, $diseaseid) {
 
 function getvaccustomer($customer, $fromtime, $amount_time, $sort, $diseaseid) {
 	global $db, $db_config, $module_name;
-	$fromtime = strtotime($fromtime);
 	$endtime = $fromtime + $amount_time;
+	$fromtime -= $amount_time;
 
 	$order = '';
 	switch ($sort) {
 		case '1':
-			$order = 'order by cometime asc';
+			$order = 'order by cometime, customer asc';
 		break;
 		case '2':
-			$order = 'order by cometime desc';
+			$order = 'order by cometime, customer desc';
 		break;
 		case '3':
-			$order = 'order by calltime asc';
+			$order = 'order by calltime, customer asc';
 		break;
 		case '4':
-			$order = 'order by calltime desc';
+			$order = 'order by calltime, customer desc';
 		break;
 	}
 
-	$sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status from " . $db_config['prefix'] . "_" . $module_name . "_" . $diseaseid . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id where c.customer like '%$customer%' or c.phone like '%$customer%' " . $order;
+	$sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status, doctorid, recall from " . $db_config['prefix'] . "_" . $module_name . "_" . $diseaseid . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id where c.customer like '%$customer%' or c.phone like '%$customer%' " . $order;
+
+	// if ($diseaseid == 2) {
+	// 	die($sql);
+	// }
+
+	// $sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status from " . $db_config['prefix'] . "_" . $module_name . "_" . $diseaseid . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id where c.customer like '%$customer%' or c.phone like '%$customer%' " . $order;
 	$result = $db->sql_query($sql);
 	$ret = array();
 	while ($row = $db->sql_fetch_assoc($result)) {

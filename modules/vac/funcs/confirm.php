@@ -15,19 +15,30 @@ if(!(empty($act) || empty($value) || empty($vacid) || empty($diseaseid))) {
 	if (in_array($value, $lang_module["confirm_value"])) {
 		$confirmid = array_search($value, $lang_module["confirm_value"]);
 		$confirmid += $mod;
-		if(!empty($lang_module["confirm_value"][$confirmid])) {
+		if (!empty($lang_module["confirm_value"][$confirmid])) {
 			$sql = "update vng_vac_$diseaseid set status = $confirmid where id = $vacid";
 			$result = $db->sql_query($sql);
-			if($result) {
+			if ($result) {
+		    $sql = "select * from vng_vac_$diseaseid where id = $vacid";
+		    $result = $db->sql_query($sql);
+				$row = $db->sql_fetch_assoc($result);
+		    if ($row["recall"] != "0") $ret["data"]["recall"] = 0;
+				else $ret["data"]["recall"] = 1;
 				$ret["status"] = 1;
-				$ret["data"] = $lang_module["confirm_value"][$confirmid];
-			}
-			else {
-				$ret["status"] = 2;
+				$ret["data"]["value"] = $lang_module["confirm_value"][$confirmid];
+				switch ($confirmid) {
+					case '1':
+						$color = "orange";
+						break;
+					case '2':
+						$color = "green";
+						break;
+					default:
+						$color = "red";
+				}
+				$ret["data"]["color"] = $color;
 			}
 		}
-	} else {
-		$ret["status"] = 0;
 	}
 }
 

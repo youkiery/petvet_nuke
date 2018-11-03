@@ -32,7 +32,7 @@
   	</thead>
   	<tbody>
     	<!-- BEGIN: vac_body -->  
-    	<tr>
+    	<tr style="background: {bgcolor}; text-transform: capitalize;">
       	<td>
         	{index}
       	</td>    
@@ -55,7 +55,7 @@
 					<button style="float: left;" onclick="confirm_lower({index}, {vacid}, {petid}, {diseaseid})">
 						&lt;
 					</button>
-          <span id="vac_confirm_{index}" style="color: {color};">
+          <span id="vac_confirm_{diseaseid}_{index}" style="color: {color};">
             {confirm}
           </span>
 					<button style="float: right;" onclick="confirm_upper({index}, {vacid}, {petid}, {diseaseid})">

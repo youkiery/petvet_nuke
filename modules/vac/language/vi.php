@@ -17,9 +17,9 @@ $lang_module["filter"] = "Lọc";
 $lang_module["confirm_0"] = "Chưa gọi";
 $lang_module["confirm_1"] = "Đã gọi";
 $lang_module["confirm_2"] = "Đã tiêm";
-$lang_module["confirm_value"][0] = "Chưa gọi";
-$lang_module["confirm_value"][1] = "Đã gọi";
-$lang_module["confirm_value"][2] = "Đã tiêm";
+$lang_module["confirm_value"][0] = "Chưa Gọi";
+$lang_module["confirm_value"][1] = "Đã Gọi";
+$lang_module["confirm_value"][2] = "Đã Tiêm";
 //disease
 $lang_module["disease_title"] = "Quản lý tiêm phòng";
 $lang_module["disease"] = "Loại tiêm phòng";
