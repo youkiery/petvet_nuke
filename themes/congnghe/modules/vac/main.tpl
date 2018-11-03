@@ -5,6 +5,8 @@
  
 <!-- END: overtime -->
 <!-- BEGIN: main -->
+
+<div id="msgshow" class="msgshow"></div>
 <div id="vac_notify" style="display: none; position: fixed; top: 0; right: 0; background: white; padding: 8px; border: 1px solid black; z-index: 1000;"></div>
 <a href="/index.php?nv=vac&op=list">
 	{lang.main_title}
@@ -23,6 +25,7 @@
 			<tr>
 				<th colspan="4">
 					{lang.disease_title}
+					<span id="e_notify" style="display: none;"></span>
 				</th>
 			</tr>
 		</thead>
@@ -101,6 +104,7 @@
 		</tbody>
 	</table>
 </form>
+
 <style>
 	.vac_icon:hover {
 		background-position-x: 32px;
@@ -147,8 +151,7 @@
 				response = JSON.parse(response);
 				switch (response["status"]) {
 					case 2:
-						msg = "Đã lưu bản ghi tiêm chủng";
-
+						alert_msg("Đã lưu vào lịch báo tiêm phòng");
 						customer_name.value = ""
 						customer_phone.value = ""
 						pet_info.innerHTML = ""
@@ -302,7 +305,7 @@
 							msg = "Tên khách hàng đã được sử dụng: " + phone;							
 							break;
 						case 2:
-							msg = "Đã thêm khách hàng: " + answer + "; Số điện thoại: " + phone;
+							alert_msg("Đã thêm khách hàng: " + answer + "; Số điện thoại: " + phone);
 							customer_data = {
 								id: response["data"][0]["id"],
 								customer: answer,
@@ -345,7 +348,7 @@
 							petname: answer
 						});
 						reloadPetOption(customer_data["pet"])
-						msg = "Đã thêm thú cưng("+answer+")";
+						alert_msg("Đã thêm thú cưng(" + answer + ")");
 						break;
 					case 3:
 						msg = "Tên thú cưng không hợp lệ";

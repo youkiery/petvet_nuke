@@ -281,6 +281,13 @@ a{text-decoration:none;color:#1e3885;}
 	right: 0px;
 	display: none;
 	height: fit-content;
+	background: #F5F5F5;
+  padding: 20px;
+  border: 4px solid #C7C7C7;
+	z-index: 10020 !important;
+}
+#e_notify {
+	color: red;
 }
 .price1 {
 	text-decoration: line-through;
