@@ -53,6 +53,7 @@ foreach ($date_option as $name => $value) {
 	$xtpl->parse("main.fo_time");
 }
 
+$xtpl->assign("keyword", $key);
 $xtpl->assign("table", getVaccineTable(NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file, $lang_module, $key, $sort, $time));
 
 $xtpl->parse("main");

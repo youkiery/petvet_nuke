@@ -3,7 +3,7 @@
 	<input type="hidden" name="nv" value="vac">
 	<p>
 		Từ khóa:
-		<input type="text" name="key">
+		<input type="text" name="key" value="{keyword}">
 	</p>
 
   <select id="f_sort" name="sort" class="vac_select">

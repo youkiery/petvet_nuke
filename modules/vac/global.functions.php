@@ -121,16 +121,27 @@ function filter($path, $lang, $fromtime, $amount_time, $sort) {
 		$xtpl->assign("diseaseid", $disease["id"]);
 		$sort_order_left = array();
 		$sort_order_right = array();
-		foreach ($vaclist as $key => $row) {
-			if ($row["calltime"] <= $now) $sort_order_right[] = $key;
-			else $sort_order_left[] = $key;
-		}
-		// if ($disease["id"] == 2) {
-		// 	var_dump($vaclist);
-		// 	die();
-		// }
-		arsort($sort_order_left);
-		asort($sort_order_right);
+
+    	$realvac = array();
+    	$price = array();
+    	foreach ($vaclist as $key => $row) {
+    		$price[$key] = $row['calltime'];
+    	}
+    	array_multisort($price, SORT_ASC , $vaclist);
+
+	foreach ($vaclist as $key => $row) {
+		$realvac[$row["petid"]] = $key;
+	}
+
+
+      foreach ($realvac as $key => $row) {
+    		if ($vaclist[$row]["calltime"] <= $now)
+          $sort_order_right[] = $row;
+        else
+          $sort_order_left[] = $row;
+      }
+		asort($sort_order_left);
+		arsort($sort_order_right);
 		foreach ($sort_order_left as $key => $value) {
 			$xtpl->assign("index", $i);
 			$xtpl->assign("petname", $vaclist[$value]["petname"]);
