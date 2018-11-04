@@ -4,7 +4,7 @@
       	<h1 style="text-indent: -9999%;">camera, camera an ninh, camera giám sát, Thiết bị an ninh</h1>
       
       
-<script type="text/javascript" src="{NV_BASE_SITEURL}themes/{TEMPLATE}/site_code/includes/tpl_script/popup.js"></script>
+<!-- <script type="text/javascript" src="{NV_BASE_SITEURL}themes/{TEMPLATE}/site_code/includes/tpl_script/popup.js"></script> -->
 
 <div id="popupContact">
   <div id="popupContactClose" > <a style="cursor:pointer; font-size: 30px;color:white;" onclick='closePop();'>

@@ -28,14 +28,14 @@ $xtpl->assign("lang", $lang_module);
 $day = 24 * 60 * 60;
 $month = 30 * $day;
 $date_option = array("1 tuần" => $day * 7, "2 tuần" => 14 * $day, "3 tuần" => 21 * $day, "1 tháng" => $month, "2 tháng" => 2 * $month, "3 tháng" => 3 * $month);
-$sort_option = array("1" => "Thời gian tiêm phòng giảm dần", "2" => "Thời gian tiêm phòng tăng dần", "3" => "Thời gian tái chủng giảm dần", "4" => "Thời gian tái chủng tăng dần");
+$sort_option = array("1" => "Thời gian tái chủng tăng dần","2" => "Thời gian tái chủng giảm dần", "3" => "Thời gian tiêm phòng tăng dần", "4" => "Thời gian tiêm phòng giảm dần");
 
 $key = $nv_Request->get_string('key', 'get', "");
 $sort = $nv_Request->get_string('sort', 'get', "");
 $time = $nv_Request->get_string('time', 'get', "");
 
 
-if (empty($time)) $time = "1 tuần";
+if (empty($time)) $time = $date_option["1 tuần"];
 if (empty($sort)) $sort = 1;
 
 foreach ($sort_option as $value => $name) {

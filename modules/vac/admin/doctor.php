@@ -22,7 +22,7 @@ if (!empty($action)) {
 					$sql = "insert into " . $db_config['prefix'] . "_" . $module_name . "_doctor (doctor) values('$doctor')";
 					if ($db->sql_query($sql)) {
 						$ret["status"] = 1;
-						$ret["data"] = doctorlist(NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file);
+						$ret["data"] = doctorlist(NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file, $lang_module);
 					}
 					else {
 						$ret["status"] = 2;
@@ -40,7 +40,7 @@ if (!empty($action)) {
 					$sql = "update " . $db_config['prefix'] . "_" . $module_name . "_doctor set doctor = '$doctor' where id = $id";
 					if ($db->sql_query($sql)) {
 						$ret["status"] = 1;
-						$ret["data"] = doctorlist(NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file);
+						$ret["data"] = doctorlist(NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file, $lang_module);
 					}
 					else {
 						$ret["status"] = 2;
@@ -57,7 +57,7 @@ if (!empty($action)) {
 					$sql = "delete from " . $db_config['prefix'] . "_" . $module_name . "_doctor where id = '$id'";
 					if ($db->sql_query($sql)) {
 						$ret["status"] = 1;
-						$ret["data"] = doctorlist(NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file);
+						$ret["data"] = doctorlist(NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file, $lang_module);
 					}
 					else {
 						$ret["status"] = 2;
@@ -74,7 +74,7 @@ if (!empty($action)) {
 $xtpl = new XTemplate("doctor.tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file);
 $xtpl->assign("lang", $lang_module);
 
-$xtpl->assign("list", doctorlist(NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file));
+$xtpl->assign("list", doctorlist(NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file, $lang_module));
 
 
 $xtpl->parse("main");

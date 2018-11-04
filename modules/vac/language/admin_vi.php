@@ -48,3 +48,4 @@ $lang_module["doctor_config"] = "Cấu hình";
 $lang_module["doctor_manager"] = "Quản lý bác sĩ";
 $lang_module["doctor_list"] = "Danh sách bác sĩ";
 $lang_module["doctor_name"] = "Tên bác sĩ";
+$lang_module["search"] = "Tìm kiếm";

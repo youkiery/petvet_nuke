@@ -7,7 +7,6 @@
  */
 
 define( 'NV_SYSTEM', true );
-
 require_once ( str_replace( '\\\\', '/', dirname( __file__ ) ) . '/mainfile.php' );
 require_once ( NV_ROOTDIR . "/includes/core/user_functions.php" );
 

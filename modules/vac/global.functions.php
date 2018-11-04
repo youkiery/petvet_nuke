@@ -37,9 +37,9 @@ function getDiseaseList() {
 	return $diseases;
 }
 
-function getCustomerList() {
+function getCustomerList($key) {
 	global $db, $db_config, $module_name;
-	$sql = "select * from " . $db_config['prefix'] . "_" . $module_name . "_customers";
+	$sql = "select * from " . $db_config['prefix'] . "_" . $module_name . "_customers where customer like '%$key%' or phone like '%$key%'";
 	$result = $db->sql_query($sql);
 	$customers = array();
 	while($row = $db->sql_fetch_assoc($result)) {
@@ -51,17 +51,21 @@ function getCustomerList() {
 function getVaccineTable($path, $lang, $key, $sort, $time) {
 	// next a week
 	global $db, $db_config, $module_name, $global_config;
-	$fromtime = strtotime(date("Y-m-d", NV_CURRENTTIME)) - $global_config["filter_time"];
-	$endtime = $fromtime + 2 * $global_config["filter_time"];
+
+	$fromtime = strtotime(date("Y-m-d", NV_CURRENTTIME)) - $time;
+	$endtime = $fromtime + 2 * $time;
 	$link = NV_BASE_ADMINURL . "index.php?" . NV_NAME_VARIABLE . "=" . $module_name . "&" . NV_OP_VARIABLE . "=";
 
-	$sort_type[1] = 'order by cometime, customer asc';
-	$sort_type[2] = 'order by cometime, customer desc';
-	$sort_type[3] = 'order by calltime, customer asc';
-	$sort_type[4] = 'order by calltime, customer desc';
+	$sort_type[1] = 'order by calltime asc';
+	$sort_type[2] = 'order by calltime desc';
+	$sort_type[3] = 'order by cometime asc';
+	$sort_type[4] = 'order by cometime desc';
+
 	
 	if ($sort_type[$sort]) $order = $sort_type[$sort];
 	else $order = "";
+	// echo $order;
+	// die();
 	$xtpl = new XTemplate("main-1.tpl", $path);
 	$xtpl->assign("lang", $lang);
 	
@@ -71,6 +75,10 @@ function getVaccineTable($path, $lang, $key, $sort, $time) {
 
 		$sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status from " . $db_config['prefix'] . "_" . $module_name . "_" . $disease_data["id"] . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id where c.customer like '%$key%' or phone like '%$key%' " . $order;
 
+		// echo $sql;
+		// die();
+
+
 		// $sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status, recall, doctorid from " . $db_config['prefix'] . "_" . $module_name . "_" . $id . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id";
 
 		$result = $db->sql_query($sql);
@@ -78,7 +86,7 @@ function getVaccineTable($path, $lang, $key, $sort, $time) {
 		while($row = $db->sql_fetch_assoc($result)) {
 			$vaccines[] = $row;
 		}
-		
+		// var_dump($vaccines);
 		$i = 1;
 		foreach ($vaccines as $vac_index => $vac_data) {
 			$xtpl->assign("index", $i);
@@ -95,6 +103,7 @@ function getVaccineTable($path, $lang, $key, $sort, $time) {
 		
 		$xtpl->parse("main.disease");
 	}
+	// die();
 	$xtpl->parse("main");
 	
 
@@ -226,7 +235,7 @@ function getdoctorlist() {
 	return $doctor;
 }
 
-function doctorlist($path) {
+function doctorlist($path, $lang) {
 	$xtpl = new XTemplate("doctor-2.tpl", $path);
 
 	$xtpl->assign("lang", $lang);
@@ -363,12 +372,13 @@ function getPatientsList2($customerid) {
 		$result2 = $db->sql_query($sql);
 		$row2 = $db->sql_fetch_assoc($result2);
 		if(!empty($row2)) {
-			$patients["data"][] = array("petid" => $row["id"], "petname" => $row["petname"], "lastcome" => $row2["cometime"], "lastname" => $diseases[$row2["disease"] - 1]);
+			$patients["data"][] = array("petid" => $row["id"], "petname" => $row["petname"], "lastcome" => $row2["calltime"], "lastname" => $diseases[$row2["disease"] - 1]);
 		}
 		else {
 			$patients["data"][] = array("petid" => $row["id"], "petname" => $row["petname"], "lastcome" => "", "lastname" => "");
 		}
 	}
+	// var_dump($patients); die();
 	return $patients;
 }
 

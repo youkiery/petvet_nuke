@@ -8,7 +8,6 @@
 
 if (!defined('NV_IS_VAC_ADMIN')) die('Stop!!!');
 $link = NV_BASE_ADMINURL . "index.php?" . NV_NAME_VARIABLE . "=" . $module_name . "&" . NV_OP_VARIABLE . "=";
-$customers = getCustomerList();
 
 $action = $nv_Request->get_string('action', 'post', "");
 if($action) {
@@ -98,7 +97,7 @@ if (!empty($customerid)) {
 	foreach ($patients["data"] as $key => $patient_data) {
 		if(!empty($patient_data["lastcome"])) $lasttime = date("d/m/Y", $patient_data["lastcome"]);
 		else $lasttime = "";
-		if(!empty($patient_data["lastname"])) $lastname = $patient_data["lastname"]["name"];
+		if(!empty($patient_data["lastname"])) $lastname = $patient_data["lastname"]["disease"];
 		else $lastname = "";
 		$xtpl->assign("id", $patient_data["petid"]);
 		$xtpl->assign("detail_link", $link . "patient&petid=" . $patient_data["petid"]);
@@ -112,6 +111,11 @@ else {
 	$page_title = $lang_module["customer_title"];
 	$xtpl = new XTemplate("customer.tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file);
 	$xtpl->assign("lang", $lang_module);
+
+	$key = $nv_Request->get_string('key', 'get', "");
+
+	$customers = getCustomerList($key);
+	$xtpl->assign("keyword", $key);
 	
 	foreach ($customers as $customer_index => $customer_data) {
 		$xtpl->assign("index", $customer_data["id"]);

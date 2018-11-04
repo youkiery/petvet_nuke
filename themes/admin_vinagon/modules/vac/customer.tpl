@@ -33,13 +33,19 @@
 			<tr>
 				<td colspan="4" style="text-align: center;">
 					<input type="submit" id="vac_button_panel" value="{lang.add}">
-					<button id="update" onclick="vac_update_customer(-1)">
-						{lang.update}
-					</button>
+					<input type="button" id="update" onclick="vac_update_customer(-1)" value="{lang.update}">
 				</td>
 			</tr>
 		</tbody>
 	</table>
+</form>
+<form method="GET">
+	<input type="hidden" name="nv" value="vac">
+	<input type="hidden" name="op" value="customer">
+	<input type="text" name="key" value="{keyword}">
+	<button>
+		{lang.search}
+	</button>
 </form>
 <div id="vac_notify" style="color: orange; background: gray; width: fit-content; display: none;"> Chọn hành động </div>
 <div class="vng_body" style="height: 426px;overflow-y: scroll;">
