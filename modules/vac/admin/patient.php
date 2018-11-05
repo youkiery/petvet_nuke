@@ -22,7 +22,7 @@ if($action) {
 			if(!(empty($petid) || empty($diseaseid) || empty($cometime) || empty($calltime))) {
 				$cometime = strtotime($cometime);
 				$calltime = strtotime($calltime);
-				$sql2 = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_$diseaseid` (petid, cometime, calltime, note, status) values('$petid', $cometime, $calltime, '', 0);";
+                $sql2 = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_$diseaseid` (petid, cometime, calltime, note, status, doctorid, recall) values ($petid, $cometime, $calltime, '', 0, 0, 0);";
 				$id = $db->sql_query_insert_id($sql2);
 
 				if($id){
@@ -43,6 +43,7 @@ if($action) {
 			$diseaseid = $nv_Request->get_string('diseaseid', 'post', '');
 			if(!empty($id) && !empty($diseaseid)) {
 				$sql = "delete from `" . $db_config['prefix'] . "_" . $module_data . "_$diseaseid` where id = $id";
+				// die($sql);
 				if($db->sql_query($sql)) echo 1;
 			}
 		break;
@@ -98,6 +99,7 @@ if (!empty($petid)) {
 }
 else {
 	$page_title = $lang_module["patient_title3"];
+
 	$xtpl = new XTemplate("patient3.tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file);
 	$xtpl->assign("lang", $lang_module);
 
@@ -136,12 +138,16 @@ else {
 	if(!empty($key)) {
 		$url .= "&key=$keyword";
 	}
-	$xtpl->assign("filter_count", $patients["info"]);
+    // echo strval($filter_text);
+    // die();
+    // var_dump( $patients["info"] ); die();
+	$xtpl->assign("filter_count", sprintf ( $lang_module ['filter'], $patients["info"] ));
+	
 	$xtpl->assign("nav_link", nv_generate_page_shop($url, $patients["info"], $filter, $page));
 
 	$index = ($page - 1) * $filter + 1;
 	foreach ($patients["data"] as $key => $patient_data) {
-		$xtpl->assign("index", $index);
+	    $xtpl->assign("index", $index);
 		$xtpl->assign("id", $patient_data["id"]);
 		$xtpl->assign("petname", $patient_data["petname"]);
 		$xtpl->assign("detail_link", $link  . "patient&petid=" . $patient_data["id"]);

@@ -295,6 +295,7 @@ function ex(id) {
 }
 
 function vac_remove_vac(id, diseaseid) {
+    diseaseid --;
 	if(confirm("Bạn có muốn xóa bản ghi này không?")) {
 		var url = "index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=patient";
 		post_data = ["action=removevac", "id=" + id, "diseaseid=" + diseaseid];
@@ -313,20 +314,17 @@ function vac_remove_vac(id, diseaseid) {
 }
 
 
-function showMsg(msg, type = 0) {
-	if (msg) {
-		$("#e_notify").text(msg);
-		switch (type) {
-			case 1:
-				$("#e_notify").attr("style", "color: green;");
-				break;
-			default:
-				$("#e_notify").attr("style", "color: red;");
-		}
-		setTimeout(() => {
-			$("#e_notify").fadeOut();
-		}, 1000);
-	}
+function showMsg(msg) {
+	$("#e_notify").show();
+	$("#e_notify").text(msg);
+	setTimeout(() => {
+		$("#e_notify").fadeOut();
+	}, 1000);
+}
+
+function alert_msg(msg) {
+	$('#msgshow').html(msg); 
+	$('#msgshow').show('slide').delay(2000).hide('slow'); 
 }
 
 function grinError(e) {
@@ -334,9 +332,4 @@ function grinError(e) {
 	setTimeout(() => {
 		e.css("border", "");
 	}, 1000);
-}
-
-function alert_msg(msg) {
-	$('#msgshow').html(msg); 
-	$('#msgshow').show('slide').delay(2000).hide('slow'); 
 }

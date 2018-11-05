@@ -95,8 +95,9 @@ if (!empty($customerid)) {
 	$xtpl->assign("customerid", $customerid);
 	$xtpl->assign("phone", $patients["phone"]);
 	$xtpl->assign("address", $patients["address"]);
-	
 	foreach ($patients["data"] as $key => $patient_data) {
+	   // var_dump($patient_data);
+	   //     die();
 		if(!empty($patient_data["lastcome"])) $lasttime = date("d/m/Y", $patient_data["lastcome"]);
 		else $lasttime = "";
 		if(!empty($patient_data["lastname"])) $lastname = $patient_data["lastname"]["disease"];
@@ -113,7 +114,7 @@ else {
 	$page_title = $lang_module["customer_title"];
 	$xtpl = new XTemplate("customer.tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file);
 	$xtpl->assign("lang", $lang_module);
-
+	
 	$keyword = $nv_Request->get_string('key', 'get', "");
 	$sort = $nv_Request->get_string('sort', 'get', "");
 	$filter = $nv_Request->get_string('filter', 'get', "");
@@ -152,7 +153,7 @@ else {
 	if(!empty($key)) {
 		$url .= "&key=$keyword";
 	}
-	$xtpl->assign("filter_count", $customers["info"]);
+	$xtpl->assign("filter_count", sprintf ( $lang_module ['filter'], $customers["info"] ));
 	$xtpl->assign("nav_link", nv_generate_page_shop($url, $customers["info"], $filter, $page));
 	foreach ($customers["data"] as $customer_index => $customer_data) {
 		$xtpl->assign("index", $customer_data["id"]);

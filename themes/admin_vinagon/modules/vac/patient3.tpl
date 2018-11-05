@@ -21,7 +21,9 @@
 			{lang.search}
 		</button>
 	</form>
-
+<p>
+    {filter_count}
+</p>
 <div class="vng_body" style="height: 426px;overflow-y: scroll;">
 		<table class="vng_vacbox tab1">
 			<thead>

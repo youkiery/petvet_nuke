@@ -5,7 +5,6 @@
  
 <!-- END: overtime -->
 <!-- BEGIN: main -->
-
 <div id="msgshow" class="msgshow"></div>
 <div id="vac_notify" style="display: none; position: fixed; top: 0; right: 0; background: white; padding: 8px; border: 1px solid black; z-index: 1000;"></div>
 <a href="/index.php?nv=vac&op=list">
@@ -25,7 +24,7 @@
 			<tr>
 				<th colspan="4">
 					{lang.disease_title}
-					<span id="e_notify" style="display: none;"></span>
+					<span id="e_notify" style="color: red; display: none;"></span>
 				</th>
 			</tr>
 		</thead>
@@ -104,7 +103,6 @@
 		</tbody>
 	</table>
 </form>
-
 <script>
 	var link = "/index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=main&act=post";
 	var blur = true;
