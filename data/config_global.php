@@ -4,7 +4,7 @@
  * @Project NUKEVIET 3.0
  * @Author VINADES.,JSC (contact@vinades.vn)
  * @Copyright (C) 2010 VINADES.,JSC. All rights reserved
- * @Createdate Sun, 21 Oct 2018 08:08:57 GMT
+ * @Createdate Sun, 04 Nov 2018 02:15:13 GMT
  */
 
 if ( ! defined( 'NV_MAINFILE' ) )
@@ -34,6 +34,7 @@ $global_config['dump_backup_day'] = 30;
 $global_config['dump_backup_ext'] = "gz";
 $global_config['error_send_email'] = "xuandhtn@gmail.com";
 $global_config['file_allowed_ext'] = "adobe,application,archives,audio,documents,flash,images,real,video";
+$global_config['filter_time'] = 1209600;
 $global_config['forbid_extensions'] = "php,php3,php4,php5,phtml,inc";
 $global_config['forbid_mimes'] = "";
 $global_config['ftp_check_login'] = 0;

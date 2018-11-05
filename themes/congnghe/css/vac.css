@@ -1,0 +1,13 @@
+.vac_icon:hover {
+	background-position-x: 32px;
+}
+.suggest div:hover {
+	background: #afa;
+	cursor: pointer;
+}
+.footer_list li {
+	list-style-type: square;
+}
+.footer_list li a {
+	color: black !important;
+}

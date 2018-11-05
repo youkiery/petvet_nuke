@@ -48,4 +48,10 @@ $lang_module["recall"] = "Tái chủng";
 $lang_module["confirm_mess"] = "Thời gian tái chủng";
 $lang_module["doctor"] = "Người trực";
 
+// sieuam
+$lang_module["tieude_sieuam"] = "Quản lý siêu âm";
+$lang_module["ngaysieuam"] = "Quản lý siêu âm";
+$lang_module["ngaydusinh"] = "Quản lý siêu âm";
+$lang_module["ngaythongbao"] = "Quản lý siêu âm";
+
 ?>
