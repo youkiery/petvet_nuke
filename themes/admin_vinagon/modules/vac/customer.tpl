@@ -42,6 +42,20 @@
 <form method="GET">
 	<input type="hidden" name="nv" value="vac">
 	<input type="hidden" name="op" value="customer">
+	<select name="sort">
+		<!-- BEGIN: fs_option -->
+		<option value="{fs_value}" {fs_select}>
+			{fs_name}
+		</option>
+		<!-- END: fs_option -->
+	</select>
+	<select name="filter">
+		<!-- BEGIN: ff_option -->
+		<option value="{ff_value}" {ff_select}>
+			{ff_name}
+		</option>
+		<!-- END: ff_option -->
+	</select>
 	<input type="text" name="key" value="{keyword}">
 	<button>
 		{lang.search}
@@ -92,5 +106,8 @@
 			<!-- END: customer -->
 		</tbody>
 	</table>
+</div>
+<div>
+	{nav_link}
 </div>
 <!-- END: main -->

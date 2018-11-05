@@ -2,7 +2,7 @@
 	<table class="vng_vacbox tab1">
   	<thead>
     	<tr>
-      	<th colspan="7" class="vng_vacbox_title" style="text-align: center">
+      	<th colspan="8" class="vng_vacbox_title" style="text-align: center">
         	{title}
       	</th>
     	</tr>
@@ -10,19 +10,22 @@
         <th style="width: 20px;">
           {lang.index}
         </th>  
-        <th style="width: 120px;">
+        <th style="width: 100px;">
           {lang.petname}
         </th>  
-        <th style="width: 140px;">
+        <th style="width: 120px;">
           {lang.customer}
         </th>  
         <th style="width: 100px;">
           {lang.phone}
         </th>  
-        <th style="width: 100px;">
+        <th style="width: 50px;">
+          {lang.disease}
+        </th>  
+        <th style="width: 50px;">
           {lang.cometime}
         </th>  
-        <th style="width: 100px;">
+        <th style="width: 50px;">
           {lang.calltime}
         </th>  
       	<th>
@@ -45,6 +48,9 @@
       	<td>
         	{phone}
       	</td>    
+      	<td>
+        	{disease}
+				</td>    
       	<td>
         	{cometime}
       	</td>    

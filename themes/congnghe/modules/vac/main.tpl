@@ -105,15 +105,6 @@
 	</table>
 </form>
 
-<style>
-	.vac_icon:hover {
-		background-position-x: 32px;
-	}
-	.suggest div:hover {
-		background: #afa;
-		cursor: pointer;
-	}
-</style>
 <script>
 	var link = "/index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=main&act=post";
 	var blur = true;

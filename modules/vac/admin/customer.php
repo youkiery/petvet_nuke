@@ -8,6 +8,8 @@
 
 if (!defined('NV_IS_VAC_ADMIN')) die('Stop!!!');
 $link = NV_BASE_ADMINURL . "index.php?" . NV_NAME_VARIABLE . "=" . $module_name . "&" . NV_OP_VARIABLE . "=";
+$fs_option = array("1" => "Tên A-Z", "2" => "Tên Z-A");
+$ff_option = array("25", "50", "100", "500", "1000");
 
 $action = $nv_Request->get_string('action', 'post', "");
 if($action) {
@@ -112,12 +114,47 @@ else {
 	$xtpl = new XTemplate("customer.tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file);
 	$xtpl->assign("lang", $lang_module);
 
-	$key = $nv_Request->get_string('key', 'get', "");
+	$keyword = $nv_Request->get_string('key', 'get', "");
+	$sort = $nv_Request->get_string('sort', 'get', "");
+	$filter = $nv_Request->get_string('filter', 'get', "");
+	$page = $nv_Request->get_string('page', 'get', "");
+	$xtpl->assign("keyword", $keyword);
 
-	$customers = getCustomerList($key);
-	$xtpl->assign("keyword", $key);
+	if (empty($sort)) $sort = 1;
+	if (empty($filter)) $filter = 25;
+	if (empty($page)) $page = 1;
+
+	foreach ($fs_option as $key => $value) {
+		$xtpl->assign("fs_name", $value);
+		$xtpl->assign("fs_value", $key);
+		if ($sort == $key) $xtpl->assign("fs_select", "selected");
+		else $xtpl->assign("fs_select", "");
+		$xtpl->parse("main.fs_option");
+	}
 	
-	foreach ($customers as $customer_index => $customer_data) {
+	foreach ($ff_option as $key => $value) {
+		$xtpl->assign("ff_name", $value);
+		$xtpl->assign("ff_value", $value);
+		if ($filter == $value) $xtpl->assign("ff_select", "selected");
+		else $xtpl->assign("ff_select", "");
+		$xtpl->parse("main.ff_option");
+	}
+	$customers = getCustomerList($keyword, $sort, $filter, $page);
+	// $customers: info, data
+	// var_dump(ceil($customers["info"]));
+	// die();
+	// for ($i=1; $i < 10; $i++) { 
+	// 	$page_nav = getNavPage($i, ceil($customers["info"] / $filter), $link . "customer&sort=$sort&filter=$filter");
+	// 	echo "<span style='color: red'>$i</span>: " . $page_nav . "<br>";
+	// }
+	// $page_nav = getNavPage($page, ceil($customers["info"] / $filter), $link . "customer&sort=$sort&filter=$filter");
+	$url = $link . "customer&sort=$sort&filter=$filter";
+	if(!empty($key)) {
+		$url .= "&key=$keyword";
+	}
+	$xtpl->assign("filter_count", $customers["info"]);
+	$xtpl->assign("nav_link", nv_generate_page_shop($url, $customers["info"], $filter, $page));
+	foreach ($customers["data"] as $customer_index => $customer_data) {
 		$xtpl->assign("index", $customer_data["id"]);
 		$xtpl->assign("name", $customer_data["customer"]);
 		$xtpl->assign("detail_link", $link . "customer&customerid=" . $customer_data["id"]);

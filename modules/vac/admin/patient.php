@@ -7,6 +7,8 @@
 */
 if (!defined('NV_IS_VAC_ADMIN')) die('Stop!!!');
 $link = NV_BASE_ADMINURL . "index.php?" . NV_NAME_VARIABLE . "=" . $module_name . "&" . NV_OP_VARIABLE . "=";
+$fs_option = array("1" => "Tên thú cưng A-Z", "2" => "Tên thú cưng Z-A", "3" => "Tên A-Z", "4" => "Tên Z-A");
+$ff_option = array("25", "50", "100", "500", "1000");
 
 $petid = $nv_Request->get_string('petid', 'get', "");
 $action = $nv_Request->get_string('action', 'post', "");
@@ -96,11 +98,49 @@ if (!empty($petid)) {
 }
 else {
 	$page_title = $lang_module["patient_title3"];
-	$patients = getPatientsList();
 	$xtpl = new XTemplate("patient3.tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file);
 	$xtpl->assign("lang", $lang_module);
-	$index = 1;
-	foreach ($patients as $key => $patient_data) {
+
+	$keyword = $nv_Request->get_string('key', 'get', "");
+	$sort = $nv_Request->get_string('sort', 'get', "");
+	$filter = $nv_Request->get_string('filter', 'get', "");
+	$page = $nv_Request->get_string('page', 'get', "");
+	$xtpl->assign("keyword", $keyword);
+
+	if (empty($sort)) $sort = 1;
+	if (empty($filter)) $filter = 25;
+	if (empty($page)) $page = 1;
+	$patients = getPatientsList($keyword, $sort, $filter, $page);
+
+	foreach ($fs_option as $key => $value) {
+		$xtpl->assign("fs_name", $value);
+		$xtpl->assign("fs_value", $key);
+		// echo $key;
+		// if ($key == 2) {
+		// 	die();
+		// }
+		if ($sort == $key) $xtpl->assign("fs_select", "selected");
+		else $xtpl->assign("fs_select", "");
+		$xtpl->parse("main.fs_option");
+	}
+	
+	foreach ($ff_option as $key => $value) {
+		$xtpl->assign("ff_name", $value);
+		$xtpl->assign("ff_value", $value);
+		if ($filter == $value) $xtpl->assign("ff_select", "selected");
+		else $xtpl->assign("ff_select", "");
+		$xtpl->parse("main.ff_option");
+	}
+
+	$url = $link . "patient&sort=$sort&filter=$filter";
+	if(!empty($key)) {
+		$url .= "&key=$keyword";
+	}
+	$xtpl->assign("filter_count", $patients["info"]);
+	$xtpl->assign("nav_link", nv_generate_page_shop($url, $patients["info"], $filter, $page));
+
+	$index = ($page - 1) * $filter + 1;
+	foreach ($patients["data"] as $key => $patient_data) {
 		$xtpl->assign("index", $index);
 		$xtpl->assign("id", $patient_data["id"]);
 		$xtpl->assign("petname", $patient_data["petname"]);
