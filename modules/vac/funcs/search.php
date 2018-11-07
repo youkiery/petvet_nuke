@@ -42,7 +42,7 @@ foreach ($diseases as $disease) {
 //       $sort_order_left[] = $row;
 //   }
     foreach ($vaclist as $key => $row) {
-      if ($row["calltime"] <= $now)
+      if ($row["calltime"] < $now)
         $sort_order_right[] = $key;
       else
         $sort_order_left[] = $key;
@@ -55,7 +55,7 @@ foreach ($diseases as $disease) {
     $xtpl->assign("petid", $vaclist[$value]["petid"]);
     $xtpl->assign("vacid", $vaclist[$value]["id"]);
     $xtpl->assign("customer", $vaclist[$value]["customer"]);
-	$xtpl->assign("phone", $vaclist[$value]["phone"]);
+  	$xtpl->assign("phone", $vaclist[$value]["phone"]);
     $xtpl->assign("disease", $vaclist[$value]["disease"]);
     $xtpl->assign("confirm", $lang_module["confirm_" . $vaclist[$value]["status"]]);
     if ($vaclist[$value]["status"] == 2 && !$vaclist[$value]["recall"])

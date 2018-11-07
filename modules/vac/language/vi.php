@@ -50,8 +50,14 @@ $lang_module["doctor"] = "Người trực";
 
 // sieuam
 $lang_module["tieude_sieuam"] = "Quản lý siêu âm";
-$lang_module["ngaysieuam"] = "Quản lý siêu âm";
-$lang_module["ngaydusinh"] = "Quản lý siêu âm";
+$lang_module["tieude_sieuam_danhsach"] = "Danh sách siêu âm";
 $lang_module["ngaythongbao"] = "Quản lý siêu âm";
+$lang_module["hinhanh"] = "Hình ảnh";
+$lang_module["chonanh"] = "Chọn ảnh";
+$lang_module["themsatc"] = "Đã lưu bản ghi";
+$lang_module["themsatb"] = "Bản ghi chưa được lưu";
+$lang_module["ngaysieuam"] = "Ngày siêu âm";
+$lang_module["ngaydusinh"] = "Ngày dự sinh";
+$lang_module["ngaybao"] = "Ngày thông báo";
 
 ?>

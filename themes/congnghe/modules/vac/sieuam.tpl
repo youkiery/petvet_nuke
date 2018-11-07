@@ -1,4 +1,5 @@
 <!-- BEGIN: main -->
+<div id="msgshow" class="msgshow"></div>
 <div style="float: right;">
 	<div style="width: 32px; height: 32px; cursor: pointer; display: inline-block; background-image: url('/themes/congnghe/images/vac/contact_add_small.png')" class="vac_icon" onclick="addCustomer()">
 		<img src="/themes/congnghe/images/vac/trans.png" title="Thêm khách hàng"> 
@@ -7,7 +8,7 @@
 		<img src="/themes/congnghe/images/vac/trans.png" title="Thêm thú cưng"> 
 	</div>
 </div>
-<form action="themsieuam.php" method="POST" autocomplete="off">
+<form onsubmit="return themsieuam(event)" autocomplete="off">
 	<table class="tab1 vac">
 		<thead>
 			<tr>
@@ -56,7 +57,7 @@
 					{lang.ngaydusinh}
 				</td>
 				<td>
-					{lang.ngaythongbao}
+					{lang.ngaybao}
 				</td>
 			</tr>
 			<!-- pet input -->
@@ -74,6 +75,21 @@
 					<input id="ngaythongbao" type="date" name="ngaythongbao" value="{thongbao}">
 				</td>
 			</tr>
+			<!-- hình ảnh -->
+			<tr>
+				<td>
+					{lang.hinhanh}
+				</td>
+				<td colspan="3">
+					<input class="input" type="text" name="hinhanh" id="hinhanh">
+					<div class="icon upload" type="button" value="{lang.chonanh}" name="selectimg" ></div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<img class="thump" id="thump">
+				</td>
+			</tr>
 			<!-- note & submit -->
 			<tr>
 				<td colspan="3">
@@ -87,66 +103,56 @@
 	</table>
 </form>
 <script>
-	var link = "/index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=main&act=post";
+	var link = "/index.php?" + nv_name_variable + "=" + nv_module_name + "&act=post&" + nv_fc_variable + "=";
 	var blur = true;
+	var g_customer = -1;
 	var customer_data = [];
 	var customer_list = [];
 	var customer_name = document.getElementById("customer_name");
 	var customer_phone = document.getElementById("customer_phone");
 	var customer_address = document.getElementById("customer_address");
 	var pet_info = document.getElementById("pet_info");
-	var pet_disease = document.getElementById("pet_disease");
-	var pet_cometime = document.getElementById("pet_cometime");
-	var pet_calltime = document.getElementById("pet_calltime");
 	var pet_note = document.getElementById("pet_note");
 	var suggest_name = document.getElementById("customer_name_suggest");
 	var suggest_phone = document.getElementById("customer_phone_suggest");
 
-	// function vaccine() {
-	// 	msg = "";
-	// 	if(!customer_name) {
-	// 		msg = "Chưa nhập tên khách hàng!"
-	// 	} else if(!customer_phone.value) {
-	// 		msg = "Chưa nhập số điện thoại!"
-	// 	} else if(!pet_info.value) {
-	// 		msg = "Khách hàng chưa có thú cưng!"
-	// 	} else if (!pet_disease.value) {
-	// 		msg = "Chưa có loại tiêm phòng!";
-	// 	} else if (!pet_cometime.value) {
-	// 		msg = "Chưa có thời gian tiêm phòng";
-	// 	} else if (!pet_calltime.value) {
-	// 		msg = "Chưa có ngày tái chủng!";
-	// 	}
-	// 	else {
-	// 		var data = ["action=insertvac", "customer=" + customer_name.value, "phone=" + customer_phone.value, "petid=" + pet_info.value, "diseaseid=" + pet_disease.value, "cometime=" + pet_cometime.value, "calltime=" + pet_calltime.value, "note=" + pet_note.value];
-	// 		fetch(link, data).then((response) => {
-	// 			response = JSON.parse(response);
-	// 			switch (response["status"]) {
-	// 				case 2:
-	// 					alert_msg("Đã lưu vào lịch báo tiêm phòng");
-	// 					customer_name.value = ""
-	// 					customer_phone.value = ""
-	// 					pet_info.innerHTML = ""
-	// 					pet_note.value = "Ghi chú"
-	// 					break;
-	// 				case 3:
-	// 					msg = "Thú cưng không tồn tại!";
-	// 					break;
-	// 				case 4:
-	// 					msg = "Khách hàng không tồn tại!";
-	// 					break;
-	// 				case 5:
-	// 					msg = "lỗi không xác định!";
-	// 					break;
-	// 				default:
-	// 					msg = "lỗi không xác định!"
-	// 			}
-	// 			showMsg(msg);
-	// 		})
-	// 	}
-	// 	showMsg(msg);
-	// 	return false;
-	// }
+	function themsieuam(event) {
+		event.preventDefault();
+		msg = "";
+		if(!customer_name) {
+			msg = "Chưa nhập tên khách hàng!"
+		} else if(!customer_phone.value) {
+			msg = "Chưa nhập số điện thoại!"
+		} else if(!pet_info.value) {
+			msg = "Khách hàng chưa có thú cưng!"
+		} else if (!$("#hinhanh").val().length) {
+			msg = "Chưa có hình ảnh!"
+		} else {
+			$.post(
+				link + "themsieuam",
+				{idthu: pet_info.value, /*idbacsi: $doctor.value,*/ ngaysieuam: $("#ngaysieuam").val(), ngaydusinh: $("#ngaydusinh").val(), ngaythongbao: $("#ngaythongbao").val(), hinhanh: $("#hinhanh").val(), ghichu: $("#ghichu").val()},
+				(data, status) => {
+					data = JSON.parse(data);
+					if (data["status"] == 1) {
+						alert_msg(data["data"]);
+						customer_name.value = "";
+						customer_phone.value = "";
+						customer_address.value = "";
+						pet_info.innerHTML = "";
+						pet_note.innerText = "Ghi chú";
+						g_customer = -1;
+						$("#hinhanh").val("");
+					}
+					else {
+						msg = data["data"];
+						showMsg(msg);
+					}
+				}
+			)
+		}
+		showMsg(msg);
+		return false;
+	}
 
 	function showSuggest (id, type) {
 		var name = "", phone = "";
@@ -224,12 +230,11 @@
     return str; 
 	}
 	function getInfo(index) {
-		customer_data = customer_list[index];
-		
+		customer_data = customer_list[index];		
 		customer_name.value = customer_data["customer"];
 		customer_phone.value = customer_data["phone"];
 		customer_address.value = customer_data["address"];
-
+		g_customer = customer_data["id"]
 		var data = ["action=getpet", "customerid=" + customer_data["id"]];
 		fetch(link, data).then(response => {
 			var html = "";
@@ -269,6 +274,7 @@
 								pet: []
 							}
 							customer_name.value = answer;
+							g_customer = response["data"][0]["id"];
 							reloadPetOption(customer_data["pet"])
 							break;
 						default:
@@ -285,39 +291,44 @@
 	}
 
 	function addPet() {
-		var customer = document.getElementById("customer_name").value;
-
-		var answer = prompt("Nhập tên thú cưng của khách hàng("+ customer +"):", "");
 		var msg = "";
-		if(answer) {
-			var data = ["action=addpet", "customerid=" + customer_data["id"], "petname=" + answer];
-			fetch(link, data).then(response => {
-				var response = JSON.parse(response);
+		if (g_customer === -1) {
+			msg = "Chưa chọn khách hàng";
+		} else {
+			var customer = document.getElementById("customer_name").value;
 
-				switch (response["status"]) {
-					case 1:
-						msg = "Khách hàng hoặc tên thú cưng không tồn tại";						
-						break;
-					case 2:
-						customer_data["pet"].push({
-							id: response["data"][0].id,
-							petname: answer
-						});
-						reloadPetOption(customer_data["pet"])
-						alert_msg("Đã thêm thú cưng(" + answer + ")");
-						break;
-					case 3:
-						msg = "Tên thú cưng không hợp lệ";
-						break;
-					case 4:
-						msg = "Tên khách hàng không hợp lệ";
-						break;
-					default:
-						msg = "Lỗi mạng!";
-				}
-				showMsg(msg);
-			})
+			var answer = prompt("Nhập tên thú cưng của khách hàng("+ customer +"):", "");
+			if(answer) {
+				var data = ["action=addpet", "customerid=" + customer_data["id"], "petname=" + answer];
+				fetch(link, data).then(response => {
+					var response = JSON.parse(response);
+
+					switch (response["status"]) {
+						case 1:
+							msg = "Khách hàng hoặc tên thú cưng không tồn tại";						
+							break;
+						case 2:
+							customer_data["pet"].push({
+								id: response["data"][0].id,
+								petname: answer
+							});
+							reloadPetOption(customer_data["pet"])
+							alert_msg("Đã thêm thú cưng(" + answer + ")");
+							break;
+						case 3:
+							msg = "Tên thú cưng không hợp lệ";
+							break;
+						case 4:
+							msg = "Tên khách hàng không hợp lệ";
+							break;
+						default:
+							msg = "Lỗi mạng!";
+					}
+					showMsg(msg);
+				})
+			}
 		}
+		showMsg(msg);
 	}
 
 	function reloadPetOption(petlist) {
@@ -328,5 +339,13 @@
 		document.getElementById("pet_info").innerHTML = html;
 	}
 
+	$("div[name=selectimg]").click(function(){
+		var area = "hinhanh";
+		var path= "{NV_UPLOADS_DIR}/{module_name}";	
+		var currentpath= "{CURRENT}";						
+		var type= "image";
+		nv_open_browse_file("{NV_BASE_ADMINURL}index.php?{NV_NAME_VARIABLE}=upload&popup=1&area=" + area+"&path="+path+"&type="+type+"&currentpath="+currentpath, "NVImg", "850", "400","resizable=no,scrollbars=no,toolbar=no,location=no,status=no");
+		return false;
+	});
 </script>
 <!-- END: main -->

@@ -11,3 +11,31 @@
 .footer_list li a {
 	color: black !important;
 }
+.input {
+	height: 2em;
+}
+.thump {
+	max-width: 240px;
+	max-height: 240px;
+}
+.icon {
+	width: 32px;
+	height: 32px;
+}
+.square_red {
+	display: inline-block;
+	background: red;
+	text-align: center;
+}
+
+.upload {
+	background: url("/uploads/vac/movie_up.png");
+	float: right;
+	margin: 4px;
+	border: 1px solid black;
+}
+
+.upload:hover {
+	margin: 3px;
+	border: 2px solid #5CBE33;
+}

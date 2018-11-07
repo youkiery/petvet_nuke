@@ -46,9 +46,6 @@
     </table>
   </form>
 </div>
-<a href="/index.php?nv=vac">
-  {lang.disease_title}
-</a>
 <form class="vac_form" onsubmit="return search()">
   <input type="text" id="customer_key" class="vac_input">
   <input type="submit" class="vac_button" value="{lang.search}">

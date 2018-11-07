@@ -166,7 +166,7 @@ function filter($path, $lang, $fromtime, $amount_time, $sort) {
 //           $sort_order_left[] = $row;
 //       }
         foreach ($vaclist as $key => $row) {
-          if ($row["calltime"] <= $now)
+          if ($row["calltime"] < $now)
             $sort_order_right[] = $key;
           else
             $sort_order_left[] = $key;

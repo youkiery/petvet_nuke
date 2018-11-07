@@ -7,9 +7,6 @@
 <!-- BEGIN: main -->
 <div id="msgshow" class="msgshow"></div>
 <div id="vac_notify" style="display: none; position: fixed; top: 0; right: 0; background: white; padding: 8px; border: 1px solid black; z-index: 1000;"></div>
-<a href="/index.php?nv=vac&op=list">
-	{lang.main_title}
-</a>
 <div style="float: right;">
 	<div style="width: 32px; height: 32px; cursor: pointer; display: inline-block; background-image: url('/themes/congnghe/images/vac/contact_add_small.png')" class="vac_icon" onclick="addCustomer()">
 		<img src="/themes/congnghe/images/vac/trans.png" title="Thêm khách hàng"> 
