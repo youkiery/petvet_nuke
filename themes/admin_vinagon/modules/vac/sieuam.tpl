@@ -99,10 +99,22 @@
 			<!-- hình ảnh -->
 			<tr>
 				<td>
+					{lang.doctor}
+				</td>
+				<td colspan="3">
+					<select name="doctor" id="doctor" style="width: 90%;">
+						<!-- BEGIN: doctor -->
+						<option value="{doctor_value}">{doctor_name}</option>
+						<!-- END: doctor -->
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>
 					{lang.hinhanh}
 				</td>
 				<td colspan="3">
-					<input class="input inmax" type="text" name="hinhanh" id="hinhanh">
+					<input class="input inmax" type="text" name="hinhanh" id="hinhanh" disabled>
 					<div class="icon upload" type="button" value="{lang.chonanh}" name="selectimg" ></div>
 				</td>
 			</tr>
@@ -114,7 +126,7 @@
 			<!-- note & submit -->
 			<tr>
 				<td colspan="3">
-					<textarea id="pet_note" rows="3" style="width: 98%;">{lang.note}</textarea>
+					<textarea id="ghichu" rows="3" style="width: 98%;"></textarea>
 				</td>
 				<td>
 					<input type="submit" value="{lang.submit}">
@@ -124,14 +136,12 @@
 	</table>
 </form>
 
-<div>
+<div id="html_content">
 	{content}
-</div>
-<div>
-	{nav_link}
 </div>
 <script>
 	var link = "/index.php?" + nv_name_variable + "=" + nv_module_name + "&act=post&" + nv_fc_variable + "=";
+	var adlink = "/adminpet/index.php?" + nv_name_variable + "=" + nv_module_name + "&act=post&" + nv_fc_variable + "=";
 	var blur = true;
 	var g_customer = -1;
 	var customer_data = [];
@@ -143,6 +153,23 @@
 	var pet_note = document.getElementById("pet_note");
 	var suggest_name = document.getElementById("customer_name_suggest");
 	var suggest_phone = document.getElementById("customer_phone_suggest");
+
+	function xoasieuam(id) {
+		var answer = confirm("Xóa bản ghi này?");
+		if (answer) {
+			$.post(
+				"",
+				{action: "xoasieuam", id: id},
+				(data, status) => {
+					data = JSON.parse(data);
+					if (data["status"]) {
+						$("#html_content").html(data["data"]);
+						alert_msg("Đã xóa bản ghi");
+					}
+				}
+			)	
+		}
+	}
 
 	function themsieuam(event) {
 		event.preventDefault();
@@ -158,7 +185,7 @@
 		} else {
 			$.post(
 				link + "themsieuam",
-				{idthu: pet_info.value, /*idbacsi: $doctor.value,*/ ngaysieuam: $("#ngaysieuam").val(), ngaydusinh: $("#ngaydusinh").val(), ngaythongbao: $("#ngaythongbao").val(), hinhanh: $("#hinhanh").val(), ghichu: $("#ghichu").val()},
+				{idthu: pet_info.value, idbacsi: $("#doctor").val(), ngaysieuam: $("#ngaysieuam").val(), ngaydusinh: $("#ngaydusinh").val(), ngaythongbao: $("#ngaythongbao").val(), hinhanh: $("#hinhanh").val(), ghichu: $("#ghichu").val()},
 				(data, status) => {
 					data = JSON.parse(data);
 					if (data["status"] == 1) {

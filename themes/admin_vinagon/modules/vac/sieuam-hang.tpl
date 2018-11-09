@@ -15,6 +15,9 @@
 				{lang.phone}
 			</th>
 			<th>
+				{lang.doctor}
+			</th>
+			<th>
 				{lang.ngaysieuam}
 			</th>
 			<th>
@@ -44,6 +47,9 @@
 				{phone}
 			</td>
 			<td>
+				{doctor}
+			</td>
+			<td>
 				{sieuam}
 			</td>
 			<td>
@@ -53,10 +59,15 @@
 				{ngaybao}
 			</td>
 			<td>
-				{delete_link}
+				<button onclick="xoasieuam({id})">
+					{lang.remove}
+				</button>
 			</td>
 		</tr>
 		<!-- END: row -->
 	</tbody>
 </table>
+<div id="nav_link">
+		{nav_link}
+	</div>
 <!-- END: main -->

@@ -18,12 +18,11 @@ $ghichu = $nv_Request->get_string('ghichu', 'post', '');
 $ret = array("status" => 0, "data" => array());
 // var_dump($_POST);
 
-if ( ! ( empty($idthu) || empty($ngaysieuam) || empty($ngaydusinh) || empty($hinhanh) ) ) {
+if ( ! ( empty($idthu) || empty($idbacsi) || empty($ngaysieuam) || empty($ngaydusinh) || empty($hinhanh) ) ) {
 	$sql = "select id from `" . $db_config['prefix'] . "_" . $module_data . "_pets` where id = $idthu";
 	$result = $db->sql_query($sql);
 
 	if ($db->sql_numrows($result)) {
-		$idbacsi = 0;
 		$sql = "INSERT INTO `" . $db_config['prefix'] . "_" . $module_data . "_sieuam` (`idthucung`, `idbacsi`, `ngaysieuam`, `ngaydusinh`, `ngaybao`, `hinhanh`, `trangthai`, `ghichu`) VALUES ($idthu, $idbacsi, ". strtotime($ngaysieuam) .", ". strtotime($ngaydusinh) .", ". strtotime($ngaythongbao) .", '$hinhanh', 0, '$ghichu')";
 		$insert_id = $db->sql_query_insert_id($sql);
 

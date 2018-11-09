@@ -22,8 +22,9 @@ if(!(empty($act) || empty($value) || empty($vacid) || empty($diseaseid))) {
 		    $sql = "select * from vng_vac_$diseaseid where id = $vacid";
 		    $result = $db->sql_query($sql);
 				$row = $db->sql_fetch_assoc($result);
-		    if ($row["recall"] != "0") $ret["data"]["recall"] = 0;
+		    if (empty($row["recall"]) || $row["recall"] == "0") $ret["data"]["recall"] = 0;
 				else $ret["data"]["recall"] = 1;
+				// $ret["data"]["recall"] = $row["recall"];
 				$ret["status"] = 1;
 				$ret["data"]["value"] = $lang_module["confirm_value"][$confirmid];
 				switch ($confirmid) {

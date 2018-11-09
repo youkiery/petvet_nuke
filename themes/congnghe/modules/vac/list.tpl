@@ -84,7 +84,7 @@
     if (response["status"]) {
       e.innerText = response["data"]["value"];
       e.style.color = response["data"]["color"];
-      if (response["data"]["color"] == "green" && response["data"]["recall"]) {
+      if (response["data"]["color"] == "green" && !response["data"]["recall"]) {
         e.parentElement.innerHTML += "<button id='recall_" + index + "' onclick='recall(" + index + ", " + vacid + ", " + petid + ", " + diseaseid + ")'>Tái chủng</button>";
       } else {
         $("#recall_" + index).remove();

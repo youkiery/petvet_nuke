@@ -187,7 +187,7 @@ function filter($path, $lang, $fromtime, $amount_time, $sort) {
       $xtpl->assign("disease", $diseases[$vaclist[$value]["diseaseid"]]);
       $xtpl->assign("note", $vaclist[$value]["note"]);
 			$xtpl->assign("confirm", $lang["confirm_" . $vaclist[$value]["status"]]);
-			if($vaclist[$value]["status"] == 2 && !$vaclist[$value]["recall"]) $xtpl->parse("disease.vac_body.recall_link");
+			if($vaclist[$value]["status"] == 2 && empty($vaclist[$value]["recall"])) $xtpl->parse("disease.vac_body.recall_link");
 			switch ($vaclist[$value]["status"]) {
 				case '1':
 					$xtpl->assign("color", "orange");
@@ -223,7 +223,7 @@ function filter($path, $lang, $fromtime, $amount_time, $sort) {
 			$xtpl->assign("disease", $diseases[$vaclist[$value]["diseaseid"]]);
       $xtpl->assign("note", $vaclist[$value]["note"]);
 			$xtpl->assign("confirm", $lang["confirm_" . $vaclist[$value]["status"]]);
-			if($vaclist[$value]["status"] == 2 && !$vaclist[$value]["recall"]) $xtpl->parse("disease.vac_body.recall_link");
+			if($vaclist[$value]["status"] == 2 && empty($vaclist[$value]["recall"])) $xtpl->parse("disease.vac_body.recall_link");
 			switch ($vaclist[$value]["status"]) {
 				case '1':
 					$xtpl->assign("color", "orange");

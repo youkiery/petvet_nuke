@@ -14,6 +14,8 @@ $xtpl->assign("lang", $lang_module);
 $sort_type = array("Tên A-Z", "Tên Z-A", "Ngày siêu âm", "Ngày báo");
 $order = array("order by customer asc", "order by customer desc", "order by ngaysieuam", "order by ngaybao");
 $filter_type = array("25", "50", "100", "200", "Tất cả");
+$ret = array("status" => 0, "data" => "");
+$check = false;
 
 $sort = $nv_Request -> get_string('sort', 'get', '');
 $filter = $nv_Request -> get_string('filter', 'get', '');
@@ -21,6 +23,8 @@ $from = $nv_Request -> get_string('from', 'get', '');
 $to = $nv_Request -> get_string('to', 'get', '');
 $keyword = $nv_Request -> get_string('keyword', 'get', '');
 $page = $nv_Request->get_string('page', 'get', "");
+$action = $nv_Request->get_string('action', 'post', "");
+$id = $nv_Request->get_string('id', 'post', "");
 $xtpl->assign("keyword", $keyword);
 
 $today = date("Y-m-d", NV_CURRENTTIME);
@@ -93,19 +97,48 @@ foreach ($filter_type as $filter_value) {
 	$xtpl->parse("main.time");
 }
 
-// $sql = "select * from vng_vac_sieuam a inner join vng_vac_pets b on a.idthucung = b.id $order[$sort]";
-$from = ($page - 1) * $filter;
-$to = $from + $filter;
-$sql = "select * from vng_vac_sieuam a inner join vng_vac_pets b on a.idthucung = b.id inner join vng_vac_customers c on b.customerid = c.id $where $order[$sort] limit $from, $to";
+if ($action == "xoasieuam" && !empty($id)) {
+	$sql = "delete from vng_vac_sieuam where id = $id";
+	$ret["data"] = $sql;
+	// echo json_encode($ret);
+	// die();
+	$result = $db->sql_query($sql);
+
+	if ($result) {
+		$check = true;
+	}
+}
+$sql = "select * from vng_vac_doctor";
 $result = $db->sql_query($sql);
-$display_list = array();
+
 while ($row = $db->sql_fetch_assoc($result)) {
-	$display_list[] = $row;
+	$xtpl->assign("doctor_value", $row["id"]);
+	$xtpl->assign("doctor_name", $row["doctor"]);
+	$xtpl->parse("main.doctor");
 }
 
-$sql = "select count(a.id) as num from vng_vac_sieuam a inner join vng_vac_pets b on a.idthucung = b.id inner join vng_vac_customers c on b.customerid = c.id $where";
+// $sql = "select * from vng_vac_sieuam a inner join vng_vac_pets b on a.idthucung = b.id $order[$sort]";
+$revert = true;
+$tpage = $page;
+while ($revert) {
+	$tpage --;
+	if ($tpage <= 0) $revert = false;
+	$from = $tpage * $filter;
+	$to = $from + $filter;
+	$sql = "select a.id, a.ngaysieuam, a.ngaydusinh, a.ngaybao, b.petname, c.customer, c.phone, d.doctor from vng_vac_sieuam a inner join vng_vac_pets b on a.idthucung = b.id inner join vng_vac_customers c on b.customerid = c.id inner join vng_vac_doctor d on a.idbacsi = d.id $where $order[$sort] limit $from, $to";
+	// die($sql);
+	$result = $db->sql_query($sql);
+	$display_list = array();
+	while ($row = $db->sql_fetch_assoc($result)) {
+		$display_list[] = $row;
+		$revert = false;
+	}
+}
+
+$sql = "select count(a.id) as num from vng_vac_sieuam a inner join vng_vac_pets b on a.idthucung = b.id inner join vng_vac_customers c on b.customerid = c.id inner join vng_vac_doctor d on a.idbacsi = d.id $where";
 $result = $db->sql_query($sql);
 $row = $db->sql_fetch_assoc($result);
+
 // die($sql);
 $num = $row["num"];
 $url = $link . "sieuam&sort=$sort&filter=$filter";
@@ -115,11 +148,20 @@ if(!empty($keyword)) {
 
 // echo "$url, $num, $filter, $page";die();
 
-$xtpl->assign("nav_link", nv_generate_page_shop($url, $num, $filter, $page));
+$nav = nv_generate_page_shop($url, $num, $filter, $page);
 // var_dump($display_list);
 // die();
+if ($action == "xoasieuam") {
+	if ($check) {
+		$ret["status"] = 1;
+		$ret["data"] = displayRed($display_list, NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file, $lang_module, $from + 1, $nav);
+	}
 
-$xtpl->assign("content", displayRed($display_list, NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file, $lang_module, $from + 1));
+	echo json_encode($ret);
+	die();
+} else {
+	$xtpl->assign("content", displayRed($display_list, NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file, $lang_module, $from + 1, $nav));
+}
 
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
@@ -128,7 +170,7 @@ include (NV_ROOTDIR . "/includes/header.php");
 echo nv_admin_theme($contents);
 include (NV_ROOTDIR . "/includes/footer.php");
 
-function displayRed($list, $path, $lang_module, $index) {
+function displayRed($list, $path, $lang_module, $index, $nav) {
 	$xtpl = new XTemplate("sieuam-hang.tpl", $path);
 	$xtpl->assign("lang", $lang_module);	
 
@@ -140,11 +182,14 @@ function displayRed($list, $path, $lang_module, $index) {
 		$xtpl->assign("customer", $row["customer"]);
 		$xtpl->assign("petname", $row["petname"]);
 		$xtpl->assign("phone", $row["phone"]);
+		$xtpl->assign("doctor", $row["doctor"]);
 		$xtpl->assign("sieuam", date("d/m/Y", $row["ngaysieuam"]));
 		$xtpl->assign("dusinh", date("d/m/Y", $row["ngaydusinh"]));
 		$xtpl->assign("ngaybao", date("d/m/Y", $row["ngaybao"]));
-		$xtpl->parse("main.row");
+		$xtpl->assign("nav_link", $nav);
+		// $xtpl->assign("delete_link", "");
 
+		$xtpl->parse("main.row");
 		$stt ++;
 	}
 
