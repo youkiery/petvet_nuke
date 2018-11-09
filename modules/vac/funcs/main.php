@@ -184,6 +184,23 @@ if (NV_CURRENTTIME < $from || NV_CURRENTTIME > $end) {
 
                 echo json_encode($ret);
                 break;
+            case "editNote":
+                $note = $nv_Request->get_string('note', 'post', '');
+                $id = $nv_Request->get_string('id', 'post', '');
+                $diseaseid = $nv_Request->get_string('diseaseid', 'post', '');
+                $ret = array("status" => 0, "data" => array());
+
+                if (!(empty($id))) {
+                  $sql = "update `" . $db_config['prefix'] . "_" . $module_data . "_$diseaseid` set note = '$note' where id = $id";
+                  $result = $db->sql_query($sql);
+                  if ($result) {
+                    $ret["data"] = $sql;
+                    $ret["status"] = 1;
+                  }
+                }
+
+                echo json_encode($ret);
+                break;
         }
         die();
     }

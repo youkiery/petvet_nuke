@@ -9,11 +9,11 @@ $dom = date("t");
 
 $xtpl = new XTemplate("list-1.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
 $xtpl->assign("lang", $lang_module);
+$xtpl->assign("title", $lang_module["main_title"]);
 
 $diseases = getDiseaseList();
 $vaclist = array();
 foreach ($diseases as $disease) {
-  $xtpl->assign("title", $disease["disease"]);
   $vaclist_disease = getvaccustomer($key, strtotime(date("Y-m-d", NV_CURRENTTIME)), $global_config["filter_time"], $global_config["sort_type"], $disease["id"], $disease["disease"]);
   $vaclist = array_merge($vaclist, $vaclist_disease);
 }
@@ -57,6 +57,7 @@ foreach ($diseases as $disease) {
     $xtpl->assign("customer", $vaclist[$value]["customer"]);
   	$xtpl->assign("phone", $vaclist[$value]["phone"]);
     $xtpl->assign("disease", $vaclist[$value]["disease"]);
+    $xtpl->assign("note", $vaclist[$value]["note"]);
     $xtpl->assign("confirm", $lang_module["confirm_" . $vaclist[$value]["status"]]);
     if ($vaclist[$value]["status"] == 2 && !$vaclist[$value]["recall"])
       $xtpl->parse("disease.vac_body.recall_link");
@@ -91,6 +92,7 @@ foreach ($diseases as $disease) {
     $xtpl->assign("vacid", $vaclist[$value]["id"]);
     $xtpl->assign("customer", $vaclist[$value]["customer"]);
     $xtpl->assign("phone", $vaclist[$value]["phone"]);
+    $xtpl->assign("note", $vaclist[$value]["note"]);
     $xtpl->assign("disease", $vaclist[$value]["disease"]);
     $xtpl->assign("confirm", $lang_module["confirm_" . $vaclist[$value]["status"]]);
     if ($vaclist[$value]["status"] == 2 && !$vaclist[$value]["recall"])

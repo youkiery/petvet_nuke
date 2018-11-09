@@ -33,6 +33,15 @@ $xtpl->assign("now", $today);
 $xtpl->assign("dusinh", date("Y-m-d", strtotime($today) + $dusinh));
 $xtpl->assign("thongbao", date("Y-m-d", strtotime($today) + $thongbao));
 
+$sql = "select * from vng_vac_doctor";
+$result = $db->sql_query($sql);
+
+while ($row = $db->sql_fetch_assoc($result)) {
+	$xtpl->assign("doctor_value", $row["id"]);
+	$xtpl->assign("doctor_name", $row["doctor"]);
+	$xtpl->parse("main.doctor");
+}
+
 $xtpl->parse("main");
 
 $contents = $xtpl->text("main");

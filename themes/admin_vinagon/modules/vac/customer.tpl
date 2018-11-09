@@ -63,7 +63,7 @@
 </form>
 <div id="vac_notify" style="color: orange; background: gray; width: fit-content; display: none;"> Chọn hành động </div>
 <p>
-    {filter_count}
+  {filter_count}
 </p>
 <div class="vng_body" style="height: 426px;overflow-y: scroll;">
 	<table class="vng_vacbox tab1">

@@ -49,4 +49,13 @@ $lang_module["doctor_manager"] = "Quản lý bác sĩ";
 $lang_module["doctor_list"] = "Danh sách bác sĩ";
 $lang_module["doctor_name"] = "Tên bác sĩ";
 $lang_module["search"] = "Tìm kiếm";
-$lang_module["filter"] = "Tổng số <span style='red'>%d</span> kết quả.";
+$lang_module["filter_result"] = "Tổng số <span style='color: red'>%d</span> kết quả.";
+
+$lang_module["ngaysieuam"] = "Ngày siêu âm";
+$lang_module["ngaydusinh"] = "Ngày dự sinh";
+$lang_module["ngaybao"] = "Ngày báo";
+$lang_module["tieude_sieuam"] = "Quản lý siêu âm";
+$lang_module["keyword"] = "Từ khóa";
+$lang_module["submit"] = "Xác nhận";
+
+$lang_module["themsieuam"] = "Thêm siêu âm";

@@ -141,7 +141,7 @@ else {
     // echo strval($filter_text);
     // die();
     // var_dump( $patients["info"] ); die();
-	$xtpl->assign("filter_count", sprintf ( $lang_module ['filter'], $patients["info"] ));
+	$xtpl->assign("filter_count", sprintf ( $lang_module ['filter_result'], $patients["info"] ));
 	
 	$xtpl->assign("nav_link", nv_generate_page_shop($url, $patients["info"], $filter, $page));
 

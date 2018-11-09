@@ -1,0 +1,58 @@
+.input {
+	height: 2em;
+}
+.inmax {
+	width: 90%;
+}
+.select {
+	height: 2em;
+}
+.button {
+	height: 2em;
+}
+.break {
+	height: 10px;
+}
+.anchor {
+	cursor: pointer;
+}
+
+#e_notify {
+	color: red;
+}
+
+.icon {
+	width: 32px;
+	height: 32px;
+}
+.upload {
+	background: url("/uploads/vac/movie_up.png");
+	float: right;
+	margin: 4px;
+	border: 1px solid black;
+}
+
+.upload:hover {
+	margin: 3px;
+	border: 2px solid #5CBE33;
+}
+
+.vac_icon:hover {
+	background-position-x: 32px;
+}
+.suggest div:hover {
+	background: #afa;
+	cursor: pointer;
+}
+
+.msgshow {
+	position: fixed;
+	top: 0px;
+	right: 0px;
+	display: none;
+	height: fit-content;
+	background: #F5F5F5;
+  padding: 20px;
+  border: 4px solid #C7C7C7;
+	z-index: 10020 !important;
+}

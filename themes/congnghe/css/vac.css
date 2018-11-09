@@ -12,11 +12,19 @@
 	color: black !important;
 }
 .input {
+	padding: 4px;
+	width: 90%;
 	height: 2em;
 }
 .thump {
 	max-width: 240px;
 	max-height: 240px;
+}
+.mini-icon {
+	width: 17px;
+	height: 18px;
+	cursor: pointer;
+	display: inline-block;
 }
 .icon {
 	width: 32px;

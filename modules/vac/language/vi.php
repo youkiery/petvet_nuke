@@ -59,5 +59,6 @@ $lang_module["themsatb"] = "Bản ghi chưa được lưu";
 $lang_module["ngaysieuam"] = "Ngày siêu âm";
 $lang_module["ngaydusinh"] = "Ngày dự sinh";
 $lang_module["ngaybao"] = "Ngày thông báo";
+$lang_module["filter_result"] = "Tổng số <span style='color: red'>%d</span> kết quả.";
 
 ?>

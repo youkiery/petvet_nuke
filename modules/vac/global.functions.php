@@ -129,15 +129,16 @@ function filter($path, $lang, $fromtime, $amount_time, $sort) {
 	$diseases = getDiseaseList();
       $dis = array();
       foreach ($diseases as $key => $value) {
-        $dis[$key ++] = $value["disease"];
+        $dis[$value["id"]] = $value["disease"];
       }
-      $diseases = $dis;
+			$diseases = $dis;
+			// echo json_encode($diseases); die();
 	$now = strtotime(date("Y-m-d", NV_CURRENTTIME));
 	$today = date("d", $now);
 	$dom = date("t");
 	$vaclist = array();
+	$xtpl->assign("title", $lang["main_title"]);
   foreach ($diseases as $id => $disease) {
-    $xtpl->assign("title", $disease);
 		$vaclist_disease = filterVac($fromtime, $amount_time, $sort, $id);
 		$vaclist = array_merge($vaclist, $vaclist_disease);
 	}
@@ -174,6 +175,7 @@ function filter($path, $lang, $fromtime, $amount_time, $sort) {
 		asort($sort_order_left);
 		arsort($sort_order_right);
 		foreach ($sort_order_left as $key => $value) {
+			// var_dump($vaclist[$value]); die();
 			$xtpl->assign("index", $i);
 			$xtpl->assign("petname", $vaclist[$value]["petname"]);
 			$xtpl->assign("petid", $vaclist[$value]["petid"]);
@@ -181,7 +183,9 @@ function filter($path, $lang, $fromtime, $amount_time, $sort) {
 			$xtpl->assign("customer", $vaclist[$value]["customer"]);
 			$xtpl->assign("phone", $vaclist[$value]["phone"]);
       $xtpl->assign("diseaseid", $vaclist[$value]["diseaseid"]);
+      // $xtpl->assign("disease", $vaclist[$value]["diseaseid"]);
       $xtpl->assign("disease", $diseases[$vaclist[$value]["diseaseid"]]);
+      $xtpl->assign("note", $vaclist[$value]["note"]);
 			$xtpl->assign("confirm", $lang["confirm_" . $vaclist[$value]["status"]]);
 			if($vaclist[$value]["status"] == 2 && !$vaclist[$value]["recall"]) $xtpl->parse("disease.vac_body.recall_link");
 			switch ($vaclist[$value]["status"]) {
@@ -216,7 +220,8 @@ function filter($path, $lang, $fromtime, $amount_time, $sort) {
 			$xtpl->assign("customer", $vaclist[$value]["customer"]);
 			$xtpl->assign("phone", $vaclist[$value]["phone"]);
       $xtpl->assign("diseaseid", $vaclist[$value]["diseaseid"]);
-      $xtpl->assign("disease", $diseases[$vaclist[$value]["diseaseid"]]);
+			$xtpl->assign("disease", $diseases[$vaclist[$value]["diseaseid"]]);
+      $xtpl->assign("note", $vaclist[$value]["note"]);
 			$xtpl->assign("confirm", $lang["confirm_" . $vaclist[$value]["status"]]);
 			if($vaclist[$value]["status"] == 2 && !$vaclist[$value]["recall"]) $xtpl->parse("disease.vac_body.recall_link");
 			switch ($vaclist[$value]["status"]) {
@@ -298,7 +303,7 @@ function filterVac($fromtime, $amount_time, $sort, $diseaseid) {
 		break;
 	}
 	
-  $sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status, doctorid, recall, '$diseaseid' as diseaseid from " . $db_config['prefix'] . "_" . $module_name . "_" . $diseaseid . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id " . $order;
+  $sql = "select a.id, a.note, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status, doctorid, recall, '$diseaseid' as diseaseid from " . $db_config['prefix'] . "_" . $module_name . "_" . $diseaseid . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id " . $order;
 
 	// if ($diseaseid == 2) {
 	// 	die($sql);
@@ -333,7 +338,7 @@ function getvaccustomer($customer, $fromtime, $amount_time, $sort, $diseaseid, $
 		break;
 	}
 
-    $sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status, doctorid, recall, '$disease' as disease from " . $db_config['prefix'] . "_" . $module_name . "_" . $diseaseid . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id where c.customer like '%$customer%' or c.phone like '%$customer%' " . $order;
+    $sql = "select a.id, a.note, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status, doctorid, recall, '$disease' as disease from " . $db_config['prefix'] . "_" . $module_name . "_" . $diseaseid . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id where c.customer like '%$customer%' or c.phone like '%$customer%' " . $order;
 
 	// if ($diseaseid == 2) {
 	// 	die($sql);

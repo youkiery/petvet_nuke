@@ -100,7 +100,7 @@ img.previewimg{background:#FFF;border:2px solid #F0F0F0;max-height:80px;max-widt
         <div style="margin-top:7px;margin-left:5px;margin-right:5px;float:left;display:none"><img src="{NV_BASE_SITEURL}images/error.png"/></div>
         <div style="float:left;"><input type="button" value="Upload" id="confirm" /></div>
     </div>
-    <div class="notupload" style="display:none">{LANG.notupload}</div>
+    <!-- <div class="notupload" style="display:none">{LANG.notupload}</div> -->
     <div style="clear:both"></div>
 </div>
 

@@ -157,5 +157,25 @@
     return false;
   }
 
+  function editNote(index, diseaseid) {
+    var answer = prompt("Ghi chú: ", trim($("#note_v" + diseaseid + "_" + index).text()));
+    if (answer) {
+      $.post(
+        link + "main&act=post",
+        {action: "editNote", note: answer, id: index, diseaseid: diseaseid},
+        (data, status) => {
+          data = JSON.parse(data);
+          if(data["status"]) {
+            $("#note_v" + diseaseid + "_" + index).text(answer);
+          }
+        }
+      )
+    }
+  }
+
+  function viewNote(index, diseaseid) {
+    $("#note_" + diseaseid + "_" + index).toggle(500);
+  }
+
 </script>
 <!-- END: main -->

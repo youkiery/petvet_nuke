@@ -2,7 +2,7 @@
 	<table class="vng_vacbox tab1">
   	<thead>
     	<tr>
-      	<th colspan="8" class="vng_vacbox_title" style="text-align: center">
+      	<th colspan="9" class="vng_vacbox_title" style="text-align: center">
         	{title}
       	</th>
     	</tr>
@@ -10,13 +10,13 @@
         <th style="width: 20px;">
           {lang.index}
         </th>  
-        <th style="width: 100px;">
+        <th style="width: 70px;">
           {lang.petname}
         </th>  
         <th style="width: 120px;">
           {lang.customer}
         </th>  
-        <th style="width: 100px;">
+        <th style="width: 80px;">
           {lang.phone}
         </th>  
         <th style="width: 50px;">
@@ -28,9 +28,12 @@
         <th style="width: 50px;">
           {lang.calltime}
         </th>  
-      	<th>
+      	<th style="width: 80px;">
         	{lang.confirm}
-      	</th>    
+				</th>
+				<th>
+					{lang.note}
+				</th>
     	</tr>
   	</thead>
   	<tbody>
@@ -73,7 +76,16 @@
 						</button>
 					<!-- END: recall_link -->
 				</td>
-    	</tr>
+				<td>
+					<img class="mini-icon" src="/uploads/vac/note_add.png" alt="thêm ghi chú" onclick="editNote({vacid}, {diseaseid})">
+					<img class="mini-icon" src="/uploads/vac/note_info.png" alt="xem ghi chú" onclick="viewNote({vacid}, {diseaseid})">
+				</td>
+			</tr>
+			<tr style="display: none; background: #fa0;" id="note_{diseaseid}_{vacid}">
+				<td colspan="9" id="note_v{diseaseid}_{vacid}">
+					{note}
+				</td>
+			</tr>
     	<!-- END: vac_body -->
   	</tbody>
 	</table>

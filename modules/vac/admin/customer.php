@@ -153,7 +153,7 @@ else {
 	if(!empty($key)) {
 		$url .= "&key=$keyword";
 	}
-	$xtpl->assign("filter_count", sprintf ( $lang_module ['filter'], $customers["info"] ));
+	$xtpl->assign("filter_count", sprintf ( $lang_module['filter_result'], $customers["info"] ));
 	$xtpl->assign("nav_link", nv_generate_page_shop($url, $customers["info"], $filter, $page));
 	foreach ($customers["data"] as $customer_index => $customer_data) {
 		$xtpl->assign("index", $customer_data["id"]);

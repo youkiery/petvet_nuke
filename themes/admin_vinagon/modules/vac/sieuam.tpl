@@ -1,14 +1,35 @@
 <!-- BEGIN: main -->
 <div id="msgshow" class="msgshow"></div>
-<div style="float: right;">
-	<div style="width: 32px; height: 32px; cursor: pointer; display: inline-block; background-image: url('/themes/congnghe/images/vac/contact_add_small.png')" class="vac_icon" onclick="addCustomer()">
-		<img src="/themes/congnghe/images/vac/trans.png" title="Thêm khách hàng"> 
-	</div>
-	<div style="width: 32px; height: 32px; cursor: pointer; display: inline-block; background-image: url('/themes/congnghe/images/vac/pet_add.png')" class="vac_icon" tooltip="Thêm thú cưng" onclick="addPet()">
-		<img src="/themes/congnghe/images/vac/trans.png" title="Thêm thú cưng"> 
-	</div>
+
+<form method="GET">
+	<input type="hidden" name="nv" value="vac">
+	<input type="hidden" name="op" value="sieuam">
+	<input class="input" type="text" name="keyword" id="keyword" value="{keyword}" placeholder="{lang.keyword}">
+	<input class="input" type="date" name="from" value="{from}">
+	<input class="input" type="date" name="to" value="{to}">
+	<div class="break"></div>
+	<select class="select" name="sort" id="sort">
+		<!-- BEGIN: sort -->
+		<option value="{sort_value}" {sort_check}>{sort_name}</option>
+		<!-- END: sort -->
+	</select>
+	<select class="select" name="filter" id="time">
+		<!-- BEGIN: time -->
+		<option value="{time_value}" {time_check}>{time_name}</option>
+		<!-- END: time -->
+	</select>
+	<button class="button">
+		{lang.filter}
+	</button>
+</form>
+<img class="anchor" src="/uploads/vac/add.png" alt="{lang.themsieuam}" title="themsieuam" onclick="$('#add').toggle(500)">
+<div style="width: 32px; height: 32px; cursor: pointer; display: inline-block; background-image: url('/themes/congnghe/images/vac/contact_add_small.png')" class="vac_icon" onclick="addCustomer()">
+	<img src="/themes/congnghe/images/vac/trans.png" title="Thêm khách hàng"> 
 </div>
-<form onsubmit="return themsieuam(event)" autocomplete="off">
+<div style="width: 32px; height: 32px; cursor: pointer; display: inline-block; background-image: url('/themes/congnghe/images/vac/pet_add.png')" class="vac_icon" tooltip="Thêm thú cưng" onclick="addPet()">
+	<img src="/themes/congnghe/images/vac/trans.png" title="Thêm thú cưng"> 
+</div>
+<form style="display: none;" id="add" onsubmit="return themsieuam(event)" autocomplete="off">
 	<table class="tab1 vac">
 		<thead>
 			<tr>
@@ -34,15 +55,15 @@
 			<!-- customer input -->
 			<tr>
 				<td style="position: relative;">
-					<input id="customer_name" type="text" name="customer">
+					<input class="input" id="customer_name" type="text" name="customer">
 					<div id="customer_name_suggest" class="suggest" style="background: white; display:none; position: absolute; overflow-y:scroll; max-height: 300px; width: 110%;"></div>
 				</td>
 				<td style="position: relative;">
-					<input id="customer_phone" style="width: 90%" type="number" name="phone">
+					<input class="input" id="customer_phone" style="width: 90%" type="number" name="phone">
 					<div id="customer_phone_suggest" class="suggest" style="background: white; display:none; position: absolute; overflow-y:scroll; max-height: 300px; width: 110%;"></div>
 				</td>
 				<td colspan="2">
-					<input id="customer_address" type="text" name="address">
+					<input class="input" id="customer_address" type="text" name="address">
 				</td>
 			</tr>
 			<!-- pet vaccine -->
@@ -63,38 +84,26 @@
 			<!-- pet input -->
 			<tr>
 				<td>
-					<select id="pet_info" style="text-transform: capitalize;" name="petname"></select>
+					<select class="input" id="pet_info" style="text-transform: capitalize;" name="petname"></select>
 				</td>
 				<td>
-					<input id="ngaysieuam" type="date" name="ngaysieuam" value="{now}">
+					<input class="input" id="ngaysieuam" type="date" name="ngaysieuam" value="{now}">
 				</td>
 				<td>
-					<input id="ngaydusinh" type="date" name="ngaysieuam" value="{dusinh}">
+					<input class="input" id="ngaydusinh" type="date" name="ngaysieuam" value="{dusinh}">
 				</td>
 				<td>
-					<input id="ngaythongbao" type="date" name="ngaythongbao" value="{thongbao}">
+					<input class="input" id="ngaythongbao" type="date" name="ngaythongbao" value="{thongbao}">
 				</td>
 			</tr>
 			<!-- hình ảnh -->
 			<tr>
 				<td>
-					{lang.doctor}
-				</td>
-				<td colspan="3">
-					<select name="doctor" id="doctor" style="width: 90%;">
-						<!-- BEGIN: doctor -->
-						<option value="{doctor_value}">{doctor_name}</option>
-						<!-- END: doctor -->
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td>
 					{lang.hinhanh}
 				</td>
 				<td colspan="3">
-					<input class="input" type="text" name="hinhanh" id="hinhanh" disabled>
-					<div class="icon upload" type="button" value="{lang.chonanh}" name="selectimg"></div>
+					<input class="input inmax" type="text" name="hinhanh" id="hinhanh">
+					<div class="icon upload" type="button" value="{lang.chonanh}" name="selectimg" ></div>
 				</td>
 			</tr>
 			<tr>
@@ -114,6 +123,13 @@
 		</tbody>
 	</table>
 </form>
+
+<div>
+	{content}
+</div>
+<div>
+	{nav_link}
+</div>
 <script>
 	var link = "/index.php?" + nv_name_variable + "=" + nv_module_name + "&act=post&" + nv_fc_variable + "=";
 	var blur = true;
@@ -142,7 +158,7 @@
 		} else {
 			$.post(
 				link + "themsieuam",
-				{idthu: pet_info.value, idbacsi: $("#doctor").val(), ngaysieuam: $("#ngaysieuam").val(), ngaydusinh: $("#ngaydusinh").val(), ngaythongbao: $("#ngaythongbao").val(), hinhanh: $("#hinhanh").val(), ghichu: $("#ghichu").val()},
+				{idthu: pet_info.value, /*idbacsi: $doctor.value,*/ ngaysieuam: $("#ngaysieuam").val(), ngaydusinh: $("#ngaydusinh").val(), ngaythongbao: $("#ngaythongbao").val(), hinhanh: $("#hinhanh").val(), ghichu: $("#ghichu").val()},
 				(data, status) => {
 					data = JSON.parse(data);
 					if (data["status"] == 1) {
