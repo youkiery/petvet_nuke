@@ -1,8 +1,35 @@
 <!-- BEGIN: main -->
 <div id="msgshow" class="msgshow"></div>
 
-<div id="vac_notify" style="display: none; position: fixed; top: 0; right: 0; background: white; padding: 8px; border: 1px solid black; z-index: 1000;"></div>
-<div id="reman" style="display: none; background: black; opacity: 0.5; position: fixed; width: 100%; height: 100%; top: 0; left: 0;"></div>
+<div id="vac_notify"></div>
+<div id="reman"></div>
+<div id="vac_info" style="display:none;">
+  <div id="thumb-box">
+    <img id="thumb" src="{image}">
+  </div>
+  <div id="info">
+    <p>
+      {lang.petname}: 
+      <span id="petname"></span>
+    </p>
+    <p>
+      {lang.customer}: 
+      <span id="customer"></span>
+    </p>
+    <p>
+      {lang.phone}: 
+      <span id="phone"></span>
+    </p>
+    <p>
+      {lang.ngaysieuam}: 
+      <span id="sieuam"></span>
+    </p>
+    <p>
+      {lang.ngaydusinh}: 
+      <span id="dusinh"></span>
+    </p>
+  </div>
+</div>
 <div id="vac_panel" style="display: none; position: fixed; margin:auto;">
   <form>
     <table class="tab1" style="width: 500px;">
@@ -90,6 +117,29 @@
       }
     }
   }
+
+  $("#reman").click(() => {
+    $("#vac_info").fadeOut();
+    $("#reman").hide();
+  })
+
+  $("tbody tr").click((e) => {
+    var data_collect = e.currentTarget.children;
+    var image = e.currentTarget.getAttribute("img");
+
+    $("#vac_info").fadeIn();
+    $("#reman").show();
+
+    $("#petname").text(data_collect[1].innerText);
+    $("#customer").text(data_collect[2].innerText);
+    $("#phone").text(data_collect[3].innerText);
+    $("#dusinh").text(data_collect[4].innerText);
+    $("#sieuam").text(data_collect[5].innerText);
+    console.log(e);
+    
+    $("#thumb").attr("src", image);
+  })
+
 
 </script>
 <!-- END: main -->

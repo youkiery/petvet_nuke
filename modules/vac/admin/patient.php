@@ -43,7 +43,6 @@ if($action) {
 			$diseaseid = $nv_Request->get_string('diseaseid', 'post', '');
 			if(!empty($id) && !empty($diseaseid)) {
 				$sql = "delete from `" . $db_config['prefix'] . "_" . $module_data . "_$diseaseid` where id = $id";
-				// die($sql);
 				if($db->sql_query($sql)) echo 1;
 			}
 		break;
@@ -90,6 +89,10 @@ if (!empty($petid)) {
 		if (empty($patient_data["status"]) || $patient_data["status"] < 0 || $patient_data["status"] >= count($lang_module["confirm_value"])) $patient_data["status"] = 0;
 		$confirm = $lang_module["confirm_value"][$patient_data["status"]];
 		$xtpl->assign("index", $patient_data["id"]);
+		// var_dump($patient_data);
+		// die();
+		$xtpl->assign("diseaseid", $patient_data["disease"]);
+		// $xtpl->assign("disease", $patient_data["disease"]);
 		$xtpl->assign("disease", $diseases[$patient_data["disease"] - 1]["disease"]);
 		$xtpl->assign("cometime", $cometime);
 		$xtpl->assign("calltime", $calltime);

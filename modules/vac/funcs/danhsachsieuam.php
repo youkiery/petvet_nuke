@@ -34,7 +34,7 @@ if (NV_CURRENTTIME < $from || NV_CURRENTTIME > $end) {
 	$from = $now - $time;
 	$end = $now + $time;
 
-	$sql = "select a.id, a.ngaysieuam, a.ngaydusinh, a.ngaybao, a.trangthai, b.id as petid, b.petname, c.customer, c.phone, d.doctor from `" . $db_config['prefix'] . "_" . $module_data . "_sieuam` a inner join `" . $db_config['prefix'] . "_" . $module_data . "_pets` b on ngaybao between $from and $end and a.idthucung = b.id inner join `" . $db_config['prefix'] . "_" . $module_data . "_customers` c on b.customerid = c.id inner join `" . $db_config['prefix'] . "_" . $module_data . "_doctor` d on a.idbacsi = d.id where c.customer like '%$key%' or c.phone like '%$key%' order by ngaybao";
+	$sql = "select a.id, a.ngaysieuam, a.ngaydusinh, a.ngaybao, a.trangthai, a.hinhanh, b.id as petid, b.petname, c.customer, c.phone, d.doctor from `" . $db_config['prefix'] . "_" . $module_data . "_sieuam` a inner join `" . $db_config['prefix'] . "_" . $module_data . "_pets` b on ngaybao between $from and $end and a.idthucung = b.id inner join `" . $db_config['prefix'] . "_" . $module_data . "_customers` c on b.customerid = c.id inner join `" . $db_config['prefix'] . "_" . $module_data . "_doctor` d on a.idbacsi = d.id where c.customer like '%$key%' or c.phone like '%$key%' order by ngaybao";
 	// die($sql);
 	// echo date("Y-m-d", 1545238800);
 	// die($sql);
@@ -111,7 +111,9 @@ function displaySSList($list, $time, $path, $lang_module) {
 	$index = 1;
 	foreach ($list as $key => $list_data) {
 		// var_dump($list_data); die();
-		$xtpl->assign("index", $index);
+    $xtpl->assign("index", $index);
+    // var_dump($list_data); die();
+		$xtpl->assign("image", $list_data["hinhanh"]);
 		$xtpl->assign("petname", $list_data["petname"]);
 		$xtpl->assign("customer", $list_data["customer"]);
 		$xtpl->assign("phone", $list_data["phone"]);

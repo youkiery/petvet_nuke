@@ -65,15 +65,17 @@ p.show_query {
 
 #toolbar .level1 {
 	background: transparent url(../images/admin/admin1.png) 0 6px no-repeat;
-	float:left
+	float:left;
 }
 
 #toolbar .level2 {
 	background: transparent url(../images/admin/admin2.png) 0 6px no-repeat;
+	float:left;
 }
 
 #toolbar .level3 {
 	background: transparent url(../images/admin/admin3.png) 0 6px no-repeat;
+	float:left;
 }
 
 #toolbar .action {

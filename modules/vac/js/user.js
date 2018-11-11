@@ -23,7 +23,7 @@ function showMsg(msg) {
 	$("#e_notify").text(msg);
 	setTimeout(() => {
 		$("#e_notify").fadeOut();
-	}, 1000);
+	}, 5000);
 }
 
 function alert_msg(msg) {

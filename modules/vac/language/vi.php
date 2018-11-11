@@ -61,4 +61,7 @@ $lang_module["ngaydusinh"] = "Ngày dự sinh";
 $lang_module["ngaybao"] = "Ngày thông báo";
 $lang_module["filter_result"] = "Tổng số <span style='color: red'>%d</span> kết quả.";
 
+$lang_module["list"] = "Danh sách quản lý tiêm phòng";
+$lang_module["list2"] = "Danh sách tiêm phòng mới thêm";
+
 ?>

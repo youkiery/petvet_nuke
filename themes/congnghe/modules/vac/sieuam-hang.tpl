@@ -30,26 +30,26 @@
   	</thead>
   	<tbody>
     	<!-- BEGIN: list -->  
-    	<tr style="background: {bgcolor}; text-transform: capitalize;">
+    	<tr style="background: {bgcolor}; text-transform: capitalize;" img="{image}">
       	<td>
         	{index}
       	</td>    
-      	<td>
+      	<td class="petname">
         	{petname}
       	</td>    
-      	<td>
+      	<td class="customer">
         	{customer}
       	</td>
-      	<td>
+      	<td class="nphone">
         	{phone}
       	</td>    
-      	<td>
+      	<td class="sieuam">
         	{sieuam}
 				</td>    
-      	<td>
+      	<td class="dusinh">
         	{dusinh}
       	</td>    
-      	<td>
+      	<td class="thongbao">
         	{thongbao}
 				</td>    
 				<td style="text-align: center;">
