@@ -8,7 +8,9 @@
 <div id="msgshow" class="msgshow"></div>
 
 <div id="vac_notify" style="display: none; position: fixed; top: 0; right: 0; background: white; padding: 8px; border: 1px solid black; z-index: 1000;"></div>
-<div id="reman" style="display: none; background: black; opacity: 0.5; position: fixed; width: 100%; height: 100%; top: 0; left: 0;"></div>
+<div id="reman"></div>
+<a href="/index.php?nv=vac&op=list"> {lang.list} </a>
+<a href="/index.php?nv=vac&op=list&page=list"> {lang.list2} </a>
 <div id="vac_panel" style="display: none; position: fixed; margin:auto;">
   <form>
     <table class="tab1" style="width: 500px;">

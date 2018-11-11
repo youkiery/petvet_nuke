@@ -280,7 +280,7 @@ function ex(id) {
 			td_calltime.innerText = data["calltime"];
 			td_cometime.innerText = data["cometime"];
 			td_confirm.innerText = data["confirm"];
-			button_remove.setAttribute("onclick", "vac_remove_vac(" + data["id"] + ")");
+			button_remove.setAttribute("onclick", "vac_remove_vac(" + data["id"] + ", " + diseaseid + ")");
 			button_remove.innerText = "Xóa";
 			td_button.appendChild(button_remove);
 			tr.appendChild(td_disease);
@@ -295,7 +295,6 @@ function ex(id) {
 }
 
 function vac_remove_vac(id, diseaseid) {
-    diseaseid --;
 	if(confirm("Bạn có muốn xóa bản ghi này không?")) {
 		var url = "index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=patient";
 		post_data = ["action=removevac", "id=" + id, "diseaseid=" + diseaseid];

@@ -11,7 +11,8 @@
 		<!-- BEGIN: is_modadmin -->
         <a href="{URL_MODULE}" title="{GLANG.admin_module_sector}"><span class="icons1 icon-module">{GLANG.admin_module_sector}</span></a>
 		<!-- END: is_modadmin -->
-		<a href="{URL_AUTHOR}" title="{GLANG.your_account}"><span class="icons1 icon-users">{GLANG.your_account}</span></a>
+    <a href="{URL_AUTHOR}" title="{GLANG.your_account}"><span class="icons1 icon-users">{GLANG.your_account}</span></a>
+    
 		<a href="javascript:void(0);" onclick="nv_admin_logout();" title="{GLANG.logout}"><span class="icons1 icon-logout">{GLANG.logout}</span></a>
     </div>
 </div>

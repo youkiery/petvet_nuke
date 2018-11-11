@@ -47,3 +47,59 @@
 	margin: 3px;
 	border: 2px solid #5CBE33;
 }
+
+.vng_vacbox tbody tr:hover {
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+#vac_info {
+  background: #eee;
+  border: 1px solid black;
+  margin: 1px;
+  position: fixed;
+  width: 500px;
+  height: 300px;
+  z-index: 1001;
+  padding: 10px;
+}
+
+#reman {
+  display: none;
+  background: black; 
+  opacity: 0.5; 
+  position: fixed; 
+  width: 100%; 
+  height: 100%; 
+  top: 0; 
+  left: 0;
+  z-index: 1000;
+}
+
+#vac_notify {
+  display: none; 
+  position: fixed; 
+  top: 0; 
+  right: 0; 
+  background: white; 
+  padding: 8px; 
+  border: 1px solid black; 
+  z-index: 1001;
+}
+
+#vac_info #thumb-box {
+  width: 200px;
+  height: 200px;
+  float: left;
+}
+
+#vac_info #thumb {
+  width: 200px;
+  height: 200px;
+}
+
+#vac_info #info {
+  display: inline-block;
+  margin-left: 10px;
+  line-height: 43px;
+}
