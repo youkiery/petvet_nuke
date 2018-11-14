@@ -137,8 +137,6 @@
 			msg = "Chưa nhập số điện thoại!"
 		} else if(!pet_info.value) {
 			msg = "Khách hàng chưa có thú cưng!"
-		} else if (!$("#hinhanh").val().length) {
-			msg = "Chưa có hình ảnh!"
 		} else {
 			$.post(
 				link + "themsieuam",

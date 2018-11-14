@@ -155,6 +155,15 @@ if ((empty($action) ? 1 : 0) && (NV_CURRENTTIME < $from || NV_CURRENTTIME > $end
           if ($db->sql_numrows($result)) {
             $cometime = strtotime($cometime);
             $calltime = strtotime($calltime);
+
+            $sql = "select * from vng_vac_$diseaseid where petid = $petid order by id desc limit 0, 1";
+            $query = $db->sql_query($sql);
+            $x = array();
+            $row = $db->sql_fetch_assoc($query);
+            $sql = "update vng_vac_$diseaseid set status = 2, recall = $calltime where id = $row[id]";
+            // echo($sql); die();
+            $db->sql_query($sql);
+
             $sql = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_$diseaseid` (petid, cometime, calltime, note, status, doctorid, recall) values ($petid, $cometime, $calltime, '$note', 0, 0, 0);";
             if ($id = $db->sql_query_insert_id($sql)) {
               $ret["status"] = 2;

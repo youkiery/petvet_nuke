@@ -18,7 +18,7 @@ $ghichu = $nv_Request->get_string('ghichu', 'post', '');
 $ret = array("status" => 0, "data" => array());
 // var_dump($_POST);
 
-if ( ! ( empty($idthu) || empty($idbacsi) || empty($ngaysieuam) || empty($ngaydusinh) || empty($hinhanh) ) ) {
+if ( ! ( empty($idthu) || empty($idbacsi) || empty($ngaysieuam) || empty($ngaydusinh) ) ) {
 	$sql = "select id from `" . $db_config['prefix'] . "_" . $module_data . "_pets` where id = $idthu";
 	$result = $db->sql_query($sql);
 
