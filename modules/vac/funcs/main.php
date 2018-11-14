@@ -13,7 +13,7 @@ $today = strtotime(date("Y-m-d"));
 $from = $today + 7 * 60 * 60;
 $end = $today + 17 * 60 * 60 + 30 * 60;
 
-if (NV_CURRENTTIME < $from || NV_CURRENTTIME > $end) {
+if ((empty($action) ? 1 : 0) && (NV_CURRENTTIME < $from || NV_CURRENTTIME > $end)) {
     $xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
     $xtpl->assign("lang", $lang_module);
 

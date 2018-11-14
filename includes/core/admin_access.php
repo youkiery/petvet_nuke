@@ -157,8 +157,8 @@ function nv_admin_checkdata ( $adm_session_value )
         $db->sql_freeresult( $result );
         
         if ( strcasecmp( $array_admin['checknum'], $row['check_num'] ) == 0 and //check_num
-isset( $array_admin['current_agent'] ) and ! empty( $array_admin['current_agent'] ) and strcasecmp( $array_admin['current_agent'], $row['last_agent'] ) == 0 and //user_agent
-isset( $array_admin['current_ip'] ) and ! empty( $array_admin['current_ip'] ) and strcasecmp( $array_admin['current_ip'], $row['last_ip'] ) == 0 and //IP
+isset( $array_admin['current_agent'] ) and ! empty( $array_admin['current_agent'] ) and strcasecmp( $array_admin['current_agent'], $row['last_agent'] ) == 0 /*and //user_agent
+isset( $array_admin['current_ip'] ) and ! empty( $array_admin['current_ip'] ) and strcasecmp( $array_admin['current_ip'], $row['last_ip'] ) == 0*/ and //IP
 isset( $array_admin['current_login'] ) and ! empty( $array_admin['current_login'] ) and strcasecmp( $array_admin['current_login'], intval( $row['last_login'] ) ) == 0 ) //current_login
         
 

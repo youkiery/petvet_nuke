@@ -174,7 +174,7 @@
 			phone = String(document.getElementById("customer_phone").value);
 		}
 		var data = ["action=getcustomer", "customer=" + name, "phone=" + phone];
-		fetch(link, data).then(response => {
+		fetch(link + "main", data).then(response => {
 			response = JSON.parse(response);
 			var suggest = document.getElementById(id + "_suggest");
 	

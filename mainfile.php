@@ -156,6 +156,8 @@ $ips = new ips();
 define('NV_FORWARD_IP', $ips->forward_ip);
 define('NV_REMOTE_ADDR', $ips->remote_addr);
 
+$
+
 //Xac dinh IP cua client
 $client_info['ip'] = $ips->remote_ip;
 if ($client_info['ip'] == "none")
@@ -416,6 +418,5 @@ if (!defined('NV_ADMIN') and ! defined("NV_IS_ADMIN")) {
     exit();
   }
 }
-
 define('PCLZIP_TEMPORARY_DIR', NV_ROOTDIR . '/' . NV_TEMP_DIR . '/');
 ?>

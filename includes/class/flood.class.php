@@ -53,7 +53,7 @@ class FloodBlocker
 
 		if (empty($ip)) $ip = $_SERVER['REMOTE_ADDR'];
 		$ip = ip2long($ip);
-		if ($ip == -1 || $ip === false) trigger_error(FloodBlocker::INCORRECT_IP_ADDRESS, E_USER_ERROR);
+		// if ($ip == -1 || $ip === false) trigger_error(FloodBlocker::INCORRECT_IP_ADDRESS, E_USER_ERROR);
 
 		$this->logs_path = $logs_path;
 		$this->ip_addr = $ip;

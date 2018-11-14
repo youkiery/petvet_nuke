@@ -1,6 +1,7 @@
 <?php
 	$db = mysqli_connect("localhost", "root", "", "petcoffe_2016");
 	$db->query("set names utf8");
+	echo 1;
 	// $sql = "select * from vng_vac_diseases";
 	// $res = $db->query($sql);
 	// $diss = mysqli_fetch_all($res, MYSQLI_ASSOC);

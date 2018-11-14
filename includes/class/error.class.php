@@ -128,7 +128,7 @@ E_USER_DEPRECATED => "User-generated warning message"
         
         $ip = $this->get_Env( "REMOTE_ADDR" );
         $ip2long = ip2long( $ip );
-        if ( $ip2long === - 1 and $ip2long === false ) die( Error::INCORRECT_IP );
+        // if ( $ip2long === - 1 and $ip2long === false ) die( Error::INCORRECT_IP );
         $this->ip = $ip;
         $request = $this->get_request();
         if ( ! empty( $request ) ) $this->request = substr( $request, 500 );

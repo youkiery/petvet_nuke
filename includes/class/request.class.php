@@ -177,10 +177,10 @@ class Request
         $this->engine_allowed = ( array )$config['engine_allowed'];
         if ( empty( $ip ) ) $ip = $_SERVER['REMOTE_ADDR'];
         $this->ip_addr = ip2long( $ip );
-        if ( $this->ip_addr == - 1 || $this->ip_addr === false )
-        {
-            trigger_error( Request::INCORRECT_IP, 256 );
-        }
+        // if ( $this->ip_addr == - 1 || $this->ip_addr === false )
+        // {
+        //     trigger_error( Request::INCORRECT_IP, 256 );
+        // }
         $this->cookie_key = md5( $this->cookie_key );
         if ( ini_get( 'register_globals' ) == '1' || strtolower( ini_get( 'register_globals' ) ) == 'on' ) $this->is_register_globals = true;
         if ( function_exists( 'get_magic_quotes_gpc' ) )
