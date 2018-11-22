@@ -25,6 +25,13 @@
   <div id="lieutrinh">
 
   </div>
+
+  <button class="button" style="position: absolute; bottom: 26px; left: 10px;" onclick="ketthuc(1)">
+    {lang.trihet}
+  </button>
+  <button class="button" style="position: absolute; bottom: 26px; left: 110px;" onclick="ketthuc(2)">
+    {lang.dachet}
+  </button>
 </div>
 <form class="vac_form" method="GET">
   <input type="hidden" name="nv" value="vac">
@@ -58,8 +65,20 @@
     var lieutrinh = trim(data_collect[5].innerText);
     if (lieutrinh) {
       var lieutrinh = JSON.parse(lieutrinh);
+      var option_type = ["Bình thường", "Hơi yếu", "Yếu", "Sắp chết", "Đã chết"];
       lieutrinh.forEach((row, index) => {
-        h_lieutrinh += "<p><b>" + row["ngay"] + "" + "</b></p><div><input class='input' type='text' name='lieutrinh[" + index + "]' value='" + row["ghichu"] + "'></div>";
+        var h_option = ""
+        option_type.forEach((option, index) => {
+          checked = ""
+          // console.log(row["tinhtrang"], index);
+          if (row["tinhtrang"] == index) {
+            checked = "selected"
+            // console.log("x");
+          }
+          h_option += "<option value='" + index + "' " + checked + ">" + option + "</option>";
+          // console.log(h_option);
+        })
+        h_lieutrinh += "<span><b>" + row["ngay"] + "" + "</b></span> <select name='tinhtrang["+index+"]' id='tinhtrang'>" + h_option + "</select> <div><input class='input' type='text' name='lieutrinh[" + index + "]' value='" + row["ghichu"] + "'></div>";
       })
     }
     h_lieutrinh += `</div><div style="text-align: center;"><button class="button"> {lang.submit} </button></div><form>`;
@@ -67,12 +86,31 @@
     $("#thumb").attr("src", image);
     lid = e.currentTarget.getAttribute("id");
   })
+
+  function ketthuc(val) {
+    $.post(
+      link + "luubenh",
+      {action: "trihet", id: lid, val: val},
+      (response, status) => {
+        // console.log(response);
+        response = JSON.parse(response);
+        if (response["status"]) {
+          $("#vac_info").fadeOut();
+          $("#reman").hide();
+        }
+      }
+    )    
+  }
+
   function save(e) {
     e.preventDefault();
     var lieutrinh = $("[name^=lieutrinh]");
+    var tinhtrang = $("[name^=tinhtrang]");
     var vlieutrinh = []
     lieutrinh.each((i, j) => {
-      vlieutrinh[i] = j.value
+      console.log(tinhtrang[i]);
+      
+      vlieutrinh[i] = tinhtrang[i].value + ":" + j.value
     })    
 
     $.post(
@@ -82,11 +120,7 @@
         // console.log(response);
         response = JSON.parse(response);
         if (response["status"]) {
-          var x = $("#" + lid + " .lieutrinh");
-          // console.log(x.text());
-          
-          x.text(response["data"]);
-          lid = -1;
+          $("#" + lid + " .lieutrinh").text(response["data"]);
         }
       }
     )    

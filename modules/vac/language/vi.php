@@ -65,4 +65,8 @@ $lang_module["list2"] = "Danh sách tiêm phòng mới thêm";
 
 $lang_module["tieude_luubenh"] = "Quản lý lưu bệnh";
 $lang_module["ngayluubenh"] = "Ngày lưu bệnh";
+$lang_module["tinhtrang"] = "Tình trạng";
+$lang_module["trihet"] = "Điều trị xong";
+$lang_module["dachet"] = "Đã chết";
+$lang_module["suckhoe"] = "Sức khỏe";
 ?>

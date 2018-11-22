@@ -17,11 +17,17 @@
         <th style="width: 50px;">
           {lang.ngayluubenh}
         </th>
+        <th style="width: 50px;">
+          {lang.suckhoe}
+        </th>
+        <th style="width: 50px;">
+          {lang.tinhtrang}
+        </th>
     	</tr>
   	</thead>
   	<tbody>
     	<!-- BEGIN: list -->  
-    	<tr style="text-transform: capitalize;" id="{lid}">
+    	<tr style="text-transform: capitalize; color: {bgcolor}" id="{lid}">
       	<td>
         	{index}
       	</td>    
@@ -33,9 +39,15 @@
       	</td>
       	<td class="nphone">
         	{phone}
-      	</td>    
-      	<td class="sieuam">
+      	</td>
+      	<td class="luubenh">
           {luubenh}
+        </td>
+      	<td class="suckhoe">
+          {suckhoe}
+        </td>
+      	<td class="tinhtrang">
+          {tinhtrang}
         </td>
         <td style="display: none;" class="lieutrinh">
           {lieutrinh}

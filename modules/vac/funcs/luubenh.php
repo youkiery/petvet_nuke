@@ -14,33 +14,56 @@ $ret = array("status" => 0, "data" => "");
 quagio();
 
   if (!empty($action)) {
-    $lid = $nv_Request->get_string('id', 'post', '');
-    $lieutrinh = $nv_Request->get_string('lieutrinh', 'post', '');
-
-    if (!empty($lid)) {
-      $sql = "update vng_vac_luubenh set lieutrinh = '$lieutrinh' where id = $lid";
-      // $ret["data"] = $sql;
-
-      if ($db->sql_query($sql)) {
-        $sql = "select ngayluubenh, lieutrinh from vng_vac_luubenh where id = $lid";
-        $query = $db->sql_query($sql);
-        if ($row = $db->sql_fetch_assoc($query)) {
-          $lieutrinh = explode("|", $row["lieutrinh"]);
-          $arrlieutrinh = array();
-          $ngaybatdau = strtotime(date("Y-m-d", $row["ngayluubenh"]));
-          $khoangcach = floor(1 + (strtotime(date("Y-m-d")) - $ngaybatdau) / (24 * 60 * 60));
-          // var_dump($khoangcach); die();
-      
-          for ($i = 0; $i < $khoangcach; $i ++) { 
-            $ngay = date("Y-m-d", ($ngaybatdau + $i * 24 * 60 * 60));
-            $ghichu = $lieutrinh[$i] ? $lieutrinh[$i] : "";
-            // echo $ngay; die();
-            $arrlieutrinh[] = array("ngay" => $ngay, "ghichu" => $ghichu);
+    switch ($action) {
+      case 'luulieutrinh':
+      $lid = $nv_Request->get_string('id', 'post', '');
+      $lieutrinh = $nv_Request->get_string('lieutrinh', 'post', '');
+  
+      if (!empty($lid)) {
+        $sql = "update vng_vac_luubenh set lieutrinh = '$lieutrinh' where id = $lid";
+        $ret["data"] = $sql;
+  
+        if ($db->sql_query($sql)) {
+          $sql = "select ngayluubenh, lieutrinh from vng_vac_luubenh where id = $lid";
+          $query = $db->sql_query($sql);
+          if ($row = $db->sql_fetch_assoc($query)) {
+            $lieutrinh = explode("|", $row["lieutrinh"]);
+            $arrlieutrinh = array();
+            $ngaybatdau = strtotime(date("Y-m-d", $row["ngayluubenh"]));
+            $khoangcach = floor(1 + (strtotime(date("Y-m-d")) - $ngaybatdau) / (24 * 60 * 60));
+            // var_dump($khoangcach); die();
+        
+            foreach($lieutrinh as $key => $value) {
+              $ngay = date("Y-m-d", ($ngaybatdau + $key * 24 * 60 * 60));
+              if ($value !== "") {
+                $x = explode(":", $value);
+                $tinhtrang = $x[0];
+                $ghichu = $x[1];
+              }
+              else {
+                $tinhtrang = "";
+              }
+              // echo $ngay; die();
+              $arrlieutrinh[] = array("ngay" => $ngay, "ghichu" => $ghichu, "tinhtrang" => $tinhtrang);
+            }
+            $ret["status"] = 1;
+            $ret["data"] = json_encode($arrlieutrinh);
           }
-          $ret["status"] = 1;
-          $ret["data"] = json_encode($arrlieutrinh);
         }
       }
+      break;
+      case 'trihet':
+        $lid = $nv_Request->get_string('id', 'post', '');
+        $val = $nv_Request->get_string('val', 'post', '');
+        
+        if (! (empty($lid) || empty($val))) {
+          $sql = "update vng_vac_luubenh set ketqua = $val where id = $lid";
+          $ret["data"] = $sql;
+          if ($db->sql_query($sql)) {
+            $ret["status"] = 1;
+          }
+        }
+      break;
     }
 
     echo json_encode($ret);
@@ -63,6 +86,17 @@ quagio();
     $xtpl->assign("doctor_name", $row["doctor"]);
     $xtpl->parse("main.doctor");
   }
+
+  $status_option = array("Bình thường", "Hơi yếu", "Yếu", "Sắp chết", "Đã chết");
+  // var_dump($status_option);
+
+  foreach($status_option as $key => $value) {
+    // echo $value;
+    $xtpl->assign("status_value", $key);
+    $xtpl->assign("status_name", $value);
+    $xtpl->parse("main.status");
+  }
+  // die();
 
   $xtpl->parse("main");
 

@@ -78,13 +78,22 @@
 			</tr>
 			<!-- note & submit -->
 			<tr>
+        <td>
+          {lang.tinhtrang}
+        </td>
 				<td colspan="3">
-					<textarea id="pet_note" rows="3" style="width: 98%;">{lang.note}</textarea>
-				</td>
-				<td>
+					<select name="tinhtrang" id="tinhtrang" style="width: 90%;">
+						<!-- BEGIN: status -->
+						<option value="{status_value}">{status_name}</option>
+						<!-- END: status -->
+					</select>
+        </td>
+			</tr>
+      <tr>
+				<td colspan="4">
 					<input type="submit" value="{lang.submit}">
 				</td>
-			</tr>
+      </tr>
 		</tbody>
 	</table>
 </form>
@@ -114,7 +123,7 @@
 		} else {
 			$.post(
 				link + "themluubenh",
-				{idthu: pet_info.value, idbacsi: $("#doctor").val(), ngayluubenh: $("#ngayluubenh").val(), ghichu: $("#ghichu").val()},
+				{idthu: pet_info.value, idbacsi: $("#doctor").val(), ngayluubenh: $("#ngayluubenh").val(), ghichu: $("#ghichu").val(), tinhtrang: $("#tinhtrang").val()},
 				(data, status) => {
 					data = JSON.parse(data);
 					if (data["status"] == 1) {

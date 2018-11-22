@@ -10,19 +10,20 @@
 if (!defined('NV_IS_MOD_VAC')) die('Stop!!!');
 $idthu = $nv_Request->get_string('idthu', 'post/get', '');
 $ngayluubenh = $nv_Request->get_string('ngayluubenh', 'post', '');
+$tinhtrang = $nv_Request->get_string('tinhtrang', 'post', '');
 $idbacsi = $nv_Request->get_string('idbacsi', 'post', '');
 $ghichu = $nv_Request->get_string('ghichu', 'post', '');
 $ret = array("status" => 0, "data" => "");
-// var_dump($_POST);
-if ( ! ( empty($idthu) || empty($idbacsi) || empty($ngayluubenh)) ) {
-	$sql = "select id from `" . $db_config['prefix'] . "_" . $module_data . "_pets` where id = $idthu";
+// var_dump(strlen($tinhtrang) > 0);
+if ( ! ( empty($idthu) || empty($idbacsi) || empty($ngayluubenh) || strlen($tinhtrang) == 0) ) {
+  $sql = "select id from `" . $db_config['prefix'] . "_" . $module_data . "_pets` where id = $idthu";
 	$result = $db->sql_query($sql);
+  // $ret["data"] .= $sql;
 
 	if ($db->sql_numrows($result)) {
-		$sql = "INSERT INTO `" . $db_config['prefix'] . "_" . $module_data . "_luubenh` (`idthucung`, `idbacsi`, `ngayluubenh`, `lieutrinh`) VALUES ($idthu, $idbacsi, ". strtotime($ngayluubenh) . ", '')";
-    $ret["data"] .= $sql;
+		$sql = "INSERT INTO `" . $db_config['prefix'] . "_" . $module_data . "_luubenh` (`idthucung`, `idbacsi`, `ngayluubenh`, `lieutrinh`) VALUES ($idthu, $idbacsi, ". strtotime($ngayluubenh) . ", '$tinhtrang: ')";
+    // $ret["data"] .= $sql;
 		$insert_id = $db->sql_query_insert_id($sql);
-
 
 		// if ($sql) {
 		if ($insert_id) {
@@ -32,9 +33,9 @@ if ( ! ( empty($idthu) || empty($idbacsi) || empty($ngayluubenh)) ) {
 	}
 }
 
-if (!$ret["status"]) {
-	$ret["data"] .= $lang_module["themsatb"];
-}
+// if (!$ret["status"]) {
+// 	$ret["data"] .= $lang_module["themsatb"];
+// }
 
 echo json_encode($ret);
 die();
