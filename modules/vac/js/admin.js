@@ -172,7 +172,7 @@ function vac_add_pet(customerid) {
 		var url = "index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=customer";
 		post_data = ["action=addpet", "id=" + customerid, "petname=" + petname];
 		fetch(url, post_data).then(response => {
-			console.log(response);
+			// console.log(response);
 			
 			var msg = "";
 			if(response) {
@@ -264,10 +264,10 @@ function ex(id) {
 	var url = "index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=patient";
 	var post_data = ["action=addvac", "petid=" + id, "diseaseid=" + diseaseid, "disease=" + disease, "cometime=" + cometime, "calltime=" + calltime];
 	fetch(url, post_data).then(response => {
-		console.log(response);
+		// console.log(response);
 		if(response) {
 			var data = JSON.parse(response);
-			console.log(data);
+			// console.log(data);
 			var tr = document.createElement("tr");
 			var td_disease = document.createElement("td");
 			var td_cometime = document.createElement("td");

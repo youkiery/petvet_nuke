@@ -161,7 +161,7 @@ function cartorder(a_ob){
 		// url: nv_siteroot + 'index.php?' + nv_lang_variable + '=' + nv_sitelang + '&' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=setcart' + '&id=' + id + "&nocache=" + new Date().getTime(),
 		data: '',
 		success: function(data){
-			console.log(data);
+			// console.log(data);
 			var s = data.split('_');
 			var strText = s[1];
 			

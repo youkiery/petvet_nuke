@@ -16,6 +16,15 @@
 	width: 90%;
 	height: 2em;
 }
+.button {
+	margin: 4px;
+	padding: 4px;
+	height: 2em;
+}
+.khung {
+  height: 250px;
+  overflow-y: scroll;
+}
 .thump {
 	max-width: 240px;
 	max-height: 240px;
@@ -99,7 +108,15 @@
 }
 
 #vac_info #info {
-  display: inline-block;
+  float: left;
   margin-left: 10px;
   line-height: 43px;
+  width: 40%;
+}
+
+#vac_info #lieutrinh {
+  float: right;
+  margin-left: 10px;
+  line-height: 43px;
+  width: 50%;
 }

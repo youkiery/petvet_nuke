@@ -105,7 +105,7 @@
   }
 
   function change_color(e, response, index, vacid, petid) {
-    console.log(e, response, index, vacid, petid);
+    // console.log(e, response, index, vacid, petid);
     
     if (response["status"]) {
       e.innerText = response["data"]["value"];
@@ -135,7 +135,7 @@
     $("#phone").text(data_collect[3].innerText);
     $("#dusinh").text(data_collect[4].innerText);
     $("#sieuam").text(data_collect[5].innerText);
-    console.log(e);
+    // console.log(e);
     
     $("#thumb").attr("src", image);
   })

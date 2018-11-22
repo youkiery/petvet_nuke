@@ -23,8 +23,7 @@
 			link,
 			{action: "save", sort: $("#f_sort").val(), time: $("#f_moment").val()},
 			(data, status) => {
-				console.log(data);
-				
+				// console.log(data);
 			}
 		)
     return false;

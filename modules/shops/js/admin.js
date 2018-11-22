@@ -468,7 +468,7 @@ function nv_add_size() {
 	$( "#zsize" ).append( newitem );
 }
 function nv_remove_size(e) {
-	console.log(e)
+	// console.log(e)
 	var row_id = e.id.slice(-1);
 	document.getElementById("size_" + row_id).remove();
 	// var newitem = "<tr><td><input type='text' maxlength='5' class='zsize' name='zsize[]' style='width: 100px;' /></td><td><input type='number' maxlength='50' class='zprice' name='zprice[]' style='width: 80px;' /><input type='button' value='Bỏ'  onclick='nv_remove_size()' /></td></tr>";

@@ -51,7 +51,6 @@ $lang_module["doctor"] = "Người trực";
 // sieuam
 $lang_module["tieude_sieuam"] = "Quản lý siêu âm";
 $lang_module["tieude_sieuam_danhsach"] = "Danh sách siêu âm";
-$lang_module["ngaythongbao"] = "Quản lý siêu âm";
 $lang_module["hinhanh"] = "Hình ảnh";
 $lang_module["chonanh"] = "Chọn ảnh";
 $lang_module["themsatc"] = "Đã lưu bản ghi";
@@ -64,4 +63,6 @@ $lang_module["filter_result"] = "Tổng số <span style='color: red'>%d</span> 
 $lang_module["list"] = "Danh sách quản lý tiêm phòng";
 $lang_module["list2"] = "Danh sách tiêm phòng mới thêm";
 
+$lang_module["tieude_luubenh"] = "Quản lý lưu bệnh";
+$lang_module["ngayluubenh"] = "Ngày lưu bệnh";
 ?>

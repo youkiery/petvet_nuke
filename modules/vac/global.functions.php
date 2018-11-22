@@ -601,5 +601,25 @@ function nv_generate_page_shop($base_url, $num_items, $per_page, $start_item, $a
   // }
   return $page_string;
 }
+// Nếu quá giờ làm việc sẽ chặn đường vào
+function quagio() {
+  global $global_config;
+  $today = strtotime(date("Y-m-d"));
+  $from = $global_config["giolamviec"] ? $global_config["giolamviec"] : $today + 7 * 60 * 60;
+  $end = $global_config["gionghi"] ? $global_config["gionghi"] : $today + 17 * 60 * 60 + 30 * 60;
+
+  if (NV_CURRENTTIME < $from || NV_CURRENTTIME > $end) {
+    $xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
+    $xtpl->assign("lang", $lang_module);
+
+    $xtpl->parse("overtime");
+    $contents = $xtpl->text("overtime");
+
+    include ( NV_ROOTDIR . "/includes/header.php" );
+    echo nv_site_theme($contents);
+    include ( NV_ROOTDIR . "/includes/footer.php" );
+    die();
+  }
+}
 
 ?>
