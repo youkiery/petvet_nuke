@@ -476,6 +476,10 @@ class Request
             $this->referer_key = 2;
             unset( $_SERVER['HTTP_REFERER'] );
         }
+        
+      	if (strpos($_SERVER['REQUEST_URI'], 'nv=mobile') >= 0) {
+          $this->referer_key = 1;
+        }
         if ( $this->str_referer_blocker and ! empty( $_SERVER['QUERY_STRING'] ) and $this->referer_key == 0 and empty( $this->search_engine ) )
         {
             header( "Location: " . $this->site_url );

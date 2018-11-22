@@ -11,7 +11,7 @@
 <div id="reman"></div>
 <a href="/index.php?nv=vac&op=list"> {lang.list} </a>
 <a href="/index.php?nv=vac&op=list&page=list"> {lang.list2} </a>
-<div id="vac_panel" style="display: none; position: fixed; margin:auto;">
+<div id="vac_panel" style="display: none; position: fixed; margin:auto; z-index: 1001;">
   <form>
     <table class="tab1" style="width: 500px;">
       <thead>
