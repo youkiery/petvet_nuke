@@ -44,7 +44,7 @@ function displaySSList($list, $time, $path, $lang_module) {
   $xtpl = new XTemplate("luubenh-bang.tpl", $path);
 	$xtpl->assign("lang", $lang_module);
   
-  $status_option = array("Bình thường", "Hơi yếu", "Yếu", "Sắp chết", "Đã chết");
+  $status_option = array("Bình thường", "Hơi yếu", "Yếu", "Sắp chết");
   $export = array("Lưu bệnh", "Đã điều trị", "Đã chết");
   $index = 1;
 	foreach ($list as $key => $list_data) {
@@ -54,8 +54,27 @@ function displaySSList($list, $time, $path, $lang_module) {
 		$xtpl->assign("petname", $list_data["petname"]);
 		$xtpl->assign("customer", $list_data["customer"]);
 		$xtpl->assign("phone", $list_data["phone"]);
+		$xtpl->assign("doctor", $list_data["doctor"]);
 		$xtpl->assign("petid", $list_data["petid"]);
     $xtpl->assign("luubenh", date("d/m/Y", $list_data["ngayluubenh"]));
+    $color = "#ccc";
+    if (!$list_data["ketqua"]) {
+      switch ($list_data["tinhtrang"]) {
+        case 0:
+          $color = "#2d2";
+        break;
+        case 1:
+          $color = "#4a2";
+        break;
+        case 2:
+          $color = "#aa2";
+        break;
+        case 3:
+          $color = "#f62";
+        break;
+      }
+    }
+    $xtpl->assign("bgcolor", $color);
     $suckhoe = 0;
     $lieutrinh = explode("|", $list_data["lieutrinh"]);
     $arrlieutrinh = array();

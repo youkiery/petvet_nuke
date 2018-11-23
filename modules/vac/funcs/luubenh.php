@@ -57,7 +57,22 @@ quagio();
         $val = $nv_Request->get_string('val', 'post', '');
         
         if (! (empty($lid) || empty($val))) {
-          $sql = "update vng_vac_luubenh set ketqua = $val where id = $lid";
+          $set = "ketqua = $val";
+          if ($val == 2) {
+              $sql = "select * from vng_vac_luubenh where id = $lid";
+              $query = $db->sql_query($sql);
+              $row = $db->sql_fetch_assoc($query);
+            //   var_dump($row);
+              $lieutrinh1 = explode("|", $row["lieutrinh"]);
+              $lieutrinh2 = explode(":", $lieutrinh1[count($lieutrinh1) - 1]);
+              $lieutrinh2[0] = 4;
+              $lieutrinh = implode(":", $lieutrinh2);
+              $lieutrinh1[count($lieutrinh1) - 1] = $lieutrinh;
+              $lieutrinh = implode("|", $lieutrinh1);
+              
+              $set .= ", tinhtrang = $lieutrinh";
+          }
+          $sql = "update vng_vac_luubenh set $set where id = $lid";
           $ret["data"] = $sql;
           if ($db->sql_query($sql)) {
             $ret["status"] = 1;

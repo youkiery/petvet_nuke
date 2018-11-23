@@ -82,7 +82,7 @@
           {lang.tinhtrang}
         </td>
 				<td colspan="3">
-					<select name="tinhtrang" id="tinhtrang" style="width: 90%;">
+					<select name="tinhtrang" id="tinhtrang2" style="width: 90%;">
 						<!-- BEGIN: status -->
 						<option value="{status_value}">{status_name}</option>
 						<!-- END: status -->
@@ -123,7 +123,7 @@
 		} else {
 			$.post(
 				link + "themluubenh",
-				{idthu: pet_info.value, idbacsi: $("#doctor").val(), ngayluubenh: $("#ngayluubenh").val(), ghichu: $("#ghichu").val(), tinhtrang: $("#tinhtrang").val()},
+				{idthu: pet_info.value, idbacsi: $("#doctor").val(), ngayluubenh: $("#ngayluubenh").val(), ghichu: $("#ghichu").val(), tinhtrang: $("#tinhtrang2").val()},
 				(data, status) => {
 					data = JSON.parse(data);
 					if (data["status"] == 1) {

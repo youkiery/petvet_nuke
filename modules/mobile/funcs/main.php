@@ -16,7 +16,6 @@ $action = $nv_Request->get_string('action', 'post', '');
 // ];
 
 header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Credentials: true');
 header('Content-Type: application/json');
 
 // $arr = array("Chưa tiêm", "1 Mũi", "2 Mũi", "3 Mũi", "4 Mũi", "5 Mũi", "6 Mũi", "7 Mũi", "8 Mũi", "9 Mũi", "10 Mũi", "Nhiều hơn");
@@ -30,9 +29,12 @@ $type = array("Cần bán", "Cần mua", "Muốn tặng", "Tìm thú lạc");
 if (isset($_GET["action"])) {
   $action = $_GET["action"];
   // $db = new mysqli("localhost", "id1588624_adweb", "Whpl.2412", "id1588624_root");
-  $db_config["dbname"] = "petcoffe_mobile";
-  $db_config["dbuname"] = "petcoffe_mobile";
-  $db_config["dbpass"] = "Ykpl.2412";
+  // $db_config["dbname"] = "petcoffe_mobile";
+  // $db_config["dbuname"] = "petcoffe_mobile";
+  // $db_config["dbpass"] = "Ykpl.2412";
+  $db_config["dbname"] = "petcoffe";
+  $db_config["dbuname"] = "root";
+  $db_config["dbpass"] = "";
   $db = new sql_db($db_config);
 
   $query = $db->sql_query("SET CHARACTER SET 'utf8'");

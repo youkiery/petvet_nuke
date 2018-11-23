@@ -60,9 +60,9 @@
     $("#petname").text(data_collect[1].innerText);
     $("#customer").text(data_collect[2].innerText);
     $("#phone").text(data_collect[3].innerText);
-    $("#luubenh").text(data_collect[4].innerText);
+    $("#luubenh").text(data_collect[5].innerText);
     var h_lieutrinh = "<form onSubmit='return save(event)'><div class='khung'>";
-    var lieutrinh = trim(data_collect[5].innerText);
+    var lieutrinh = trim(data_collect[8].innerText);
     if (lieutrinh) {
       var lieutrinh = JSON.parse(lieutrinh);
       var option_type = ["Bình thường", "Hơi yếu", "Yếu", "Sắp chết", "Đã chết"];
