@@ -67,8 +67,8 @@
   border: 1px solid black;
   margin: 1px;
   position: fixed;
-  width: 500px;
-  height: 300px;
+  width: 640px;
+  height: 400px;
   z-index: 1001;
   padding: 10px;
 }
@@ -114,13 +114,14 @@
   width: 40%;
 }
 
-#vac_info #lieutrinh {
+#vac_info .lieutrinh {
   float: right;
   margin-left: 10px;
   line-height: 43px;
-  width: 50%;
+  width: 55%;
 }
 
 #tinhtrang {
   float: right;
 }
+

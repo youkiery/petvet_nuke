@@ -69,4 +69,12 @@ $lang_module["tinhtrang"] = "Tình trạng";
 $lang_module["trihet"] = "Điều trị xong";
 $lang_module["dachet"] = "Đã chết";
 $lang_module["suckhoe"] = "Sức khỏe";
+$lang_module["ketqua"] = "Kết quả điều trị";
+$lang_module["nhietdo"] = "Nhiệt độ";
+$lang_module["niemmac"] = "Niêm mạc";
+$lang_module["khac"] = "Khác";
+$lang_module["dieutri"] = "Điều trị";
+$lang_module["xetnghiem"] = "Xét nghiệm";
+$lang_module["non"] = "Không";
+$lang_module["have"] = "Có";
 ?>

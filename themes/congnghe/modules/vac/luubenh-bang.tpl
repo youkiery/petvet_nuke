@@ -8,12 +8,6 @@
       <th style="width: 100px;">
         {lang.petname}
       </th>  
-      <th style="width: 120px;">
-        {lang.customer}
-      </th>  
-      <th style="width: 100px;">
-        {lang.phone}
-      </th>  
       <th style="width: 100px;">
         {lang.doctor}
       </th>  
@@ -21,10 +15,10 @@
         {lang.ngayluubenh}
       </th>
       <th style="width: 50px;">
-        {lang.suckhoe}
+        {lang.tinhtrang}
       </th>
       <th style="width: 50px;">
-        {lang.tinhtrang}
+        {lang.ketqua}
       </th>
     </tr>
   </thead>
@@ -37,12 +31,6 @@
       <td class="petname">
         {petname}
       </td>    
-      <td class="customer">
-        {customer}
-      </td>
-      <td class="nphone">
-        {phone}
-      </td>
       <td class="doctor">
         {doctor}
       </td>
@@ -50,10 +38,10 @@
         {luubenh}
       </td>
       <td class="suckhoe">
-        {suckhoe}
+        {tinhtrang}
       </td>
       <td class="tinhtrang">
-        {tinhtrang}
+        {ketqua}
       </td>
       <td style="display: none;" class="lieutrinh">
         {lieutrinh}

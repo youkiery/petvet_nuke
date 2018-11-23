@@ -37,11 +37,11 @@ if ((empty($action) ? 1 : 0) && (NV_CURRENTTIME < $from || NV_CURRENTTIME > $end
   $today = date("Y-m-d", NV_CURRENTTIME);
   $dusinh = $global_config["dusinh"];
   if (empty($dusinh)) {
-    $dusinh = 45 * 24 * 60 * 60;
+    $dusinh = 30 * 24 * 60 * 60;
   }
   $thongbao = $global_config["thongbao"];
   if (empty($thongbao)) {
-    $thongbao = 45 * 24 * 60 * 60;
+    $thongbao = 30 * 24 * 60 * 60;
   }
   // echo $thongbao; die();
 

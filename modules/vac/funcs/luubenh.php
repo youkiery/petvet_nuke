@@ -6,117 +6,162 @@
  * @Copyright (C) 2011
  * @Createdate 26/01/2011 10:26 AM
  */
-
-if (!defined('NV_IS_MOD_VAC')) die('Stop!!!');
+if (!defined('NV_IS_MOD_VAC'))
+  die('Stop!!!');
 $action = $nv_Request->get_string('action', 'post/get', '');
 $ret = array("status" => 0, "data" => "");
 
 quagio();
 
-  if (!empty($action)) {
-    switch ($action) {
-      case 'luulieutrinh':
-      $lid = $nv_Request->get_string('id', 'post', '');
-      $lieutrinh = $nv_Request->get_string('lieutrinh', 'post', '');
-  
-      if (!empty($lid)) {
-        $sql = "update vng_vac_luubenh set lieutrinh = '$lieutrinh' where id = $lid";
+if (!empty($action)) {
+  switch ($action) {
+    case 'luulieutrinh':
+      $ltid = $nv_Request->get_string('id', 'post', '');
+      $nhietdo = $nv_Request->get_string('nhietdo', 'post', '');
+      $niemmac = $nv_Request->get_string('niemmac', 'post', '');
+      $khac = $nv_Request->get_string('khac', 'post', '');
+      $xetnghiem = $nv_Request->get_string('xetnghiem', 'post', '');
+      $dieutri = $nv_Request->get_string('dieutri', 'post', '');
+
+      if (! (empty($ltid) || empty($xetnghiem))) {
+        $sql = "update vng_vac_lieutrinh set nhietdo = '$nhietdo', niemmac = '$niemmac', khac = '$khac', xetnghiem = '$xetnghiem', dieutri = '$dieutri' where id = $ltid";
         $ret["data"] = $sql;
-  
+
         if ($db->sql_query($sql)) {
-          $sql = "select ngayluubenh, lieutrinh from vng_vac_luubenh where id = $lid";
-          $query = $db->sql_query($sql);
-          if ($row = $db->sql_fetch_assoc($query)) {
-            $lieutrinh = explode("|", $row["lieutrinh"]);
-            $arrlieutrinh = array();
-            $ngaybatdau = strtotime(date("Y-m-d", $row["ngayluubenh"]));
-            $khoangcach = floor(1 + (strtotime(date("Y-m-d")) - $ngaybatdau) / (24 * 60 * 60));
-            // var_dump($khoangcach); die();
-        
-            foreach($lieutrinh as $key => $value) {
-              $ngay = date("Y-m-d", ($ngaybatdau + $key * 24 * 60 * 60));
-              if ($value !== "") {
-                $x = explode(":", $value);
-                $tinhtrang = $x[0];
-                $ghichu = $x[1];
-              }
-              else {
-                $tinhtrang = "";
-              }
-              // echo $ngay; die();
-              $arrlieutrinh[] = array("ngay" => $ngay, "ghichu" => $ghichu, "tinhtrang" => $tinhtrang);
-            }
             $ret["status"] = 1;
-            $ret["data"] = json_encode($arrlieutrinh);
-          }
+
+          // $sql = "select ngayluubenh, lieutrinh from vng_vac_luubenh where id = $lid";
+          // $query = $db->sql_query($sql);
+          // if ($row = $db->sql_fetch_assoc($query)) {
+          //   $lieutrinh = explode("|", $row["lieutrinh"]);
+          //   $arrlieutrinh = array();
+          //   $ngaybatdau = strtotime(date("Y-m-d", $row["ngayluubenh"]));
+          //   $khoangcach = floor(1 + (strtotime(date("Y-m-d")) - $ngaybatdau) / (24 * 60 * 60));
+          //   // var_dump($khoangcach); die();
+
+          //   foreach ($lieutrinh as $key => $value) {
+          //     $ngay = date("Y-m-d", ($ngaybatdau + $key * 24 * 60 * 60));
+          //     if ($value !== "") {
+          //       $x = explode(":", $value);
+          //       $tinhtrang = $x[0];
+          //       $ghichu = $x[1];
+          //     } else {
+          //       $tinhtrang = "";
+          //     }
+          //     // echo $ngay; die();
+          //     $arrlieutrinh[] = array("ngay" => $ngay, "ghichu" => $ghichu, "tinhtrang" => $tinhtrang);
+          //   }
+          //   $ret["status"] = 1;
+          //   $ret["data"] = json_encode($arrlieutrinh);
+          // }
         }
       }
       break;
-      case 'trihet':
-        $lid = $nv_Request->get_string('id', 'post', '');
-        $val = $nv_Request->get_string('val', 'post', '');
-        
-        if (! (empty($lid) || empty($val))) {
-          $set = "ketqua = $val";
-          if ($val == 2) {
-              $sql = "select * from vng_vac_luubenh where id = $lid";
-              $query = $db->sql_query($sql);
-              $row = $db->sql_fetch_assoc($query);
-            //   var_dump($row);
-              $lieutrinh1 = explode("|", $row["lieutrinh"]);
-              $lieutrinh2 = explode(":", $lieutrinh1[count($lieutrinh1) - 1]);
-              $lieutrinh2[0] = 4;
-              $lieutrinh = implode(":", $lieutrinh2);
-              $lieutrinh1[count($lieutrinh1) - 1] = $lieutrinh;
-              $lieutrinh = implode("|", $lieutrinh1);
-              
-              $set .= ", tinhtrang = $lieutrinh";
+    case 'trihet':
+      $lid = $nv_Request->get_string('id', 'post', '');
+      $val = $nv_Request->get_string('val', 'post', '');
+
+      if (!(empty($lid) || empty($val))) {
+        $set = "ketqua = $val";
+        if ($val == 2) {
+          $sql = "select * from vng_vac_luubenh where id = $lid";
+          $query = $db->sql_query($sql);
+          $row = $db->sql_fetch_assoc($query);
+          //   var_dump($row);
+          $lieutrinh1 = explode("|", $row["lieutrinh"]);
+          $lieutrinh2 = explode(":", $lieutrinh1[count($lieutrinh1) - 1]);
+          $lieutrinh2[0] = 4;
+          $lieutrinh = implode(":", $lieutrinh2);
+          $lieutrinh1[count($lieutrinh1) - 1] = $lieutrinh;
+          $lieutrinh = implode("|", $lieutrinh1);
+
+          $set .= ", tinhtrang = $lieutrinh";
+        }
+        $sql = "update vng_vac_luubenh set $set where id = $lid";
+        $ret["data"] = $sql;
+        if ($db->sql_query($sql)) {
+          $ret["status"] = 1;
+        }
+      }
+      break;
+    case 'thongtinluubenh':
+      $lid = $nv_Request->get_string('id', 'post', '');
+      if (!(empty($lid))) {
+        $sql = "SELECT a.id, a.ngayluubenh, a.tinhtrang, a.ketqua, b.id, c.customer, c.phone, c.address as petid, b.petname, d.doctor from " . VAC_PREFIX . "_luubenh a inner join " . VAC_PREFIX . "_pets b on a.id = $lid and a.idthucung = b.id inner join " . VAC_PREFIX .  "_customers c on c.id = b.customerid and (c.customer like '%$key%' or c.phone like '%$key%' or b.petname like '%$key%') inner join " . VAC_PREFIX . "_doctor d on a.idbacsi = d.id order by ngayluubenh";
+        $query = $db->sql_query($sql);
+        if ($row = $db->sql_fetch_assoc($query)) {
+          $row["ngayluubenh"] = date("d/m/Y", $row["ngayluubenh"]);
+          $sql = "SELECT * from " . VAC_PREFIX . "_lieutrinh where idluubenh = $lid";
+          $query = $db->sql_query($sql);
+          $lieutrinh = fetchall($db, $query);
+          if ($lieutrinh) {
+            foreach ($lieutrinh as $key => $value) {
+              $lieutrinh[$key]["ngay"] = date("d/m/Y", $value["ngay"]);
+            }
+            $row["lieutrinh"] = $lieutrinh;
           }
-          $sql = "update vng_vac_luubenh set $set where id = $lid";
-          $ret["data"] = $sql;
-          if ($db->sql_query($sql)) {
+          $ret["status"] = 1;
+          $ret["data"] = $row;
+        }
+      }
+    break;
+    case 'themlieutrinh':
+      $lid = $nv_Request->get_string('id', 'post', '');
+      $ngay = $nv_Request->get_string('ngay', 'post', '');
+      if (! (empty($lid) || empty($ngay))) {
+        $i_ngay = strtotime($ngay);
+        $sql = "select * from `" . VAC_PREFIX . "_lieutrinh` where idluubenh = $lid and ngay = " . $i_ngay;
+        if (!$db->sql_query_insert_id($sql)) {
+          $sql = "insert into `" . VAC_PREFIX . "_lieutrinh` (idluubenh, nhietdo, niemmac, khac, xetnghiem, hinhanh, ngay, dieutri) values($lid, '', '', '', 0, '', " . strtotime($i_ngay) . ", '')";
+          if ($id = $db->sql_query_insert_id($sql)) {
             $ret["status"] = 1;
+            $ret["data"]["id"] = $id;
+            $ret["data"]["ngay"] = date_format(date_create($ngay), "d/m/Y");
           }
         }
-      break;
-    }
-
-    echo json_encode($ret);
-    die();
+        else {
+          $ret["status"] = 2;
+        }
+      }
+    break;
   }
 
-  $xtpl = new XTemplate("luubenh.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
-  $xtpl->assign("lang", $lang_module);
+  echo json_encode($ret);
+  die();
+}
 
-  $today = date("Y-m-d", NV_CURRENTTIME);
-  // echo $thongbao; die();
+$xtpl = new XTemplate("luubenh.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
+$xtpl->assign("lang", $lang_module);
 
-  $xtpl->assign("now", $today);
+$today = date("Y-m-d", NV_CURRENTTIME);
+// echo $thongbao; die();
 
-  $sql = "select * from vng_vac_doctor";
-  $result = $db->sql_query($sql);
+$xtpl->assign("now", $today);
 
-  while ($row = $db->sql_fetch_assoc($result)) {
-    $xtpl->assign("doctor_value", $row["id"]);
-    $xtpl->assign("doctor_name", $row["doctor"]);
-    $xtpl->parse("main.doctor");
-  }
+$sql = "select * from vng_vac_doctor";
+$result = $db->sql_query($sql);
 
-  $status_option = array("Bình thường", "Hơi yếu", "Yếu", "Sắp chết", "Đã chết");
-  // var_dump($status_option);
+while ($row = $db->sql_fetch_assoc($result)) {
+  $xtpl->assign("doctor_value", $row["id"]);
+  $xtpl->assign("doctor_name", $row["doctor"]);
+  $xtpl->parse("main.doctor");
+}
 
-  foreach($status_option as $key => $value) {
-    // echo $value;
-    $xtpl->assign("status_value", $key);
-    $xtpl->assign("status_name", $value);
-    $xtpl->parse("main.status");
-  }
-  // die();
+$status_option = array("Bình thường", "Hơi yếu", "Yếu", "Sắp chết", "Đã chết");
+// var_dump($status_option);
 
-  $xtpl->parse("main");
+foreach ($status_option as $key => $value) {
+  // echo $value;
+  $xtpl->assign("status_value", $key);
+  $xtpl->assign("status_name", $value);
+  $xtpl->parse("main.status");
+}
+// die();
 
-  $contents = $xtpl->text("main");
-  include ( NV_ROOTDIR . "/includes/header.php" );
-  echo nv_site_theme($contents);
-  include ( NV_ROOTDIR . "/includes/footer.php" );
+$xtpl->parse("main");
+
+$contents = $xtpl->text("main");
+include ( NV_ROOTDIR . "/includes/header.php" );
+echo nv_site_theme($contents);
+include ( NV_ROOTDIR . "/includes/footer.php" );
 ?>

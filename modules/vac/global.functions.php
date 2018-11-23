@@ -621,5 +621,12 @@ function quagio() {
     die();
   }
 }
+function fetchall($db, $query) {
+  $result = array();
+  while ($row = $db->sql_fetch_assoc($query)) {
+      $result[] = $row;
+  }
+  return $result;
+}
 
 ?>

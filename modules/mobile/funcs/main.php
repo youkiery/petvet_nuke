@@ -459,6 +459,13 @@ if (isset($_GET["action"])) {
         }
       }
       break;
+    case 'getproviderpet':
+      $prid = $nv_Request->get_string('prid', 'post/get', '');
+      if (!empty($prid)) {
+        $sql = "select a.type as typeid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, a.description, b.name as owner, c.name as species, d.name as kind, b.province from post a inner join user b on a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id where a.user = $prid and sold = 0 order by a.time desc";
+        $
+      }
+    break;
   }
 
 }
