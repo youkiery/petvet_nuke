@@ -628,5 +628,32 @@ function fetchall($db, $query) {
   }
   return $result;
 }
+// Thay đổi màu trong lưu bệnh
+function mauluubenh($ketqua, $tinhtrang) {
+  switch ($ketqua) {
+    case 1:
+      $color = "#ccc";
+    break;
+    case 2:
+      $color = "#f44";
+    break;
+    default:
+      switch ($tinhtrang) {
+        case 0:
+          $color = "#2d2";
+          break;
+        case 1:
+          $color = "#4a2";
+          break;
+        case 2:
+          $color = "#aa2";
+          break;
+        case 3:
+          $color = "#f62";
+          break;
+      }
+  }
+  return $color;
+}
 
 ?>

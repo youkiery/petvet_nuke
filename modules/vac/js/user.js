@@ -46,10 +46,11 @@ function vi(str) {
   return str; 
 }
 function getInfo(index) {
-  customer_data = customer_list[index];		
+  customer_data = customer_list[index];
   customer_name.value = customer_data["customer"];
   customer_phone.value = customer_data["phone"];
   customer_address.value = customer_data["address"];
+  g_index = index;
   g_customer = customer_data["id"]
   var data = ["action=getpet", "customerid=" + customer_data["id"]];
   fetch(link, data).then(response => {

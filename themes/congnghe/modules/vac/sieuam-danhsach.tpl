@@ -123,8 +123,8 @@
     $("#reman").hide();
   })
 
-  $("tbody tr").click((e) => {
-    var data_collect = e.currentTarget.children;
+  $("tbody td[class]").click((e) => {
+    var data_collect = e.target.parentElement.children;
     var image = e.currentTarget.getAttribute("img");
 
     $("#vac_info").fadeIn();
@@ -133,8 +133,8 @@
     $("#petname").text(data_collect[1].innerText);
     $("#customer").text(data_collect[2].innerText);
     $("#phone").text(data_collect[3].innerText);
-    $("#dusinh").text(data_collect[4].innerText);
-    $("#sieuam").text(data_collect[5].innerText);
+    $("#sieuam").text(data_collect[4].innerText);
+    $("#dusinh").text(data_collect[5].innerText);
     // console.log(e);
     
     $("#thumb").attr("src", image);

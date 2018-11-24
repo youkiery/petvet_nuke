@@ -15,6 +15,9 @@ $ngaythongbao = $nv_Request->get_string('ngaythongbao', 'post', '');
 $hinhanh = $nv_Request->get_string('hinhanh', 'post', '');
 $idbacsi = $nv_Request->get_string('idbacsi', 'post', '');
 $ghichu = $nv_Request->get_string('ghichu', 'post', '');
+$customer = $nv_Request->get_string('customer', 'post', '');
+$phone = $nv_Request->get_string('phone', 'post', '');
+$address = $nv_Request->get_string('address', 'post', '');
 $ret = array("status" => 0, "data" => array());
 // var_dump($_POST);
 
@@ -28,6 +31,10 @@ if ( ! ( empty($idthu) || empty($idbacsi) || empty($ngaysieuam) || empty($ngaydu
 
 		// if ($sql) {
 		if ($insert_id) {
+      if (!empty($phone)) {
+        $sql = "update `" . VAC_PREFIX . "_customers` set customer = '$customer', address = '$address' where phone = '$phone'";
+        $db->sql_query($sql);
+      }
 			$ret["status"] = 1;
 			$ret["data"] = $lang_module["themsatc"];
 		}

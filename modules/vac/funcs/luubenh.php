@@ -12,6 +12,8 @@ $action = $nv_Request->get_string('action', 'post/get', '');
 $ret = array("status" => 0, "data" => "");
 
 quagio();
+$status_option = array("Bình thường", "Hơi yếu", "Yếu", "Sắp chết", "Đã chết");
+$export = array("Lưu bệnh", "Đã điều trị", "Đã chết");
 
 if (!empty($action)) {
   switch ($action) {
@@ -22,13 +24,20 @@ if (!empty($action)) {
       $khac = $nv_Request->get_string('khac', 'post', '');
       $xetnghiem = $nv_Request->get_string('xetnghiem', 'post', '');
       $dieutri = $nv_Request->get_string('dieutri', 'post', '');
+      $tinhtrang = $nv_Request->get_string('tinhtrang', 'post', '');
 
-      if (! (empty($ltid) || empty($xetnghiem))) {
-        $sql = "update vng_vac_lieutrinh set nhietdo = '$nhietdo', niemmac = '$niemmac', khac = '$khac', xetnghiem = '$xetnghiem', dieutri = '$dieutri' where id = $ltid";
-        $ret["data"] = $sql;
+      if (! (empty($ltid) || $xetnghiem < 0 || $tinhtrang < 0)) {
+        $sql = "update vng_vac_lieutrinh set nhietdo = '$nhietdo', niemmac = '$niemmac', khac = '$khac', xetnghiem = '$xetnghiem', dieutri = '$dieutri', tinhtrang = $tinhtrang where id = $ltid";
+        // $ret["data"] = $sql;
 
         if ($db->sql_query($sql)) {
-            $ret["status"] = 1;
+          $sql = "select * from `" . VAC_PREFIX . "_luubenh` a inner join `" . VAC_PREFIX . "_lieutrinh` b on b.id = $ltid and a.id = b.idluubenh";
+            $query = $db->sql_query($sql);
+            if ($row = $db->sql_fetch_assoc($query)) {
+              $ret["status"] = 1;
+              $ret["data"]["color"] = mauluubenh($row["ketqua"], $row["tinhtrang"]);
+              $ret["data"]["tinhtrang"] = $status_option[$row["tinhtrang"]];
+            }
 
           // $sql = "select ngayluubenh, lieutrinh from vng_vac_luubenh where id = $lid";
           // $query = $db->sql_query($sql);
@@ -60,34 +69,26 @@ if (!empty($action)) {
     case 'trihet':
       $lid = $nv_Request->get_string('id', 'post', '');
       $val = $nv_Request->get_string('val', 'post', '');
-
+      
       if (!(empty($lid) || empty($val))) {
-        $set = "ketqua = $val";
-        if ($val == 2) {
-          $sql = "select * from vng_vac_luubenh where id = $lid";
-          $query = $db->sql_query($sql);
-          $row = $db->sql_fetch_assoc($query);
-          //   var_dump($row);
-          $lieutrinh1 = explode("|", $row["lieutrinh"]);
-          $lieutrinh2 = explode(":", $lieutrinh1[count($lieutrinh1) - 1]);
-          $lieutrinh2[0] = 4;
-          $lieutrinh = implode(":", $lieutrinh2);
-          $lieutrinh1[count($lieutrinh1) - 1] = $lieutrinh;
-          $lieutrinh = implode("|", $lieutrinh1);
-
-          $set .= ", tinhtrang = $lieutrinh";
-        }
-        $sql = "update vng_vac_luubenh set $set where id = $lid";
-        $ret["data"] = $sql;
+        $sql = "update vng_vac_luubenh set ketqua = $val where id = $lid";
+        // $ret["data"] = $sql;
         if ($db->sql_query($sql)) {
-          $ret["status"] = 1;
+          $sql = "select * from `" . VAC_PREFIX . "_luubenh` where id = $lid";
+          // $ret["data"] = $sql;
+          $query = $db->sql_query($sql);
+          if ($row = $db->sql_fetch_assoc($query)) {
+            $ret["status"] = 1;
+            $ret["data"]["color"] = mauluubenh($row["ketqua"], $row["tinhtrang"]);
+            $ret["data"]["ketqua"] = $export[$row["ketqua"]];
+          }
         }
       }
       break;
     case 'thongtinluubenh':
       $lid = $nv_Request->get_string('id', 'post', '');
       if (!(empty($lid))) {
-        $sql = "SELECT a.id, a.ngayluubenh, a.tinhtrang, a.ketqua, b.id, c.customer, c.phone, c.address as petid, b.petname, d.doctor from " . VAC_PREFIX . "_luubenh a inner join " . VAC_PREFIX . "_pets b on a.id = $lid and a.idthucung = b.id inner join " . VAC_PREFIX .  "_customers c on c.id = b.customerid and (c.customer like '%$key%' or c.phone like '%$key%' or b.petname like '%$key%') inner join " . VAC_PREFIX . "_doctor d on a.idbacsi = d.id order by ngayluubenh";
+        $sql = "SELECT a.id, a.ngayluubenh, a.ketqua, b.id, c.customer, c.phone, c.address, b.petname, d.doctor from " . VAC_PREFIX . "_luubenh a inner join " . VAC_PREFIX . "_pets b on a.id = $lid and a.idthucung = b.id inner join " . VAC_PREFIX .  "_customers c on c.id = b.customerid and (c.customer like '%$key%' or c.phone like '%$key%' or b.petname like '%$key%') inner join " . VAC_PREFIX . "_doctor d on a.idbacsi = d.id order by ngayluubenh";
         $query = $db->sql_query($sql);
         if ($row = $db->sql_fetch_assoc($query)) {
           $row["ngayluubenh"] = date("d/m/Y", $row["ngayluubenh"]);
@@ -111,8 +112,13 @@ if (!empty($action)) {
       if (! (empty($lid) || empty($ngay))) {
         $i_ngay = strtotime($ngay);
         $sql = "select * from `" . VAC_PREFIX . "_lieutrinh` where idluubenh = $lid and ngay = " . $i_ngay;
-        if (!$db->sql_query_insert_id($sql)) {
-          $sql = "insert into `" . VAC_PREFIX . "_lieutrinh` (idluubenh, nhietdo, niemmac, khac, xetnghiem, hinhanh, ngay, dieutri) values($lid, '', '', '', 0, '', " . strtotime($i_ngay) . ", '')";
+        $query = $db->sql_query($sql);
+        $row = $db->sql_fetch_assoc($query);
+        
+        if (!$row) {
+          // echo 1;
+          $sql = "insert into `" . VAC_PREFIX . "_lieutrinh` (idluubenh, nhietdo, niemmac, khac, xetnghiem, hinhanh, ngay, dieutri, tinhtrang) values($lid, '', '', '', 0, '', " . $i_ngay . ", '', 0)";
+          // $ret["data"] = $sql;
           if ($id = $db->sql_query_insert_id($sql)) {
             $ret["status"] = 1;
             $ret["data"]["id"] = $id;
@@ -147,7 +153,6 @@ while ($row = $db->sql_fetch_assoc($result)) {
   $xtpl->parse("main.doctor");
 }
 
-$status_option = array("Bình thường", "Hơi yếu", "Yếu", "Sắp chết", "Đã chết");
 // var_dump($status_option);
 
 foreach ($status_option as $key => $value) {

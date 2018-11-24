@@ -39,7 +39,7 @@ if ((empty($action) ? 1 : 0) && (NV_CURRENTTIME < $from || NV_CURRENTTIME > $end
             case 'getrecall':
                 $vacid = $nv_Request->get_string('vacid', 'post', '');
                 $diseaseid = $nv_Request->get_string('diseaseid', 'post', '');
-                $sql = "select a.recall, b.doctor from `" . $db_config['prefix'] . "_" . $module_data . "_$diseaseid` a inner join `" . $db_config['prefix'] . "_" . $module_data . "_$diseaseid` b on id = $vacid where a.doctorid = b.id";
+                $sql = "select a.recall, b.doctor from `" . VAC_PREFIX . "_$diseaseid` a inner join `" . VAC_PREFIX . "_$diseaseid` b on id = $vacid where a.doctorid = b.id";
 
                 $result = $db->sql_query($sql);
                 $check = true;
@@ -48,7 +48,7 @@ if ((empty($action) ? 1 : 0) && (NV_CURRENTTIME < $from || NV_CURRENTTIME > $end
                     $ret["status"] = 1;
                     $ret["data"] = $row;
                 } else {
-                    $sql = "select * from `" . $db_config['prefix'] . "_" . $module_data . "_doctor`";
+                    $sql = "select * from `" . VAC_PREFIX . "_doctor`";
                     $result = $db->sql_query($sql);
                     $doctor = array();
                     while ($row = $db->sql_fetch_assoc($result)) {
@@ -72,9 +72,9 @@ if ((empty($action) ? 1 : 0) && (NV_CURRENTTIME < $from || NV_CURRENTTIME > $end
                 $doctor ++;
 
                 if (!(empty($petid) || empty($recall) || empty($doctor) || empty($vacid) || empty($diseaseid))) {
-                    $sql = "update `" . $db_config['prefix'] . "_" . $module_data . "_$diseaseid` set recall = '$recall', doctorid = $doctor where id = $vacid;";
+                    $sql = "update `" . VAC_PREFIX . "_$diseaseid` set recall = '$recall', doctorid = $doctor where id = $vacid;";
                     if ($db->sql_query($sql)) {
-                        $sql = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_$diseaseid` (petid, cometime, calltime, status, note, recall, doctorid) values ($petid, $cometime, $calltime, 0, '', 0, 0);";
+                        $sql = "insert into `" . VAC_PREFIX . "_$diseaseid` (petid, cometime, calltime, status, note, recall, doctorid) values ($petid, $cometime, $calltime, 0, '', 0, 0);";
                         if ($db->sql_query($sql)) {
                             $ret["status"] = 1;
                         }
@@ -85,7 +85,7 @@ if ((empty($action) ? 1 : 0) && (NV_CURRENTTIME < $from || NV_CURRENTTIME > $end
                 break;
             case 'getpet':
                 $customerid = $nv_Request->get_string('customerid', 'post', '');
-                $sql = "select * from `" . $db_config['prefix'] . "_" . $module_data . "_pets` where customerid = $customerid";
+                $sql = "select * from `" . VAC_PREFIX . "_pets` where customerid = $customerid";
 
                 $result = $db->sql_query($sql);
                 while ($row = $db->sql_fetch_assoc($result)) {
@@ -100,10 +100,10 @@ if ((empty($action) ? 1 : 0) && (NV_CURRENTTIME < $from || NV_CURRENTTIME > $end
         $address = $nv_Request->get_string('address', 'post', '');
 
         if (!(empty($customer) || empty($phone))) {
-          $sql = "select * from `" . $db_config['prefix'] . "_" . $module_data . "_customers` where phone = '$phone'";
+          $sql = "select * from `" . VAC_PREFIX . "_customers` where phone = '$phone'";
           $result = $db->sql_query($sql);
           if (!$db->sql_numrows($result)) {
-            $sql = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_customers` (customer, phone, address) values ('$customer', '$phone', '$address');";
+            $sql = "insert into `" . VAC_PREFIX . "_customers` (customer, phone, address) values ('$customer', '$phone', '$address');";
             if ($id = $db->sql_query_insert_id($sql)) {
               $ret["status"] = 2;
               $ret["data"][] = array("id" => $id);
@@ -121,10 +121,10 @@ if ((empty($action) ? 1 : 0) && (NV_CURRENTTIME < $from || NV_CURRENTTIME > $end
 
         if (!empty($customerid)) {
           if (!empty($petname)) {
-            $sql = "select * from `" . $db_config['prefix'] . "_" . $module_data . "_pets` where petname = '$petname' and customerid = $customerid";
+            $sql = "select * from `" . VAC_PREFIX . "_pets` where petname = '$petname' and customerid = $customerid";
             $result = $db->sql_query($sql);
             if (!$db->sql_numrows($result)) {
-              $sql = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_pets` (petname, customerid) values ('$petname', $customerid);";
+              $sql = "insert into `" . VAC_PREFIX . "_pets` (petname, customerid) values ('$petname', $customerid);";
               if ($id = $db->sql_query_insert_id($sql)) {
                 $ret["status"] = 2;
                 $ret["data"][] = array("id" => $id);
@@ -143,13 +143,16 @@ if ((empty($action) ? 1 : 0) && (NV_CURRENTTIME < $from || NV_CURRENTTIME > $end
         break;
       case 'insertvac':
         $petid = $nv_Request->get_string('petid', 'post', '');
+        $customer = $nv_Request->get_string('customer', 'post', '');
+        $phone = $nv_Request->get_string('phone', 'post', '');
+        $address = $nv_Request->get_string('address', 'post', '');
         $diseaseid = $nv_Request->get_string('diseaseid', 'post', '');
         $cometime = $nv_Request->get_string('cometime', 'post', '');
         $calltime = $nv_Request->get_string('calltime', 'post', '');
         $note = $nv_Request->get_string('note', 'post', '');
 
         if (!(empty($petid) || empty($diseaseid) || empty($cometime) || empty($calltime))) {
-          $sql = "select * from `" . $db_config['prefix'] . "_" . $module_data . "_pets` where id = $petid";
+          $sql = "select * from `" . VAC_PREFIX . "_pets` where id = $petid";
           $result = $db->sql_query($sql);
           $x = $db->sql_numrows($result);
           if ($db->sql_numrows($result)) {
@@ -164,10 +167,14 @@ if ((empty($action) ? 1 : 0) && (NV_CURRENTTIME < $from || NV_CURRENTTIME > $end
             // echo($sql); die();
             $db->sql_query($sql);
 
-            $sql = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_$diseaseid` (petid, cometime, calltime, note, status, doctorid, recall) values ($petid, $cometime, $calltime, '$note', 0, 0, 0);";
+            $sql = "insert into `" . VAC_PREFIX . "_$diseaseid` (petid, cometime, calltime, note, status, doctorid, recall) values ($petid, $cometime, $calltime, '$note', 0, 0, 0);";
             if ($id = $db->sql_query_insert_id($sql)) {
+              if (!empty($phone)) {
+                $sql = "update `" . VAC_PREFIX . "_customers` set customer = '$customer', address = '$address' where phone = '$phone'";
+                $ret["data"] = $sql;
+                $db->sql_query($sql);
+              }
               $ret["status"] = 2;
-              $ret["data"][] = array("id" => $id);
             } else {
               $ret["status"] = 5;
             }
@@ -200,7 +207,7 @@ if ((empty($action) ? 1 : 0) && (NV_CURRENTTIME < $from || NV_CURRENTTIME > $end
                 $ret = array("status" => 0, "data" => array());
 
                 if (!(empty($id))) {
-                  $sql = "update `" . $db_config['prefix'] . "_" . $module_data . "_$diseaseid` set note = '$note' where id = $id";
+                  $sql = "update `" . VAC_PREFIX . "_$diseaseid` set note = '$note' where id = $id";
                   $result = $db->sql_query($sql);
                   if ($result) {
                     $ret["data"] = $sql;

@@ -102,7 +102,8 @@
 	var blur = true;
 	var g_customer = -1;
 	var customer_data = [];
-	var customer_list = [];
+  var customer_list = [];
+  var g_index = -1
 	var customer_name = document.getElementById("customer_name");
 	var customer_phone = document.getElementById("customer_phone");
 	var customer_address = document.getElementById("customer_address");
@@ -112,7 +113,8 @@
 	var suggest_phone = document.getElementById("customer_phone_suggest");
 
 	function themluubenh(event) {
-		event.preventDefault();
+    event.preventDefault();
+    // return false;
 		msg = "";
 		if(!customer_name) {
 			msg = "Chưa nhập tên khách hàng!"
@@ -123,11 +125,14 @@
 		} else {
 			$.post(
 				link + "themluubenh",
-				{idthu: pet_info.value, idbacsi: $("#doctor").val(), ngayluubenh: $("#ngayluubenh").val(), ghichu: $("#ghichu").val(), tinhtrang: $("#tinhtrang2").val()},
+				{"customer=": customer_name.value, "phone=": customer_phone.value, "address=": customer_address.value,idthu: pet_info.value, idbacsi: $("#doctor").val(), ngayluubenh: $("#ngayluubenh").val(), ghichu: $("#ghichu").val(), tinhtrang: $("#tinhtrang2").val()},
 				(data, status) => {
 					data = JSON.parse(data);
 					if (data["status"] == 1) {
-						alert_msg(data["data"]);
+            alert_msg(data["data"]);
+            customer_list[g_index]["customer"] = customer_name.value
+            customer_list[g_index]["address"] = customer_address.value
+            g_index = -1;
 						customer_name.value = "";
 						customer_phone.value = "";
 						customer_address.value = "";
