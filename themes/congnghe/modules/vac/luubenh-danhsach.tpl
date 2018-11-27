@@ -196,12 +196,12 @@
     vac_index = 2;
 
     var body = ""
-    var addition = "<p><b>{lang.tongngay} " + lieutrinh.length + " </b></p>"
+    var addition = "<p><b>{lang.tongngay} " + d_lieutrinh.length + " </b></p>"
     d_lieutrinh.forEach((lieutrinh, index) => {
-      body += "<tr style='height: 32px;'><td style='width: 20%'>" + lieutrinh["ngay"] + "</td><td style='width: 50%'><b>{lang.nhietdo}</b>: " + lieutrinh["nhietdo"] + "<br><b>{lang.niemmac}</b>: " + lieutrinh["niemmac"] + "<br><b>{lang.khac}</b>: " + lieutrinh["khac"] + "</td><td style='width: 30%'>" + lieutrinh["dieutri"] + addition + "</td></tr>"
+      body += "<tr style='height: 32px;'><td style='width: 20%'>" + lieutrinh["ngay"] + "</td><td style='width: 50%'><b>{lang.nhietdo}</b>: " + lieutrinh["nhietdo"] + "<br><b>{lang.niemmac}</b>: " + lieutrinh["niemmac"] + "<br><b>{lang.khac}</b>: " + lieutrinh["khac"] + "</td><td style='width: 30%'>" + lieutrinh["dieutri"] + "</td></tr>"
     }) 
     var html = 
-    "<table border='1' style='border-collapse: collapse; width: 100%;'><thead><tr style='height: 32px;'><th><span id='tk_khachhang'>" + $("#customer").text() + "</span> / <span id='tk_thucung'>" + $("#petname").text() + "</span></th><th>{lang.trieuchung}</th><th>{lang.dieutri}</th></tr></thead><tbody>" + body + "</tbody></table>"
+    "<table border='1' style='border-collapse: collapse; width: 100%;'><thead><tr style='height: 32px;'><th><span id='tk_khachhang'>" + $("#customer").text() + "</span> / <span id='tk_thucung'>" + $("#petname").text() + "</span></th><th>{lang.trieuchung}</th><th>{lang.dieutri}</th></tr></thead><tbody>" + body + "</tbody><tfoot><tr><td colspan='3'>" + addition + "</td></tr></tfoot></table>"
     $("#vac2_body").html(html)
   }
 
@@ -218,6 +218,7 @@
             // thành công
             var data = response["data"]
             d_lieutrinh.push(data)
+            // console.log(d_lieutrinh);
             
             id = d_lieutrinh.length - 1
             g_ltid = data["id"]
@@ -230,7 +231,7 @@
             $("#lieutrinh").text(d_lieutrinh[id]["ngay"])
             $("#tinhtrang2").val(d_lieutrinh[id]["tinhtrang"])
 
-            html = "<span onclick='xemlieutrinh(" + d_lieutrinh[id]["id"] + ")'>" + data["ngay"] + "</span>";
+            html = "<span onclick='xemlieutrinh(" + d_lieutrinh[id]["id"] + ", " + g_id + ")'>" + data["ngay"] + "</span>";
             $("#dslieutrinh").html($("#dslieutrinh").html() + html)
             $("#qllieutrinh input").removeAttr("disabled", "");
             $("#qllieutrinh select").removeAttr("disabled", "");
@@ -249,6 +250,7 @@
 
   function xemlieutrinh(ltid, id) {
     g_ltid = ltid;
+    g_id = id;
     console.log(g_ltid);
     // console.log(d_lieutrinh);
     

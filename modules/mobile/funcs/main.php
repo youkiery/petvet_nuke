@@ -220,6 +220,7 @@ if (isset($_GET["action"])) {
 
       $result["data"]["type"] = $type;
       $result["data"]["config"] = $config;
+      filterbase();
       break;
     case 'order':
       if (checkParam(array("name", "address", "phone", "pid"))) {
@@ -309,38 +310,7 @@ if (isset($_GET["action"])) {
       }
       break;
     case 'filter':
-      if (checkParam(array("sort", "price", "type"))) {
-        $keyword = $_GET["keyword"];
-        $sort = $_GET["sort"];
-        $type = $_GET["type"];
-        $price = explode("-", $_GET["price"]);
-
-        $where = " where (a.name like '%$keyword%' or a.description like '%$keyword%' or b.name like '%$keyword%' or b.phone like '%$keyword%') and a.sold = 0 and a.type = $type";
-        $order = " order by " . $sorttype[$sort];
-
-        if ($price[1] >= 100000) {
-          $where .= " and price >= $price[0]";
-        } else {
-          $where .= " and price between $price[0] and $price[1]";
-        }
-
-        if (checkParam(array("species")) && $_GET["species"] > 0) {
-          $species = $_GET["species"];
-          $where .= " and a.species = $species";
-        } else if (checkParam(array("kind")) && $_GET["kind"] > 0) {
-          $kind = $_GET["kind"];
-          $where .= " and d.kind = $kind";
-        }
-
-        $sql = "SELECT a.type as typeid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, a.description, b.name as owner, c.name as species, d.name as kind, b.province from post a inner join user b on a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id $where $order";
-        // die($sql);
-        $query = $db->sql_query($sql);
-
-        if ($query) {
-          $result["status"] = 1;
-          $result["data"] = parseData(fetchall($db, $query));
-        }
-      }
+      filterbase();
       break;
     case 'salefilter':
       filterorder();
@@ -499,6 +469,46 @@ function rate() {
     if ($query = $db->sql_query($sql)) {
       $result["status"] = 1;
       $result["data"] = $db->sql_numrows($query);
+    }
+  }
+}
+
+function filterbase() {
+  global $db, $result, $sorttype;
+  if (checkParam(array("sort", "price", "type"))) {
+    $keyword = $_GET["keyword"];
+    $sort = $_GET["sort"];
+    $type = $_GET["type"];
+    $price = explode("-", $_GET["price"]);
+
+    $where = " where (a.name like '%$keyword%' or a.description like '%$keyword%' or b.name like '%$keyword%' or b.phone like '%$keyword%') and a.sold = 0 and a.type = $type";
+    $order = " order by " . $sorttype[$sort];
+
+    if ($price[1] >= 100000) {
+      $where .= " and price >= $price[0]";
+    } else {
+      $where .= " and price between $price[0] and $price[1]";
+    }
+
+    if (checkParam(array("species")) && $_GET["species"] > 0) {
+      $species = $_GET["species"];
+      $where .= " and a.species = $species";
+    } else if (checkParam(array("kind")) && $_GET["kind"] > 0) {
+      $kind = $_GET["kind"];
+      $where .= " and d.kind = $kind";
+    }
+
+    $sql = "SELECT a.type as typeid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, a.description, b.name as owner, c.name as species, d.name as kind, b.province from post a inner join user b on a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id $where $order";
+    // die($sql);
+    $query = $db->sql_query($sql);
+
+    if ($query) {
+      $result["status"] = 1;
+      if ($result["data"]["config"]) {
+        $result["data"]["newpet"] = parseData(fetchall($db, $query));
+      } else {
+        $result["data"] = parseData(fetchall($db, $query));
+      }
     }
   }
 }

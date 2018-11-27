@@ -2,124 +2,101 @@
   if (!defined('NV_IS_MOD_VAC')) die('Stop!!!');
 
 // http://localhost/index.php/vac/xuatbang.html
-  $action = $nv_Request->get_string('action', 'get', '');
 
   include_once('includes/class/PHPExcel/IOFactory.php');
   $fileType = 'Excel2007';
-  $objPHPExcel = PHPExcel_IOFactory::load('blank.xlsx');
-
-  switch ($action) {
-    case 1:
-      // var_dump(getall("vng_vac_diseases"));
-      putintoe(getall("vng_vac_diseases"));
-      $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
-      $file_path = "output/vng_vac_benh.xlsx";
-      $file_url = "http://" . $global_config["my_domains"][0] . "/" . $file_path;
-      $objWriter->save($file_path);
-      header("location: $file_url");
-    break;
-    case 2:
-    $objPHPExcel = PHPExcel_IOFactory::load('blank.xlsx');
-      putintoe(getall("vng_vac_1"));
-      $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
-      $file_path = "output/vng_vac_benh_1.xlsx";
-      $file_url = "http://" . $global_config["my_domains"][0] . "/" . $file_path;
-      $objWriter->save($file_path);
-      // $my_head = '<meta http-equiv="refresh" content="0;url=" />';
-      header("location: $file_url");
-    break;
-    case 3:
-      $objPHPExcel = PHPExcel_IOFactory::load('blank.xlsx');
-      putintoe(getall("vng_vac_2"));
-      $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
-      $file_path = "output/vng_vac_benh_2.xlsx";
-      $file_url = "http://" . $global_config["my_domains"][0] . "/" . $file_path;
-      $objWriter->save($file_path);
-      header("location: $file_url");
-    break;
-    case 4:    
-      $objPHPExcel = PHPExcel_IOFactory::load('blank.xlsx');
-      putintoe(getall("vng_vac_3"));
-      $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
-      $file_path = "output/vng_vac_benh_3.xlsx";
-      $file_url = "http://" . $global_config["my_domains"][0] . "/" . $file_path;
-      $objWriter->save($file_path);
-      header("location: $file_url");
-    break;
-    case 5:
-      $objPHPExcel = PHPExcel_IOFactory::load('blank.xlsx');
-      putintoe(getall("vng_vac_4"));
-      $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
-      $file_path = "output/vng_vac_benh_4.xlsx";
-      $file_url = "http://" . $global_config["my_domains"][0] . "/" . $file_path;
-      $objWriter->save($file_path);
-      header("location: $file_url");
-    break;
-    case 6:
-      $objPHPExcel = PHPExcel_IOFactory::load('blank.xlsx');
-      putintoe(getall("vng_vac_customers"));
-      $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
-      $file_path = "output/vng_vac_khachhang.xlsx";
-      $file_url = "http://" . $global_config["my_domains"][0] . "/" . $file_path;
-      $objWriter->save($file_path);
-      header("location: $file_url");
-    break;
-    case 7:    
-      // $objPHPExcel = PHPExcel_IOFactory::load('blank.xlsx');
-      // putintoe(getall("vng_vac_lieutrinh");
-      // $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
-      // $file_path = "output/vng_vac_lieutrinh.xlsx";
-      // $file_url = "http://" . $global_config["my_domains"][0] . "/" . $file_path;
-      // $objWriter->save($file_path);
-      // header("location: $file_url");
-    break;
-    case 8:    
-    // $objPHPExcel = PHPExcel_IOFactory::load('blank.xlsx');
-    // putintoe(getall("vng_vac_luubenh");
-    // $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
-    // $file_path = "output/vng_vac_luubenh.xlsx";
-    // $file_url = "http://" . $global_config["my_domains"][0] . "/" . $file_path;
-    // $objWriter->save($file_path);
-    // header("location: $file_url");
-    break;
-    case 9:    
-    // $objPHPExcel = PHPExcel_IOFactory::load('blank.xlsx');
-    // putintoe(getall("vng_vac_sieuam");
-    // $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
-    // $file_path = "output/vng_vac_sieuam.xlsx";
-    // $file_url = "http://" . $global_config["my_domains"][0] . "/" . $file_path;
-    // $objWriter->save($file_path);
-    // header("location: $file_url");
-    break;
-    case 10:
-    // $objPHPExcel = PHPExcel_IOFactory::load('blank.xlsx');
-    // putintoe(getall("vng_vac_pets");
-    // $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
-    // $file_path = "output/vng_vac_thucung.xlsx";
-    // $file_url = "http://" . $global_config["my_domains"][0] . "/" . $file_path;
-    // $objWriter->save($file_path);
-    // header("location: $file_url");
-    break;
-    case 11:
-    //   putintoe(getall("vng_vac_doctor"));
-    //   $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
-    //   $file_path = "output/vng_vac_bacsi.xlsx";
-    //   $file_url = "http://" . $global_config["my_domains"][0] . "/" . $file_path;
-    //   $objWriter->save($file_path);      
-    //   header("location: $file_url");
-    break;
-    default:
-      $xtpl = new XTemplate("xuatbang.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
-
-      $xtpl->parse("main");
-      $contents = $xtpl->text("main");
   
-      include ( NV_ROOTDIR . "/includes/header.php" );
-      echo nv_site_theme($contents);
-      include ( NV_ROOTDIR . "/includes/footer.php" );  
-}
+  $objPHPExcel = PHPExcel_IOFactory::load('blank.xlsx');
+  putintoe(getall("vng_vac_diseases"));
+  $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
+  $file_path = "output/vng_vac_benh.xlsx";
+  $file_url = "http://" . $global_config["my_domains"][0] . "/" . $file_path;
+  $objWriter->save($file_path);
 
+  $objPHPExcel = PHPExcel_IOFactory::load('blank.xlsx');
+  putintoe(getall("vng_vac_1"));
+  $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
+  $file_path = "output/vng_vac_benh_1.xlsx";
+  $file_url = "http://" . $global_config["my_domains"][0] . "/" . $file_path;
+  $objWriter->save($file_path);
+  
+  $objPHPExcel = PHPExcel_IOFactory::load('blank.xlsx');
+  putintoe(getall("vng_vac_2"));
+  $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
+  $file_path = "output/vng_vac_benh_2.xlsx";
+  $file_url = "http://" . $global_config["my_domains"][0] . "/" . $file_path;
+  $objWriter->save($file_path);
 
+  $objPHPExcel = PHPExcel_IOFactory::load('blank.xlsx');
+  putintoe(getall("vng_vac_3"));
+  $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
+  $file_path = "output/vng_vac_benh_3.xlsx";
+  $file_url = "http://" . $global_config["my_domains"][0] . "/" . $file_path;
+  $objWriter->save($file_path);
+
+  $objPHPExcel = PHPExcel_IOFactory::load('blank.xlsx');
+  putintoe(getall("vng_vac_4"));
+  $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
+  $file_path = "output/vng_vac_benh_4.xlsx";
+  $file_url = "http://" . $global_config["my_domains"][0] . "/" . $file_path;
+  $objWriter->save($file_path);
+
+  $objPHPExcel = PHPExcel_IOFactory::load('blank.xlsx');
+  putintoe(getall("vng_vac_customers"));
+  $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
+  $file_path = "output/vng_vac_khachhang.xlsx";
+  $file_url = "http://" . $global_config["my_domains"][0] . "/" . $file_path;
+  $objWriter->save($file_path);
+
+  $objPHPExcel = PHPExcel_IOFactory::load('blank.xlsx');
+  putintoe(getall("vng_vac_lieutrinh"));
+  $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
+  $file_path = "output/vng_vac_lieutrinh.xlsx";
+  $file_url = "http://" . $global_config["my_domains"][0] . "/" . $file_path;
+  $objWriter->save($file_path);
+
+  $objPHPExcel = PHPExcel_IOFactory::load('blank.xlsx');
+  putintoe(getall("vng_vac_luubenh"));
+  $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
+  $file_path = "output/vng_vac_luubenh.xlsx";
+  $file_url = "http://" . $global_config["my_domains"][0] . "/" . $file_path;
+  $objWriter->save($file_path);
+
+  $objPHPExcel = PHPExcel_IOFactory::load('blank.xlsx');
+  putintoe(getall("vng_vac_sieuam"));
+  $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
+  $file_path = "output/vng_vac_sieuam.xlsx";
+  $file_url = "http://" . $global_config["my_domains"][0] . "/" . $file_path;
+  $objWriter->save($file_path);
+
+  $objPHPExcel = PHPExcel_IOFactory::load('blank.xlsx');
+  putintoe(getall("vng_vac_pets"));
+  $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
+  $file_path = "output/vng_vac_thucung.xlsx";
+  $file_url = "http://" . $global_config["my_domains"][0] . "/" . $file_path;
+  $objWriter->save($file_path);
+
+  $objPHPExcel = PHPExcel_IOFactory::load('blank.xlsx');
+  putintoe(getall("vng_vac_doctor"));
+  $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
+  $file_path = "output/vng_vac_bacsi.xlsx";
+  $file_url = "http://" . $global_config["my_domains"][0] . "/" . $file_path;
+  $objWriter->save($file_path);      
+
+  $zip = new ZipArchive();
+  $filename = "output/petcoffe-" . date("d-m-y") . ".zip";
+  $all_file = array("vng_vac_bacsi.xlsx", "vng_vac_benh.xlsx", "vng_vac_benh_1.xlsx", "vng_vac_benh_2.xlsx", "vng_vac_benh_3.xlsx", "vng_vac_benh_4.xlsx", "vng_vac_khachhang.xlsx", "vng_vac_lieutrinh.xlsx", "vng_vac_luubenh.xlsx", "vng_vac_sieuam.xlsx", "vng_vac_thucung.xlsx");
+
+  if ($zip->open($filename, ZipArchive::CREATE)!==TRUE) {
+    exit("cannot open <$filename>\n");
+  }
+
+  foreach ($all_file as $value) {
+    $zip->addFile("output/" . $value);
+  }
+
+  $zip->close();
+  header("location: /$filename");
 
 function getall($table) {
   global $db;

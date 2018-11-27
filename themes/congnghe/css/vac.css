@@ -71,6 +71,7 @@
   height: 400px;
   z-index: 1001;
   padding: 10px;
+  top: calc(50% - 200px);
 }
 
 #vac_info2 {
