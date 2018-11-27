@@ -246,35 +246,41 @@ if (isset($_GET["action"])) {
       }
       break;
     case 'getinfo':
-      if (checkParam(array("id", "puid", "pid"))) {
-        $id = $_GET["id"];
+      if (checkParam(array("uid", "puid", "pid"))) {
         $puid = $_GET["puid"];
+        $uid = $_GET["uid"];
         $pid = $_GET["pid"];
         $uid = 0;
         $userdata = array();
         $order = 0;
         $rate = 0;
 
-        $sql = "SELECT name, phone, address from user where id = $puid ";
-        // die(var_dump($_GET));
-        $query = $db->sql_query($sql);
-        $userdata = $db->sql_fetch_assoc($query);
-
+        
         if (checkParam(array("uid"))) {
           $uid = $_GET["uid"];
+          
+          $sql = "SELECT name, phone, address from user where id = $puid";
+          // $result["data"]["sql"] = $sql;
+          // die(var_dump($_GET));
+          $query = $db->sql_query($sql);
+          $userdata = $db->sql_fetch_assoc($query);
 
-          $sql = "SELECT id from rate where uid = $uid";
+          $sql = "SELECT id, value from rate where uid = $uid and pid = $pid";
           // die(var_dump($_GET));
           // die($sql);
           $query = $db->sql_query($sql);
-          $rate = $db->sql_numrows($query);
+          if ($row = $db->sql_fetch_assoc($query)) {
+            // $result["data"] = var_dump($row);
+            $rate = $row["value"];
+            // test();
+          }
 
-          $sql = "SELECT * from petorder where user = $uid and pid = $id";
+          $sql = "SELECT * from petorder where user = $uid and pid = $pid";
           $query = $db->sql_query($sql);
           // $order = "1: " . $sql;
           $order = $db->sql_numrows($query);
           if (!$order) {
-            $sql = "SELECT * from post where user = $uid and id = $id";
+            $sql = "SELECT * from post where user = $uid and id = $pid";
             $query = $db->sql_query($sql);
             $order = $db->sql_numrows($query);
             // $order .= "|2: " . $db->sql_numrows($query);
@@ -287,7 +293,7 @@ if (isset($_GET["action"])) {
           $where = "(b.user = $puid)";
         }
 
-        $sql = "SELECT a.user, a.time, a.comment, c.name, c.province from comment a inner join post b on a.pid = $id and a.pid = b.id and $where inner join user c on a.user = c.id order by a.time asc";
+        $sql = "SELECT a.user, a.time, a.comment, c.name, c.province from comment a inner join post b on a.pid = $pid and a.pid = b.id and $where inner join user c on a.user = c.id order by a.time asc";
         $query = $db->sql_query($sql);
         $comment = fetchall($db, $query);
         // die($sql);
@@ -408,14 +414,14 @@ if (isset($_GET["action"])) {
       }
       break;
     case 'rate':
-      if (checkParam(array("value", "uid", "puid"))) {
+      if (checkParam(array("value", "uid", "pid"))) {
         $value = $_GET["value"];
         $uid = $_GET["uid"];
-        $puid = $_GET["puid"];
+        $pid = $_GET["pid"];
 
         $time = strtotime(date("Y-m-d"));
 
-        $sql = "INSERT into rate (uid, puid, value, review, time) values($uid, $puid, $value, '', $time)";
+        $sql = "INSERT into rate (uid, pid, value, review, time) values($uid, $pid, $value, '', $time)";
         if ($db->sql_query($sql)) {
           $result["status"] = 1;
         }
@@ -442,12 +448,13 @@ if (isset($_GET["action"])) {
       $phone = $nv_Request->get_string('phone', 'post/get', '');
       if (!(empty($name) || (empty($phone)))) {
         $sql = "SELECT a.type as typeid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, a.description, b.name as owner, c.name as species, d.name as kind, b.province from post a inner join user b on b.name = '$name' and b.phone = '$phone' and a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id where sold = 0 order by a.time desc";
-        $result["data"] = $sql;
         if ($query = $db->sql_query($sql)) {
           $data = fetchall($db, $query);
-          $sql = "SELECT * from post a inner join user b on b.name = '$name' and b.phone = '$phone' and a.user = b.id inner join rate c on c.";
+          // $sql = "SELECT * from rate a inner join post b on a.pid = b.id inner join user c on c.id in ("1", "2", "3") and b.user = c.id";
+          $sql = "SELECT * from rate a inner join post b on a.pid = b.id inner join user c on c.id = b.user";
           $query = $db->sql_query($sql);
           $total = $db->sql_numrows($query);
+          // $result["data"]["sql"] = $sql;
 
           $rate = fetchall($db, $query);
           $totalpoint = 0;
@@ -456,21 +463,22 @@ if (isset($_GET["action"])) {
           }
           $average = $totalpoint / $total;
 
-          $sql = "SELECT * from petorder a inner join user b on b.name = '$name' and b.phone = '$phone' and a.sold = 1 and a.puid = b.id";
+          $sql = "SELECT * from post a inner join user b on b.name = '$name' and b.phone = '$phone' and a.sold = 1 and a.user = b.id";
           $query = $db->sql_query($sql);
           $totalsale = $db->sql_numrows($query);
+          // $result["data"]["sql"] = $sql;
 
           $crate = array();
           foreach ($rate as $key => $row) {
-            $crate[] = array("name" => $row["name"]);
+            $crate[] = array("name" => $row["name"], "msg" => $row["review"], "time" => date("d/m/Y", $row["time"]));
           }
 
           $result["status"] = 1;
-          $result["data"]["propet"] = $data;
+          $result["data"]["propet"] = parseData($data);
           $result["data"]["total"] = $total;
           $result["data"]["average"] = $average;
           $result["data"]["totalsale"] = $totalsale;
-          $result["data"]["rate"] = $rate;
+          $result["data"]["rate"] = $crate;
         }
       }
       break;
@@ -519,16 +527,18 @@ function filterorder() {
         break;
       case '3':
         // sold
-        $sql = "$main2 $where and e.user = $uid and a.sold = 1 $order";
+        $sql = "$main2 $where and a.user = $uid and a.sold = 1 and e.status = 1 $order";
         break;
-      case '4':
+        case '4':
         // bought
-        $sql = "$main2 $where and a.user = $uid and a.sold = 1 $order";
+        $sql = "$main2 $where and e.user = $uid and a.sold = 1 and e.status = 1 $order";
         break;
       default:
         //sell
         $sql = "$main $where and a.user = $uid and a.sold = 0 $order";
     }
+    $result["data"]["sql"] = $sql;
+
     // die($sql);
     // echo $type;
     $query = $db->sql_query($sql);
@@ -613,6 +623,11 @@ function fetchall($db, $query) {
     $result[] = $row;
   }
   return $result;
+}
+
+function test() {
+  echo json_encode($result);
+  die();
 }
 
 ?>
