@@ -3,6 +3,10 @@
 
 <div id="vac_notify"></div>
 <div id="reman"></div>
+<div id="vac_info2" style="display:none;">
+  <div id="vac2_header"></div>
+  <div id="vac2_body"></div>
+</div>
 <div id="vac_info" style="display:none;">
   <div id="info">
     <p>
@@ -27,11 +31,13 @@
     </p>
   </div>
   <div class="lieutrinh">
-    <input type="date" id="ngaylieutrinh" value="{now}" />
-    <button onclick="themlieutrinh()">
-      {lang.add}
-    </button>
     <span id="lieutrinh" style="float: right;"></span>
+    <form onsubmit="return themlieutrinh(event)">
+      <input type="date" id="ngaylieutrinh" value="{now}" />
+      <button>
+        {lang.add}
+      </button>
+    </form>
     <div id="dslieutrinh">
       
     </div>
@@ -67,6 +73,9 @@
   <button class="button" style="position: absolute; bottom: 26px; left: 110px;" onclick="ketthuc(2)">
     {lang.dachet}
   </button>
+  <button class="button" style="position: absolute; bottom: 26px; left: 210px;" onclick="tongket()">
+    {lang.tongket}
+  </button>
 </div>
 <!-- <form class="vac_form" method="GET">
   <input type="hidden" name="nv" value="vac">
@@ -80,16 +89,39 @@
 <script>
   var link = "/index.php?" + nv_name_variable + "=" + nv_module_name + "&act=post&" + nv_fc_variable + "=";
   var lid = -1;
-  var ltid = -1;
+  var g_ltid = -1;
+  var g_id = -1;
   var d_lieutrinh = []
   var g_ketqua = -1;
+  var vac_index = 0;
   $("#reman").click(() => {
-    $("#vac_info").fadeOut();
-    $("#reman").hide();
+    closeVac()
   })
+
+  $("body").keydown((e) => {
+    console.log(e);
+    if (e.key == "Escape") {
+      closeVac()
+    }
+  })
+
+  function closeVac() {
+    console.log(vac_index);
+    
+    if (vac_index == 1) {
+      $("#vac_info").fadeOut();
+      $("#reman").hide();
+      vac_index = 0;
+    }
+    if (vac_index == 2) {
+      $("#vac_info2").fadeOut();
+      vac_index = 1;
+    }
+  }
 
   $("tbody tr").click((e) => {
     lid = e.currentTarget.getAttribute("id");
+    vac_index = 1;
 
     $("#vac_info").fadeIn();
     $("#reman").show();
@@ -109,9 +141,13 @@
           $("#doctor").text(data["doctor"])
           var h_lieutrinh = ""
           g_ketqua = data["ketqua"];
-          // console.log(data["lieutrinh"]);
+          console.log(data);
           
           if (data["lieutrinh"]) {
+            console.log(1);
+            
+            $("#qllieutrinh input").removeAttr("disabled", "");
+            $("#qllieutrinh select").removeAttr("disabled", "");
             select = -1;
             d_lieutrinh = data["lieutrinh"]
             $("#dslieutrinh").html("")
@@ -119,8 +155,9 @@
               select ++
               var ngay = e["ngay"] * 1000;
               // console.log(ngay);
-              ltid = e["id"]
-              html = "<span onclick='xemlieutrinh(" + select + ")'>" + e["ngay"] + "</span> ";
+              g_ltid = e["id"]
+              g_id = select
+              html = "<span onclick='xemlieutrinh(" + g_ltid + ", " + select +")'>" + e["ngay"] + "</span> ";
               $("#dslieutrinh").html($("#dslieutrinh").html() + html)
             })
             // console.log(select, data["lieutrinh"]);
@@ -134,10 +171,19 @@
             $("#tinhtrang2").val(data["lieutrinh"][select]["tinhtrang"])
           }
           else {
-            // console.log("1");
-            
+            console.log("2");
+            d_lieutrinh = []
             $("#qllieutrinh input").attr("disabled", "disabled");
             $("#qllieutrinh select").attr("disabled", "disabled");
+            $("#dslieutrinh").html("")
+            
+            $("#nhietdo").val("")
+            $("#niemmac").val("")
+            $("#khac").val("")
+            $("#dieutri").val("")
+            $("#xetnghiem").val(0)
+            $("#lieutrinh").text("")
+            $("#tinhtrang2").val(0)
           }
 
         }
@@ -145,7 +191,22 @@
     )
   })
 
-  function themlieutrinh() {
+  function tongket() {
+    $("#vac_info2").fadeIn()
+    vac_index = 2;
+
+    var body = ""
+    var addition = "<p><b>{lang.tongngay} " + lieutrinh.length + " </b></p>"
+    d_lieutrinh.forEach((lieutrinh, index) => {
+      body += "<tr style='height: 32px;'><td style='width: 20%'>" + lieutrinh["ngay"] + "</td><td style='width: 50%'><b>{lang.nhietdo}</b>: " + lieutrinh["nhietdo"] + "<br><b>{lang.niemmac}</b>: " + lieutrinh["niemmac"] + "<br><b>{lang.khac}</b>: " + lieutrinh["khac"] + "</td><td style='width: 30%'>" + lieutrinh["dieutri"] + addition + "</td></tr>"
+    }) 
+    var html = 
+    "<table border='1' style='border-collapse: collapse; width: 100%;'><thead><tr style='height: 32px;'><th><span id='tk_khachhang'>" + $("#customer").text() + "</span> / <span id='tk_thucung'>" + $("#petname").text() + "</span></th><th>{lang.trieuchung}</th><th>{lang.dieutri}</th></tr></thead><tbody>" + body + "</tbody></table>"
+    $("#vac2_body").html(html)
+  }
+
+  function themlieutrinh(e) {
+    e.preventDefault();
     $.post(
       link + "luubenh",
       {action: "themlieutrinh", ngay: $("#ngaylieutrinh").val(), id: lid},
@@ -157,7 +218,10 @@
             // thành công
             var data = response["data"]
             d_lieutrinh.push(data)
+            
             id = d_lieutrinh.length - 1
+            g_ltid = data["id"]
+            g_id = id
             $("#nhietdo").val(d_lieutrinh[id]["nhietdo"])
             $("#niemmac").val(d_lieutrinh[id]["niemmac"])
             $("#khac").val(d_lieutrinh[id]["khac"])
@@ -166,8 +230,10 @@
             $("#lieutrinh").text(d_lieutrinh[id]["ngay"])
             $("#tinhtrang2").val(d_lieutrinh[id]["tinhtrang"])
 
-            html = "<span onclick='xemlieutrinh(" + id + ")'>" + data["ngay"] + "</span>";
+            html = "<span onclick='xemlieutrinh(" + d_lieutrinh[id]["id"] + ")'>" + data["ngay"] + "</span>";
             $("#dslieutrinh").html($("#dslieutrinh").html() + html)
+            $("#qllieutrinh input").removeAttr("disabled", "");
+            $("#qllieutrinh select").removeAttr("disabled", "");
           break;
           case 2:
             // đã tồn tại ngày hôm nay
@@ -181,8 +247,9 @@
     )
   }
 
-  function xemlieutrinh(id) {
-    ltid = id;
+  function xemlieutrinh(ltid, id) {
+    g_ltid = ltid;
+    console.log(g_ltid);
     // console.log(d_lieutrinh);
     
     $("#nhietdo").val(d_lieutrinh[id]["nhietdo"])
@@ -228,13 +295,19 @@
     
     $.post(
       link + "luubenh",
-      {action: "luulieutrinh", id: ltid, nhietdo: nhietdo, niemmac: niemmac, khac: khac, xetnghiem: xetnghiem, dieutri: dieutri, tinhtrang: tinhtrang},
+      {action: "luulieutrinh", id: g_ltid, nhietdo: nhietdo, niemmac: niemmac, khac: khac, xetnghiem: xetnghiem, dieutri: dieutri, tinhtrang: tinhtrang},
       (response, status) => {
         response = JSON.parse(response);
         // console.log(response);
         if (response["status"]) {
           $("#" + lid).css("background", response["data"]["color"])
           $("#" + lid + " .suckhoe").text(response["data"]["tinhtrang"])
+          d_lieutrinh[g_id]["nhietdo"] = nhietdo
+          d_lieutrinh[g_id]["niemmac"] = niemmac
+          d_lieutrinh[g_id]["khac"] = khac
+          d_lieutrinh[g_id]["xetnghiem"] = xetnghiem
+          d_lieutrinh[g_id]["dieutri"] = dieutri
+          d_lieutrinh[g_id]["tinhtrang"] = tinhtrang
         }
       }
     )    

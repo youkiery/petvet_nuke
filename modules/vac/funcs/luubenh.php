@@ -97,7 +97,7 @@ if (!empty($action)) {
           $lieutrinh = fetchall($db, $query);
           if ($lieutrinh) {
             foreach ($lieutrinh as $key => $value) {
-              $lieutrinh[$key]["ngay"] = date("d/m/Y", $value["ngay"]);
+              $lieutrinh[$key]["ngay"] = date("d/m", $value["ngay"]);
             }
             $row["lieutrinh"] = $lieutrinh;
           }
@@ -112,17 +112,17 @@ if (!empty($action)) {
       if (! (empty($lid) || empty($ngay))) {
         $i_ngay = strtotime($ngay);
         $sql = "select * from `" . VAC_PREFIX . "_lieutrinh` where idluubenh = $lid and ngay = " . $i_ngay;
+        // $ret["data"] = $sql;
         $query = $db->sql_query($sql);
-        $row = $db->sql_fetch_assoc($query);
         
-        if (!$row) {
+        if (!$db->sql_numrows($query)) {
           // echo 1;
           $sql = "insert into `" . VAC_PREFIX . "_lieutrinh` (idluubenh, nhietdo, niemmac, khac, xetnghiem, hinhanh, ngay, dieutri, tinhtrang) values($lid, '', '', '', 0, '', " . $i_ngay . ", '', 0)";
           // $ret["data"] = $sql;
           if ($id = $db->sql_query_insert_id($sql)) {
             $ret["status"] = 1;
             $ret["data"]["id"] = $id;
-            $ret["data"]["ngay"] = date_format(date_create($ngay), "d/m/Y");
+            $ret["data"]["ngay"] = date_format(date_create($ngay), "d/m");
           }
         }
         else {

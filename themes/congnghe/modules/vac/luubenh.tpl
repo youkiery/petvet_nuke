@@ -125,7 +125,7 @@
 		} else {
 			$.post(
 				link + "themluubenh",
-				{"customer=": customer_name.value, "phone=": customer_phone.value, "address=": customer_address.value,idthu: pet_info.value, idbacsi: $("#doctor").val(), ngayluubenh: $("#ngayluubenh").val(), ghichu: $("#ghichu").val(), tinhtrang: $("#tinhtrang2").val()},
+				{"customer": customer_name.value, "phone": customer_phone.value, "address": customer_address.value,idthu: pet_info.value, idbacsi: $("#doctor").val(), ngayluubenh: $("#ngayluubenh").val(), ghichu: $("#ghichu").val(), tinhtrang: $("#tinhtrang2").val()},
 				(data, status) => {
 					data = JSON.parse(data);
 					if (data["status"] == 1) {

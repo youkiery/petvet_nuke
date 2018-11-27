@@ -1,64 +1,39 @@
 <?php
-/**
- * @Project NUKEVIET-MUSIC
- * @Author Phan Tan Dung
- * @Copyright (C) 2011
- * @Createdate 26/01/2011 10:26 AM
- */
-if (!defined('NV_IS_MOD_VAC')) die('Stop!!!');
-$action = $nv_Request->get_string('action', 'post', '');
 
-// $origin = 'http://localhost:8100';
-// $allowed_domains = [
-//   'http://localhost:8100',
-//   'http://localhost:8080',
-//   'http://petcoffee:8080'
-// ];
+if (!defined('NV_IS_MOD_VAC'))
+  die('Stop!!!');
+$action = $nv_Request->get_string('action', 'post', '');
 
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
-
-// $arr = array("Chưa tiêm", "1 Mũi", "2 Mũi", "3 Mũi", "4 Mũi", "5 Mũi", "6 Mũi", "7 Mũi", "8 Mũi", "9 Mũi", "10 Mũi", "Nhiều hơn");
-// if (in_array($origin, $allowed_domains)) {
-// header('Access-Control-Allow-Origin: ' . $origin);
-// header('Content-Type: application/json');
 
 $result = array("status" => 0, "data" => "");
 $type = array("Cần bán", "Cần mua", "Muốn tặng", "Tìm thú lạc");
 
 if (isset($_GET["action"])) {
   $action = $_GET["action"];
-  // $db = new mysqli("localhost", "id1588624_adweb", "Whpl.2412", "id1588624_root");
-  // $db_config["dbname"] = "petcoffe_mobile";
-  // $db_config["dbuname"] = "petcoffe_mobile";
-  // $db_config["dbpass"] = "Ykpl.2412";
   $db_config["dbname"] = "petcoffe";
   $db_config["dbuname"] = "root";
   $db_config["dbpass"] = "";
-  $db = new sql_db($db_config);
 
+  $db = new sql_db($db_config);
   $query = $db->sql_query("SET CHARACTER SET 'utf8'");
 
-  // foreach ($arr as $key => $value) {
-  //   $sql = "insert into config (name, value) values('vaccine[$key]', '$value')";
-  //   $db->sql_query($sql);
-  // }
   $sql = "SELECT * FROM `config`";
   $query = $db->sql_query($sql);
   $data = fetchall($db, $query);
 
   $config = array();
-
   foreach ($data as $key => $value) {
     $config[$value["name"]][] = $value["value"];
   }
   $sorttype = array("time desc", "time asc", "price asc", "price desc");
+
   switch ($action) {
     case "getlogin":
-      
-    if (checkParam(array("id"))) {
+      if (checkParam(array("id"))) {
         $id = $_GET["id"];
-        $sql = "select * from user where id = $id";
+        $sql = "SELECT * from user where id = $id";
         $query = $db->sql_query($sql);
 
         if ($db->sql_numrows($query)) {
@@ -73,13 +48,13 @@ if (isset($_GET["action"])) {
         $username = $_GET["username"];
         $password = $_GET["password"];
 
-        $sql = "select * from user where username = '$username'";
+        $sql = "SELECT * from user where username = '$username'";
         $query = $db->sql_query($sql);
         // echo $sql;
         // var_dump($db->sql_fetch_assoc($query));
 
         if ($db->sql_numrows($query)) {
-          $sql = "select * from user where username = '$username' and password = '$password'";
+          $sql = "SELECT * from user where username = '$username' and password = '$password'";
           $query = $db->sql_query($sql);
 
           if ($db->sql_numrows($query)) {
@@ -102,11 +77,11 @@ if (isset($_GET["action"])) {
         $address = $_GET["address"];
         $province = $_GET["province"];
 
-        $sql = "select * from user where username = '$username'";
+        $sql = "SELECT * from user where username = '$username'";
         $query = $db->sql_query($sql);
 
         if (!$db->sql_numrows($query)) {
-          $sql = "insert into user (username, password, name, phone, address, province) values ('$username', '$password', '$name', '$phone', '$address', $province)";
+          $sql = "INSERT into user (username, password, name, phone, address, province) values ('$username', '$password', '$name', '$phone', '$address', $province)";
           $id = $db->sql_query_insert_id($sql);
 
           if ($id) {
@@ -134,7 +109,7 @@ if (isset($_GET["action"])) {
         if (isset($_POST["id"]) && $_POST["id"] !== "undefined") {
           $result["data"] = 1;
           $id = $_POST["id"];
-          $sql = "update post set name = '$name', age = $age, description = '$description', price = '$price', vaccine = $vaccine, species = $species, kind = $kind, type = $typeid where id = $id";
+          $sql = "UPDATE post set name = '$name', age = $age, description = '$description', price = '$price', vaccine = $vaccine, species = $species, kind = $kind, type = $typeid where id = $id";
           // $result["data"] = $sql;
           // echo json_encode($result);
           // die();
@@ -143,8 +118,8 @@ if (isset($_GET["action"])) {
           }
         } else {
           $time = time();
-          $sql = "insert into post(user, name, age, description, species, kind, price, vaccine, type, sold, time) values($uid, '$name', $age, '$description', $species, $kind, $price, $vaccine, $typeid, 0, $time)";
-        //   echo $sql;
+          $sql = "INSERT into post(user, name, age, description, species, kind, price, vaccine, type, sold, time) values($uid, '$name', $age, '$description', $species, $kind, $price, $vaccine, $typeid, 0, $time)";
+          //   echo $sql;
           $id = $db->sql_query_insert_id($sql);
         }
         if ($id) {
@@ -169,7 +144,7 @@ if (isset($_GET["action"])) {
               }
             }
             if (count($image)) {
-              $sql = "update post set image = '" . implode("|", $image) . "' where id = $id";
+              $sql = "UPDATE post set image = '" . implode("|", $image) . "' where id = $id";
               $query = $db->sql_query($sql);
               if ($query) {
                 $result["status"] = 3;
@@ -185,7 +160,7 @@ if (isset($_GET["action"])) {
             $target_path = $target_path . $id . "_" . $index . "." . $extension;
 
             if (move_uploaded_file($_FILES['file']['tmp_name'], $target_path)) {
-              $sql = "update post set image = '$target_path' where id = $id";
+              $sql = "UPDATE post set image = '$target_path' where id = $id";
               $query = $db->sql_query($sql);
               if ($query) {
                 $result["status"] = 3;
@@ -228,13 +203,13 @@ if (isset($_GET["action"])) {
       }
       break;
     case 'getinit':
-      $sql = 'select * from kind';
+      $sql = 'SELECT * from kind';
       $query = $db->sql_query($sql);
       $result["data"]["kind"] = fetchall($db, $query);
       $result["data"]["species"] = array();
 
       foreach ($result["data"]["kind"] as $key => $value) {
-        $sql = "select * from species where kind = $value[id]";
+        $sql = "SELECT * from species where kind = $value[id]";
         $query = $db->sql_query($sql);
 
         $data = fetchall($db, $query);
@@ -259,10 +234,10 @@ if (isset($_GET["action"])) {
           $id = 0;
         }
 
-        $sql = "insert into petorder(pid, user, name, address, phone, status) values ($pid, $id, '$name', '$address', '$phone', 0)";
+        $sql = "INSERT into petorder(pid, user, name, address, phone, status) values ($pid, $id, '$name', '$address', '$phone', 0)";
         $query = $db->sql_query($sql);
         if ($query) {
-          $sql = "insert into notify(type, user, pid) values (1, $id, $pid)";
+          $sql = "INSERT into notify(type, user, pid) values (1, $id, $pid)";
           $query = $db->sql_query($sql);
           $result["status"] = 2;
         } else {
@@ -271,15 +246,16 @@ if (isset($_GET["action"])) {
       }
       break;
     case 'getinfo':
-      if (checkParam(array("id", "puid"))) {
+      if (checkParam(array("id", "puid", "pid"))) {
         $id = $_GET["id"];
         $puid = $_GET["puid"];
+        $pid = $_GET["pid"];
         $uid = 0;
         $userdata = array();
         $order = 0;
         $rate = 0;
 
-        $sql = "select name, phone, address from user where id = $puid";
+        $sql = "SELECT name, phone, address from user where id = $puid ";
         // die(var_dump($_GET));
         $query = $db->sql_query($sql);
         $userdata = $db->sql_fetch_assoc($query);
@@ -287,18 +263,18 @@ if (isset($_GET["action"])) {
         if (checkParam(array("uid"))) {
           $uid = $_GET["uid"];
 
-          $sql = "select id from rate where uid = $uid";
+          $sql = "SELECT id from rate where uid = $uid";
           // die(var_dump($_GET));
           // die($sql);
           $query = $db->sql_query($sql);
           $rate = $db->sql_numrows($query);
 
-          $sql = "select * from petorder where user = $uid and pid = $id";
+          $sql = "SELECT * from petorder where user = $uid and pid = $id";
           $query = $db->sql_query($sql);
           // $order = "1: " . $sql;
           $order = $db->sql_numrows($query);
           if (!$order) {
-            $sql = "select * from post where user = $uid and id = $id";
+            $sql = "SELECT * from post where user = $uid and id = $id";
             $query = $db->sql_query($sql);
             $order = $db->sql_numrows($query);
             // $order .= "|2: " . $db->sql_numrows($query);
@@ -311,7 +287,7 @@ if (isset($_GET["action"])) {
           $where = "(b.user = $puid)";
         }
 
-        $sql = "select a.user, a.time, a.comment, c.name, c.province from comment a inner join post b on a.pid = $id and a.pid = b.id and $where inner join user c on a.user = c.id order by a.time asc";
+        $sql = "SELECT a.user, a.time, a.comment, c.name, c.province from comment a inner join post b on a.pid = $id and a.pid = b.id and $where inner join user c on a.user = c.id order by a.time asc";
         $query = $db->sql_query($sql);
         $comment = fetchall($db, $query);
         // die($sql);
@@ -350,7 +326,7 @@ if (isset($_GET["action"])) {
           $where .= " and d.kind = $kind";
         }
 
-        $sql = "select a.type as typeid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, a.description, b.name as owner, c.name as species, d.name as kind, b.province from post a inner join user b on a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id $where $order";
+        $sql = "SELECT a.type as typeid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, a.description, b.name as owner, c.name as species, d.name as kind, b.province from post a inner join user b on a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id $where $order";
         // die($sql);
         $query = $db->sql_query($sql);
 
@@ -375,7 +351,7 @@ if (isset($_GET["action"])) {
         if ($db->sql_query($sql)) {
           $where = " where (a.name like '%$keyword%' or a.description like '%$keyword%' or b.name like '%$keyword%' or b.phone like '%$keyword%')";
           $order = " order by " . $sorttype[$sort];
-          $main = "select e.id as oid, b.province, a.kind as kindid, a.species as speciesid, a.type as typeid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, b.name as owner, c.name as species from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id";
+          $main = "SELECT e.id as oid, b.province, a.kind as kindid, a.species as speciesid, a.type as typeid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, b.name as owner, c.name as species from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id";
 
           if ($type) {
             $sql = "$main $where and e.user = $uid $order";
@@ -404,9 +380,9 @@ if (isset($_GET["action"])) {
           $name = $_GET["name"];
         }
 
-        $sql = "insert into comment(pid, user, name, time, comment, cid, public) values($pid, $uid, '$name', $time, '$comment', 0, 0)";
+        $sql = "INSERT into comment(pid, user, name, time, comment, cid, public) values($pid, $uid, '$name', $time, '$comment', 0, 0)";
         if ($db->sql_query($sql)) {
-          $sql = "select a.user, a.time, a.comment, c.name from comment a inner join post b on a.pid = $pid and a.pid = b.id inner join user c on a.user = c.id order by a.time asc";
+          $sql = "SELECT a.user, a.time, a.comment, c.name from comment a inner join post b on a.pid = $pid and a.pid = b.id inner join user c on a.user = c.id order by a.time asc";
           $query = $db->sql_query($sql);
           $comment = fetchall($db, $query);
           foreach ($comment as $key => $value) {
@@ -418,9 +394,9 @@ if (isset($_GET["action"])) {
         }
 
 
-        // $sql = "insert into comment (pid, user, name, time, comment) value ($id, $uid, '$name', $time, '$chattext')";
+        // $sql = "INSERT into comment (pid, user, name, time, comment) value ($id, $uid, '$name', $time, '$chattext')";
         // if ($db->sql_query($sql)) {
-        //   $sql = "select a.user, a.time, a.comment, c.name from comment a inner join post b on a.pid = $id and a.pid = b.id and (a.user = $uid or b.user = $puid) inner join user c on a.user = c.id order by a.time asc";
+        //   $sql = "SELECT a.user, a.time, a.comment, c.name from comment a inner join post b on a.pid = $id and a.pid = b.id and (a.user = $uid or b.user = $puid) inner join user c on a.user = c.id order by a.time asc";
         //   $query = $db->sql_query($sql);
         //   $comment = fetchall($db, $query);
         //   foreach ($comment as $key => $value) {
@@ -437,7 +413,9 @@ if (isset($_GET["action"])) {
         $uid = $_GET["uid"];
         $puid = $_GET["puid"];
 
-        $sql = "insert into rate (uid, puid, value, review) values($uid, $puid, $value, '')";
+        $time = strtotime(date("Y-m-d"));
+
+        $sql = "INSERT into rate (uid, puid, value, review, time) values($uid, $puid, $value, '', $time)";
         if ($db->sql_query($sql)) {
           $result["status"] = 1;
         }
@@ -448,11 +426,11 @@ if (isset($_GET["action"])) {
         $oid = $_GET["oid"];
         $pid = $_GET["pid"];
 
-        $sql = "update petorder set status = 1 where id = $oid";
+        $sql = "UPDATE petorder set status = 1 where id = $oid";
         if ($db->sql_query($sql)) {
-          $sql = "update petorder set status = 2 where status = 0 and id <> $oid";
+          $sql = "UPDATE petorder set status = 2 where status = 0 and id <> $oid";
           if ($db->sql_query($sql)) {
-            $sql = "update post set sold = 1 where id = $pid";
+            $sql = "UPDATE post set sold = 1 where id = $pid";
             if ($db->sql_query($sql))
               $result["status"] = 1;
           }
@@ -460,14 +438,43 @@ if (isset($_GET["action"])) {
       }
       break;
     case 'getproviderpet':
-      $prid = $nv_Request->get_string('prid', 'post/get', '');
-      if (!empty($prid)) {
-        $sql = "select a.type as typeid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, a.description, b.name as owner, c.name as species, d.name as kind, b.province from post a inner join user b on a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id where a.user = $prid and sold = 0 order by a.time desc";
-        $
-      }
-    break;
-  }
+      $name = $nv_Request->get_string('name', 'post/get', '');
+      $phone = $nv_Request->get_string('phone', 'post/get', '');
+      if (!(empty($name) || (empty($phone)))) {
+        $sql = "SELECT a.type as typeid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, a.description, b.name as owner, c.name as species, d.name as kind, b.province from post a inner join user b on b.name = '$name' and b.phone = '$phone' and a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id where sold = 0 order by a.time desc";
+        $result["data"] = $sql;
+        if ($query = $db->sql_query($sql)) {
+          $data = fetchall($db, $query);
+          $sql = "SELECT * from post a inner join user b on b.name = '$name' and b.phone = '$phone' and a.user = b.id inner join rate c on c.";
+          $query = $db->sql_query($sql);
+          $total = $db->sql_numrows($query);
 
+          $rate = fetchall($db, $query);
+          $totalpoint = 0;
+          foreach ($rate as $key => $value) {
+            $totalpoint += $value["value"];
+          }
+          $average = $totalpoint / $total;
+
+          $sql = "SELECT * from petorder a inner join user b on b.name = '$name' and b.phone = '$phone' and a.sold = 1 and a.puid = b.id";
+          $query = $db->sql_query($sql);
+          $totalsale = $db->sql_numrows($query);
+
+          $crate = array();
+          foreach ($rate as $key => $row) {
+            $crate[] = array("name" => $row["name"]);
+          }
+
+          $result["status"] = 1;
+          $result["data"]["propet"] = $data;
+          $result["data"]["total"] = $total;
+          $result["data"]["average"] = $average;
+          $result["data"]["totalsale"] = $totalsale;
+          $result["data"]["rate"] = $rate;
+        }
+      }
+      break;
+  }
 }
 
 // var_dump($result);
@@ -480,7 +487,7 @@ function rate() {
 
   if (checkParam(array("uid"))) {
     $uid = $_GET["uid"];
-    $sql = "select * from post where sold = 1 and user = $uid";
+    $sql = "SELECT * from post where sold = 1 and user = $uid";
     if ($query = $db->sql_query($sql)) {
       $result["status"] = 1;
       $result["data"] = $db->sql_numrows($query);
@@ -498,8 +505,8 @@ function filterorder() {
 
     $where = " where (a.name like '%$keyword%' or a.description like '%$keyword%' or b.name like '%$keyword%' or b.phone like '%$keyword%')";
     $order = " order by " . $sorttype[$sort];
-    $main = "select a.type as typeid, a.kind as kindid, a.species as speciesid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, b.name as owner, a.description, c.name as species, d.name as kind, b.province from post a inner join user b on a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id";
-    $main2 = "select e.id as oid, a.type as typeid, a.kind as kindid, a.species as speciesid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, b.name as owner, a.description, c.name as species, d.name as kind, b.province from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id";
+    $main = "SELECT a.type as typeid, a.kind as kindid, a.species as speciesid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, b.name as owner, a.description, c.name as species, d.name as kind, b.province from post a inner join user b on a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id";
+    $main2 = "SELECT e.id as oid, a.type as typeid, a.kind as kindid, a.species as speciesid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, b.name as owner, a.description, c.name as species, d.name as kind, b.province from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id";
 
     switch ($type) {
       case '1':
@@ -601,11 +608,11 @@ function checkParam($param, $post = false) {
 }
 
 function fetchall($db, $query) {
-    $result = array();
-    while ($row = $db->sql_fetch_assoc($query)) {
-        $result[] = $row;
-    }
-    return $result;
+  $result = array();
+  while ($row = $db->sql_fetch_assoc($query)) {
+    $result[] = $row;
+  }
+  return $result;
 }
 
 ?>

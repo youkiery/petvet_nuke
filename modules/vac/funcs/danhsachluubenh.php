@@ -40,7 +40,7 @@ foreach ($status_option as $key => $value) {
 
 // var_dump($_GET); die();
 
-$sql = "SELECT a.id, a.ngayluubenh, a.ketqua, b.id as petid, b.petname, d.doctor from `" . VAC_PREFIX . "_luubenh` a inner join `" . VAC_PREFIX . "_pets` b on a.idthucung = b.id inner join `" . VAC_PREFIX .  "_customers` c on c.id = b.customerid and (c.customer like '%$keyword%' or c.phone like '%$keyword%' or b.petname like '%$keyword%') inner join `" . VAC_PREFIX . "_doctor` d on a.idbacsi = d.id order by ngayluubenh";
+$sql = "SELECT a.id, a.ngayluubenh, a.ketqua, b.id as petid, b.petname, d.doctor from `" . VAC_PREFIX . "_luubenh` a inner join `" . VAC_PREFIX . "_pets` b on a.idthucung = b.id inner join `" . VAC_PREFIX .  "_customers` c on c.id = b.customerid and (c.customer like '%$keyword%' or c.phone like '%$keyword%' or b.petname like '%$keyword%') inner join `" . VAC_PREFIX . "_doctor` d on a.idbacsi = d.id order by ngayluubenh desc, a.id";
 // die($sql);
 $result = $db->sql_query($sql);
 
