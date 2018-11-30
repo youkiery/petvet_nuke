@@ -1,8 +1,9 @@
 <?php
 
-if (!defined('NV_IS_MOD_VAC'))
-  die('Stop!!!');
-$action = $nv_Request->get_string('action', 'post', '');
+if (!defined('NV_IS_MOD_VAC')) {
+      die('Stop!!!');
+}
+$action = $nv_Request->get_string('action', 'post/get', '');
 
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
@@ -10,8 +11,7 @@ header('Content-Type: application/json');
 $result = array("status" => 0, "data" => "");
 $type = array("Cần bán", "Cần mua", "Muốn tặng", "Tìm thú lạc");
 
-if (isset($_GET["action"])) {
-  $action = $_GET["action"];
+if (!empty($action)) {
   $db_config["dbname"] = "petcoffe";
   $db_config["dbuname"] = "root";
   $db_config["dbpass"] = "";
@@ -27,26 +27,31 @@ if (isset($_GET["action"])) {
   foreach ($data as $key => $value) {
     $config[$value["name"]][] = $value["value"];
   }
+  $newprovince = array("Toàn quốc");
+  foreach ($config["province"] as $key => $row) {
+    $newprovince[] = $row;
+  }
+  $config["province"] = $newprovince;
   $sorttype = array("time desc", "time asc", "price asc", "price desc");
 
   switch ($action) {
     case "getlogin":
-      if (checkParam(array("id"))) {
-        $id = $_GET["id"];
+      $id = $nv_Request->get_string('id', 'post/get', '');
+      if (!empty($id)) {
         $sql = "SELECT * from user where id = $id";
         $query = $db->sql_query($sql);
 
         if ($db->sql_numrows($query)) {
           $row = $db->sql_fetch_assoc($query);
           $result["status"] = 1;
-          $result["data"] = array("uid" => $row["id"], "name" => $row["name"], "phone" => $row["phone"], "address" => $row["address"]);
+          $result["data"] = array("uid" => $row["id"], "name" => $row["name"], "phone" => $row["phone"], "address" => $row["address"], "province" => $row["province"]);
         }
       }
       break;
     case "login":
-      if (checkParam(array("username", "password"))) {
-        $username = $_GET["username"];
-        $password = $_GET["password"];
+      $username = $nv_Request->get_string('username', 'post/get', '');
+      $password = $nv_Request->get_string('password', 'post/get', '');
+      if (! (empty($username) || empty($password))) {
 
         $sql = "SELECT * from user where username = '$username'";
         $query = $db->sql_query($sql);
@@ -180,25 +185,36 @@ if (isset($_GET["action"])) {
         } else {
           $result["status"] = 1;
         }
+        // $result["data"]["sql"] = $sql;
         if ($result["status"] === 3) {
           if (isset($_POST["id"]) && $_POST["id"] !== "undefined") {
             $result["status"] = 5;
           }
-          $result["data"] = array();
           filterorder();
         }
       }
       break;
     case 'removepost':
       if (checkParam(array("id", "uid"))) {
-        $id = $_GET["id"];
+        $pid = $_GET["id"];
         $uid = $_GET["uid"];
 
-        $sql = "delete from post where id = $id";
-        if ($db->sql_query($sql)) {
-          $result["status"] = 1;
-          $result["data"] = array();
-          filterorder();
+        $sql = "SELECT * from post where id = $pid";
+        $query = $db->sql_query($sql);
+        $row = $db->sql_fetch_assoc($query);
+        $sql = "SELECT * from petorder where pid = $pid";
+        $query = $db->sql_query($sql);
+        if (!empty($allrow = fetchall($db, $query))) {
+          $sql = "delete from post where id = $pid";
+          if ($db->sql_query($sql)) {
+            foreach ($allrow as $key => $row) {
+              $sql = "insert into notify (type, user, uid, pid, time) values(5, $row[uid], $row[user], $pid, " . strtotime(date("Y-m-d")) . ")";
+              $query = $db->sql_query($sql);
+            }
+            $result["status"] = 1;
+            $result["data"] = array();
+            filterorder();
+          }
         }
       }
       break;
@@ -213,10 +229,11 @@ if (isset($_GET["action"])) {
         $query = $db->sql_query($sql);
 
         $data = fetchall($db, $query);
-        $result["data"]["species"][$value["id"]] = $data;
-        $result["data"]["species"][$value["id"]][] = array("id" => 0, "name" => "Chưa chọn");
+        $result["data"]["species"][$value["id"]][0] = array("id" => 0, "name" => "Chưa chọn");
+        foreach ($data as $key => $row) {
+          $result["data"]["species"][$value["id"]][] = $row;
+        }
       }
-      $result["data"]["kind"][] = array("id" => 0, "name" => "Chưa chọn");
 
       $result["data"]["type"] = $type;
       $result["data"]["config"] = $config;
@@ -236,19 +253,26 @@ if (isset($_GET["action"])) {
         }
 
         $sql = "INSERT into petorder(pid, user, name, address, phone, status) values ($pid, $id, '$name', '$address', '$phone', 0)";
-        $query = $db->sql_query($sql);
-        if ($query) {
-          $sql = "INSERT into notify(type, user, pid) values (1, $id, $pid)";
           $query = $db->sql_query($sql);
-          $result["status"] = 2;
-        } else {
-          $result["status"] = 1;
+          $result["data"] = $sql;
+
+        if ($query) {
+          $time = strtotime(date("Y-m-d"));
+          $sql = "SELECT user from post where id = $pid";
+          $query = $db->sql_query($sql);
+          if ($row = $db->sql_fetch_assoc($query)) {
+            $sql = "insert into notify (type, user, uid, pid, time) values(1, $row[user], $uid, $pid, $time)";
+            $result["data"] = $sql;  
+            $query = $db->sql_query($sql);
+            $result["status"] = 1;
+          }
         }
       }
       break;
     case 'getinfo':
-      if (checkParam(array("uid", "puid", "pid"))) {
+      if (checkParam(array("uid", "puid", "pid", "page"))) {
         $puid = $_GET["puid"];
+        $page = $_GET["page"];
         $uid = $_GET["uid"];
         $pid = $_GET["pid"];
         $uid = 0;
@@ -256,7 +280,6 @@ if (isset($_GET["action"])) {
         $order = 0;
         $rate = 0;
 
-        
         if (checkParam(array("uid"))) {
           $uid = $_GET["uid"];
           
@@ -294,13 +317,49 @@ if (isset($_GET["action"])) {
           $where = "(b.user = $puid)";
         }
 
-        $sql = "SELECT a.user, a.time, a.comment, c.name, c.province from comment a inner join post b on a.pid = $pid and a.pid = b.id and $where inner join user c on a.user = c.id order by a.time asc";
+        $commentlimit = 10;
+        if ($config["comment"] > 0) {
+          $commentlimit = $config["comment"];
+        }
+        $from = 0; 
+        $to = $page * $commentlimit; 
+        $limit = "limit $from, $to";
+
+        $sql = "SELECT a.user, a.name, a.phone, a.address, a.time, a.comment from comment a where a.pid = $pid order by a.time asc $limit";
         $query = $db->sql_query($sql);
         $comment = fetchall($db, $query);
-        // die($sql);
-        foreach ($comment as $key => $value) {
-          $comment[$key]["time"] = date("d/m/Y", $value["time"]);
+
+        foreach ($comment as $key => $row) {
+          if ($row["user"]) {
+            $sql = "SELECT a.name, a.phone, a.address from user a where id = $row[user]";
+            $result["data"]["sql"] = $sql;
+            $query = $db->sql_query($sql);
+            $crow = $db->sql_fetch_assoc($query);
+            $comment[$key]["name"] = $crow["name"];
+            $comment[$key]["phone"] = $crow["phone"];
+            $comment[$key]["address"] = $crow["address"];
+          }
+          $comment[$key]["time"] = date("H:i d/m/Y", $row["time"]);
         }
+
+        $sql = "select count(id) as count from comment where pid = $pid";
+        $query = $db->sql_query($sql);
+        $countid = $db->sql_fetch_assoc($query);
+        $result["data"]["next"] = false;
+        if ($countid["count"] > $to) {
+          $result["data"]["next"] = true;
+        }
+
+        // $comment = array_merge($comment, $comment2);
+        // $time = array();
+        // foreach ($comment as $key => $row) {
+        //   $time[$key] = $row['time'];
+        // }
+        // array_multisort($time, SORT_ASC, $comment);
+      
+        $sql = "insert into notify (type, user, uid, pid, time) values(4, $ouid, $uid, $pid, " . strtotime(date("Y-m-d")) . ")";
+        $query = $db->sql_query($sql);
+
 
         $result["status"] = 1;
         $result["data"]["owner"] = $userdata;
@@ -318,69 +377,98 @@ if (isset($_GET["action"])) {
     case 'disorder':
       if (checkParam(array("uid", "id", "sort", "type"))) {
         $uid = $_GET["uid"];
-        $id = $_GET["id"];
+        $oid = $_GET["id"];
         $keyword = $_GET["keyword"];
         $sort = $_GET["sort"];
         $type = $_GET["type"];
 
-        $sql = "delete from petorder where id = $id";
-        if ($db->sql_query($sql)) {
-          $where = " where (a.name like '%$keyword%' or a.description like '%$keyword%' or b.name like '%$keyword%' or b.phone like '%$keyword%')";
-          $order = " order by " . $sorttype[$sort];
-          $main = "SELECT e.id as oid, b.province, a.kind as kindid, a.species as speciesid, a.type as typeid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, b.name as owner, c.name as species from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id";
-
-          if ($type) {
-            $sql = "$main $where and e.user = $uid $order";
-          } else {
-            $sql = "$main $where and a.user = $uid $order";
-          }
-          $query = $db->sql_query($sql);
-
-          if ($query) {
-            $result["status"] = 1;
-            $result["data"] = parseData(fetchall($db, $query));
-          }
+        $sql = "SELECT * from petorder where id = $oid";
+        $query = $db->sql_query($sql);
+        if ($row = $db->sql_fetch_assoc($query)) {
+          $sql = "delete from petorder where id = $oid";
+          if ($db->sql_query($sql)) {
+            $where = " where (a.name like '%$keyword%' or a.description like '%$keyword%' or b.name like '%$keyword%' or b.phone like '%$keyword%')";
+            $order = " order by " . $sorttype[$sort];
+            $main = "SELECT e.id as oid, b.province, a.kind as kindid, a.species as speciesid, a.type as typeid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, b.name as owner, c.name as species from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id";
+  
+            if ($type) {
+              $sql = "$main $where and e.user = $uid $order";
+            } else {
+              $sql = "$main $where and a.user = $uid $order";
+            }
+            $query = $db->sql_query($sql);
+  
+            if ($query) {
+              $sql = "insert into notify (type, user, uid, pid, time) values(2, $row[user], $uid, $row[id], " . strtotime(date("Y-m-d")) . ")";
+              $query = $db->sql_query($sql);
+                $query = $db->sql_query($sql);
+              $result["status"] = 1;
+              $result["data"] = parseData(fetchall($db, $query));
+            }
+          }            
         }
       }
       break;
     case 'postchat':
-      if (checkParam(array("id", "uid", "puid", "chattext"))) {
-        $pid = $_GET["id"];
-        $uid = $_GET["uid"];
-        $puid = $_GET["puid"];
-        $comment = $_GET["chattext"];
-        $name = "";
-        $time = time();
+      $uid = $nv_Request->get_string('uid', 'post/get', '');
+      $pid = $nv_Request->get_string('id', 'post/get', '');
+      $page = $nv_Request->get_string('page', 'post/get', '');
+      $comment = $nv_Request->get_string('chattext', 'post/get', '');
+      $time = time();
 
-        if (checkParam(array("name"))) {
-          $name = $_GET["name"];
+      if (empty($uid)) {
+        $name = $nv_Request->get_string('name', 'post/get', '');
+        $phone = $nv_Request->get_string('phone', 'post/get', '');
+        $address = $nv_Request->get_string('address', 'post/get', '');
+        $uid = 0;
+
+        $sql = "INSERT into comment(pid, user, name, phone, address, time, comment, cid, public) values($pid, $uid, '$name', '$phone', '$address', $time, '$comment', 0, 0)";
+      }
+      else {
+        $puid = $nv_Request->get_string('puid', 'post/get', '');
+
+        $sql = "INSERT into comment(pid, user, name, phone, address, time, comment, cid, public) values($pid, $uid, '', '', '', $time, '$comment', 0, 0)";
+      }
+
+      if ($db->sql_query($sql)) {
+        $commentlimit = 10;
+        if ($config["comment"] > 0) {
+          $commentlimit = $config["comment"];
         }
+        $result["data"]["page"] = $page;
+        $result["data"]["commentlimit"] = $commentlimit;
 
-        $sql = "INSERT into comment(pid, user, name, time, comment, cid, public) values($pid, $uid, '$name', $time, '$comment', 0, 0)";
-        if ($db->sql_query($sql)) {
-          $sql = "SELECT a.user, a.time, a.comment, c.name from comment a inner join post b on a.pid = $pid and a.pid = b.id inner join user c on a.user = c.id order by a.time asc";
-          $query = $db->sql_query($sql);
-          $comment = fetchall($db, $query);
-          foreach ($comment as $key => $value) {
-            $comment[$key]["time"] = date("d/m/Y", $value["time"]);
+        $from = 0; 
+        $to = $page * $commentlimit; 
+        $limit = "limit $from, $to";
+
+        $sql = "SELECT a.user, a.name, a.phone, a.address, a.time, a.comment from comment a where a.pid = $pid  order by a.time asc $limit";
+        // $result["data"]["sql"] = $sql;
+        $query = $db->sql_query($sql);
+        $comment = fetchall($db, $query);
+
+        foreach ($comment as $key => $row) {
+          if ($row["user"]) {
+            $sql = "SELECT a.name, a.phone, a.address from user a where id = $row[user]";
+            $query = $db->sql_query($sql);
+            $crow = $db->sql_fetch_assoc($query);
+            $comment[$key]["name"] = $crow["name"];
+            $comment[$key]["phone"] = $crow["phone"];
+            $comment[$key]["address"] = $crow["address"];
           }
-
-          $result["status"] = 1;
-          $result["data"] = $comment;
+          $comment[$key]["time"] = date("H:i d/m/Y", $row["time"]);
         }
 
+        $sql = "SELECT * from post where id = $pid";
+        $query = $db->sql_query($sql);
+        $row = $db->sql_fetch_assoc($query);
 
-        // $sql = "INSERT into comment (pid, user, name, time, comment) value ($id, $uid, '$name', $time, '$chattext')";
-        // if ($db->sql_query($sql)) {
-        //   $sql = "SELECT a.user, a.time, a.comment, c.name from comment a inner join post b on a.pid = $id and a.pid = b.id and (a.user = $uid or b.user = $puid) inner join user c on a.user = c.id order by a.time asc";
-        //   $query = $db->sql_query($sql);
-        //   $comment = fetchall($db, $query);
-        //   foreach ($comment as $key => $value) {
-        //   $comment[$key]["time"] = date("d/m/Y", $value["time"]);
-        //   }
-        //   $result["status"] = 1;
-        //   $result["data"] = $comment;
-        // }
+        $sql = "insert into notify (type, user, uid, pid, time) values(4, $row[user], $uid, $pid, " . strtotime(date("Y-m-d")) . ")";
+        $result["data"]["sql"] = $sql;
+        $query = $db->sql_query($sql);
+
+        $result["status"] = 1;
+        $result["data"]["comment"] = $comment;
       }
       break;
     case 'rate':
@@ -391,14 +479,21 @@ if (isset($_GET["action"])) {
 
         $time = strtotime(date("Y-m-d"));
 
-        $sql = "INSERT into rate (uid, pid, value, review, time) values($uid, $pid, $value, '', $time)";
-        if ($db->sql_query($sql)) {
-          $result["status"] = 1;
+        $sql = "SELECT * from post where id = $pid";
+        $query = $db->sql_query($sql);
+        if ($row = $db->sql_fetch_assoc($query)) {
+          $sql = "INSERT into rate (uid, pid, value, review, time) values($uid, $pid, $value, '', $time)";
+          if ($db->sql_query($sql)) {
+            $sql = "insert into notify (type, user, uid, pid, time) values(3, $row[user], $uid, $pid, " . strtotime(date("Y-m-d")) . ")";
+            $query = $db->sql_query($sql);
+            $result["status"] = 1;
+          }  
         }
       }
       break;
     case 'submitorder':
-      if (checkParam(array("oid", "pid"))) {
+      if (checkParam(array("oid", "uid", "pid"))) {
+        $uid = $_GET["uid"];
         $oid = $_GET["oid"];
         $pid = $_GET["pid"];
 
@@ -407,8 +502,17 @@ if (isset($_GET["action"])) {
           $sql = "UPDATE petorder set status = 2 where status = 0 and id <> $oid";
           if ($db->sql_query($sql)) {
             $sql = "UPDATE post set sold = 1 where id = $pid";
-            if ($db->sql_query($sql))
+            if ($db->sql_query($sql)) {
+              $sql = "SELECT * from post where id = $pid";
+              $query = $db->sql_query($sql);
+              $row = $db->sql_fetch_assoc($query);
+              $sql = "insert into notify (type, user, uid, pid, time) values(6, $uid, $row[user], $pid, " . strtotime(date("Y-m-d")) . ")";
+              $query = $db->sql_query($sql);
+              $sql = "insert into notify (type, user, uid, pid, time) values(7, $row[user], $uid, $pid, " . strtotime(date("Y-m-d")) . ")";
+              $query = $db->sql_query($sql);
               $result["status"] = 1;
+              filterorder();
+            }
           }
         }
       }
@@ -426,12 +530,17 @@ if (isset($_GET["action"])) {
           $total = $db->sql_numrows($query);
           // $result["data"]["sql"] = $sql;
 
-          $rate = fetchall($db, $query);
-          $totalpoint = 0;
-          foreach ($rate as $key => $value) {
-            $totalpoint += $value["value"];
+          if ($total) {
+            $rate = fetchall($db, $query);
+            $totalpoint = 0;
+            foreach ($rate as $key => $value) {
+              $totalpoint += $value["value"];
+            }
+            $average = $totalpoint / $total;
           }
-          $average = $totalpoint / $total;
+          else {
+            $average = 0;
+          }
 
           $sql = "SELECT * from post a inner join user b on b.name = '$name' and b.phone = '$phone' and a.sold = 1 and a.user = b.id";
           $query = $db->sql_query($sql);
@@ -451,6 +560,138 @@ if (isset($_GET["action"])) {
           $result["data"]["rate"] = $crate;
         }
       }
+      break;
+      case 'getnotify':
+        $uid = $nv_Request->get_string('uid', 'post/get', '');
+        if (!empty($uid)) {
+          $sql = "SELECT a.type, a.time, a.pid, b.name as title, c.name from notify a inner join post b on a.pid = b.id inner join user c on a.user = $uid and a.uid = c.id order by a.time desc";
+          $result["data"]["sql"] = $sql;
+
+          if ($query = $db->sql_query($sql)) {
+            $data = fetchall($db, $query);
+            foreach ($data as $key => $row) {
+              $data[$key]["time"] = date("d/m/Y", $row["time"]);
+            }
+            $result["status"] = 1;
+            $result["data"] = $data;
+          }
+        }
+      break;
+      case 'getvender':
+        $oid = $nv_Request->get_string('oid', 'post/get', '');
+        if (!empty($oid)) {
+          $sql = "SELECT c.name, c.phone, c.address from petorder a inner join post b on a.id = $oid and a.pid = b.id inner join user c on b.user = c.id";
+
+          $query = $db->sql_query($sql);
+          if ($row = $db->sql_fetch_assoc($query)) {
+            $result["status"] = 1;
+            $result["data"]["vender"] = $row;
+          }
+        }
+      break;
+      case 'getorderlist':
+        $pid = $nv_Request->get_string('pid', 'post/get', '');
+        if (!empty($pid)) {
+          $sql = "SELECT a.id as oid, c.name, c.phone, c.address from petorder a inner join post b on a.pid = $pid and a.pid = b.id inner join user c on a.user = c.id";
+          $query = $db->sql_query($sql);
+          if ($allrow = fetchall($db, $query)) {
+            $result["status"] = 1;
+            $result["data"]["vender"] = $allrow;
+          }
+        }
+      break;
+      case 'changepass':
+        $uid = $nv_Request->get_string('uid', 'post/get', '');
+        $pass = $nv_Request->get_string('pass', 'post/get', '');
+        $npass = $nv_Request->get_string('npass', 'post/get', '');
+        if (!(empty($uid) || empty($pass) || empty($npass))) {
+          $sql = "SELECT * from user where password = $pass and id = $uid";
+          $query = $db->sql_query($sql);
+          if ($row = $db->sql_fetch_assoc($query)) {
+            $sql = "UPDATE user set password = '$npass' where id = $uid";
+            if ($db->sql_query($sql)) {
+              $result["status"] = 1;
+            }
+          }
+        }
+      break;
+      case 'changeinfo':
+        $uid = $nv_Request->get_string('uid', 'post/get', '');
+        $name = $nv_Request->get_string('name', 'post/get', '');
+        $address = $nv_Request->get_string('address', 'post/get', '');
+        $phone = $nv_Request->get_string('phone', 'post/get', '');
+        if (!(empty($uid) || empty($name) || empty($address) || empty($phone))) {
+          $sql = "SELECT * from user where id = $uid and name = $name";
+          $query = $db->sql_query($sql);
+          if ($row = $db->sql_fetch_assoc($query)) {
+            $sql = "UPDATE user set name = '$name', address = '$address', phone = '$phone' where id = $uid";
+            if ($db->sql_query($sql)) {
+              $result["status"] = 1;
+            }
+          }
+        }
+      break;
+      case 'changeprovince':
+        $uid = $nv_Request->get_string('uid', 'post/get', '');
+        $province = $nv_Request->get_string('province', 'post/get', '');
+        if (!(empty($uid) || empty($province))) {
+            $sql = "UPDATE user set province = '$province' where id = $uid";
+            if ($db->sql_query($sql)) {
+              $result["status"] = 1;
+            }
+        }
+      break;
+      case 'getdatainfo':
+        $pid = $nv_Request->get_string('pid', 'post/get', '');
+        if (!empty($pid)) {
+          $sql = "SELECT a.type as typeid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, a.description, b.name as owner, c.name as species, d.name as kind, b.province from post a inner join user b on a.id = $pid and a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id";
+          if ($query = $db->sql_query($sql)) {
+            $result["data"]["owner"] = parseData(array($db->sql_fetch_assoc($query)))[0];
+            $result["status"] = 1;
+          }
+        }
+      break;
+      case 'nextcomment':
+        $pid = $nv_Request->get_string('pid', 'post/get', '');
+        $page = $nv_Request->get_string('page', 'post/get', '');
+        if (!(empty($pid) || empty($page))) {
+          $page ++;
+          $commentlimit = 10;
+          if ($config["comment"] > 0) {
+            $commentlimit = $config["comment"];
+          }
+          $from = 0; 
+          $to = $page * $commentlimit; 
+          $limit = "limit $from, $to";
+  
+          $sql = "SELECT a.user, a.name, a.phone, a.address, a.time, a.comment from comment a where a.pid = $pid  order by a.time asc $limit";
+          $result["data"]["sql"] = $sql;
+          $query = $db->sql_query($sql);
+          $comment = fetchall($db, $query);
+  
+          foreach ($comment as $key => $row) {
+            if ($row["user"]) {
+              $sql = "SELECT a.name, a.phone, a.address from user a where id = $row[user]";
+              $query = $db->sql_query($sql);
+              $crow = $db->sql_fetch_assoc($query);
+              $comment[$key]["name"] = $crow["name"];
+              $comment[$key]["phone"] = $crow["phone"];
+              $comment[$key]["address"] = $crow["address"];
+            }
+            $comment[$key]["time"] = date("H:i d/m/Y", $row["time"]);
+          }
+  
+          $sql = "select count(id) as count from comment where pid = $pid";
+          $query = $db->sql_query($sql);
+          $countid = $db->sql_fetch_assoc($query);
+          $result["data"]["next"] = false;
+          if ($countid["count"] > $to) {
+            $result["data"]["next"] = true;
+          }
+
+          $result["status"] = 1;
+          $result["data"]["comment"] = $comment;
+        }
       break;
   }
 }
@@ -474,14 +715,21 @@ function rate() {
 }
 
 function filterbase() {
-  global $db, $result, $sorttype;
-  if (checkParam(array("sort", "price", "type"))) {
+  global $db, $result, $sorttype, $nv_Request;
+  $sort = $nv_Request->get_string('sort', 'post/get', '');
+  $price = $nv_Request->get_string('price', 'post/get', '');
+  $type = $nv_Request->get_string('type', 'post/get', '');
+  $province = $nv_Request->get_string('province', 'post/get', '');
+  $page = $nv_Request->get_string('page', 'post/get', '');
+  if ($sort >= 0 && !empty($price) && $type >= 0 && $page > 0) {
     $keyword = $_GET["keyword"];
-    $sort = $_GET["sort"];
-    $type = $_GET["type"];
-    $price = explode("-", $_GET["price"]);
+    $price = explode("-", $price);
+    $whereprovince = "";
+    if ($province > 0) {
+      $whereprovince = "and b.province = $province";
+    }
 
-    $where = " where (a.name like '%$keyword%' or a.description like '%$keyword%' or b.name like '%$keyword%' or b.phone like '%$keyword%') and a.sold = 0 and a.type = $type";
+    $where = " where (a.name like '%$keyword%' or a.description like '%$keyword%' or b.name like '%$keyword%' or b.phone like '%$keyword%') $whereprovince and a.sold = 0 and a.type = $type";
     $order = " order by " . $sorttype[$sort];
 
     if ($price[1] >= 100000) {
@@ -498,17 +746,27 @@ function filterbase() {
       $where .= " and d.kind = $kind";
     }
 
-    $sql = "SELECT a.type as typeid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, a.description, b.name as owner, c.name as species, d.name as kind, b.province from post a inner join user b on a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id $where $order";
+    $from = 0;
+    $to = 12 * $page;
+
+    $sql = "SELECT count(a.id) as count from post a inner join user b on a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id $where";
+    $query = $db->sql_query($sql);
+    $countid = $db->sql_fetch_assoc($query);
+    $result["data"]["next"] = false;
+    if ($countid["count"] > $to) {
+      $result["data"]["next"] = true;
+    }
+
+
+    $sql = "SELECT a.type as typeid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, a.description, b.name as owner, c.name as species, d.name as kind, b.province from post a inner join user b on a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id $where $order limit $from, $to";
+    $result["data"]["sql"] = $sql;
+    // yk
     // die($sql);
     $query = $db->sql_query($sql);
 
     if ($query) {
       $result["status"] = 1;
-      if ($result["data"]["config"]) {
-        $result["data"]["newpet"] = parseData(fetchall($db, $query));
-      } else {
-        $result["data"] = parseData(fetchall($db, $query));
-      }
+      $result["data"]["newpet"] = parseData(fetchall($db, $query));
     }
   }
 }
@@ -547,9 +805,7 @@ function filterorder() {
         //sell
         $sql = "$main $where and a.user = $uid and a.sold = 0 $order";
     }
-    $result["data"]["sql"] = $sql;
 
-    // die($sql);
     // echo $type;
     $query = $db->sql_query($sql);
 
@@ -588,13 +844,13 @@ function parseData($petlist) {
     $petlist[$key]["type"] = $type[$value["typeid"]];
     $petlist[$key]["typename"] = $value["kind"] . " " . $value["species"];
 
-    if ($timedistance > $year) {
+    if ($timedistance > (3 * $year)) {
       $petlist[$key]["timer"] = floor($timedistance / $year) . " năm";
-    } else if ($timedistance > $month) {
+    } else if ($timedistance > (3 * $month)) {
       $petlist[$key]["timer"] = floor($timedistance / $month) . " tháng";
-    } else if ($timedistance > $week) {
+    } else if ($timedistance > (3 * $week)) {
       $petlist[$key]["timer"] = floor($timedistance / $week) . " tuần";
-    } else if ($timedistance > $day) {
+    } else if ($timedistance > (3 * $day)) {
       $petlist[$key]["timer"] = floor($timedistance / $day) . " ngày";
     } else {
       $h = floor($timedistance / $hour);
