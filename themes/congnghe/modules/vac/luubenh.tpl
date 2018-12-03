@@ -129,15 +129,14 @@
 				(data, status) => {
 					data = JSON.parse(data);
 					if (data["status"] == 1) {
-            alert_msg(data["data"]);
-            customer_list[g_index]["customer"] = customer_name.value
-            customer_list[g_index]["address"] = customer_address.value
-            g_index = -1;
+                        alert_msg(data["data"]);
+                        customer_list[g_index]["customer"] = customer_name;
+                        customer_list[g_index]["phone"] = customer_phone;
+                        g_index = -1;
 						customer_name.value = "";
 						customer_phone.value = "";
 						customer_address.value = "";
 						pet_info.innerHTML = "";
-						pet_note.innerText = "Ghi chú";
 						g_customer = -1;
 					}
 					else {

@@ -64,4 +64,5 @@ $lang_module["filter_result"] = "Tổng số <span style='color: red'>%d</span> 
 $lang_module["list"] = "Danh sách quản lý tiêm phòng";
 $lang_module["list2"] = "Danh sách tiêm phòng mới thêm";
 
+$lang_module["guest"] = "Khách";
 ?>

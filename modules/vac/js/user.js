@@ -90,6 +90,8 @@ function addCustomer() {
               phone: phone,
               pet: []
             }
+            g_index = customer_list.length;
+            customer_list.push(customer_data);
             customer_name.value = answer;
             g_customer = response["data"][0]["id"];
             reloadPetOption(customer_data["pet"])

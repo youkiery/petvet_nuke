@@ -20,6 +20,7 @@
             </label>
             <input type="password" id="nv_password_iavim" name="nv_password" value="{DATA.nv_password}" class="required password input" maxlength="{PASS_MAXLENGTH}" />
         </div>
+        <br>
         <!-- END: passEmpty -->
         <div class="clearfix rows">
             <label>
@@ -27,12 +28,14 @@
             </label>
             <input type="password" id="new_password_iavim" name="new_password" value="{DATA.new_password}" class="required password input" maxlength="{PASS_MAXLENGTH}" />
         </div>
+        <br>
         <div class="clearfix rows">
             <label>
                 {LANG.pass_new_re}
             </label>
             <input type="password" id="re_password_iavim" name="re_password" value="{DATA.re_password}" class="required password input" maxlength="{PASS_MAXLENGTH}" />
         </div>
+        <br>
 		<div class="clearfix rows">
 			<label>
                 &nbsp;

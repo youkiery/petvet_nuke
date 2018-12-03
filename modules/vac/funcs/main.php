@@ -168,6 +168,7 @@ if ((empty($action) ? 1 : 0) && (NV_CURRENTTIME < $from || NV_CURRENTTIME > $end
             $db->sql_query($sql);
 
             $sql = "insert into `" . VAC_PREFIX . "_$diseaseid` (petid, cometime, calltime, note, status, doctorid, recall) values ($petid, $cometime, $calltime, '$note', 0, 0, 0);";
+            $ret["sql"] = $sql;
             if ($id = $db->sql_query_insert_id($sql)) {
               if (!empty($phone)) {
                 $sql = "update `" . VAC_PREFIX . "_customers` set customer = '$customer', address = '$address' where phone = '$phone'";
