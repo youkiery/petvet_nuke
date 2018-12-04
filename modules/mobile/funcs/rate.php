@@ -13,8 +13,9 @@ if ($uid > 0 && $pid > 0 && $value > 0) {
 
   $sql = "SELECT * from post where id = $pid";
   $query = $db->sql_query($sql);
-  if ($row = $db->sql_fetch_assoc($query)) {
-    $sql = "INSERT into rate (uid, pid, value, review, time) values($uid, $pid, $value, '$review', $time)";
+  $row = $db->sql_fetch_assoc($query);
+  if ($row) {
+    $sql = "INSERT into rate (uid, user, value, review, time) values($uid, $row[user], $value, '$review', $time)";
     if ($db->sql_query($sql)) {
       $sql = "insert into notify (type, user, uid, pid, time) values(3, $row[user], $uid, $pid, " . strtotime(date("Y-m-d")) . ")";
       $query = $db->sql_query($sql);

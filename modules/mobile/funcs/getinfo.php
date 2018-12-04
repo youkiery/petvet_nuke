@@ -20,14 +20,20 @@ if ($pid > 0 && $puid > 0 && $page > 0) {
     $query = $db->sql_query($sql);
     $userdata = $db->sql_fetch_assoc($query);
 
-    $sql = "SELECT id, value from rate where uid = $uid and pid = $pid";
-    // die(var_dump($_GET));
-    // die($sql);
-    $query = $db->sql_query($sql);
-    if ($row = $db->sql_fetch_assoc($query)) {
-      // $result["data"] = var_dump($row);
-      $rate = $row["value"];
-      // test();
+    if ($uid == $puid) {
+      $rateval = -1;
+    }
+    else {
+      $sql = "SELECT id, value from rate where uid = $uid and user = $puid";
+      // $result["sql3"] = $sql;
+      // die(var_dump($_GET));
+      // die($sql);
+      $query = $db->sql_query($sql);
+      if ($row = $db->sql_fetch_assoc($query)) {
+        // $result["data"] = var_dump($row);
+        $rateval = $row["value"];
+        // test();
+      }
     }
 
     $sql = "SELECT * from petorder where user = $uid and pid = $pid";
@@ -49,6 +55,24 @@ if ($pid > 0 && $puid > 0 && $page > 0) {
   } else {
     $where = "(b.user = $puid)";
   }
+
+  $sql = "SELECT * from rate where user = $puid";
+  $query = $db->sql_query($sql);
+  $total = $db->sql_numrows($query);
+  // $result["data"]["sql"] = $sql;
+
+  if ($total) {
+    $rate = sqlfetchall($db, $query);
+    $totalpoint = 0;
+    foreach ($rate as $key => $value) {
+      $totalpoint += $value["value"];
+    }
+    $average = $totalpoint / $total;
+  } else {
+    $average = 0;
+  }
+  $result["data"]["total"] = $total;
+  $result["data"]["average"] = $average;
 
   $commentlimit = 10;
   if ($config["comment"] > 0) {
@@ -85,5 +109,5 @@ if ($pid > 0 && $puid > 0 && $page > 0) {
   $result["data"]["owner"] = $userdata;
   $result["data"]["comment"] = $comment;
   $result["data"]["order"] = $order;
-  $result["data"]["rate"] = $rate;
+  $result["data"]["rate"] = $rateval;
 }

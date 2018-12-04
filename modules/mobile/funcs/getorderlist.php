@@ -7,7 +7,7 @@ if (!defined('NV_IS_MOD_VAC')) {
 $pid = $nv_Request->get_string('pid', 'post/get', '');
 if (!empty($pid)) {
   $sql = "SELECT a.id as oid, a.name, a.phone, a.address from petorder a inner join post b on a.pid = $pid and a.pid = b.id";
-  $result["data"]["sql"] = $sql;
+  // $result["data"]["sql"] = $sql;
   $query = $db->sql_query($sql);
   $allrow = sqlfetchall($db, $query);
 

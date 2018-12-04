@@ -17,7 +17,7 @@ if ($pid > 0 && $uid > 0) {
   $query = $db->sql_query($sql);
   $allrow = sqlfetchall($db, $query);
   $sql = "delete from post where id = $pid";
-  $result["data"]["sql"] = $sql;
+  // $result["data"]["sql"] = $sql;
 
   if ($db->sql_query($sql)) {
     $result["data"]["step"] .= 3;

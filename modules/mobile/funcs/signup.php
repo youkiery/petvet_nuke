@@ -10,7 +10,7 @@ $name = $nv_Request->get_string('name', 'post/get', '');
 $phone = $nv_Request->get_string('phone', 'post/get', '');
 $address = $nv_Request->get_string('address', 'post/get', '');
 $province = $nv_Request->get_string('province', 'post/get', '');
-if (!(empty($username) || empty($password) || empty($name) || empty($phone) || empty($address)) && $province >= 0) {
+if (!(empty($username) || empty($password) || empty($name) || empty($phone)) && $province >= 0) {
   $sql = "SELECT * from user where username = '$username'";
   $query = $db->sql_query($sql);
 
