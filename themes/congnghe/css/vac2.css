@@ -1,0 +1,144 @@
+.vac_icon:hover {
+	background-position-x: 32px;
+}
+.suggest div:hover {
+	background: #afa;
+	cursor: pointer;
+}
+.footer_list li {
+	list-style-type: square;
+}
+.footer_list li a {
+	color: black !important;
+}
+.input {
+	padding: 4px;
+	width: 90%;
+	height: 2em;
+}
+.button {
+	margin: 4px;
+	padding: 4px;
+	height: 2em;
+}
+.khung {
+  height: 250px;
+  overflow-y: scroll;
+}
+.thump {
+	max-width: 240px;
+	max-height: 240px;
+}
+.mini-icon {
+	width: 17px;
+	height: 18px;
+	cursor: pointer;
+	display: inline-block;
+}
+.icon {
+	width: 32px;
+	height: 32px;
+}
+.square_red {
+	display: inline-block;
+	background: red;
+	text-align: center;
+}
+
+.upload {
+	background: url("/uploads/vac/movie_up.png");
+	float: right;
+	margin: 4px;
+	border: 1px solid black;
+}
+
+.upload:hover {
+	margin: 3px;
+	border: 2px solid #5CBE33;
+}
+
+.vng_vacbox tbody tr:hover {
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+#vac_info, #vac_info2 {
+  background: #eee;
+  border: 1px solid black;
+  margin: 1px;
+  position: fixed;
+  width: 640px;
+  height: 400px;
+  z-index: 1001;
+  padding: 10px;
+  top: calc(50% - 200px);
+}
+
+#vac_info2 {
+  z-index: 1002;
+}
+
+#reman {
+  display: none;
+  background: black; 
+  opacity: 0.5; 
+  position: fixed; 
+  width: 100%; 
+  height: 100%; 
+  top: 0; 
+  left: 0;
+  z-index: 1000;
+}
+
+#vac_notify {
+  display: none; 
+  position: fixed; 
+  top: 0; 
+  right: 0; 
+  background: white; 
+  padding: 8px; 
+  border: 1px solid black; 
+  z-index: 1001;
+}
+
+#vac_info #thumb-box, #vac_info2 #thumb-box {
+  width: 200px;
+  height: 200px;
+  float: left;
+}
+
+#vac_info #thumb, #vac_info2 #thumb {
+  width: 200px;
+  height: 200px;
+  background: url('/uploads/vac/no_image.jpg');
+}
+
+#vac_info #info, #vac_info2 #info {
+  float: left;
+  margin-left: 10px;
+  line-height: 43px;
+  width: 40%;
+}
+
+#vac_info .lieutrinh, #vac_info2 .lieutrinh {
+  float: right;
+  margin-left: 10px;
+  line-height: 43px;
+  width: 55%;
+}
+
+#tinhtrang {
+  float: right;
+}
+
+#dslieutrinh span {
+  background: #4af;
+  border: 1px solid #fff;
+  border-radius: 10px;
+  padding: 4px;
+  color: white;
+}
+
+td, th {
+  padding: 4px;
+}

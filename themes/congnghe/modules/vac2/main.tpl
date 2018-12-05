@@ -1,9 +1,3 @@
-<!-- BEGIN: overtime -->
- <p>
-   Đã hết thời gian làm việc, xin hãy quay trở lại vào ngày mai!  
- </p>
- 
-<!-- END: overtime -->
 <!-- BEGIN: main -->
 <div id="msgshow" class="msgshow"></div>
 <div id="vac_notify" style="display: none; position: fixed; top: 0; right: 0; background: white; padding: 8px; border: 1px solid black; z-index: 1000;"></div>
@@ -101,7 +95,7 @@
 	</table>
 </form>
 <script>
-	var link = "/index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=main&act=post";
+	var link = "/index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=main-process&act=post";
 	var blur = true;
 	var customer_data = [];
   var customer_list = [];

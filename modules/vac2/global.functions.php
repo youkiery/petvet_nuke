@@ -142,9 +142,9 @@ function checkNewDisease($id) {
   global $db, $db_config, $module_name;
 
   $sql = array();
-  $sql[] = "CREATE TABLE IF NOT EXISTS " . $db_config['prefix'] . "_" . $module_name . "_$id ( `id` int(11) NOT NULL, `petid` int(11) NOT NULL, `cometime` int(11) NOT NULL, `calltime` int(11) NOT NULL, `status` tinyint(4) NOT NULL, `note` text NOT NULL ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
-  $sql[] = "ALTER TABLE `" . $db_config['prefix'] . "_" . $module_name . "_$id` ADD PRIMARY KEY (`id`);";
-  $sql[] = "ALTER TABLE `" . $db_config['prefix'] . "_" . $module_name . "_$id` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;";
+  $sql[] = "CREATE TABLE IF NOT EXISTS " . VAC_PREFIX . "_$id ( `id` int(11) NOT NULL, `petid` int(11) NOT NULL, `cometime` int(11) NOT NULL, `calltime` int(11) NOT NULL, `status` tinyint(4) NOT NULL, `note` text NOT NULL ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+  $sql[] = "ALTER TABLE `" . VAC_PREFIX . "_$id` ADD PRIMARY KEY (`id`);";
+  $sql[] = "ALTER TABLE `" . VAC_PREFIX . "_$id` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;";
   $check = true;
   foreach ($sql as $value) {
     if (!$db->sql_query($value))
@@ -155,7 +155,7 @@ function checkNewDisease($id) {
 
 function get_disease_list() {
   global $db, $db_config, $module_name;
-  $sql = "select * from " . $db_config['prefix'] . "_" . $module_name . "_diseases";
+  $sql = "select * from " . VAC_PREFIX . "_diseases";
   $result = $db->sql_query($sql);
   $diseases = array();
   while ($row = $db->sql_fetch_assoc($result)) {
@@ -177,12 +177,12 @@ function getCustomerList($key, $sort, $filter, $page) {
   $customers = array();
   $customers["data"] = array();
 
-  $sql = "select count(id) as num from " . $db_config['prefix'] . "_" . $module_name . "_customers where customer like '%$key%' or phone like '%$key%'";
+  $sql = "select count(id) as num from " . VAC_PREFIX . "_customers where customer like '%$key%' or phone like '%$key%'";
   $result = $db->sql_query($sql);
   $num = $db->sql_fetch_assoc($result);
   $customers["info"] = $num["num"];
 
-  $sql = "select * from " . $db_config['prefix'] . "_" . $module_name . "_customers where customer like '%$key%' or phone like '%$key%' " . $order . " limit $from_item, $end_item";
+  $sql = "select * from " . VAC_PREFIX . "_customers where customer like '%$key%' or phone like '%$key%' " . $order . " limit $from_item, $end_item";
   $result = $db->sql_query($sql);
   while ($row = $db->sql_fetch_assoc($result)) {
     $customers["data"][] = $row;
@@ -213,9 +213,9 @@ function getVaccineTable($path, $lang, $key, $sort, $time) {
   foreach ($diseases as $disease_index => $disease_data) {
     $xtpl->assign("title", $disease_data["disease"]);
 
-    $sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status from " . $db_config['prefix'] . "_" . $module_name . "_" . $disease_data["id"] . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id where c.customer like '%$key%' or phone like '%$key%' " . $order;
+    $sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status from " . VAC_PREFIX . "_" . $disease_data["id"] . " a inner join " . VAC_PREFIX . "_pets b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customers c on b.customerid = c.id where c.customer like '%$key%' or phone like '%$key%' " . $order;
 
-    // $sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status, recall, doctorid from " . $db_config['prefix'] . "_" . $module_name . "_" . $id . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id";
+    // $sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status, recall, doctorid from " . VAC_PREFIX . "_" . $id . " a inner join " . VAC_PREFIX . "_pets b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customers c on b.customerid = c.id";
 
     $result = $db->sql_query($sql);
     $vaccines = array();
@@ -242,7 +242,7 @@ function getVaccineTable($path, $lang, $key, $sort, $time) {
   $xtpl->parse("main");
 
 
-  // $sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status from " . $db_config['prefix'] . "_" . $module_name . "_" . $id . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime between " . $time . " and " . $next_time . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id" . $order;
+  // $sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status from " . VAC_PREFIX . "_" . $id . " a inner join " . VAC_PREFIX . "_pets b on calltime between " . $time . " and " . $next_time . " and a.petid = b.id inner join " . VAC_PREFIX . "_customers c on b.customerid = c.id" . $order;
 
   return $xtpl->text("main");
 }
@@ -407,7 +407,7 @@ function filter($vaclist, $path, $lang, $fromtime, $amount_time, $sort, $order) 
 
 function getdoctorlist() {
   global $db, $db_config, $module_name;
-  $sql = "select * from " . $db_config['prefix'] . "_" . $module_name . "_doctor";
+  $sql = "select * from " . VAC_PREFIX . "_doctor";
   $result = $db->sql_query($sql);
   $doctor = array();
 
@@ -455,7 +455,7 @@ function getrecentlist($fromtime, $amount_time, $sort, $diseaseid) {
       break;
   }
 
-  $sql = "select a.id, a.note, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status, doctorid, recall, '$diseaseid' as diseaseid from " . $db_config['prefix'] . "_" . $module_name . "_" . $diseaseid . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on cometime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id " . $order;
+  $sql = "select a.id, a.note, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status, doctorid, recall, '$diseaseid' as diseaseid from " . VAC_PREFIX . "_" . $diseaseid . " a inner join " . VAC_PREFIX . "_pets b on cometime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customers c on b.customerid = c.id " . $order;
 
   // if ($diseaseid == 2) {
   // 	die($sql);
@@ -490,7 +490,7 @@ function filterVac($fromtime, $amount_time, $sort, $diseaseid) {
       break;
   }
 
-  $sql = "select a.id, a.note, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status, doctorid, recall, '$diseaseid' as diseaseid from " . $db_config['prefix'] . "_" . $module_name . "_" . $diseaseid . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id " . $order;
+  $sql = "select a.id, a.note, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status, doctorid, recall, '$diseaseid' as diseaseid from " . VAC_PREFIX . "_" . $diseaseid . " a inner join " . VAC_PREFIX . "_pets b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customers c on b.customerid = c.id " . $order;
 
   // if ($diseaseid == 2) {
   // 	die($sql);
@@ -525,12 +525,12 @@ function getvaccustomer($customer, $fromtime, $amount_time, $sort, $diseaseid, $
       break;
   }
 
-  $sql = "select a.id, a.note, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status, doctorid, recall, '$diseaseid' as diseaseid, '$disease' as disease from " . $db_config['prefix'] . "_" . $module_name . "_" . $diseaseid . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id where c.customer like '%$customer%' or c.phone like '%$customer%' " . $order;
+  $sql = "select a.id, a.note, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status, doctorid, recall, '$diseaseid' as diseaseid, '$disease' as disease from " . VAC_PREFIX . "_" . $diseaseid . " a inner join " . VAC_PREFIX . "_pets b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customers c on b.customerid = c.id where c.customer like '%$customer%' or c.phone like '%$customer%' " . $order;
 
   // if ($diseaseid == 2) {
   // 	die($sql);
   // }
-  // $sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status from " . $db_config['prefix'] . "_" . $module_name . "_" . $diseaseid . " a inner join " . $db_config['prefix'] . "_" . $module_name . "_pets b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id where c.customer like '%$customer%' or c.phone like '%$customer%' " . $order;
+  // $sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status from " . VAC_PREFIX . "_" . $diseaseid . " a inner join " . VAC_PREFIX . "_pets b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customers c on b.customerid = c.id where c.customer like '%$customer%' or c.phone like '%$customer%' " . $order;
   $result = $db->sql_query($sql);
   $ret = array();
   while ($row = $db->sql_fetch_assoc($result)) {
@@ -542,9 +542,9 @@ function getvaccustomer($customer, $fromtime, $amount_time, $sort, $diseaseid, $
 function getcustomer($customer, $phone) {
   global $db, $db_config, $module_name;
   if (!empty($customer)) {
-    $sql = "select * from `" . $db_config['prefix'] . "_" . $module_name . "_customers` where customer like '%$customer%'";
+    $sql = "select * from `" . VAC_PREFIX . "_customers` where customer like '%$customer%'";
   } else {
-    $sql = "select * from `" . $db_config['prefix'] . "_" . $module_name . "_customers` where phone like '%$phone%'";
+    $sql = "select * from `" . VAC_PREFIX . "_customers` where phone like '%$phone%'";
   }
 
   $result = $db->sql_query($sql);
@@ -571,14 +571,14 @@ function getPatientsList($key, $sort, $filter, $page) {
   $from_item = ($page - 1) * $filter;
   $end_item = $from_item + $filter;
 
-  $sql = "select count(b.id) as num from " . $db_config['prefix'] . "_" . $module_name . "_pets b inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id where c.customer like '%$key%' or b.petname like '%$key%'";
+  $sql = "select count(b.id) as num from " . VAC_PREFIX . "_pets b inner join " . VAC_PREFIX . "_customers c on b.customerid = c.id where c.customer like '%$key%' or b.petname like '%$key%'";
   $result = $db->sql_query($sql);
   $num = $db->sql_fetch_assoc($result);
   $patients["info"] = $num["num"];
   // var_dump($patients["info"]);
   // die();
 
-  $sql = "select b.id, b.petname, c.id as customerid, c.customer, c.phone as phone from " . $db_config['prefix'] . "_" . $module_name . "_pets b inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.customerid = c.id where c.customer like '%$key%' or b.petname like '%$key%' or c.phone like '%$key%' " . $order . " limit $from_item, $end_item";
+  $sql = "select b.id, b.petname, c.id as customerid, c.customer, c.phone as phone from " . VAC_PREFIX . "_pets b inner join " . VAC_PREFIX . "_customers c on b.customerid = c.id where c.customer like '%$key%' or b.petname like '%$key%' or c.phone like '%$key%' " . $order . " limit $from_item, $end_item";
   $result = $db->sql_query($sql);
   while ($row = $db->sql_fetch_assoc($result)) {
     $patients["data"][] = $row;
@@ -590,11 +590,11 @@ function getPatientsList($key, $sort, $filter, $page) {
 
 function getPatientsList2($customerid) {
   global $db, $db_config, $module_name;
-  $sql = "select * from " . $db_config['prefix'] . "_" . $module_name . "_customers where id = $customerid";
+  $sql = "select * from " . VAC_PREFIX . "_customers where id = $customerid";
   $result = $db->sql_query($sql);
   $patients = $db->sql_fetch_assoc($result);
   $patients["data"] = array();
-  $sql = "select petname, id from " . $db_config['prefix'] . "_" . $module_name . "_pets where customerid = $customerid";
+  $sql = "select petname, id from " . VAC_PREFIX . "_pets where customerid = $customerid";
   $result = $db->sql_query($sql);
   $diseases = get_disease_list();
   // echo json_encode($diseases);
@@ -642,7 +642,7 @@ function getPatientsList2($customerid) {
 
 function getPatientDetail($petid) {
   global $db, $db_config, $module_name;
-  $sql = "select b.petname, c.customer, c.phone as phone from " . $db_config['prefix'] . "_" . $module_name . "_pets b inner join " . $db_config['prefix'] . "_" . $module_name . "_customers c on b.id = $petid and b.customerid = c.id";
+  $sql = "select b.petname, c.customer, c.phone as phone from " . VAC_PREFIX . "_pets b inner join " . VAC_PREFIX . "_customers c on b.id = $petid and b.customerid = c.id";
   $result = $db->sql_query($sql);
   $patients = $db->sql_fetch_assoc($result);
   $patients["data"] = array();

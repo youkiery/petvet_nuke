@@ -6,9 +6,8 @@
  * @Copyright (C) 2011
  * @Createdate 26/01/2011 10:26 AM
  */
-if (!defined('NV_IS_MOD_VAC')) {
+if (!defined('NV_IS_MOD_VAC'))
   die('Stop!!!');
-}
 $action = $nv_Request->get_string('action', 'post', '');
 $ret = array("status" => 0, "data" => array());
 
@@ -22,6 +21,7 @@ if (!empty($action)) {
       if (count($ret["data"])) {
         $ret["status"] = 2;
       }
+      echo json_encode($ret);
       break;
     case 'getrecall':
       $vacid = $nv_Request->get_string('vacid', 'post', '');
@@ -44,7 +44,7 @@ if (!empty($action)) {
         $ret["data"] = $doctor;
       }
 
-
+      echo json_encode($ret);
       break;
     case 'save':
       $recall = $nv_Request->get_string('recall', 'post', '');
@@ -68,7 +68,7 @@ if (!empty($action)) {
         }
       }
 
-
+      echo json_encode($ret);
       break;
     case 'getpet':
       $customerid = $nv_Request->get_string('customerid', 'post', '');
@@ -79,7 +79,7 @@ if (!empty($action)) {
         $ret["data"][] = $row;
         $ret["status"] = 2;
       }
-
+      echo json_encode($ret);
       break;
     case 'addcustomer':
       $customer = $nv_Request->get_string('customer', 'post', '');
@@ -100,7 +100,7 @@ if (!empty($action)) {
         }
       }
 
-
+      echo json_encode($ret);
       break;
     case 'addpet':
       $customerid = $nv_Request->get_string('customerid', 'post', '');
@@ -126,7 +126,7 @@ if (!empty($action)) {
         $ret["status"] = 4;
       }
 
-
+      echo json_encode($ret);
       break;
     case 'insertvac':
       $petid = $nv_Request->get_string('petid', 'post', '');
@@ -171,7 +171,7 @@ if (!empty($action)) {
         }
       }
 
-
+      echo json_encode($ret);
       break;
     case "filter":
       $fromtime = $nv_Request->get_string('fromtime', 'post', '');
@@ -186,7 +186,7 @@ if (!empty($action)) {
         $ret["data"] = filter(NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file, $lang_module, $fromtime, $time_amount, $sort);
       }
 
-
+      echo json_encode($ret);
       break;
     case "editNote":
       $note = $nv_Request->get_string('note', 'post', '');
@@ -203,9 +203,9 @@ if (!empty($action)) {
         }
       }
 
+      echo json_encode($ret);
       break;
   }
+  die();
 }
-echo json_encode($ret);
-die();
 ?>
