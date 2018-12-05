@@ -603,12 +603,12 @@ function nv_generate_page_shop($base_url, $num_items, $per_page, $start_item, $a
 }
 // Nếu quá giờ làm việc sẽ chặn đường vào
 function quagio() {
-  global $global_config, $module_info, $module_file;
+  global $global_config, $admin_info, $module_info, $module_file;
   $today = strtotime(date("Y-m-d"));
   $from = $global_config["giolamviec"] ? $global_config["giolamviec"] : $today + 7 * 60 * 60;
   $end = $global_config["gionghi"] ? $global_config["gionghi"] : $today + 17 * 60 * 60 + 30 * 60;
 
-  if (NV_CURRENTTIME < $from || NV_CURRENTTIME > $end) {
+  if (!($admin_info["level"] == "1") && (NV_CURRENTTIME < $from || NV_CURRENTTIME > $end)) {
     $xtpl = new XTemplate("overtime.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
     // die(NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
     $xtpl->assign("lang", $lang_module);

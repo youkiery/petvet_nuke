@@ -6,21 +6,7 @@
  * @Createdate 26/01/2011 10:26 AM
  */
 if (!defined('NV_IS_MOD_VAC')) die('Stop!!!');
-$today = strtotime(date("Y-m-d"));
-$from = $today + 7 * 60 * 60;
-$end = $today + 17 * 60 * 60 + 30 * 60;
-
-if (NV_CURRENTTIME < $from || NV_CURRENTTIME > $end) {
-    $xtpl = new XTemplate("overtime.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
-    $xtpl->assign("lang", $lang_module);
-
-    $xtpl->parse("overtime");
-    $contents = $xtpl->text("overtime");
-
-    include ( NV_ROOTDIR . "/includes/header.php" );
-    echo nv_site_theme($contents);
-    include ( NV_ROOTDIR . "/includes/footer.php" );
-} else {
+quagio();
 	$key = $nv_Request->get_string('key', 'get', '');
 	$page_title = $lang_module["tieude_sieuam_danhsach"];
 	$xtpl = new XTemplate("sieuam-danhsach.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
@@ -56,7 +42,6 @@ if (NV_CURRENTTIME < $from || NV_CURRENTTIME > $end) {
 	echo nv_site_theme( $contents );
 	include ( NV_ROOTDIR . "/includes/footer.php" );
 
-}
 
 function displaySSList($list, $time, $path, $lang_module) {
 	$xtpl = new XTemplate("sieuam-hang.tpl", $path);

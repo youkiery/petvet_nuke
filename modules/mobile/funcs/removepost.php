@@ -7,7 +7,6 @@ if (!defined('NV_IS_MOD_VAC')) {
 $uid = $nv_Request->get_string('uid', 'post/get', '');
 $pid = $nv_Request->get_string('pid', 'post/get', '');
 $result["data"]["step"] = 1;
-
 if ($pid > 0 && $uid > 0) {
   $result["data"]["step"] .= 2;
   $sql = "SELECT * from post where id = $pid";

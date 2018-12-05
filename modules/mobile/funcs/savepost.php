@@ -37,7 +37,10 @@ if (!(empty($name)) && $uid >= 0 && $age >= 0 && $price >= 0 && $species >= 0 &&
     if ($length) {
       $image = array();
       for ($i = 0; $i < $length; $i ++) {
-        $extension = end(explode(".", $file)) ? $extension : "";
+        $file = $_FILES['file']['name'][$i];
+
+        $extension = explode(".", $file);
+        $extension = $extension[count($extension) - 1];
         $save_path = $target_path . $pid . "_" . $i . "." . $extension;
         if (move_uploaded_file($_FILES['file']['tmp_name'][$i], $save_path)) {
           $image[] = $save_path;
@@ -53,10 +56,12 @@ if (!(empty($name)) && $uid >= 0 && $age >= 0 && $price >= 0 && $species >= 0 &&
         }
       }
     } else if ($_FILES && $_FILES['file']['name']) {
-      $extension = end(explode(".", $file)) ? $extension : "";
-      $target_path = $target_path . $pid . "_" . $index . "." . $extension;
+        $file = $_FILES['file']['name'][0];
+        $extension = explode(".", $file);
+        $extension = $extension[count($extension) - 1];
+          $target_path = $target_path . $pid . "_" . $index . "." . $extension;
 
-      if (move_uploaded_file($_FILES['file']['tmp_name'], $target_path)) {
+      if (move_uploaded_file($_FILES['file']['tmp_name'][0], $target_path)) {
         $sql = "UPDATE post set image = '$target_path' where id = $pid";
         $query = $db->sql_query($sql);
         if ($query) {
