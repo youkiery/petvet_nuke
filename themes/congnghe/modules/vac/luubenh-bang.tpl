@@ -7,7 +7,10 @@
       </th>  
       <th style="width: 100px;">
         {lang.petname}
-      </th>  
+      </th>
+      <th style="width: 100px;">
+        {lang.customer}
+      </th>
       <th style="width: 100px;">
         {lang.doctor}
       </th>  
@@ -30,6 +33,9 @@
       </td>    
       <td class="petname">
         {petname}
+      </td>
+      <td class="petname">
+        {customer}
       </td>    
       <td class="doctor">
         {doctor}
