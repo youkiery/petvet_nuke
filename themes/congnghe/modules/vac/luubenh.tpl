@@ -112,6 +112,7 @@
 	var suggest_name = document.getElementById("customer_name_suggest");
 	var suggest_phone = document.getElementById("customer_phone_suggest");
 
+
 	function themluubenh(event) {
     event.preventDefault();
     // return false;

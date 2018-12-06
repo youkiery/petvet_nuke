@@ -9,6 +9,7 @@
 
 if (!defined( 'NV_ADMIN') or !defined('NV_MAINFILE') or !defined('NV_IS_MODADMIN')) die('Stop!!!'); 
 require_once NV_ROOTDIR . "/modules/" . $module_name . '/global.functions.php';
+define(VAC_PREFIX, "vng_vac");
 
 $submenu['customer'] = $lang_module["customer_title"];
 $submenu['patient'] = $lang_module["patient_title3"];

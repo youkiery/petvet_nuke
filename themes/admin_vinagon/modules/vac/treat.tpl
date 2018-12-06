@@ -1,6 +1,5 @@
 <!-- BEGIN: main -->
 <div id="msgshow" class="msgshow"></div>
-<div id="vac_notify"></div>
 <div id="reman"></div>
 <div id="vac_info2" style="display:none;">
   <div id="vac2_header"></div>
@@ -42,10 +41,10 @@
     </div>
     <div id="lieutrinh">
       <form onsubmit="return luulieutrinh(event)" id="qllieutrinh">
-        <input class="input" type="text" id="nhietdo" placeholder="{lang.nhietdo}">
-        <input class="input" type="text" id="niemmac" placeholder="{lang.niemmac}">
-        <input class="input" type="text" id="khac" placeholder="{lang.khac}">
-        <input class="input" type="text" id="dieutri" placeholder="{lang.dieutri}">
+        <input style="width: 100%" class="input" type="text" id="nhietdo" placeholder="{lang.nhietdo}">
+        <input style="width: 100%" class="input" type="text" id="niemmac" placeholder="{lang.niemmac}">
+        <input style="width: 100%" class="input" type="text" id="khac" placeholder="{lang.khac}">
+        <input style="width: 100%" class="input" type="text" id="dieutri" placeholder="{lang.dieutri}">
         <br>
         <label for="tinhtrang">{lang.tinhtrang}</label>
         <select name="tinhtrang" id="tinhtrang2"> 
@@ -76,74 +75,143 @@
     {lang.tongket}
   </button>
 </div>
-<!-- <form class="vac_form" method="GET">
-  <input type="hidden" name="nv" value="vac">
-  <input type="hidden" name="op" value="danhsachsieuam">
-  <input type="text" name="key" value="{keyword}" class="vac_input">
-  <input type="submit" class="vac_button" value="{lang.search}">
-</form> -->
-<div id="disease_display">
-  <!-- BEGIN: treat -->
-  <table class="vng_vacbox tab1">
-    <thead>
-      <tr>
-        <th style="width: 20px;">
-          {lang.index}
-        </th>  
-        <th style="width: 100px;">
-          {lang.petname}
-        </th>
-        <th style="width: 100px;">
-          {lang.customer}
-        </th>
-        <th style="width: 100px;">
-          {lang.doctor}
-        </th>  
-        <th style="width: 50px;">
-          {lang.ngayluubenh}
-        </th>
-        <th style="width: 50px;">
-          {lang.tinhtrang}
-        </th>
-        <th style="width: 50px;">
-          {lang.ketqua}
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- BEGIN: list -->  
-      <tr style="text-transform: capitalize; background: {bgcolor}" id="{lid}">
+
+<form method="GET">
+	<input type="hidden" name="nv" value="vac">
+	<input type="hidden" name="op" value="treat">
+	<input class="input" type="text" name="keyword" id="keyword" value="{keyword}" placeholder="{lang.keyword}">
+	<input class="input" type="date" name="from" value="{from}">
+	<input class="input" type="date" name="to" value="{to}">
+	<div class="break"></div>
+	<select class="select" name="sort" id="sort">
+		<!-- BEGIN: sort -->
+		<option value="{sort_value}" {sort_check}>{sort_name}</option>
+		<!-- END: sort -->
+	</select>
+	<select class="select" name="filter" id="time">
+		<!-- BEGIN: time -->
+		<option value="{time_value}" {time_check}>{time_name}</option>
+		<!-- END: time -->
+	</select>
+	<button class="button">
+		{lang.filter}
+	</button>
+</form>
+<img class="anchor" src="/uploads/vac/add.png" alt="{lang.themsieuam}" title="themsieuam" onclick="$('#add').toggle(500)">
+<div style="width: 32px; height: 32px; cursor: pointer; display: inline-block; background-image: url('/themes/congnghe/images/vac/contact_add_small.png')" class="vac_icon" onclick="addCustomer()">
+	<img src="/themes/congnghe/images/vac/trans.png" title="Thêm khách hàng"> 
+</div>
+<div style="width: 32px; height: 32px; cursor: pointer; display: inline-block; background-image: url('/themes/congnghe/images/vac/pet_add.png')" class="vac_icon" tooltip="Thêm thú cưng" onclick="addPet()">
+	<img src="/themes/congnghe/images/vac/trans.png" title="Thêm thú cưng"> 
+</div>
+<form style="display: none;" id="add" onsubmit="return themluubenh(event)" autocomplete="off">
+	<table class="tab1 vac">
+		<thead>
+			<tr>
+				<th colspan="4">
+					{lang.tieude_luubenh}
+					<span id="e_notify" style="display: none;"></span>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- customer title -->
+			<tr>
+				<td>
+					{lang.customer}
+				</td>
+				<td>
+					{lang.phone}
+				</td>
+				<td colspan="2">
+					{lang.address}
+				</td>
+			</tr>
+			<!-- customer input -->
+			<tr>
+				<td style="position: relative;">
+					<input id="customer_name" type="text" name="customer">
+					<div id="customer_name_suggest" class="suggest" style="background: white; display:none; position: absolute; overflow-y:scroll; max-height: 300px; width: 110%;"></div>
+				</td>
+				<td style="position: relative;">
+					<input id="customer_phone" style="width: 90%" type="number" name="phone">
+					<div id="customer_phone_suggest" class="suggest" style="background: white; display:none; position: absolute; overflow-y:scroll; max-height: 300px; width: 110%;"></div>
+				</td>
+				<td colspan="2">
+					<input id="customer_address" type="text" name="address">
+				</td>
+			</tr>
+			<!-- pet vaccine -->
+			<tr>
+				<td>
+					{lang.petname}
+				</td>
+				<td colspan="3">
+					{lang.ngayluubenh}
+				</td>
+			</tr>
+			<!-- pet input -->
+			<tr>
+				<td>
+					<select id="pet_info" style="text-transform: capitalize;" name="petname"></select>
+				</td>
+				<td colspan="3">
+					<input id="ngayluubenh" type="date" name="ngayluubenh" value="{now}">
+				</td>
+			</tr>
+			<!-- hình ảnh -->
+			<tr>
+				<td>
+					{lang.doctor}
+				</td>
+				<td colspan="3">
+					<select name="doctor" id="doctor2" style="width: 90%;">
+						<!-- BEGIN: doctor -->
+						<option value="{doctor_value}">{doctor_name}</option>
+						<!-- END: doctor -->
+					</select>
+				</td>
+			</tr>
+			<!-- note & submit -->
+			<tr>
         <td>
-          {index}
-        </td>    
-        <td class="petname">
-          {petname}
+          {lang.tinhtrang}
         </td>
-        <td class="petname">
-          {customer}
-        </td>    
-        <td class="doctor">
-          {doctor}
+				<td colspan="3">
+					<select name="tinhtrang" id="tinhtrang2" style="width: 90%;">
+						<!-- BEGIN: status -->
+						<option value="{status_value}">{status_name}</option>
+						<!-- END: status -->
+					</select>
         </td>
-        <td class="luubenh">
-          {luubenh}
-        </td>
-        <td class="suckhoe">
-          {tinhtrang}
-        </td>
-        <td class="tinhtrang">
-          {ketqua}
-        </td>
-        <td style="display: none;" class="lieutrinh">
-          {lieutrinh}
-        </td>
+			</tr>
+      <tr>
+				<td colspan="4">
+					<input type="submit" value="{lang.submit}">
+				</td>
       </tr>
-      <!-- END: list -->
-    </tbody>
-  </table>
-  <!-- END: treat -->
+		</tbody>
+	</table>
+</form>
+
+<div id="html_content">
+	{content}
 </div>
 <script>
+	var link = "/index.php?" + nv_name_variable + "=" + nv_module_name + "&act=post&" + nv_fc_variable + "=";
+	var adlink = "/adminpet/index.php?" + nv_name_variable + "=" + nv_module_name + "&act=post&" + nv_fc_variable + "=";
+	var blur = true;
+	var g_customer = -1;
+	var customer_data = [];
+	var customer_list = [];
+	var customer_name = document.getElementById("customer_name");
+	var customer_phone = document.getElementById("customer_phone");
+	var customer_address = document.getElementById("customer_address");
+	var pet_info = document.getElementById("pet_info");
+	var pet_note = document.getElementById("pet_note");
+	var suggest_name = document.getElementById("customer_name_suggest");
+	var suggest_phone = document.getElementById("customer_phone_suggest");
+
   var link = "/index.php?" + nv_name_variable + "=" + nv_module_name + "&act=post&" + nv_fc_variable + "=";
   var lid = -1;
   var g_ltid = -1;
@@ -156,15 +224,16 @@
   })
 
   $("body").keydown((e) => {
-    console.log(e);
-    if (e.key == "Escape") {
+		console.log(e);
+		
+    if (e.keyCode == 27) {
       closeVac()
     }
   })
 
   function closeVac() {
-    console.log(vac_index);
-    
+		console.log(1);
+		
     if (vac_index == 1) {
       $("#vac_info").fadeOut();
       $("#reman").hide();
@@ -176,13 +245,11 @@
     }
   }
 
-  $("tbody tr").click((e) => {
-    lid = e.currentTarget.getAttribute("id");
+  $("#html_content tbody tr td[class]").click((e) => {
+    lid = e.currentTarget.parentElement.getAttribute("id");
     vac_index = 1;
-
     $("#vac_info").fadeIn();
     $("#reman").show();
-
     $.post(
       link + "luubenh",
       {action: "thongtinluubenh", id: lid},
@@ -198,11 +265,7 @@
           $("#doctor").text(data["doctor"])
           var h_lieutrinh = ""
           g_ketqua = data["ketqua"];
-          console.log(data);
-          
           if (data["lieutrinh"]) {
-            console.log(1);
-            
             $("#qllieutrinh input").removeAttr("disabled", "");
             $("#qllieutrinh select").removeAttr("disabled", "");
             select = -1;
@@ -211,14 +274,11 @@
             data["lieutrinh"].forEach(e => {
               select ++
               var ngay = e["ngay"] * 1000;
-              // console.log(ngay);
               g_ltid = e["id"]
               g_id = select
               html = "<span onclick='xemlieutrinh(" + g_ltid + ", " + select +")'>" + e["ngay"] + "</span> ";
               $("#dslieutrinh").html($("#dslieutrinh").html() + html)
             })
-            // console.log(select, data["lieutrinh"]);
-            
             $("#nhietdo").val(data["lieutrinh"][select]["nhietdo"])
             $("#niemmac").val(data["lieutrinh"][select]["niemmac"])
             $("#khac").val(data["lieutrinh"][select]["khac"])
@@ -228,12 +288,10 @@
             $("#tinhtrang2").val(data["lieutrinh"][select]["tinhtrang"])
           }
           else {
-            console.log("2");
             d_lieutrinh = []
             $("#qllieutrinh input").attr("disabled", "disabled");
             $("#qllieutrinh select").attr("disabled", "disabled");
             $("#dslieutrinh").html("")
-            
             $("#nhietdo").val("")
             $("#niemmac").val("")
             $("#khac").val("")
@@ -242,7 +300,6 @@
             $("#lieutrinh").text("")
             $("#tinhtrang2").val(0)
           }
-
         }
       }
     )
@@ -320,6 +377,25 @@
     $("#tinhtrang2").val(d_lieutrinh[id]["tinhtrang"])
   }
 
+	function delete_treat(id) {
+		var answer = confirm("Xóa bản ghi này?");
+		if (answer) {
+			$.post(
+				link + "luubenh",
+				{action: "delete_treat", id: id},
+				(response, status) => {
+					// console.log(response);
+					response = JSON.parse(response);
+					console.log(response);
+					
+					if (response["status"]) {
+						window.location.reload()
+					}
+				}
+			)    
+		}
+	}
+
   function ketthuc(val) {
     $.post(
       link + "luubenh",
@@ -371,5 +447,91 @@
       }
     )    
   }
+
+
+	function xoasieuam(id) {
+		var answer = confirm("Xóa bản ghi này?");
+		if (answer) {
+			$.post(
+				"",
+				{action: "xoasieuam", id: id},
+				(data, status) => {
+					data = JSON.parse(data);
+					if (data["status"]) {
+						$("#html_content").html(data["data"]);
+						alert_msg("Đã xóa bản ghi");
+					}
+				}
+			)	
+		}
+	}
+
+	function themluubenh(event) {
+    event.preventDefault();
+    // return false;
+		msg = "";
+		if(!customer_name) {
+			msg = "Chưa nhập tên khách hàng!"
+		} else if(!customer_phone.value) {
+			msg = "Chưa nhập số điện thoại!"
+		} else if(!pet_info.value) {
+			msg = "Khách hàng chưa có thú cưng!"
+		} else {
+			$.post(
+				link + "themluubenh",
+				{"customer": customer_name.value, "phone": customer_phone.value, "address": customer_address.value,idthu: pet_info.value, idbacsi: $("#doctor2").val(), ngayluubenh: $("#ngayluubenh").val(), ghichu: $("#ghichu").val(), tinhtrang: $("#tinhtrang2").val()},
+				(data, status) => {
+					data = JSON.parse(data);
+					if (data["status"] == 1) {
+						window.location.reload();
+					}
+					else {
+						msg = data["data"];
+						showMsg(msg);
+					}
+				}
+			)
+		}
+		showMsg(msg);
+		return false;
+	}
+
+	customer_name.addEventListener("keyup", (e) => {
+		showSuggest(e.target.getAttribute("id"), true);
+	})
+
+	customer_phone.addEventListener("keyup", (e) => {
+		showSuggest(e.target.getAttribute("id"), false);
+	})
+
+	suggest_name.addEventListener("mouseenter", (e) => {
+		blur = false;
+	})
+	suggest_name.addEventListener("mouseleave", (e) => {
+		blur = true;
+	})
+	customer_name.addEventListener("focus", (e) => {
+		suggest_name.style.display = "block";
+	})
+	customer_name.addEventListener("blur", (e) => {
+		if(blur) {
+			suggest_name.style.display = "none";
+		}
+	})
+	suggest_phone.addEventListener("mouseenter", (e) => {
+		blur = false;
+	})
+	suggest_phone.addEventListener("mouseleave", (e) => {
+		blur = true;
+	})
+	customer_phone.addEventListener("focus", (e) => {
+		suggest_phone.style.display = "block";
+	})
+	customer_phone.addEventListener("blur", (e) => {
+		if(blur) {
+			suggest_phone.style.display = "none";
+		}
+	})
+
 </script>
 <!-- END: main -->

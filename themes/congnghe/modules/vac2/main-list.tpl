@@ -3,8 +3,14 @@
 
 <div id="vac_notify" style="display: none; position: fixed; top: 0; right: 0; background: white; padding: 8px; border: 1px solid black; z-index: 1000;"></div>
 <div id="reman"></div>
-<a href="/index.php?nv=vac&op=list"> {lang.list} </a>
-<a href="/index.php?nv=vac&op=list&page=list"> {lang.list2} </a>
+<ul>
+  <li>
+    <a href="{list}"> {lang.list} </a>
+  </li>
+  <li>
+    <a href="{rlist}"> {lang.list2} </a>
+  </li>
+</ul>
 <div id="vac_panel" style="display: none; position: fixed; margin:auto; z-index: 1001;">
   <form>
     <table class="tab1" style="width: 500px;">
@@ -42,12 +48,107 @@
     </table>
   </form>
 </div>
-<form class="vac_form" onsubmit="return search()">
-  <input type="text" id="customer_key" class="vac_input">
+<form class="vac_form">
+  <input type="hidden" name="nv" value="vac2">
+  <input type="hidden" name="op" value="main-list">
+  <input type="hidden" name="page" value="{page}">
+  <input type="text" name="keyword" value="{keyword}">
   <input type="submit" class="vac_button" value="{lang.search}">
 </form>
 <div id="disease_display">
-  {content}
+<!-- BEGIN: disease -->
+<table class="vng_vacbox tab1">
+  	<thead>
+    	<tr>
+      	<th colspan="9" class="vng_vacbox_title" style="text-align: center">
+        	{lang.main_title}
+      	</th>
+    	</tr>
+    	<tr>
+        <th style="width: 20px;">
+          {lang.index}
+        </th>  
+        <th style="width: 100px;">
+          {lang.petname}
+        </th>  
+        <th style="width: 130px;">
+          {lang.customer}
+        </th>  
+        <th style="width: 80px;">
+          {lang.phone}
+        </th>  
+        <th style="width: 50px;">
+          {lang.disease}
+        </th>  
+        <th style="width: 50px;">
+          {lang.cometime}
+        </th>  
+        <th style="width: 50px;">
+          {lang.calltime}
+        </th>  
+      	<th style="width: 100px;">
+        	{lang.confirm}
+				</th>
+				<th>
+					{lang.note}
+				</th>
+    	</tr>
+  	</thead>
+  	<tbody>
+    	<!-- BEGIN: body -->  
+    	<tr style="background: {bgcolor}; text-transform: capitalize;">
+      	<td>
+        	{index}
+      	</td>    
+      	<td>
+        	{petname}
+      	</td>    
+      	<td>
+        	{customer}
+      	</td>    
+      	<td>
+        	{phone}
+      	</td>    
+      	<td>
+        	{disease}
+				</td>    
+      	<td>
+        	{cometime}
+      	</td>    
+      	<td>
+        	{calltime}
+				</td>    
+				<td style="text-align: center;">
+					<button style="float: left;" onclick="confirm_lower({index}, {vacid}, {petid}, {diseaseid})">
+						&lt;
+					</button>
+          <span id="vac_confirm_{diseaseid}_{index}" style="color: {color};">
+            {confirm}
+          </span>
+					<button style="float: right;" onclick="confirm_upper({index}, {vacid}, {petid}, {diseaseid})">
+						&gt;
+					</button>
+					<!-- BEGIN: recall -->
+						<button id="recall_{index}" onclick="recall({index}, {vacid}, {petid}, {diseaseid})">
+							{lang.recall}
+						</button>
+					<!-- END: recall -->
+				</td>
+				<td>
+					<img class="mini-icon" src="/uploads/vac/note_add.png" alt="thêm ghi chú" onclick="editNote({vacid}, {diseaseid})">
+					<img class="mini-icon" src="/uploads/vac/note_info.png" alt="xem ghi chú" onclick="viewNote({vacid}, {diseaseid})">
+				</td>
+			</tr>
+			<tr style="display: none; background: #fa0;" id="note_{diseaseid}_{vacid}">
+				<td colspan="9" id="note_v{diseaseid}_{vacid}">
+					{note}
+				</td>
+			</tr>
+    	<!-- END: body -->
+  	</tbody>
+	</table>
+<br>
+<!-- END: disease -->
 </div>
 <script>
   var link = "/index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=";
@@ -62,7 +163,7 @@
 
   function confirm_upper(index, vacid, petid, diseaseid) {
     var value = document.getElementById("vac_confirm_" + diseaseid + "_" + index);
-    fetch(link + "confirm&act=up&value=" + trim(value.innerText) + "&vacid=" + vacid + "&diseaseid=" + diseaseid, []).then(response => {
+    fetch(link + "main-process&action=confirm&act=up&value=" + trim(value.innerText) + "&vacid=" + vacid + "&diseaseid=" + diseaseid, []).then(response => {
       response = JSON.parse(response);
       change_color(value, response, index, vacid, petid, diseaseid);
     })
@@ -70,7 +171,7 @@
 
   function confirm_lower(index, vacid, petid, diseaseid) {
     var value = document.getElementById("vac_confirm_" + diseaseid + "_" + index);
-    fetch(link + "confirm&act=low&value=" + trim(value.innerText) + "&vacid=" + vacid + "&diseaseid=" + diseaseid, []).then(response => {
+    fetch(link + "main-process&action=confirm&act=low&value=" + trim(value.innerText) + "&vacid=" + vacid + "&diseaseid=" + diseaseid, []).then(response => {
       response = JSON.parse(response);
       change_color(value, response, index, vacid, petid, diseaseid);
     })
@@ -90,7 +191,7 @@
 
   function save_form() {
     $.post(
-      link + "main&act=post",
+      link + "main-process&act=post",
       {action: "save", petid: g_petid, recall: $("#confirm_recall").val(), doctor: $("#confirm_doctor").val(), vacid: g_vacid, diseaseid: g_disease},
       (data, status) => {
 				data = JSON.parse(data);
@@ -114,7 +215,7 @@
     $("#reman").fadeIn();
     $("#vac_panel").fadeIn();
     $.post(
-			link + "main&act=post",
+			link + "main-process&act=post",
       {action: "getrecall", vacid: vacid, diseaseid: diseaseid},
       (data, status) => {
 				data = JSON.parse(data);
@@ -144,20 +245,11 @@
     )
   }
 
-  function search() {
-
-    var key = document.getElementById("customer_key").value;
-    fetch(link + "search&key=" + key, []).then(response => {
-      document.getElementById("disease_display").innerHTML = response;
-    })
-    return false;
-  }
-
   function editNote(index, diseaseid) {
     var answer = prompt("Ghi chú: ", trim($("#note_v" + diseaseid + "_" + index).text()));
     if (answer) {
       $.post(
-        link + "main&act=post",
+        link + "main-process&act=post",
         {action: "editNote", note: answer, id: index, diseaseid: diseaseid},
         (data, status) => {
           data = JSON.parse(data);

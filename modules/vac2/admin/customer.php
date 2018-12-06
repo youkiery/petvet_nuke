@@ -19,7 +19,7 @@ if($action) {
       $phone = $nv_Request -> get_string('phone', 'post', '');
       $address = $nv_Request -> get_string('address', 'post', '');
       if(!(empty($name) || empty($phone))) {
-        $sql2 .= "insert into `" . $db_config['prefix'] . "_" . $module_data . "_customers` (customer, phone, address) values('$name', '$phone', '$address');";
+        $sql2 .= "insert into `" . VAC_PREFIX . "_customers` (customer, phone, address) values('$name', '$phone', '$address');";
         
         $id = $db->sql_query_insert_id($sql2);
         if($id){
@@ -31,7 +31,7 @@ if($action) {
     case "remove":
       $id = $nv_Request->get_string('id', 'post', '');
       if(!empty($id)) {
-        $sql = "delete from `" . $db_config['prefix'] . "_" . $module_data . "_customers` where id = $id";
+        $sql = "delete from `" . VAC_PREFIX . "_customers` where id = $id";
         if($db->sql_query($sql)) echo 1;
       }
     break;
@@ -41,7 +41,7 @@ if($action) {
       $phone = $nv_Request -> get_string('phone', 'post', '');
       $address = $nv_Request -> get_string('address', 'post', '');
       if(!(empty($id) || empty($name) || empty($phone))) {
-        $sql = "update `" . $db_config['prefix'] . "_" . $module_data . "_customers` set customer = '$name', phone = '$phone', address = '$address' where id = $id";
+        $sql = "update `" . VAC_PREFIX . "_customers` set customer = '$name', phone = '$phone', address = '$address' where id = $id";
         if($db->sql_query($sql)) {
           $row = array("id" => $id, "name" => $name, "phone" => $phone, "address" => $address);
           echo json_encode($row);
@@ -52,7 +52,7 @@ if($action) {
       $petname = $nv_Request -> get_string('petname', 'post', '');
       $customerid = $nv_Request -> get_string('id', 'post', '');
       if(!(empty($petname) || empty($customerid))) {
-        $sql2 .= "insert into `" . $db_config['prefix'] . "_" . $module_data . "_pets` (customerid, petname) values('$customerid', '$petname');";
+        $sql2 .= "insert into `" . VAC_PREFIX . "_pets` (customerid, petname) values('$customerid', '$petname');";
         
         $id = $db->sql_query_insert_id($sql2);
         if($id){
@@ -64,7 +64,7 @@ if($action) {
     case "removepet":
       $id = $nv_Request->get_string('id', 'post', '');
       if(!empty($id)) {
-        $sql = "delete from `" . $db_config['prefix'] . "_" . $module_data . "_pets` where id = $id";
+        $sql = "delete from `" . VAC_PREFIX . "_pets` where id = $id";
         if($db->sql_query($sql)) echo 1;
       }
     break;
@@ -72,7 +72,7 @@ if($action) {
       $id = $nv_Request->get_string('id', 'post', '');
       $petname = $nv_Request -> get_string('petname', 'post', '');
       if(!(empty($id) || empty($petname))) {
-        $sql = "update `" . $db_config['prefix'] . "_" . $module_data . "_pets` set petname = '$petname' where id = $id";
+        $sql = "update `" . VAC_PREFIX . "_pets` set petname = '$petname' where id = $id";
         if($db->sql_query($sql)) {
           $row = array("id" => $id, "name" => $petname);
           echo json_encode($row);

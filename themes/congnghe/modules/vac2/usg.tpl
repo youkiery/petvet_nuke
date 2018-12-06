@@ -8,7 +8,7 @@
 		<img src="/themes/congnghe/images/vac/trans.png" title="Thêm thú cưng"> 
 	</div>
 </div>
-<form onsubmit="return themsieuam(event)" autocomplete="off">
+<form onsubmit="return insertusg(event)" autocomplete="off">
 	<table class="tab1 vac">
 		<thead>
 			<tr>
@@ -51,13 +51,10 @@
 					{lang.petname}
 				</td>
 				<td>
-					{lang.ngaysieuam}
+					{lang.usgcalltime}
 				</td>
 				<td>
-					{lang.ngaydusinh}
-				</td>
-				<td>
-					{lang.ngaybao}
+					{lang.usgcometime}
 				</td>
 			</tr>
 			<!-- pet input -->
@@ -66,13 +63,10 @@
 					<select id="pet_info" style="text-transform: capitalize;" name="petname"></select>
 				</td>
 				<td>
-					<input id="ngaysieuam" type="date" name="ngaysieuam" value="{now}">
+					<input id="cometime" type="date" name="cometime" value="{now}">
 				</td>
 				<td>
-					<input id="ngaydusinh" type="date" name="ngaysieuam" value="{dusinh}">
-				</td>
-				<td>
-					<input id="ngaythongbao" type="date" name="ngaythongbao" value="{thongbao}">
+					<input id="calltime" type="date" name="calltime" value="{calltime}">
 				</td>
 			</tr>
 			<!-- hình ảnh -->
@@ -93,7 +87,7 @@
 					{lang.hinhanh}
 				</td>
 				<td colspan="3">
-					<input class="input" type="text" name="hinhanh" id="hinhanh" disabled>
+					<input class="input" type="text" name="image" id="image" disabled>
 					<div class="icon upload" type="button" value="{lang.chonanh}" name="selectimg"></div>
 				</td>
 			</tr>
@@ -105,7 +99,7 @@
 			<!-- note & submit -->
 			<tr>
 				<td colspan="3">
-					<textarea id="pet_note" rows="3" style="width: 98%;">{lang.note}</textarea>
+					<textarea id="note" rows="3" style="width: 98%;">{lang.note}</textarea>
 				</td>
 				<td>
 					<input type="submit" value="{lang.submit}">
@@ -115,7 +109,7 @@
 	</table>
 </form>
 <script>
-	var link = "/index.php?" + nv_name_variable + "=" + nv_module_name + "&act=post&" + nv_fc_variable + "=";
+	var link = "/index.php?" + nv_name_variable + "=" + nv_module_name + "&act=post&" + nv_fc_variable + "=usg-process";
 	var blur = true;
 	var g_customer = -1;
   var g_index = -1
@@ -129,7 +123,7 @@
 	var suggest_name = document.getElementById("customer_name_suggest");
 	var suggest_phone = document.getElementById("customer_phone_suggest");
 
-	function themsieuam(event) {
+	function insertusg(event) {
 		event.preventDefault();
 		msg = "";
 		if(!customer_name) {
@@ -140,14 +134,12 @@
 			msg = "Khách hàng chưa có thú cưng!"
 		} else {
 			$.post(
-				link + "themsieuam",
-				{customer: customer_name.value, phone: customer_phone.value, address: customer_address.value, idthu: pet_info.value, idbacsi: $("#doctor").val(), ngaysieuam: $("#ngaysieuam").val(), ngaydusinh: $("#ngaydusinh").val(), ngaythongbao: $("#ngaythongbao").val(), hinhanh: $("#hinhanh").val(), ghichu: $("#ghichu").val()},
+				link,
+				{action: "insertusg", customer: customer_name.value, phone: customer_phone.value, address: customer_address.value, petid: pet_info.value, doctorid: $("#doctor").val(), cometime: $("#cometime").val(), calltime: $("#calltime").val(), image: $("#image").val(), note: $("#note").val()},
 				(data, status) => {
 					data = JSON.parse(data);
 					if (data["status"] == 1) {
             alert_msg(data["data"]);
-            console.log(g_index);
-            
             customer_list[g_index]["customer"] = customer_name.value
             customer_list[g_index]["address"] = customer_address.value
             g_index = -1;
@@ -170,42 +162,7 @@
 		return false;
 	}
 
-	customer_name.addEventListener("keyup", (e) => {
-		showSuggest(e.target.getAttribute("id"), true);
-	})
-
-	customer_phone.addEventListener("keyup", (e) => {
-		showSuggest(e.target.getAttribute("id"), false);
-	})
-
-	suggest_name.addEventListener("mouseenter", (e) => {
-		blur = false;
-	})
-	suggest_name.addEventListener("mouseleave", (e) => {
-		blur = true;
-	})
-	customer_name.addEventListener("focus", (e) => {
-		suggest_name.style.display = "block";
-	})
-	customer_name.addEventListener("blur", (e) => {
-		if(blur) {
-			suggest_name.style.display = "none";
-		}
-	})
-	suggest_phone.addEventListener("mouseenter", (e) => {
-		blur = false;
-	})
-	suggest_phone.addEventListener("mouseleave", (e) => {
-		blur = true;
-	})
-	customer_phone.addEventListener("focus", (e) => {
-		suggest_phone.style.display = "block";
-	})
-	customer_phone.addEventListener("blur", (e) => {
-		if(blur) {
-			suggest_phone.style.display = "none";
-		}
-	})
+	suggest_init();
 
 	$("div[name=selectimg]").click(function(){
 		var area = "hinhanh";

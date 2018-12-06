@@ -56,7 +56,6 @@
   border: 4px solid #C7C7C7;
 	z-index: 10020 !important;
 }
-
 .vac_icon:hover {
 	background-position-x: 32px;
 }
@@ -69,6 +68,16 @@
 }
 .footer_list li a {
 	color: black !important;
+}
+.input {
+	padding: 4px;
+	width: 90%;
+	height: 2em;
+}
+.button {
+	margin: 4px;
+	padding: 4px;
+	height: 2em;
 }
 .khung {
   height: 250px;

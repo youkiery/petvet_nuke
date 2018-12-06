@@ -22,7 +22,7 @@ if($action) {
 			if(!(empty($petid) || empty($diseaseid) || empty($cometime) || empty($calltime))) {
 				$cometime = strtotime($cometime);
 				$calltime = strtotime($calltime);
-                $sql2 = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_$diseaseid` (petid, cometime, calltime, note, status, doctorid, recall) values ($petid, $cometime, $calltime, '', 0, 0, 0);";
+                $sql2 = "insert into `" . VAC_PREFIX . "_$diseaseid` (petid, cometime, calltime, note, status, doctorid, recall) values ($petid, $cometime, $calltime, '', 0, 0, 0);";
 				$id = $db->sql_query_insert_id($sql2);
 
 				if($id){
@@ -34,7 +34,7 @@ if($action) {
 		case "remove":
 			$id = $nv_Request->get_string('id', 'post', '');
 			if(!empty($id)) {
-				$sql = "delete from `" . $db_config['prefix'] . "_" . $module_data . "_customers` where id = $id";
+				$sql = "delete from `" . VAC_PREFIX . "_customers` where id = $id";
 				if($db->sql_query($sql)) echo 1;
 			}
 		break;
@@ -42,7 +42,7 @@ if($action) {
 			$id = $nv_Request->get_string('id', 'post', '');
 			$diseaseid = $nv_Request->get_string('diseaseid', 'post', '');
 			if(!empty($id) && !empty($diseaseid)) {
-				$sql = "delete from `" . $db_config['prefix'] . "_" . $module_data . "_$diseaseid` where id = $id";
+				$sql = "delete from `" . VAC_PREFIX . "_$diseaseid` where id = $id";
 				if($db->sql_query($sql)) echo 1;
 			}
 		break;
@@ -52,7 +52,7 @@ if($action) {
 			$phone = $nv_Request -> get_string('phone', 'post', '');
 			$note = $nv_Request -> get_string('note', 'post', '');
 			if(!(empty($id) || empty($name) || empty($phone))) {
-				$sql = "update `" . $db_config['prefix'] . "_" . $module_data . "_customers` set name = '$name', phone = '$phone', note = '$note' where id = $id";
+				$sql = "update `" . VAC_PREFIX . "_customers` set name = '$name', phone = '$phone', note = '$note' where id = $id";
 				if($db->sql_query($sql)) {
 					$row = array("id" => $id, "name" => $name, "phone" => $phone, "note" => $note);
 					echo json_encode($row);

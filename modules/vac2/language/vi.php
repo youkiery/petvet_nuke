@@ -28,8 +28,8 @@ $lang_module["save"] = "Lưu thay đổi";
 $lang_module["patient_title1"] = "Chi tiết tiêm phòng thú cưng";
 $lang_module["patient_title2"] = "Danh sách thú cưng của khách";
 $lang_module["patient_title3"] = "Quản lý thú cưng";
-$lang_module["cometime"] = "Thời gian tiêm phòng";
-$lang_module["calltime"] = "Thời gian tái chủng";
+$lang_module["cometime"] = "tiêm phòng";
+$lang_module["calltime"] = "tái chủng";
 $lang_module["confirm"] = "Đã tiêm";
 // customer
 $lang_module["customer_title"] = "Quản lý khách hàng";
@@ -80,4 +80,8 @@ $lang_module["have"] = "Có";
 $lang_module["tongket"] = "Tổng kết";
 $lang_module["trieuchung"] = "Triệu chứng";
 $lang_module["tongngay"] = "Tổng số ngày điều trị: ";
+
+$lang_module["usgcometime"] = "Siêu âm";
+$lang_module["usgcalltime"] = "Dự sinh";
+$lang_module["usg_titme"] = "Danh sách nhắc siêu âm";
 ?>

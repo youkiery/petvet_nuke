@@ -12,39 +12,20 @@ if (!defined('NV_MAINFILE')) {
 
 define('NV_NEXTMONTH', 30 * 24 * 60 * 60);
 define('NV_NEXTWEEK', 7 * 24 * 60 * 60);
+$sort_option = ["c.name asc", "c.name desc", "time asc", "time desc"];
 
-function get_main_recent_list($disease) {
-  global $db;
-  $now = NV_CURRENTTIME;
-  $filter_time = $global_config["filter_time"] ? $global_config["filter_time"] : NV_NEXTWEEK;
-  $start = strtotime(date("Y-m-d", NV_CURRENTTIME)) - $filter_time;
-
-  $return_var = array();
-  foreach ($disease as $disease_key => $disease_row) {
-    $this_vaccine_list = array();
-    $sql = "SELECT * from " . VAC_PREFIX . "_" . $disease_row["id"] . " where cometime between " . $start . " and " . $now;
-    $this_vaccine_list_query = $db->sql_query($sql);
-    $this_vaccine_list[] = fetchall($db, $this_vaccine_list_query);
-    foreach ($this_vaccine_list as $this_vaccine_list_row) {
-      $info = getpet_info($row["petid"]);
-      $list[$key] = transprop($list[$key], $info);
-      $return_var[] = $this_vaccine_list_row;
-    }
-  }
-  return $return_var;
-}
-
-function get_main_list($disease) {
+function get_main_recent_list($keyword, $disease) {
   global $db, $global_config;
   $now = NV_CURRENTTIME;
   $filter_time = $global_config["filter_time"] ? $global_config["filter_time"] : NV_NEXTWEEK;
   $start = strtotime(date("Y-m-d", NV_CURRENTTIME)) - $filter_time;
-  $end = strtotime(date("Y-m-d", NV_CURRENTTIME)) + $filter_time;
+
+  $filter = parse_filter(array("keyword" => $keyword));
 
   $return_var = array();
-  foreach ($disease as $disease_key => $disease_row) {
+  foreach ($disease as $disease_id => $disease_name) {
     $list = array();
-    $sql = "SELECT *, " . $disease_row["id"] . " as disease from " . VAC_PREFIX . "_" . $disease_row["id"] . " where calltime between " . $start . " and " . $end;
+    $sql = "SELECT *, " . $disease_id . " as diseaseid from " . VAC_PREFIX . "_" . $disease_id . " where  " . $filter["where"] . " cometime between " . $start . " and " . $now;
     $list_query = $db->sql_query($sql);
     $list = fetchall($db, $list_query);
     foreach ($list as $key => $row) {
@@ -52,6 +33,74 @@ function get_main_list($disease) {
       $list[$key] = transprop($list[$key], $info);
       $return_var[] = $list[$key];
     }
+  }
+  return $return_var;
+}
+
+function get_main_list($keyword, $disease) {
+  global $db, $global_config;
+  $now = NV_CURRENTTIME;
+  $filter_time = $global_config["filter_time"] ? $global_config["filter_time"] : NV_NEXTWEEK;
+  $start = strtotime(date("Y-m-d", NV_CURRENTTIME)) - $filter_time;
+  $end = strtotime(date("Y-m-d", NV_CURRENTTIME)) + $filter_time;
+
+  $where = parse_filter(array("keyword" => $keyword));
+
+  $return_var = array();
+  foreach ($disease as $disease_id => $disease_name) {
+    $list = array();
+    $sql = "SELECT *, " . $disease_id . " as diseaseid from " . VAC_PREFIX . "_" . $disease_id . " where " . $filter["where"] . " calltime between " . $start . " and " . $end;
+    $list_query = $db->sql_query($sql);
+    $list = fetchall($db, $list_query);
+    foreach ($list as $key => $row) {
+      $info = getpet_info($row["petid"]);
+      $list[$key] = transprop($list[$key], $info);
+      $return_var[] = $list[$key];
+    }
+  }
+  return $return_var;
+}
+
+function get_usg_recent_list($keyword) {
+  global $db, $global_config;
+  $now = NV_CURRENTTIME;
+  $filter_time = $global_config["filter_time"] ? $global_config["filter_time"] : NV_NEXTWEEK;
+  $start = strtotime(date("Y-m-d", NV_CURRENTTIME)) - $filter_time;
+
+  $filter = parse_filter(array("keyword" => $keyword));
+
+  $return_var = array();
+  $list = array();
+  $sql = "SELECT * from " . VAC_PREFIX . "_usg where  " . $filter["where"] . " cometime between " . $start . " and " . $now;
+  $list_query = $db->sql_query($sql);
+  $list = fetchall($db, $list_query);
+  foreach ($list as $key => $row) {
+    $info = getpet_info($row["petid"]);
+    $list[$key] = transprop($list[$key], $info);
+    $return_var[] = $list[$key];
+  }
+  return $return_var;
+}
+
+function get_usg_list($keyword) {
+  global $db, $global_config;
+  $now = NV_CURRENTTIME;
+  $filter_time = $global_config["filter_time"] ? $global_config["filter_time"] : NV_NEXTWEEK;
+  $start = strtotime(date("Y-m-d", NV_CURRENTTIME)) - $filter_time;
+  $end = strtotime(date("Y-m-d", NV_CURRENTTIME)) + $filter_time;
+
+  $filter = parse_filter(array("keyword" => $keyword));
+
+  $return_var = array();
+  $list = array();
+  $sql = "SELECT * from " . VAC_PREFIX . "_usg where " . $filter["where"] . " calltime between " . $start . " and " . $end;
+  // die($sql); 
+  $list_query = $db->sql_query($sql);
+  $list = fetchall($db, $list_query);
+  foreach ($list as $key => $row) {
+    $info = getpet_info($row["petid"]);
+    $list[$key] = transprop($list[$key], $info);
+    $return_var[] = $list[$key];
   }
   return $return_var;
 }
@@ -74,6 +123,29 @@ function getcustomer_info($customerid) {
   $customer_row = $db->sql_fetch_assoc($customer_query);
 
   return $customer_row;
+}
+
+function parse_filter($filter) {
+  global $sort_option;
+  $where = [];
+  $order = [];
+  if ($filter["keyword"]) {
+    $where[] = "c.customer like '%" . $filter["keyword"] . "%' or c.phone like '%" . $filter["keyword"] . "%' or c.address like '%" . $filter["keyword"] . "%'";
+  }
+  if ($filter["sort"]) {
+    $order[] = $sort_option[$filter["sort"]];
+  }
+  if (count($where)) {
+    $where = implode(" and ", $where);
+  } else {
+    $where = "";
+  }
+  if (count($order)) {
+    $order = implode(" and ", $order);
+  } else {
+    $where = "";
+  }
+  return array("where" => $where, "order" => $order);
 }
 
 function parse_list($list, $order = 1) {
@@ -99,10 +171,14 @@ function parse_list($list, $order = 1) {
 	asort($sort_order_left);
   arsort($sort_order_right);
 
+  $max = $sort_order_left[0];
+  $min = $sort_order_right[count($sort_order_right) - 1];
+  $dis = 1 + ($max - $min) / (24 * 60 * 60);
+
   foreach ($sort_order_left as $key => $value) {
     if ($order) $dday = $list[$key]['calltime'];
     else $dday = $list[$key]['cometime'];
-    $d = ceil(($dday - $now) / (24 * 60 * 60)  / 2);
+    $d = ceil(($dday - $now) / (24 * 60 * 60) / $dis);
     $c = 15 - $d;
 		$list[$key]["bgcolor"] = "#4" . $hex[$c] . "4";
 		$array_left[] = $list[$key];
@@ -110,33 +186,60 @@ function parse_list($list, $order = 1) {
   foreach ($sort_order_right as $key => $value) {
     if ($order) $dday = $list[$key]['calltime'];
     else $dday = $list[$key]['cometime'];
-    $d = ceil(($dday - $now) / (24 * 60 * 60)  / 2);
-    $d = $list[$key]["calltime"];
-    $c = 15 - ($now - $d) / (24 * 60 * 60);
+    $d = ceil(($dday - $now) / (24 * 60 * 60) / $dis);
+    $c = 15 - $d;
+    // echo "$c ";
 		$list[$key]["bgcolor"] = "#$hex[$c]$hex[$c]$hex[$c]";
 		$array_right[] = $list[$key];
-	}
+  }
+  // die();
 
 	$list = array_merge($array_left, $array_right);
 	foreach ($list as $key => $row) {
-		$list[$key]["confirm"] = $lang_module["confirm_" . $row["confirm"]];
+    $list[$key]["confirm"] = $lang_module["confirm_" . $row["status"]];
 		$list[$key]["cometime"] = date("d/m/Y", $row["cometime"]);
 		$list[$key]["calltime"] = date("d/m/Y", $row["calltime"]);
-		$list[$key]["color"] = $color;
-	}
+		$list[$key]["color"] = parse_status_color($row["status"]);
+  }
   return $list;
 }
 
-// switch ($list_data["trangthai"]) {
-//   case '1':
-//     $color = "orange";
-//     break;
-//   case '2':
-//     $color = "green";
-//     break;
-//   default:
-//     $color = "red";
-// }
+function parse_status_color($status) {
+  $status = intval($status);
+  switch ($status) {
+    case 1:
+      $color = "orange";
+      break;
+    case 2:
+      $color = "green";
+      break;
+    default:
+      $color = "red";
+  }
+  return $color;
+}
+
+function get_disease_list() {
+  global $db;
+  $sql = "select * from " . VAC_PREFIX . "_diseases";
+  $result = $db->sql_query($sql);
+  $diseases = array();
+  while ($row = $db->sql_fetch_assoc($result)) {
+    $diseases[$row["id"]] = $row["disease"];
+  }
+  return $diseases;
+}
+
+function get_doctor() {
+  global $db;
+  $sql = "select * from " . VAC_PREFIX . "_doctor";
+  $result = $db->sql_query($sql);
+  $doctor = array();
+  while ($row = $db->sql_fetch_assoc($result)) {
+    $doctor[$row["id"]] = $row["doctor"];
+  }
+  return $doctor;
+}
 
 function checkNewDisease($id) {
   global $db, $db_config, $module_name;
@@ -151,17 +254,6 @@ function checkNewDisease($id) {
       $check = false;
   }
   return $check;
-}
-
-function get_disease_list() {
-  global $db, $db_config, $module_name;
-  $sql = "select * from " . VAC_PREFIX . "_diseases";
-  $result = $db->sql_query($sql);
-  $diseases = array();
-  while ($row = $db->sql_fetch_assoc($result)) {
-    $diseases[] = $row;
-  }
-  return $diseases;
 }
 
 function getCustomerList($key, $sort, $filter, $page) {
@@ -735,8 +827,8 @@ function quagio() {
   $end = $global_config["gionghi"] ? $global_config["gionghi"] : $today + 17 * 60 * 60 + 30 * 60;
 
   if (!($admin_info["level"] == "1") && (NV_CURRENTTIME < $from || NV_CURRENTTIME > $end)) {
-    $xtpl = new XTemplate("overtime.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
-    // die(NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
+    $xtpl = new XTemplate("overtime.tpl", VAC_PATH);
+    // die(VAC_PATH);
     $xtpl->assign("lang", $lang_module);
 
     $xtpl->parse("overtime");

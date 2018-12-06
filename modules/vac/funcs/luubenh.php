@@ -85,6 +85,17 @@ if (!empty($action)) {
         }
       }
       break;
+    case 'delete_treat':
+      $id = $nv_Request->get_string('id', 'post', '');
+      
+      if (!(empty($id))) {
+        $sql = "delete from vng_vac_luubenh where id = $id";
+        // $ret["data"] = $sql;
+        if ($db->sql_query($sql)) {
+          $ret["status"] = 1;
+        }
+      }
+      break;
     case 'thongtinluubenh':
       $lid = $nv_Request->get_string('id', 'post', '');
       if (!(empty($lid))) {
@@ -169,4 +180,30 @@ $contents = $xtpl->text("main");
 include ( NV_ROOTDIR . "/includes/header.php" );
 echo nv_site_theme($contents);
 include ( NV_ROOTDIR . "/includes/footer.php" );
+
+function displayRed($list, $path, $lang_module, $index, $nav) {
+	$xtpl = new XTemplate("treat-list.tpl", $path);
+	$xtpl->assign("lang", $lang_module);	
+
+	// echo $path; die();
+	$stt = $index;
+	foreach ($list as $key => $row) {
+		$xtpl->assign("stt", $stt);
+		$xtpl->assign("id", $row["id"]);
+		$xtpl->assign("customer", $row["customer"]);
+		$xtpl->assign("petname", $row["petname"]);
+		$xtpl->assign("phone", $row["phone"]);
+		$xtpl->assign("doctor", $row["doctor"]);
+		$xtpl->assign("luubenh", date("d/m/Y", $row["ngayluubenh"]));
+		$xtpl->assign("nav_link", $nav);
+		// $xtpl->assign("delete_link", "");
+
+		$xtpl->parse("main.row");
+		$stt ++;
+	}
+
+	$xtpl->parse("main");
+	return $xtpl->text("main");
+}
+
 ?>

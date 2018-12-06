@@ -36,13 +36,13 @@ if($array_value) {
 		switch ($sd["action"]) {
 			case 1:
 				checkNewDisease($sdi);
-				$sql2 = "insert into `" . $db_config['prefix'] . "_" . $module_data . "_diseases` (id, disease) values(". $sdi . ", '" . $sd['disease'] . "');";
+				$sql2 = "insert into `" . VAC_PREFIX . "_diseases` (id, disease) values(". $sdi . ", '" . $sd['disease'] . "');";
 				break;
 			case 2:
-				$sql2 = "update `" . $db_config['prefix'] . "_" . $module_data . "_diseases` set disease = '". $sd["disease"] ."' where id = " . $sdi . ";";
+				$sql2 = "update `" . VAC_PREFIX . "_diseases` set disease = '". $sd["disease"] ."' where id = " . $sdi . ";";
 				break;
 			default:
-				$sql2 = "delete from `" . $db_config['prefix'] . "_" . $module_data . "_diseases` where id = " . $sdi . "; ";
+				$sql2 = "delete from `" . VAC_PREFIX . "_diseases` where id = " . $sdi . "; ";
 		}
 		if(empty($sql2) || !$db->sql_query($sql2)) {
 			$check = false;

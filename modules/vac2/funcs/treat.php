@@ -136,7 +136,7 @@ if (!empty($action)) {
   die();
 }
 
-$xtpl = new XTemplate("luubenh.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
+$xtpl = new XTemplate("luubenh.tpl", VAC_PATH);
 $xtpl->assign("lang", $lang_module);
 
 $today = date("Y-m-d", NV_CURRENTTIME);

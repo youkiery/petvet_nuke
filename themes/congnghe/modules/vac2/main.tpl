@@ -141,8 +141,6 @@
             customer_address.value = ""
 						pet_info.innerHTML = ""
             pet_note.value = "Ghi chú"
-            console.log(customer_list, g_index);
-            
 						break;
 					case 3:
 						msg = "Thú cưng không tồn tại!";
@@ -163,43 +161,7 @@
 		return false;
 	}
 
-	customer_name.addEventListener("keyup", (e) => {
-		showSuggest(e.target.getAttribute("id"), true);
-	})
-
-	customer_phone.addEventListener("keyup", (e) => {
-		showSuggest(e.target.getAttribute("id"), false);
-	})
-
-	suggest_name.addEventListener("mouseenter", (e) => {
-		blur = false;
-	})
-	suggest_name.addEventListener("mouseleave", (e) => {
-		blur = true;
-	})
-	customer_name.addEventListener("focus", (e) => {
-		suggest_name.style.display = "block";
-	})
-	customer_name.addEventListener("blur", (e) => {
-		if(blur) {
-			suggest_name.style.display = "none";
-		}
-	})
-	suggest_phone.addEventListener("mouseenter", (e) => {
-		blur = false;
-	})
-	suggest_phone.addEventListener("mouseleave", (e) => {
-		blur = true;
-	})
-	customer_phone.addEventListener("focus", (e) => {
-		suggest_phone.style.display = "block";
-	})
-	customer_phone.addEventListener("blur", (e) => {
-		if(blur) {
-			suggest_phone.style.display = "none";
-		}
-	})
+	suggest_init();
 
 </script>
 <!-- END: main -->
-

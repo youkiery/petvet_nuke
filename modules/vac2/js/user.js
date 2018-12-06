@@ -1,5 +1,6 @@
 var timer = 0;
 var interval;
+var g_link = "/index.php?nv=vac2&op=process&method=post";
 
 function fetch(url, data) {
 	return new Promise(resolve => {
@@ -53,7 +54,7 @@ function getInfo(index) {
   g_index = index;
   g_customer = customer_data["id"]
   var data = ["action=getpet", "customerid=" + customer_data["id"]];
-  fetch(link, data).then(response => {
+  fetch(g_link, data).then(response => {
     var html = "";
     response = JSON.parse(response);
     customer_data["pet"] = response["data"];
@@ -73,7 +74,7 @@ function addCustomer() {
     var answer = prompt("Nhập tên khách hàng cho số điện thoại(" + phone + "):", name);
     if(answer) {
       var data = ["action=addcustomer", "customer=" + answer, "phone=" + phone, "address=" + address];
-      fetch(link, data).then(response => {
+      fetch(g_link, data).then(response => {
         response = JSON.parse(response);
         switch (response["status"]) {
           case 1:
@@ -119,7 +120,7 @@ function addPet() {
     var answer = prompt("Nhập tên thú cưng của khách hàng("+ customer +"):", "");
     if(answer) {
       var data = ["action=addpet", "customerid=" + customer_data["id"], "petname=" + answer];
-      fetch(link, data).then(response => {
+      fetch(g_link, data).then(response => {
         var response = JSON.parse(response);
 
         switch (response["status"]) {
@@ -166,7 +167,7 @@ function showSuggest (id, type) {
     phone = String(document.getElementById("customer_phone").value);
   }
   var data = ["action=getcustomer", "customer=" + name, "phone=" + phone];
-  fetch(link + "main", data).then(response => {
+  fetch(g_link, data).then(response => {
     response = JSON.parse(response);
     var suggest = document.getElementById(id + "_suggest");
 
@@ -185,3 +186,41 @@ function showSuggest (id, type) {
   })
 }
 
+function suggest_init() {
+  customer_name.addEventListener("keyup", (e) => {
+		showSuggest(e.target.getAttribute("id"), true);
+	})
+
+	customer_phone.addEventListener("keyup", (e) => {
+		showSuggest(e.target.getAttribute("id"), false);
+	})
+
+	suggest_name.addEventListener("mouseenter", (e) => {
+		blur = false;
+	})
+	suggest_name.addEventListener("mouseleave", (e) => {
+		blur = true;
+	})
+	customer_name.addEventListener("focus", (e) => {
+		suggest_name.style.display = "block";
+	})
+	customer_name.addEventListener("blur", (e) => {
+		if(blur) {
+			suggest_name.style.display = "none";
+		}
+	})
+	suggest_phone.addEventListener("mouseenter", (e) => {
+		blur = false;
+	})
+	suggest_phone.addEventListener("mouseleave", (e) => {
+		blur = true;
+	})
+	customer_phone.addEventListener("focus", (e) => {
+		suggest_phone.style.display = "block";
+	})
+	customer_phone.addEventListener("blur", (e) => {
+		if(blur) {
+			suggest_phone.style.display = "none";
+		}
+	})
+}

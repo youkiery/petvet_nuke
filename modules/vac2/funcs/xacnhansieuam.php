@@ -22,7 +22,7 @@ if(!(empty($act) || empty($value) || empty($id))) {
 		$confirmid = array_search($value, $lang_module["confirm_value"]);
 		$confirmid += $mod;
 		if (!empty($lang_module["confirm_value"][$confirmid])) {
-			$sql = "update `" . $db_config['prefix'] . "_" . $module_data . "_sieuam` set trangthai = $confirmid where id = $id";
+			$sql = "update `" . VAC_PREFIX . "_sieuam` set trangthai = $confirmid where id = $id";
 			$result = $db->sql_query($sql);
 			if ($result) {
 				$ret["status"] = 1;

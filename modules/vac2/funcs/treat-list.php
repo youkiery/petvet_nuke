@@ -14,7 +14,7 @@ quagio();
 
 $keyword = $nv_Request->get_string('key', 'get', '');
 $page_title = $lang_module["tieude_luubenh"];
-$xtpl = new XTemplate("luubenh-danhsach.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
+$xtpl = new XTemplate("luubenh-danhsach.tpl", VAC_PATH);
 $xtpl->assign("lang", $lang_module);
 $status_option = array("Bình thường", "Hơi yếu", "Yếu", "Sắp chết");
 
@@ -59,7 +59,7 @@ while ($row = $db->sql_fetch_assoc($result)) {
 // var_dump($display_list);
 // die();
 
-$xtpl->assign("content", displaySSList($display_list, $time, NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file, $lang_module));
+$xtpl->assign("content", displaySSList($display_list, $time, VAC_PATH, $lang_module));
 
 $xtpl->parse("main");
 $contents = $xtpl->text("main");

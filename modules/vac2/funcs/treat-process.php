@@ -183,7 +183,7 @@ if (!empty($action)) {
         $_SESSION["vac_filter"]["sort"] = $sort;
         $_SESSION["vac_filter"]["time_amount"] = $time_amount;
         $ret["status"] = 1;
-        $ret["data"] = filter(NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file, $lang_module, $fromtime, $time_amount, $sort);
+        $ret["data"] = filter(VAC_PATH, $lang_module, $fromtime, $time_amount, $sort);
       }
 
       echo json_encode($ret);
