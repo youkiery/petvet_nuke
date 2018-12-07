@@ -66,7 +66,7 @@
 			<!-- hình ảnh -->
 			<tr>
 				<td>
-					{lang.doctor}
+					{lang.doctor2}
 				</td>
 				<td colspan="3">
 					<select name="doctor" id="doctor" style="width: 90%;">

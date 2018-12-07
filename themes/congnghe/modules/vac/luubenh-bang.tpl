@@ -12,7 +12,7 @@
         {lang.customer}
       </th>
       <th style="width: 100px;">
-        {lang.doctor}
+        {lang.doctor2}
       </th>  
       <th style="width: 50px;">
         {lang.ngayluubenh}

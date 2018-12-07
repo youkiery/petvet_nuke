@@ -48,9 +48,9 @@
     </table>
   </form>
 </div>
-<form class="vac_form">
+<form class="vac_form" action="/index.php">
   <input type="hidden" name="nv" value="vac2">
-  <input type="hidden" name="op" value="main-list">
+  <input type="hidden" name="op" value="usg-list">
   <input type="hidden" name="page" value="{page}">
   <input type="text" name="keyword" value="{keyword}">
   <input type="submit" class="vac_button" value="{lang.search}">
@@ -113,20 +113,15 @@
         	{calltime}
 				</td>    
 				<td style="text-align: center;">
-					<button style="float: left;" onclick="confirm_lower({index}, {vacid}, {petid}, {diseaseid})">
+					<button style="float: left;" onclick="confirm_lower({index}, {vacid}, {petid})">
 						&lt;
 					</button>
-          <span id="vac_confirm_{diseaseid}_{index}" style="color: {color};">
+          <span id="vac_confirm_{index}" style="color: {color};">
             {confirm}
           </span>
-					<button style="float: right;" onclick="confirm_upper({index}, {vacid}, {petid}, {diseaseid})">
+					<button style="float: right;" onclick="confirm_upper({index}, {vacid}, {petid})">
 						&gt;
 					</button>
-					<!-- BEGIN: recall -->
-						<button id="recall_{index}" onclick="recall({index}, {vacid}, {petid}, {diseaseid})">
-							{lang.recall}
-						</button>
-					<!-- END: recall -->
 				</td>
 				<td>
 					<img class="mini-icon" src="/uploads/vac/note_add.png" alt="thêm ghi chú" onclick="editNote({vacid})">
@@ -151,20 +146,19 @@
     var e = document.getElementById("vac_confirm_" + index);
     $.post(
       link,
-      {act: "down", value: trim(e.innerText), id: vacid},
+      {action: "confirm", act: "down", value: trim(e.innerText), id: vacid},
       (data, status) => {
         data = JSON.parse(data);
         change_color(e, data, index, vacid, petid);
       }
     )
-    // fetch(link + "confirm&act=up&value=" + trim(value.innerText) + "&vacid=" + vacid + "&diseaseid=" + diseaseid, []).then(response => {
   }
 
   function confirm_upper(index, vacid, petid) {
     var e = document.getElementById("vac_confirm_" + index);
     $.post(
       link,
-      {act: "up", value: trim(e.innerText), id: vacid},
+      {action: "confirm", act: "up", value: trim(e.innerText), id: vacid},
       (data, status) => {
         data = JSON.parse(data);
         change_color(e, data, index, vacid, petid);

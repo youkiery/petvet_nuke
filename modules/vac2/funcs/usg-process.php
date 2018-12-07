@@ -8,6 +8,7 @@
  */
 if (!defined('NV_IS_MOD_VAC'))
   die('Stop!!!');
+
 $action = $nv_Request->get_string('action', 'post', '');
 $ret = array("status" => 0, "data" => array());
 
@@ -58,27 +59,20 @@ if (!empty($action)) {
       $mod = 0;
       if ($act == "up") {
         $mod = 1;
-      } else {
+      } else if ($act == "down") {
         $mod = -1;
       }
-      if (in_array($value, $lang_module["confirm_value"])) {
-        $confirmid = array_search($value, $lang_module["confirm_value"]);
-        $confirmid += $mod;
-        if (!empty($lang_module["confirm_value"][$confirmid])) {
-          $sql = "update vng_vac_$diseaseid set status = $confirmid where id = $vacid";
-          $result = $db->sql_query($sql);
-          if ($result) {
-            $sql = "select * from vng_vac_$diseaseid where id = $vacid";
-            $result = $db->sql_query($sql);
-            $row = $db->sql_fetch_assoc($result);
-            if (empty($row["recall"]) || $row["recall"] == "0") $ret["data"]["recall"] = 0;
-            else $ret["data"]["recall"] = 1;
-            // $ret["data"]["recall"] = $row["recall"];
-            $ret["status"] = 1;
-            $ret["data"]["value"] = $lang_module["confirm_value"][$confirmid];
-            $color = parse_status_color($confirmid);
-            $ret["data"]["color"] = $color;
-          }
+      $value = mb_strtolower($value);
+      $confirmid = array_search($value, $lang_module["confirm2"]) + $mod;
+      $confirm = $lang_module["confirm2"][$confirmid];
+      if ($confirm) {
+        $sql = "update `" . VAC_PREFIX . "_usg` set status = $confirmid where id = $id";
+        $result = $db->sql_query($sql);
+        if ($result) {
+          $ret["status"] = 1;
+          $ret["data"]["value"] = $confirm;
+          $color = parse_status_color($confirmid);
+          $ret["data"]["color"] = $color;
         }
       }
     }

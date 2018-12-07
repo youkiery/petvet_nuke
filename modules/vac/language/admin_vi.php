@@ -58,6 +58,7 @@ $lang_module["tieude_sieuam"] = "Quản lý siêu âm";
 $lang_module["keyword"] = "Từ khóa";
 $lang_module["submit"] = "Xác nhận";
 $lang_module["doctor"] = "Người trực";
+$lang_module["doctor2"] = "Người nhận";
 
 $lang_module["themsieuam"] = "Thêm siêu âm";
 

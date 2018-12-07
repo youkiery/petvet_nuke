@@ -151,7 +151,7 @@
 <!-- END: disease -->
 </div>
 <script>
-  var link = "/index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=";
+  var link = "/index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=main-process&method=post";
   var g_index = -1;
   var g_vacid = -1;
   var g_disease = -1;
@@ -161,20 +161,28 @@
     $("#reman").hide();
   })
 
-  function confirm_upper(index, vacid, petid, diseaseid) {
-    var value = document.getElementById("vac_confirm_" + diseaseid + "_" + index);
-    fetch(link + "main-process&action=confirm&act=up&value=" + trim(value.innerText) + "&vacid=" + vacid + "&diseaseid=" + diseaseid, []).then(response => {
-      response = JSON.parse(response);
-      change_color(value, response, index, vacid, petid, diseaseid);
-    })
+  function confirm_lower(index, vacid, petid, diseaseid) {
+    var e = document.getElementById("vac_confirm_" + diseaseid + "_" + index);
+    $.post(
+      link,
+      {action: "confirm", act: "down", value: trim(e.innerText), id: vacid, diseaseid: diseaseid},
+      (response, status) => {
+        data = JSON.parse(response);
+        change_color(e, data, index, vacid, petid, diseaseid);
+      }
+    )
   }
 
-  function confirm_lower(index, vacid, petid, diseaseid) {
-    var value = document.getElementById("vac_confirm_" + diseaseid + "_" + index);
-    fetch(link + "main-process&action=confirm&act=low&value=" + trim(value.innerText) + "&vacid=" + vacid + "&diseaseid=" + diseaseid, []).then(response => {
-      response = JSON.parse(response);
-      change_color(value, response, index, vacid, petid, diseaseid);
-    })
+  function confirm_upper(index, vacid, petid, diseaseid) {
+    var e = document.getElementById("vac_confirm_" + diseaseid + "_" + index);
+    $.post(
+      link,
+      {action: "confirm", act: "up", value: trim(e.innerText), id: vacid, diseaseid: diseaseid},
+      (response, status) => {
+        data = JSON.parse(response);
+        change_color(e, data, index, vacid, petid, diseaseid);
+      }
+    )
   }
 
   function change_color(e, response, index, vacid, petid, diseaseid) {
@@ -191,7 +199,7 @@
 
   function save_form() {
     $.post(
-      link + "main-process&act=post",
+      link,
       {action: "save", petid: g_petid, recall: $("#confirm_recall").val(), doctor: $("#confirm_doctor").val(), vacid: g_vacid, diseaseid: g_disease},
       (data, status) => {
 				data = JSON.parse(data);
@@ -215,7 +223,7 @@
     $("#reman").fadeIn();
     $("#vac_panel").fadeIn();
     $.post(
-			link + "main-process&act=post",
+			link,
       {action: "getrecall", vacid: vacid, diseaseid: diseaseid},
       (data, status) => {
 				data = JSON.parse(data);
@@ -249,7 +257,7 @@
     var answer = prompt("Ghi chú: ", trim($("#note_v" + diseaseid + "_" + index).text()));
     if (answer) {
       $.post(
-        link + "main-process&act=post",
+        link,
         {action: "editNote", note: answer, id: index, diseaseid: diseaseid},
         (data, status) => {
           data = JSON.parse(data);

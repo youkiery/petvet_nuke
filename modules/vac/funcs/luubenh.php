@@ -18,17 +18,19 @@ $export = array("Lưu bệnh", "Đã điều trị", "Đã chết");
 if (!empty($action)) {
   switch ($action) {
     case 'luulieutrinh':
-      $ltid = $nv_Request->get_string('id', 'post', '');
-      $nhietdo = $nv_Request->get_string('nhietdo', 'post', '');
-      $niemmac = $nv_Request->get_string('niemmac', 'post', '');
-      $khac = $nv_Request->get_string('khac', 'post', '');
-      $xetnghiem = $nv_Request->get_string('xetnghiem', 'post', '');
-      $dieutri = $nv_Request->get_string('dieutri', 'post', '');
-      $tinhtrang = $nv_Request->get_string('tinhtrang', 'post', '');
+    $ltid = $nv_Request->get_string('id', 'post', '');
+    $nhietdo = $nv_Request->get_string('nhietdo', 'post', '');
+    $niemmac = $nv_Request->get_string('niemmac', 'post', '');
+    $khac = $nv_Request->get_string('khac', 'post', '');
+    $xetnghiem = $nv_Request->get_string('xetnghiem', 'post', '');
+    $dieutri = $nv_Request->get_string('dieutri', 'post', '');
+    $tinhtrang = $nv_Request->get_string('tinhtrang', 'post', '');
+    $doctorx = $nv_Request->get_string('doctorx', 'post', '');
+    $ret["step"] = 1;
 
-      if (! (empty($ltid) || $xetnghiem < 0 || $tinhtrang < 0)) {
-        $sql = "update vng_vac_lieutrinh set nhietdo = '$nhietdo', niemmac = '$niemmac', khac = '$khac', xetnghiem = '$xetnghiem', dieutri = '$dieutri', tinhtrang = $tinhtrang where id = $ltid";
-        // $ret["data"] = $sql;
+      if (! (empty($ltid) || $xetnghiem < 0 || $tinhtrang < 0) && $doctorx >= 0) {
+        $sql = "update vng_vac_lieutrinh set nhietdo = '$nhietdo', niemmac = '$niemmac', khac = '$khac', xetnghiem = '$xetnghiem', dieutri = '$dieutri', tinhtrang = $tinhtrang, doctorx = $doctorx where id = $ltid";
+        $ret["sql"] = $sql;
 
         if ($db->sql_query($sql)) {
           $sql = "select * from `" . VAC_PREFIX . "_luubenh` a inner join `" . VAC_PREFIX . "_lieutrinh` b on b.id = $ltid and a.id = b.idluubenh";
@@ -87,10 +89,8 @@ if (!empty($action)) {
       break;
     case 'delete_treat':
       $id = $nv_Request->get_string('id', 'post', '');
-      
       if (!(empty($id))) {
         $sql = "delete from vng_vac_luubenh where id = $id";
-        // $ret["data"] = $sql;
         if ($db->sql_query($sql)) {
           $ret["status"] = 1;
         }
@@ -103,7 +103,7 @@ if (!empty($action)) {
         $query = $db->sql_query($sql);
         if ($row = $db->sql_fetch_assoc($query)) {
           $row["ngayluubenh"] = date("d/m/Y", $row["ngayluubenh"]);
-          $sql = "SELECT * from " . VAC_PREFIX . "_lieutrinh where idluubenh = $lid";
+          $sql = "SELECT * from " . VAC_PREFIX . "_lieutrinh where idluubenh = $lid order by ngay";
           $query = $db->sql_query($sql);
           $lieutrinh = fetchall($db, $query);
           if ($lieutrinh) {
@@ -120,16 +120,19 @@ if (!empty($action)) {
     case 'themlieutrinh':
       $lid = $nv_Request->get_string('id', 'post', '');
       $ngay = $nv_Request->get_string('ngay', 'post', '');
+      $ret["step"] = 1;
       if (! (empty($lid) || empty($ngay))) {
         $i_ngay = strtotime($ngay);
         $sql = "select * from `" . VAC_PREFIX . "_lieutrinh` where idluubenh = $lid and ngay = " . $i_ngay;
         // $ret["data"] = $sql;
         $query = $db->sql_query($sql);
         
+        $ret["sql"] = $sql;
         if (!$db->sql_numrows($query)) {
           // echo 1;
           $sql = "insert into `" . VAC_PREFIX . "_lieutrinh` (idluubenh, nhietdo, niemmac, khac, xetnghiem, hinhanh, ngay, dieutri, tinhtrang) values($lid, '', '', '', 0, '', " . $i_ngay . ", '', 0)";
           // $ret["data"] = $sql;
+          $ret["sql"] = $sql;
           if ($id = $db->sql_query_insert_id($sql)) {
             $ret["status"] = 1;
             $ret["data"]["id"] = $id;

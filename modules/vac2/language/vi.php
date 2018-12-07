@@ -14,12 +14,12 @@ $lang_module["index"] = "STT";
 $lang_module["phone"] = "Số liên hệ";
 $lang_module["address"] = "Địa chỉ";
 $lang_module["filter"] = "Lọc";
-$lang_module["confirm_0"] = "Chưa gọi";
-$lang_module["confirm_1"] = "Đã gọi";
-$lang_module["confirm_2"] = "Đã tiêm";
-$lang_module["confirm_value"][0] = "Chưa Gọi";
-$lang_module["confirm_value"][1] = "Đã Gọi";
-$lang_module["confirm_value"][2] = "Đã Tiêm";
+$lang_module["confirm"][0] = "chưa gọi";
+$lang_module["confirm"][1] = "đã gọi";
+$lang_module["confirm"][2] = "đã tiêm";
+$lang_module["confirm2"][0] = "chưa gọi";
+$lang_module["confirm2"][1] = "đã gọi";
+$lang_module["confirm2"][2] = "đã siêu âm";
 //disease
 $lang_module["disease_title"] = "Quản lý tiêm phòng";
 $lang_module["disease"] = "Loại tiêm phòng";
@@ -30,7 +30,6 @@ $lang_module["patient_title2"] = "Danh sách thú cưng của khách";
 $lang_module["patient_title3"] = "Quản lý thú cưng";
 $lang_module["cometime"] = "tiêm phòng";
 $lang_module["calltime"] = "tái chủng";
-$lang_module["confirm"] = "Đã tiêm";
 // customer
 $lang_module["customer_title"] = "Quản lý khách hàng";
 // general

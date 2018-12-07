@@ -31,6 +31,16 @@ if (empty($time)) {
 $from = $now - $time;
 $end = $now + $time;
 
+$sql = "select * from vng_vac_doctor";
+$result = $db->sql_query($sql);
+
+while ($row = $db->sql_fetch_assoc($result)) {
+  $xtpl->assign("doctorid", $row["id"]);
+  $xtpl->assign("doctorname", $row["doctor"]);
+  $xtpl->parse("main.doctor");
+}
+
+
 foreach ($status_option as $key => $value) {
   // var_dump($value); die();
   $xtpl->assign("status_value", $key);  

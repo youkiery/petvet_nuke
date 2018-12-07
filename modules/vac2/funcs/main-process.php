@@ -14,45 +14,36 @@ $ret = array("status" => 0, "data" => array());
 if (!empty($action)) {
   switch ($action) {
     case 'confirm':
-    $value = $nv_Request->get_string('value', 'get', '');
-    $vacid = $nv_Request->get_string('vacid', 'get', '');
-    $diseaseid = $nv_Request->get_string('diseaseid', 'get', '');
-    $act = $nv_Request->get_string('act', 'get', '');
-    $ret = array("status" => 0, "data" => "");
+    $value = $nv_Request->get_string('value', 'post', '');
+    $vacid = $nv_Request->get_string('id', 'post', '');
+    $diseaseid = $nv_Request->get_string('diseaseid', 'post', '');
+    $act = $nv_Request->get_string('act', 'post', '');
+
+    $ret["step"] = 1;
     if(!(empty($act) || empty($value) || empty($vacid) || empty($diseaseid))) {
+      $ret["step"] = 2;
       $mod = 0;
       if ($act == "up") {
         $mod = 1;
-      } else {
+      } else if ($act == "down") {
         $mod = -1;
       }
-      if (in_array($value, $lang_module["confirm_value"])) {
-        $confirmid = array_search($value, $lang_module["confirm_value"]);
-        $confirmid += $mod;
-        if (!empty($lang_module["confirm_value"][$confirmid])) {
-          $sql = "update vng_vac_$diseaseid set status = $confirmid where id = $vacid";
+      $value = mb_strtolower($value);
+      $confirmid = array_search($value, $lang_module["confirm"]) + $mod;
+      $confirm = $lang_module["confirm"][$confirmid];
+      if ($confirm) {
+        $sql = "update vng_vac_$diseaseid set status = $confirmid where id = $vacid";
+        $result = $db->sql_query($sql);
+        if ($result) {
+          $sql = "select * from vng_vac_$diseaseid where id = $vacid";
           $result = $db->sql_query($sql);
-          if ($result) {
-            $sql = "select * from vng_vac_$diseaseid where id = $vacid";
-            $result = $db->sql_query($sql);
-            $row = $db->sql_fetch_assoc($result);
-            if (empty($row["recall"]) || $row["recall"] == "0") $ret["data"]["recall"] = 0;
-            else $ret["data"]["recall"] = 1;
-            // $ret["data"]["recall"] = $row["recall"];
-            $ret["status"] = 1;
-            $ret["data"]["value"] = $lang_module["confirm_value"][$confirmid];
-            switch ($confirmid) {
-              case '1':
-                $color = "orange";
-                break;
-              case '2':
-                $color = "green";
-                break;
-              default:
-                $color = "red";
-            }
-            $ret["data"]["color"] = $color;
-          }
+          $row = $db->sql_fetch_assoc($result);
+          if (empty($row["recall"]) || $row["recall"] == "0") $ret["data"]["recall"] = 0;
+          else $ret["data"]["recall"] = 1;
+          $ret["status"] = 1;
+          $ret["data"]["value"] = $confirm;
+          $color = parse_status_color($confirmid);
+          $ret["data"]["color"] = $color;
         }
       }
     }

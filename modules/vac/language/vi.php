@@ -80,4 +80,5 @@ $lang_module["have"] = "Có";
 $lang_module["tongket"] = "Tổng kết";
 $lang_module["trieuchung"] = "Triệu chứng";
 $lang_module["tongngay"] = "Tổng số ngày điều trị: ";
+$lang_module["doctor2"] = "Người nhận";
 ?>

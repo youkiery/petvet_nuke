@@ -13,6 +13,16 @@ $export = array("Lưu bệnh", "Đã điều trị", "Đã chết");
 
 $xtpl = new XTemplate("treat.tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file);
 $xtpl->assign("lang", $lang_module);
+
+$sql = "select * from vng_vac_doctor";
+$result = $db->sql_query($sql);
+
+while ($row = $db->sql_fetch_assoc($result)) {
+  $xtpl->assign("doctorid", $row["id"]);
+  $xtpl->assign("doctorname", $row["doctor"]);
+  $xtpl->parse("main.doctor");
+}
+
 $sort_type = array("Tên A-Z", "Tên Z-A", "Mới trước", "Cũ trước");
 $order = array("order by customer asc", "order by customer desc", "order by ngayluubenh asc", "order by ngayluubenh desc");
 $filter_type = array("25", "50", "100", "200", "Tất cả");

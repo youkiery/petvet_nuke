@@ -24,7 +24,7 @@
       <span id="luubenh"></span>
     </p>
     <p>
-      {lang.doctor}: 
+      {lang.doctor2}: 
       <span id="doctor"></span>
     </p>
   </div>
@@ -32,7 +32,7 @@
     <span id="lieutrinh" style="float: right;"></span>
     <form onsubmit="return themlieutrinh(event)">
       <input type="date" id="ngaylieutrinh" value="{now}" />
-      <button>
+      <button class="submitbutton">
         {lang.add}
       </button>
     </form>
@@ -41,10 +41,20 @@
     </div>
     <div id="lieutrinh">
       <form onsubmit="return luulieutrinh(event)" id="qllieutrinh">
-        <input style="width: 100%" class="input" type="text" id="nhietdo" placeholder="{lang.nhietdo}">
-        <input style="width: 100%" class="input" type="text" id="niemmac" placeholder="{lang.niemmac}">
-        <input style="width: 100%" class="input" type="text" id="khac" placeholder="{lang.khac}">
-        <input style="width: 100%" class="input" type="text" id="dieutri" placeholder="{lang.dieutri}">
+        <input width="100%" class="input" type="text" id="nhietdo" placeholder="{lang.nhietdo}">
+        <input width="100%" class="input" type="text" id="niemmac" placeholder="{lang.niemmac}">
+        <input width="100%" class="input" type="text" id="khac" placeholder="{lang.khac}">
+        <input width="100%" class="input" type="text" id="dieutri" placeholder="{lang.dieutri}">
+        <br>
+        <label for="doctorx">{lang.doctor}</label>
+        <select name="doctorx" id="doctorx"> 
+          <!-- BEGIN: doctor -->
+          <option value="{doctorid}"> {doctorname} </option>
+          <!-- END: doctor -->
+        </select>
+        <button class="submitbutton">
+          {lang.submit}
+        </button>
         <br>
         <label for="tinhtrang">{lang.tinhtrang}</label>
         <select name="tinhtrang" id="tinhtrang2"> 
@@ -58,20 +68,17 @@
           <option value="0"> {lang.non} </option>
           <option value="1"> {lang.have} </option>
         </select>
-        <button>
-          {lang.submit}
-        </button>
       </form>
     </div>
   </div>
 
-  <button class="button" style="position: absolute; bottom: 26px; left: 10px;" onclick="ketthuc(1)">
+  <button class="button submitbutton" style="position: absolute; bottom: 26px; left: 10px;" onclick="ketthuc(1)">
     {lang.trihet}
   </button>
-  <button class="button" style="position: absolute; bottom: 26px; left: 110px;" onclick="ketthuc(2)">
+  <button class="button submitbutton" style="position: absolute; bottom: 26px; left: 110px;" onclick="ketthuc(2)">
     {lang.dachet}
   </button>
-  <button class="button" style="position: absolute; bottom: 26px; left: 210px;" onclick="tongket()">
+  <button class="button submitbutton" style="position: absolute; bottom: 26px; left: 210px;" onclick="tongket()">
     {lang.tongket}
   </button>
 </div>
@@ -162,7 +169,7 @@
 			<!-- hình ảnh -->
 			<tr>
 				<td>
-					{lang.doctor}
+					{lang.doctor2}
 				</td>
 				<td colspan="3">
 					<select name="doctor" id="doctor2" style="width: 90%;">
@@ -266,8 +273,16 @@
           var h_lieutrinh = ""
           g_ketqua = data["ketqua"];
           if (data["lieutrinh"]) {
-            $("#qllieutrinh input").removeAttr("disabled", "");
-            $("#qllieutrinh select").removeAttr("disabled", "");
+            if (data["ketqua"] > 0) {
+              $("#qllieutrinh input").attr("disabled", "disabled");
+              $("#qllieutrinh select").attr("disabled", "disabled");
+              $(".submitbutton").attr("disabled", "disabled");
+            }
+            else {
+              $("#qllieutrinh input").removeAttr("disabled", "");
+              $("#qllieutrinh select").removeAttr("disabled", "");
+              $(".submitbutton").removeAttr("disabled", "");
+            }
             select = -1;
             d_lieutrinh = data["lieutrinh"]
             $("#dslieutrinh").html("")
@@ -286,6 +301,7 @@
             $("#xetnghiem").val(data["lieutrinh"][select]["xetnghiem"])
             $("#lieutrinh").text(data["lieutrinh"][select]["ngay"])
             $("#tinhtrang2").val(data["lieutrinh"][select]["tinhtrang"])
+            $("#doctorx").val(data["lieutrinh"][select]["doctorx"])
           }
           else {
             d_lieutrinh = []
@@ -299,6 +315,7 @@
             $("#xetnghiem").val(0)
             $("#lieutrinh").text("")
             $("#tinhtrang2").val(0)
+            $("#doctorx").val(0)
           }
         }
       }
@@ -426,15 +443,17 @@
     var dieutri = $("#dieutri").val();
     // console.log(dieutri);
     var tinhtrang = $("#tinhtrang2").val();
+    var doctorx = $("#doctorx").val();
     // console.log(tinhtrang);
     
     $.post(
       link + "luubenh",
-      {action: "luulieutrinh", id: g_ltid, nhietdo: nhietdo, niemmac: niemmac, khac: khac, xetnghiem: xetnghiem, dieutri: dieutri, tinhtrang: tinhtrang},
+      {action: "luulieutrinh", id: g_ltid, nhietdo: nhietdo, niemmac: niemmac, khac: khac, xetnghiem: xetnghiem, dieutri: dieutri, tinhtrang: tinhtrang, doctorx: doctorx},
       (response, status) => {
         response = JSON.parse(response);
         // console.log(response);
         if (response["status"]) {
+          alert_msg("Đã lưu");
           $("#" + lid).css("background", response["data"]["color"])
           $("#" + lid + " .suckhoe").text(response["data"]["tinhtrang"])
           d_lieutrinh[g_id]["nhietdo"] = nhietdo
@@ -443,6 +462,7 @@
           d_lieutrinh[g_id]["xetnghiem"] = xetnghiem
           d_lieutrinh[g_id]["dieutri"] = dieutri
           d_lieutrinh[g_id]["tinhtrang"] = tinhtrang
+          d_lieutrinh[g_id]["doctorx"] = doctorx
         }
       }
     )    
@@ -479,7 +499,7 @@
 		} else {
 			$.post(
 				link + "themluubenh",
-				{"customer": customer_name.value, "phone": customer_phone.value, "address": customer_address.value,idthu: pet_info.value, idbacsi: $("#doctor2").val(), ngayluubenh: $("#ngayluubenh").val(), ghichu: $("#ghichu").val(), tinhtrang: $("#tinhtrang2").val()},
+				{"customer": customer_name.value, "phone": customer_phone.value, "address": customer_address.value,idthu: pet_info.value, idbacsi: $("#doctor2").val(), ngayluubenh: $("#ngayluubenh").val(), ghichu: $("#ghichu").val(), tinhtrang: $("#tinhtrang2").val(), doctorx: $("#doctor2").val()},
 				(data, status) => {
 					data = JSON.parse(data);
 					if (data["status"] == 1) {

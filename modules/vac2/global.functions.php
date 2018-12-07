@@ -15,7 +15,7 @@ define('NV_NEXTWEEK', 7 * 24 * 60 * 60);
 $sort_option = ["c.name asc", "c.name desc", "time asc", "time desc"];
 
 function get_main_recent_list($keyword, $disease) {
-  global $db, $global_config;
+  global $db, $global_config, $lang_module;
   $now = NV_CURRENTTIME;
   $filter_time = $global_config["filter_time"] ? $global_config["filter_time"] : NV_NEXTWEEK;
   $start = strtotime(date("Y-m-d", NV_CURRENTTIME)) - $filter_time;
@@ -31,6 +31,7 @@ function get_main_recent_list($keyword, $disease) {
     foreach ($list as $key => $row) {
       $info = getpet_info($row["petid"]);
       $list[$key] = transprop($list[$key], $info);
+      $list[$key]["confirm"] = $lang_module["confirm"][$row["status"]];
       $return_var[] = $list[$key];
     }
   }
@@ -38,7 +39,7 @@ function get_main_recent_list($keyword, $disease) {
 }
 
 function get_main_list($keyword, $disease) {
-  global $db, $global_config;
+  global $db, $global_config, $lang_module;
   $now = NV_CURRENTTIME;
   $filter_time = $global_config["filter_time"] ? $global_config["filter_time"] : NV_NEXTWEEK;
   $start = strtotime(date("Y-m-d", NV_CURRENTTIME)) - $filter_time;
@@ -55,6 +56,7 @@ function get_main_list($keyword, $disease) {
     foreach ($list as $key => $row) {
       $info = getpet_info($row["petid"]);
       $list[$key] = transprop($list[$key], $info);
+      $list[$key]["confirm"] = $lang_module["confirm"][$row["status"]];
       $return_var[] = $list[$key];
     }
   }
@@ -62,7 +64,7 @@ function get_main_list($keyword, $disease) {
 }
 
 function get_usg_recent_list($keyword) {
-  global $db, $global_config;
+  global $db, $global_config, $lang_module;
   $now = NV_CURRENTTIME;
   $filter_time = $global_config["filter_time"] ? $global_config["filter_time"] : NV_NEXTWEEK;
   $start = strtotime(date("Y-m-d", NV_CURRENTTIME)) - $filter_time;
@@ -77,13 +79,14 @@ function get_usg_recent_list($keyword) {
   foreach ($list as $key => $row) {
     $info = getpet_info($row["petid"]);
     $list[$key] = transprop($list[$key], $info);
+    $list[$key]["confirm"] = $lang_module["confirm2"][$row["status"]];
     $return_var[] = $list[$key];
   }
   return $return_var;
 }
 
 function get_usg_list($keyword) {
-  global $db, $global_config;
+  global $db, $global_config, $lang_module;
   $now = NV_CURRENTTIME;
   $filter_time = $global_config["filter_time"] ? $global_config["filter_time"] : NV_NEXTWEEK;
   $start = strtotime(date("Y-m-d", NV_CURRENTTIME)) - $filter_time;
@@ -100,6 +103,7 @@ function get_usg_list($keyword) {
   foreach ($list as $key => $row) {
     $info = getpet_info($row["petid"]);
     $list[$key] = transprop($list[$key], $info);
+    $list[$key]["confirm"] = $lang_module["confirm2"][$row["status"]];
     $return_var[] = $list[$key];
   }
   return $return_var;
@@ -186,20 +190,19 @@ function parse_list($list, $order = 1) {
   foreach ($sort_order_right as $key => $value) {
     if ($order) $dday = $list[$key]['calltime'];
     else $dday = $list[$key]['cometime'];
-    $d = ceil(($dday - $now) / (24 * 60 * 60) / $dis);
+    $d = ceil(($now - $dday) / (24 * 60 * 60) / $dis);
     $c = 15 - $d;
     // echo "$c ";
 		$list[$key]["bgcolor"] = "#$hex[$c]$hex[$c]$hex[$c]";
 		$array_right[] = $list[$key];
   }
-  // die();
 
+  
 	$list = array_merge($array_left, $array_right);
-	foreach ($list as $key => $row) {
-    $list[$key]["confirm"] = $lang_module["confirm_" . $row["status"]];
-		$list[$key]["cometime"] = date("d/m/Y", $row["cometime"]);
-		$list[$key]["calltime"] = date("d/m/Y", $row["calltime"]);
-		$list[$key]["color"] = parse_status_color($row["status"]);
+  foreach ($list as $key => $row) {
+    $list[$key]["cometime"] = date("d/m/Y", $row["cometime"]);
+    $list[$key]["calltime"] = date("d/m/Y", $row["calltime"]);
+    $list[$key]["color"] = parse_status_color($row["status"]);
   }
   return $list;
 }
