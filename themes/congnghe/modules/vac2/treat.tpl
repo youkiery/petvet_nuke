@@ -8,7 +8,7 @@
 		<img src="/themes/congnghe/images/vac/trans.png" title="Thêm thú cưng"> 
 	</div>
 </div>
-<form onsubmit="return themluubenh(event)" autocomplete="off">
+<form onsubmit="return inserttreat(event)" autocomplete="off">
 	<table class="tab1 vac">
 		<thead>
 			<tr>
@@ -51,7 +51,7 @@
 					{lang.petname}
 				</td>
 				<td colspan="3">
-					{lang.ngayluubenh}
+					{lang.treatcome}
 				</td>
 			</tr>
 			<!-- pet input -->
@@ -60,13 +60,13 @@
 					<select id="pet_info" style="text-transform: capitalize;" name="petname"></select>
 				</td>
 				<td colspan="3">
-					<input id="ngayluubenh" type="date" name="ngayluubenh" value="{now}">
+					<input id="cometime" type="date" name="cometime" value="{now}">
 				</td>
 			</tr>
 			<!-- hình ảnh -->
 			<tr>
 				<td>
-					{lang.doctor}
+					{lang.doctor2}
 				</td>
 				<td colspan="3">
 					<select name="doctor" id="doctor" style="width: 90%;">
@@ -82,7 +82,7 @@
           {lang.tinhtrang}
         </td>
 				<td colspan="3">
-					<select name="tinhtrang" id="tinhtrang2" style="width: 90%;">
+					<select name="status" id="status" style="width: 90%;">
 						<!-- BEGIN: status -->
 						<option value="{status_value}">{status_name}</option>
 						<!-- END: status -->
@@ -98,7 +98,7 @@
 	</table>
 </form>
 <script>
-	var link = "/index.php?" + nv_name_variable + "=" + nv_module_name + "&act=post&" + nv_fc_variable + "=";
+	var link = "/index.php?" + nv_name_variable + "=" + nv_module_name + "&act=post&" + nv_fc_variable + "=treat-process";
 	var blur = true;
 	var g_customer = -1;
 	var customer_data = [];
@@ -112,7 +112,8 @@
 	var suggest_name = document.getElementById("customer_name_suggest");
 	var suggest_phone = document.getElementById("customer_phone_suggest");
 
-	function themluubenh(event) {
+
+	function inserttreat(event) {
     event.preventDefault();
     // return false;
 		msg = "";
@@ -124,15 +125,15 @@
 			msg = "Khách hàng chưa có thú cưng!"
 		} else {
 			$.post(
-				link + "themluubenh",
-				{"customer": customer_name.value, "phone": customer_phone.value, "address": customer_address.value,idthu: pet_info.value, idbacsi: $("#doctor").val(), ngayluubenh: $("#ngayluubenh").val(), ghichu: $("#ghichu").val(), tinhtrang: $("#tinhtrang2").val()},
+				link,
+				{action: "themluubenh", "customer": customer_name.value, "phone": customer_phone.value, "address": customer_address.value, petid: pet_info.value, doctorid: $("#doctor").val(), cometime: $("#cometime").val(), note: $("#note").val(), status: $("#status").val()},
 				(data, status) => {
 					data = JSON.parse(data);
 					if (data["status"] == 1) {
-                        alert_msg(data["data"]);
-                        customer_list[g_index]["customer"] = customer_name;
-                        customer_list[g_index]["phone"] = customer_phone;
-                        g_index = -1;
+            alert_msg(data["data"]);
+            customer_list[g_index]["customer"] = customer_name;
+            customer_list[g_index]["phone"] = customer_phone;
+            g_index = -1;
 						customer_name.value = "";
 						customer_phone.value = "";
 						customer_address.value = "";
@@ -150,42 +151,7 @@
 		return false;
 	}
 
-	customer_name.addEventListener("keyup", (e) => {
-		showSuggest(e.target.getAttribute("id"), true);
-	})
-
-	customer_phone.addEventListener("keyup", (e) => {
-		showSuggest(e.target.getAttribute("id"), false);
-	})
-
-	suggest_name.addEventListener("mouseenter", (e) => {
-		blur = false;
-	})
-	suggest_name.addEventListener("mouseleave", (e) => {
-		blur = true;
-	})
-	customer_name.addEventListener("focus", (e) => {
-		suggest_name.style.display = "block";
-	})
-	customer_name.addEventListener("blur", (e) => {
-		if(blur) {
-			suggest_name.style.display = "none";
-		}
-	})
-	suggest_phone.addEventListener("mouseenter", (e) => {
-		blur = false;
-	})
-	suggest_phone.addEventListener("mouseleave", (e) => {
-		blur = true;
-	})
-	customer_phone.addEventListener("focus", (e) => {
-		suggest_phone.style.display = "block";
-	})
-	customer_phone.addEventListener("blur", (e) => {
-		if(blur) {
-			suggest_phone.style.display = "none";
-		}
-	})
+	suggest_init()
 
 </script>
 <!-- END: main -->

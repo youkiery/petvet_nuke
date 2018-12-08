@@ -64,11 +64,14 @@ $lang_module["list2"] = "Danh sách tiêm phòng mới thêm";
 
 $lang_module["tieude_luubenh"] = "Quản lý lưu bệnh";
 $lang_module["ngayluubenh"] = "Ngày lưu bệnh";
+$lang_module["treattime"] = "Ngày lưu bệnh";
 $lang_module["tinhtrang"] = "Tình trạng";
+$lang_module["status"] = "Tình trạng";
 $lang_module["trihet"] = "Điều trị xong";
 $lang_module["dachet"] = "Đã chết";
 $lang_module["suckhoe"] = "Sức khỏe";
 $lang_module["ketqua"] = "Kết quả điều trị";
+$lang_module["insult"] = "Kết quả điều trị";
 $lang_module["nhietdo"] = "Nhiệt độ";
 $lang_module["niemmac"] = "Niêm mạc";
 $lang_module["khac"] = "Khác";
@@ -77,6 +80,7 @@ $lang_module["xetnghiem"] = "Xét nghiệm";
 $lang_module["non"] = "Không";
 $lang_module["have"] = "Có";
 $lang_module["tongket"] = "Tổng kết";
+$lang_module["summary"] = "Tổng kết";
 $lang_module["trieuchung"] = "Triệu chứng";
 $lang_module["tongngay"] = "Tổng số ngày điều trị: ";
 

@@ -131,3 +131,57 @@ function usg_vaccine_list($data_content, $html_page = "") {
   $xtpl->parse("main");
   return $xtpl->text("main");
 }
+
+function treat_vaccine_page($data_content, $html_page = "") {
+  global $lang_module, $global_config;
+  $xtpl = new XTemplate("treat.tpl", VAC_PATH);
+  $xtpl->assign("lang", $lang_module);
+
+  $today = date("Y-m-d", NV_CURRENTTIME);
+  $xtpl->assign("now", $today);
+
+  foreach ($data_content["doctor"] as $id => $doctor) {
+    $xtpl->assign("doctor_value", $id);
+    $xtpl->assign("doctor_name", $doctor);
+    $xtpl->parse("main.doctor");
+  }
+  foreach ($data_content["status"] as $id => $doctor) {
+    $xtpl->assign("status_name", $doctor);
+    $xtpl->assign("status_value", $id);
+    $xtpl->parse("main.status");
+  }
+
+  $xtpl->parse("main");
+  return $xtpl->text("main");
+}
+
+function treat_vaccine_list($data_content, $html_page = "") {
+  global $hex, $lang_module, $module_name;
+  $xtpl = new XTemplate("usg-list.tpl", VAC_PATH);
+  $xtpl->assign("lang", $lang_module);
+  $xtpl->assign("keyword", $data_content["keyword"]);
+  $xtpl->assign("page", $data_content["page"]);
+  $xtpl->assign("list", "/index.php?nv=$module_name&op=treat-list");
+  $xtpl->assign("rlist", "/index.php?nv=$module_name&op=treat-list&page=rlist");
+  
+  $i = 1;
+  foreach ($data_content["list"] as $data_row) {
+    $xtpl->assign("index", $i);
+    $xtpl->assign("vacid", $data_row["id"]);
+    $xtpl->assign("diseaseid", $data_row["diseaseid"]);
+    $xtpl->assign("petid", $data_row["petid"]);
+    $xtpl->assign("petname", $data_row["petname"]);
+    $xtpl->assign("customer", $data_row["customer"]);
+    $xtpl->assign("phone", $data_row["phone"]);
+    $xtpl->assign("cometime", $data_row["cometime"]);
+    $xtpl->assign("bgcolor", $data_row["bgcolor"]);
+    $xtpl->assign("confirm", $data_row["confirm"]);
+    $xtpl->assign("note", $data_row["note"]);
+    $xtpl->parse("main.disease.body");
+    $i ++;
+  }
+
+  $xtpl->parse("main.disease");
+  $xtpl->parse("main");
+  return $xtpl->text("main");
+}

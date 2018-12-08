@@ -1,11 +1,12 @@
 <?php
 
 /**
- * @Project NUKEVIET-MUSIC
- * @Author Phan Tan Dung
- * @Copyright (C) 2011
- * @Createdate 26/01/2011 10:26 AM
+ * @Project TXManager
+ * @Author Youkiery (youkiery@gmail.com)
+ * @copyright 2018
+ * @createdate 01/11/2018 08:00 AM
  */
+
 if (!defined('NV_IS_MOD_VAC'))
   die('Stop!!!');
 

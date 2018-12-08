@@ -75,9 +75,9 @@ function filterorder() {
   $keyword = $nv_Request->get_string('keyword', 'post/get', '');
   $page = $nv_Request->get_string('page', 'post/get', '');
   // echo 1;
-  $result["step"] = 1;
+  // $result["step"] = 1;
   if ($uid > 0 && $sort >= 0 && $type >= 0 && $page) {
-    $result["step"] = 2;
+    // $result["step"] = 2;
     // echo 2;
     $from = 0;
     $to = (12 * $page);
@@ -89,7 +89,7 @@ function filterorder() {
     $count = "SELECT count(a.id) as count from post a inner join user b on a.user = b.id";
     $count2 = "SELECT count(a.id) as count from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id";
 
-    $result["step"] = 3;
+    // $result["step"] = 3;
 
     $typeid = 0;
     switch ($type) {
@@ -122,13 +122,13 @@ function filterorder() {
         $sql = "$main $where and a.user = $uid and a.sold = 0 $order limit $from, " . ($to - 1);
         $sql2 = "$count $where and a.user = $uid and a.sold = 0 $order";
     }
-    $result["sql"] = $sql;
+    // $result["sql"] = $sql;
 
     $query = $db->sql_query($sql2);
     $countid = $db->sql_fetch_assoc($query);
     $result["data"]["next"] = false;
-    $result["count"] = $countid["count"];
-    $result["to"] = $to;
+    // $result["count"] = $countid["count"];
+    // $result["to"] = $to;
     // $result["sql"] = $sql2;
     if ($countid["count"] > $to) {
       $result["data"]["next"] = true;

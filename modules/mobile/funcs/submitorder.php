@@ -14,7 +14,7 @@ if ($uid > 0 && $oid > 0 && $pid) {
     if ($db->sql_query($sql)) {
       $sql = "UPDATE post set sold = 1 where id = $pid";
       if ($db->sql_query($sql)) {
-        $sql = "SELECT * from post where id = $pid";
+        $sql = "SELECT * from petorder where id = $oid";
         $pquery = $db->sql_query($sql);
         $row = $db->sql_fetch_assoc($pquery);
         $sql = "insert into notify (type, user, uid, pid, time) values(6, $uid, $row[user], $pid, " . strtotime(date("Y-m-d")) . ")";

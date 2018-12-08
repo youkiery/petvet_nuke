@@ -13,6 +13,8 @@ if (!(empty($uid) || empty($page))) {
   $sql = "SELECT count(a.id) as count from notify a where a.user = $uid";
   $query = $db->sql_query($sql);
   $row = $db->sql_fetch_assoc($query);
+  $result["data"]["count"] = $sql;
+
   if ($row["count"] > $to) {
     $result["data"]["next"] = true;
   } else {
@@ -20,7 +22,7 @@ if (!(empty($uid) || empty($page))) {
   }
 
   $sql = "SELECT a.type, a.time, a.pid, b.name as title from notify a inner join post b on a.pid = b.id where a.user = $uid order by a.time desc $limit";
-  // $result["data"]["sql"] = $sql;
+  $result["data"]["sql2"] = $sql;
 
   if ($query = $db->sql_query($sql)) {
     $data = sqlfetchall($db, $query);
@@ -41,6 +43,7 @@ if (!(empty($uid) || empty($page))) {
     $row = $db->sql_fetch_assoc($query);
     $count = $row["count"];
     $result["data"]["new"] = $count;
+
 
     $sql = "UPDATE notify set view = 1 where id in (select id from (select id from notify where user = $uid and view = 0 order by time desc $limit) tpl )";
     $db->sql_query($sql);
