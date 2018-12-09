@@ -7,42 +7,43 @@
 */
 
 if (!defined('NV_IS_FILE_MODULES')) die('Stop!!!');
+define('VAC_PREFIX', $db_config['prefix'] . "_" . $module_data);
 
 $sql_drop_module = array();
-$sql_drop_module[] = "DROP TABLE IF EXISTS `" . $db_config['prefix'] . "_" . $module_data . "_customer`";
-$sql_drop_module[] = "DROP TABLE IF EXISTS `" . $db_config['prefix'] . "_" . $module_data . "_disease`";
-$sql_drop_module[] = "DROP TABLE IF EXISTS `" . $db_config['prefix'] . "_" . $module_data . "_doctor`";
-$sql_drop_module[] = "DROP TABLE IF EXISTS `" . $db_config['prefix'] . "_" . $module_data . "_pet`";
-$sql_drop_module[] = "DROP TABLE IF EXISTS `" . $db_config['prefix'] . "_" . $module_data . "_treat`";
-$sql_drop_module[] = "DROP TABLE IF EXISTS `" . $db_config['prefix'] . "_" . $module_data . "_treating`";
-$sql_drop_module[] = "DROP TABLE IF EXISTS `" . $db_config['prefix'] . "_" . $module_data . "_usg`";
-$sql_drop_module[] = "DROP TABLE IF EXISTS `" . $db_config['prefix'] . "_" . $module_data . "_vaccine`";
+$sql_drop_module[] = "DROP TABLE IF EXISTS `" . VAC_PREFIX . "_customer`";
+$sql_drop_module[] = "DROP TABLE IF EXISTS `" . VAC_PREFIX . "_disease`";
+$sql_drop_module[] = "DROP TABLE IF EXISTS `" . VAC_PREFIX . "_doctor`";
+$sql_drop_module[] = "DROP TABLE IF EXISTS `" . VAC_PREFIX . "_pet`";
+$sql_drop_module[] = "DROP TABLE IF EXISTS `" . VAC_PREFIX . "_treat`";
+$sql_drop_module[] = "DROP TABLE IF EXISTS `" . VAC_PREFIX . "_treating`";
+$sql_drop_module[] = "DROP TABLE IF EXISTS `" . VAC_PREFIX . "_usg`";
+$sql_drop_module[] = "DROP TABLE IF EXISTS `" . VAC_PREFIX . "_vaccine`";
 $sql_create_module = $sql_drop_module;
-$sql_create_module[] = "CREATE TABLE `" . $db_config['prefix'] . "_" . $module_data . "_customer` (
-  `id` int(11) NOT NULL,
+$sql_create_module[] = "CREATE TABLE `" . VAC_PREFIX . "_customer` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
   `phone` varchar(20) NOT NULL,
   `address` text NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8";
-$sql_create_module[] = "CREATE TABLE `" . $db_config['prefix'] . "_" . $module_data . "_disease` (
-  `id` int(11) NOT NULL,
+$sql_create_module[] = "CREATE TABLE `" . VAC_PREFIX . "_disease` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
-$sql_create_module[] = "CREATE TABLE `" . $db_config['prefix'] . "_" . $module_data . "_doctor` (
-  `id` int(11) NOT NULL,
+$sql_create_module[] = "CREATE TABLE `" . VAC_PREFIX . "_doctor` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8";
-$sql_create_module[] = "CREATE TABLE `" . $db_config['prefix'] . "_" . $module_data . "_pet` (
-  `id` int(11) NOT NULL,
+$sql_create_module[] = "CREATE TABLE `" . VAC_PREFIX . "_pet` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   `customerid` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
-$sql_create_module[] = "CREATE TABLE `" . $db_config['prefix'] . "_" . $module_data . "_treat` (
-  `id` int(11) NOT NULL,
+$sql_create_module[] = "CREATE TABLE `" . VAC_PREFIX . "_treat` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `petid` int(11) NOT NULL,
   `doctorid` int(11) NOT NULL,
   `cometime` int(11) NOT NULL,
@@ -50,8 +51,8 @@ $sql_create_module[] = "CREATE TABLE `" . $db_config['prefix'] . "_" . $module_d
   `insult` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
-$sql_create_module[] = "CREATE TABLE `" . $db_config['prefix'] . "_" . $module_data . "_treating` (
-  `id` int(11) NOT NULL,
+$sql_create_module[] = "CREATE TABLE `" . VAC_PREFIX . "_treating` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `treatid` int(11) NOT NULL,
   `temperate` varchar(200) NOT NULL,
   `eye` varchar(200) NOT NULL,
@@ -64,8 +65,8 @@ $sql_create_module[] = "CREATE TABLE `" . $db_config['prefix'] . "_" . $module_d
   `doctorx` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
-$sql_create_module[] = "CREATE TABLE `" . $db_config['prefix'] . "_" . $module_data . "_usg` (
-  `id` int(11) NOT NULL,
+$sql_create_module[] = "CREATE TABLE `" . VAC_PREFIX . "_usg` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `petid` int(11) NOT NULL,
   `doctorid` int(11) NOT NULL,
   `cometime` int(11) NOT NULL,
@@ -75,8 +76,8 @@ $sql_create_module[] = "CREATE TABLE `" . $db_config['prefix'] . "_" . $module_d
   `note` varchar(200) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
-$sql_create_module[] = "CREATE TABLE `" . $db_config['prefix'] . "_" . $module_data . "_vaccine` (
-  `id` int(11) NOT NULL,
+$sql_create_module[] = "CREATE TABLE `" . VAC_PREFIX . "_vaccine` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `petid` int(11) NOT NULL,
   `diseaseid` int(11) NOT NULL,
   `cometime` int(11) NOT NULL,
