@@ -122,7 +122,7 @@ if (!function_exists('nv_pro_catalogs')) {
 			foreach ($list as $catid) {
 				if ($array_cat_shops[$catid]['inhome'] == '1') {
 				$html .= " <div class=\"cols\">\n";		
-				$html .= "<div class=\"cate_title_" . $array_cat_shops[$catid]['keywords'] . "\">\n";
+				$html .= "<div class=\"cate_title_" . $array_cat_shops[$catid]['vi_keywords'] . "\">\n";
 					$html .= "<a href=\"" . $array_cat_shops[$catid]['link'] . "&sort=1&view=viewcat_page_list\" >". 
                                     "<img src=\"" . $array_cat_shops[$catid]['icon'] . "\" />" . nv_clean60($array_cat_shops[$catid]['title'], $cut_num) . "</a>\n";
 				 $html .= "</div>\n";
