@@ -11,9 +11,8 @@ if (!defined('NV_IS_MOD_VAC')) {
   die('Stop!!!');
 }
 
-quagio();
-
-$page_title = $module_info['custom_title'];
+overtime();
+$page_title = $module_info['main_title'];
 $key_words = $module_info['keywords'];
 
 $data_content["disease"] = get_disease_list();

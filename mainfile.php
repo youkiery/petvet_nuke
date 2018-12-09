@@ -126,9 +126,9 @@ $global_config['error_log_filename'] = NV_ERRORLOGS_FILENAME;
 $global_config['error_log_fileext'] = NV_LOGS_EXT;
 
 //Ket noi voi class Error_handler
-require_once ( NV_ROOTDIR . '/includes/class/error.class.php' );
-$ErrorHandler = new Error($global_config);
-set_error_handler(array(&$ErrorHandler, 'error_handler'));
+//require_once ( NV_ROOTDIR . '/includes/class/error.class.php' );
+//$ErrorHandler = new Error($global_config);
+//set_error_handler(array(&$ErrorHandler, 'error_handler'));
 
 if (empty($global_config['allow_sitelangs']) or empty($global_config['allow_adminlangs'])) {
   trigger_error("Error! Language variables is empty!", 256);

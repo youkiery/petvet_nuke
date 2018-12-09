@@ -9,7 +9,7 @@
 
 if (!defined('NV_SYSTEM')) die('Stop!!!'); 
 define('NV_IS_MOD_VAC', true); 
-// define(VAC_PREFIX, "vng_vac");
+define('VAC_PREFIX', 'vng_vac');
 // $module_info['theme'] = "congnghe";
 // define(VAC_PATH, NV_ROOTDIR . "/themes/" . $module_info['theme'] . "/modules/" . $module_file);
 

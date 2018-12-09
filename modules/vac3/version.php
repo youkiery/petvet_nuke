@@ -11,7 +11,7 @@ if ( ! defined( 'NV_ADMIN' ) or ! defined( 'NV_MAINFILE' )) die( 'Stop!!!' );
 
 $module_version = array( 
 	"name" => "vac", // Tieu de module
-	"modfuncs" => "process, main, main-process, main-list, usg, usg-process, usg-list, treat, treat-process, treat-list, sieuam, danhsachsieuam, themsieuam, xacnhansieuam, luubenh, danhsachluubenh, themluubenh, xuatbang",
+	"modfuncs" => "test, main",
 	"is_sysmod" => 0,
 	"virtual" => 1,
 	"version" => "3.0.01",
