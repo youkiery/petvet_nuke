@@ -11,34 +11,28 @@ quagio();
     $xtpl = new XTemplate("list.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
     $xtpl->assign("lang", $lang_module);
 
+    $sql = "select * from " . VAC_PREFIX . "_doctor";
+    $query = $db->sql_query($sql);
+    while($row = $db->sql_fetch_assoc($query)) {
+      $xtpl->assign("doctorid", $row["id"]);
+      $xtpl->assign("doctorname", $row["name"]);
+      $xtpl->parse("main.doctor");
+    }
+
     $page = $nv_Request->get_string('page', 'get', '');
 
     $diseases = getDiseaseList();
     $vaclist = array();
-    // echo $global_config["filter_time"]; die();
+
     if ($page == "list") {
-      foreach ($diseases as $id => $disease) {
-        $vaclist_disease = getrecentlist(NV_CURRENTTIME, $global_config["filter_time"], $global_config["sort_type"], $disease["id"]);
-        // echo date("Y-m-d", NV_CURRENTTIME) . ", " . $global_config["filter_time"] . ", " . $global_config["sort_type"] . ", " . $disease["id"] . " | ";
-        // var_dump($vaclist_disease);
-        $vaclist = array_merge($vaclist, $vaclist_disease);
-      }
+        $vaclist = getrecentlist(NV_CURRENTTIME, $global_config["filter_time"], $global_config["sort_type"]);
     } else {
-      foreach ($diseases as $id => $disease) {
-        $vaclist_disease = filterVac(NV_CURRENTTIME, $global_config["filter_time"], $global_config["sort_type"], $disease["id"]);
-        // echo date("Y-m-d", NV_CURRENTTIME) . ", " . $global_config["filter_time"] . ", " . $global_config["sort_type"] . ", " . $disease["id"] . " | ";
-        // var_dump($vaclist_disease);
-        $vaclist = array_merge($vaclist, $vaclist_disease);
-      }
+        $vaclist = filterVac(NV_CURRENTTIME, $global_config["filter_time"], $global_config["sort_type"]);
     }
-    // die();
-    // var_dump($vaclist); die();
   
     if ($page == "list") {
       $xtpl->assign("content", filter($vaclist, NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file, $lang_module, date("Y-m-d", NV_CURRENTTIME), $global_config["filter_time"], $global_config["sort_type"], 0));
     } else {
-      // echo $vaclist, NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file, $lang_module, date("Y-m-d", NV_CURRENTTIME), $global_config["filter_time"], $global_config["sort_type"]), 1;
-      // die();
       $xtpl->assign("content", filter($vaclist, NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file, $lang_module, date("Y-m-d", NV_CURRENTTIME), $global_config["filter_time"], $global_config["sort_type"], 1));
     }
 

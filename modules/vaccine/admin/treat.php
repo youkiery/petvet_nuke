@@ -25,7 +25,7 @@ while ($row = $db->sql_fetch_assoc($result)) {
 }
 
 $sort_type = array("Tên A-Z", "Tên Z-A", "Mới trước", "Cũ trước");
-$order = array("order by customer asc", "order by customer desc", "order by ngayluubenh asc", "order by ngayluubenh desc");
+$order = array("order by c.name asc", "order by c.name desc", "order by cometime asc", "order by cometime desc");
 $filter_type = array("25", "50", "100", "200", "Tất cả");
 $ret = array("status" => 0, "data" => "");
 $check = false;

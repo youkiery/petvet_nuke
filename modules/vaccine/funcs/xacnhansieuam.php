@@ -18,15 +18,15 @@ if(!(empty($act) || empty($value) || empty($id))) {
 	} else {
 		$mod = -1;
 	}
-	if (in_array($value, $lang_module["confirm_value"])) {
-		$confirmid = array_search($value, $lang_module["confirm_value"]);
+	if (in_array($value, $lang_module["confirm_value2"])) {
+		$confirmid = array_search($value, $lang_module["confirm_value2"]);
 		$confirmid += $mod;
-		if (!empty($lang_module["confirm_value"][$confirmid])) {
+		if (!empty($lang_module["confirm_value2"][$confirmid])) {
 			$sql = "update `" . VAC_PREFIX . "_usg` set status = $confirmid where id = $id";
 			$result = $db->sql_query($sql);
 			if ($result) {
 				$ret["status"] = 1;
-				$ret["data"]["value"] = $lang_module["confirm_value"][$confirmid];
+				$ret["data"]["value"] = $lang_module["confirm_value2"][$confirmid];
 				switch ($confirmid) {
 					case '1':
 						$color = "orange";

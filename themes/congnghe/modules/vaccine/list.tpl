@@ -1,16 +1,10 @@
-<!-- BEGIN: overtime -->
-<p>
-  Đã hết thời gian làm việc, xin hãy quay trở lại vào ngày mai!  
-</p>
-
-<!-- END: overtime -->
 <!-- BEGIN: main -->
 <div id="msgshow" class="msgshow"></div>
 
 <div id="vac_notify" style="display: none; position: fixed; top: 0; right: 0; background: white; padding: 8px; border: 1px solid black; z-index: 1000;"></div>
 <div id="reman"></div>
-<a href="/index.php?nv=vac&op=list"> {lang.list} </a>
-<a href="/index.php?nv=vac&op=list&page=list"> {lang.list2} </a>
+<a href="/index.php?nv=vaccine&op=list"> {lang.list} </a>
+<a href="/index.php?nv=vaccine&op=list&page=list"> {lang.list2} </a>
 <div id="vac_panel" style="display: none; position: fixed; margin:auto; z-index: 1001;">
   <form>
     <table class="tab1" style="width: 500px;">
@@ -35,7 +29,12 @@
             {lang.doctor}
           </td>
           <td>
-            <select id="confirm_doctor" style="width: 100%; height: 2em;">
+            <select id="doctor_select" style="width: 100%; height: 2em;">
+              <!-- BEGIN: doctor -->
+              <option value="{doctorid}">
+                {doctorname}
+              </option>
+              <!-- END: doctor -->
             </select>      
           </td>
         </tr>
@@ -97,7 +96,7 @@
   function save_form() {
     $.post(
       link + "main&act=post",
-      {action: "save", petid: g_petid, recall: $("#confirm_recall").val(), doctor: $("#confirm_doctor").val(), vacid: g_vacid, diseaseid: g_disease},
+      {action: "save", petid: g_petid, recall: $("#confirm_recall").val(), doctor: $("#doctor_select").val(), vacid: g_vacid, diseaseid: g_disease},
       (data, status) => {
 				data = JSON.parse(data);
 
@@ -130,9 +129,9 @@
 				g_index = index
 				if (data["status"]) {
 					$("#confirm_recall").val(data["data"]["recall"]);
-					$("#confirm_doctor").val(data["data"]["doctor"]);
+					$("#doctor_select").val(data["data"]["doctor"]);
 					$("#confirm_recall").attr("disabled", true);
-					$("#confirm_doctor").attr("disabled", true);
+					$("#doctor_select").attr("disabled", true);
 				} else {
 					var now = new Date(Number(new Date()) + 3 * 7 * 24 * 60 * 60 * 1000);
 					timestring = now.getFullYear() + "-" + (((now.getMonth() + 1) < 10 ? "0" : "") + (now.getMonth() + 1)) + "-" + (now.getDate() < 10 ? "0" : "") + now.getDate();
@@ -142,9 +141,8 @@
 					data["data"].forEach((doctor, index) => {
 						html += "<option value='" + index + "'>" + doctor["doctor"] + "</option>";
 					})
-					$("#confirm_doctor").html(html);
 					$("#confirm_recall").attr("disabled", false);
-					$("#confirm_doctor").attr("disabled", false);
+					$("#doctor_select").attr("disabled", false);
 				}
 			}
     )

@@ -20,6 +20,9 @@ $lang_module["confirm_2"] = "Đã tiêm";
 $lang_module["confirm_value"][0] = "Chưa Gọi";
 $lang_module["confirm_value"][1] = "Đã Gọi";
 $lang_module["confirm_value"][2] = "Đã Tiêm";
+$lang_module["confirm_value2"][0] = "Chưa Gọi";
+$lang_module["confirm_value2"][1] = "Đã Gọi";
+$lang_module["confirm_value2"][2] = "Đã Siêu Âm";
 //disease
 $lang_module["disease_title"] = "Quản lý tiêm phòng";
 $lang_module["disease"] = "Loại tiêm phòng";
@@ -81,4 +84,5 @@ $lang_module["tongket"] = "Tổng kết";
 $lang_module["trieuchung"] = "Triệu chứng";
 $lang_module["tongngay"] = "Tổng số ngày điều trị: ";
 $lang_module["doctor2"] = "Người nhận";
-?>
+
+$lang_module["themsieuam"] = "Thêm siêu âm";

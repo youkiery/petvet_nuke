@@ -375,7 +375,9 @@ if (!nv_function_exists('nv_menu_site')) {
           $xtpl->assign('cla', '');
         }
 
-        $xtpl->assign('MENUTREE', $list_cats[$catid]);
+        if (!empty($list_cats[$catid])) {
+          $xtpl->assign('MENUTREE', $list_cats[$catid]);
+        }
 
         if (!empty($list_cats[$catid]['subcats'])) {
           $tree = nv_sub_menu($style, $list_cats, $list_cats[$catid]['subcats']);

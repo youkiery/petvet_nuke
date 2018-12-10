@@ -20,9 +20,6 @@
         <th style="width: 50px;">
           {lang.ngaydusinh}
         </th>  
-      	<th style="width: 50px;">
-        	{lang.ngaybao}
-				</th>    
 				<th style="width: 70px;">
 					{lang.confirm}
 				</th>
@@ -49,15 +46,12 @@
       	<td class="dusinh">
         	{dusinh}
       	</td>    
-      	<td class="thongbao">
-        	{thongbao}
-				</td>    
 				<td style="text-align: center;">
 					<button style="float: left;" onclick="confirm_lower({index}, {vacid}, {petid})">
 						&lt;
 					</button>
           <span id="vac_confirm_{index}" style="color: {color};">
-            {trangthai}
+            {status}
           </span>
 					<button style="float: right;" onclick="confirm_upper({index}, {vacid}, {petid})">
 						&gt;

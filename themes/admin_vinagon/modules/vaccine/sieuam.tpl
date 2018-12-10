@@ -77,9 +77,6 @@
 				<td>
 					{lang.ngaydusinh}
 				</td>
-				<td>
-					{lang.ngaybao}
-				</td>
 			</tr>
 			<!-- pet input -->
 			<tr>
@@ -88,9 +85,6 @@
 				</td>
 				<td>
 					<input class="input" id="ngaysieuam" type="date" name="ngaysieuam" value="{now}">
-				</td>
-				<td>
-					<input class="input" id="ngaydusinh" type="date" name="ngaysieuam" value="{dusinh}">
 				</td>
 			</tr>
 			<!-- hình ảnh -->

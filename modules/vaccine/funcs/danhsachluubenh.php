@@ -36,7 +36,7 @@ $result = $db->sql_query($sql);
 
 while ($row = $db->sql_fetch_assoc($result)) {
   $xtpl->assign("doctorid", $row["id"]);
-  $xtpl->assign("doctorname", $row["doctor"]);
+  $xtpl->assign("doctorname", $row["name"]);
   $xtpl->parse("main.doctor");
 }
 
@@ -50,19 +50,19 @@ foreach ($status_option as $key => $value) {
 
 // var_dump($_GET); die();
 
-$sql = "SELECT a.id, a.ngayluubenh, a.ketqua, b.id as petid, b.petname, c.name as customer, d.name as doctor from `" . VAC_PREFIX . "_treat` a inner join `" . VAC_PREFIX . "_pet` b on a.petid = b.id inner join `" . VAC_PREFIX .  "_customer` c on c.id = b.customerid and (c.customer like '%$keyword%' or c.phone like '%$keyword%' or b.petname like '%$keyword%') inner join `" . VAC_PREFIX . "_doctor` d on a.doctorid =d.id order by ngayluubenh desc, a.id";
+$sql = "SELECT a.id, a.cometime, a.insult, b.id as petid, b.name as petname, c.name as customer, d.name as doctor from `" . VAC_PREFIX . "_treat` a inner join `" . VAC_PREFIX . "_pet` b on a.petid = b.id inner join `" . VAC_PREFIX .  "_customer` c on c.id = b.customerid and (c.name like '%$keyword%' or c.phone like '%$keyword%' or b.name like '%$keyword%') inner join `" . VAC_PREFIX . "_doctor` d on a.doctorid = d.id order by cometime desc, a.id";
 // die($sql);
 $result = $db->sql_query($sql);
 
 $display_list = array();
 while ($row = $db->sql_fetch_assoc($result)) {
   // var_dump($row); die();
-  $sql = "SELECT tinhtrang from `" . VAC_PREFIX . "_treating` where idluubenh = $row[id] order by id desc limit 1";
+  $sql = "SELECT status from `" . VAC_PREFIX . "_treating` where treatid = $row[id] order by id desc limit 1";
   // echo $sql; die();
   $query2 = $db->sql_query($sql);
   $row2 = $db->sql_fetch_assoc($query2);
   // var_dump($row2);
-  $row["tinhtrang"] = $row2["tinhtrang"] ? $row2["tinhtrang"] : 0;
+  $row["status"] = $row2["status"] ? $row2["status"] : 0;
   $display_list[] = $row;
 }
 
@@ -92,10 +92,10 @@ function displaySSList($list, $time, $path, $lang_module) {
     $xtpl->assign("customer", $list_data["customer"]);
     $xtpl->assign("doctor", $list_data["doctor"]);
     $xtpl->assign("petid", $list_data["petid"]);
-    $xtpl->assign("luubenh", date("d/m/Y", $list_data["ngayluubenh"]));
-    $xtpl->assign("ketqua", $export[$list_data["ketqua"]]);
-    $xtpl->assign("tinhtrang", $status_option[$list_data["tinhtrang"]]);
-    $xtpl->assign("bgcolor", mauluubenh($list_data["ketqua"], $list_data["tinhtrang"]));
+    $xtpl->assign("cometime", date("d/m/Y", $list_data["cometime"]));
+    $xtpl->assign("insult", $export[$list_data["insult"]]);
+    $xtpl->assign("status", $status_option[$list_data["status"]]);
+    $xtpl->assign("bgcolor", mauluubenh($list_data["insult"], $list_data["status"]));
 
     // $xtpl->assign("thongbao", $list_data["ngaybao"]);
     $xtpl->parse("main.list");

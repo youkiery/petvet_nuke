@@ -22,7 +22,7 @@
       <span id="phone"></span>
     </p>
     <p>
-      {lang.ngayluubenh}: 
+      {lang.cometime}: 
       <span id="luubenh"></span>
     </p>
     <p>
@@ -30,23 +30,23 @@
       <span id="doctor"></span>
     </p>
   </div>
-  <div class="lieutrinh">
-    <span id="lieutrinh" style="float: right;"></span>
-    <form onsubmit="return themlieutrinh(event)">
-      <input type="date" id="ngaylieutrinh" value="{now}" />
+  <div class="treating">
+    <span id="treating" style="float: right;"></span>
+    <form onsubmit="return themtreating(event)">
+      <input type="date" id="timetreating" value="{now}" />
       <button class="submitbutton">
         {lang.add}
       </button>
     </form>
-    <div id="dslieutrinh">
+    <div id="dstreating">
       
     </div>
-    <div id="lieutrinh">
-      <form onsubmit="return luulieutrinh(event)" id="qllieutrinh">
-        <input class="input" type="text" id="nhietdo" placeholder="{lang.nhietdo}">
-        <input class="input" type="text" id="niemmac" placeholder="{lang.niemmac}">
-        <input class="input" type="text" id="khac" placeholder="{lang.khac}">
-        <input class="input" type="text" id="dieutri" placeholder="{lang.dieutri}">
+    <div id="treating">
+      <form onsubmit="return luutreating(event)" id="qltreating">
+        <input class="input" type="text" id="temperate" placeholder="{lang.temperate}">
+        <input class="input" type="text" id="rate" placeholder="{lang.rate}">
+        <input class="input" type="text" id="other" placeholder="{lang.other}">
+        <input class="input" type="text" id="treating" placeholder="{lang.treating}">
         <br>
         <label for="doctorx">{lang.doctor}</label>
         <select name="doctorx" id="doctorx"> 
@@ -58,15 +58,15 @@
           {lang.submit}
         </button>
         <br>
-        <label for="tinhtrang">{lang.tinhtrang}</label>
-        <select name="tinhtrang" id="tinhtrang2"> 
+        <label for="status">{lang.status}</label>
+        <select name="status" id="status2"> 
           <!-- BEGIN: status_option -->
           <option value="{status_value}"> {status_name} </option>
           <!-- END: status_option -->
         </select>
         <br>
-        <label for="xetnhiem">{lang.xetnghiem}</label>
-        <select name="xetnghiem" id="xetnghiem"> 
+        <label for="xetnhiem">{lang.examine}</label>
+        <select name="examine" id="examine"> 
           <option value="0"> {lang.non} </option>
           <option value="1"> {lang.have} </option>
         </select>
@@ -98,8 +98,8 @@
   var lid = -1;
   var g_ltid = -1;
   var g_id = -1;
-  var d_lieutrinh = []
-  var g_ketqua = -1;
+  var d_treating = []
+  var g_insult = -1;
   var vac_index = 0;
   $("#reman").click(() => {
     closeVac()
@@ -144,62 +144,62 @@
           $("#petname").text(data["petname"])
           $("#customer").text(data["customer"])
           $("#phone").text(data["phone"])
-          $("#luubenh").text(data["ngayluubenh"])
+          $("#luubenh").text(data["cometime"])
           $("#doctor").text(data["doctor"])
-          var h_lieutrinh = ""
-          g_ketqua = data["ketqua"];
+          var h_treating = ""
+          g_insult = data["insult"];
           // console.log(data);
           
-          if (data["lieutrinh"]) {
-            // console.log(data["ketqua"]);
+          if (data["treating"]) {
+            // console.log(data["insult"]);
             
-            if (data["ketqua"] > 0) {
-              $("#qllieutrinh input").attr("disabled", "disabled");
-              $("#qllieutrinh select").attr("disabled", "disabled");
+            if (data["insult"] > 0) {
+              $("#qltreating input").attr("disabled", "disabled");
+              $("#qltreating select").attr("disabled", "disabled");
               $(".submitbutton").attr("disabled", "disabled");
             }
             else {
-              $("#qllieutrinh input").removeAttr("disabled", "");
-              $("#qllieutrinh select").removeAttr("disabled", "");
+              $("#qltreating input").removeAttr("disabled", "");
+              $("#qltreating select").removeAttr("disabled", "");
               $(".submitbutton").removeAttr("disabled", "");
             }
             select = -1;
-            d_lieutrinh = data["lieutrinh"]
-            $("#dslieutrinh").html("")
-            data["lieutrinh"].forEach(e => {
+            d_treating = data["treating"]
+            $("#dstreating").html("")
+            data["treating"].forEach(e => {
               select ++
-              var ngay = e["ngay"] * 1000;
-              // console.log(ngay);
+              var time = e["time"] * 1000;
+              // console.log(time);
               g_ltid = e["id"]
               g_id = select
-              html = "<span onclick='xemlieutrinh(" + g_ltid + ", " + select +")'>" + e["ngay"] + "</span> ";
-              $("#dslieutrinh").html($("#dslieutrinh").html() + html)
+              html = "<span onclick='xemtreating(" + g_ltid + ", " + select +")'>" + e["time"] + "</span> ";
+              $("#dstreating").html($("#dstreating").html() + html)
             })
-            // console.log(select, data["lieutrinh"]);
+            // console.log(select, data["treating"]);
             
-            $("#nhietdo").val(data["lieutrinh"][select]["nhietdo"])
-            $("#niemmac").val(data["lieutrinh"][select]["niemmac"])
-            $("#khac").val(data["lieutrinh"][select]["khac"])
-            $("#dieutri").val(data["lieutrinh"][select]["dieutri"])
-            $("#xetnghiem").val(data["lieutrinh"][select]["xetnghiem"])
-            $("#lieutrinh").text(data["lieutrinh"][select]["ngay"])
-            $("#tinhtrang2").val(data["lieutrinh"][select]["tinhtrang"])
-            $("#doctorx").val(data["lieutrinh"][select]["doctorx"])
+            $("#temperate").val(data["treating"][select]["temperate"])
+            $("#rate").val(data["treating"][select]["rate"])
+            $("#other").val(data["treating"][select]["other"])
+            $("#treating").val(data["treating"][select]["treating"])
+            $("#examine").val(data["treating"][select]["examine"])
+            $("#treating").text(data["treating"][select]["time"])
+            $("#status2").val(data["treating"][select]["status"])
+            $("#doctorx").val(data["treating"][select]["doctorx"])
           }
           else {
             // console.log("2");
-            d_lieutrinh = []
-            $("#qllieutrinh input").attr("disabled", "disabled");
-            $("#qllieutrinh select").attr("disabled", "disabled");
-            $("#dslieutrinh").html("")
+            d_treating = []
+            $("#qltreating input").attr("disabled", "disabled");
+            $("#qltreating select").attr("disabled", "disabled");
+            $("#dstreating").html("")
             
-            $("#nhietdo").val("")
-            $("#niemmac").val("")
-            $("#khac").val("")
-            $("#dieutri").val("")
-            $("#xetnghiem").val(0)
-            $("#lieutrinh").text("")
-            $("#tinhtrang2").val(0)
+            $("#temperate").val("")
+            $("#rate").val("")
+            $("#other").val("")
+            $("#treating").val("")
+            $("#examine").val(0)
+            $("#treating").text("")
+            $("#status2").val(0)
             $("#doctorx").val(0)
           }
 
@@ -213,20 +213,20 @@
     vac_index = 2;
 
     var body = ""
-    var addition = "<p><b>{lang.tongngay} " + d_lieutrinh.length + " </b></p>"
-    d_lieutrinh.forEach((lieutrinh, index) => {
-      body += "<tr style='height: 32px;'><td style='width: 20%'>" + lieutrinh["ngay"] + "</td><td style='width: 50%'><b>{lang.nhietdo}</b>: " + lieutrinh["nhietdo"] + "<br><b>{lang.niemmac}</b>: " + lieutrinh["niemmac"] + "<br><b>{lang.khac}</b>: " + lieutrinh["khac"] + "</td><td style='width: 30%'>" + lieutrinh["dieutri"] + "</td></tr>"
+    var addition = "<p><b>{lang.tongtime} " + d_treating.length + " </b></p>"
+    d_treating.forEach((treating, index) => {
+      body += "<tr style='height: 32px;'><td style='width: 20%'>" + treating["time"] + "</td><td style='width: 50%'><b>{lang.temperate}</b>: " + treating["temperate"] + "<br><b>{lang.rate}</b>: " + treating["rate"] + "<br><b>{lang.other}</b>: " + treating["other"] + "</td><td style='width: 30%'>" + treating["treating"] + "</td></tr>"
     }) 
     var html = 
-    "<table border='1' style='border-collapse: collapse; width: 100%;'><thead><tr style='height: 32px;'><th><span id='tk_khachhang'>" + $("#customer").text() + "</span> / <span id='tk_thucung'>" + $("#petname").text() + "</span></th><th>{lang.trieuchung}</th><th>{lang.dieutri}</th></tr></thead><tbody>" + body + "</tbody><tfoot><tr><td colspan='3'>" + addition + "</td></tr></tfoot></table>"
+    "<table border='1' style='border-collapse: collapse; width: 100%;'><thead><tr style='height: 32px;'><th><span id='tk_otherhhang'>" + $("#customer").text() + "</span> / <span id='tk_thucung'>" + $("#petname").text() + "</span></th><th>{lang.trieuchung}</th><th>{lang.treating}</th></tr></thead><tbody>" + body + "</tbody><tfoot><tr><td colspan='3'>" + addition + "</td></tr></tfoot></table>"
     $("#vac2_body").html(html)
   }
 
-  function themlieutrinh(e) {
+  function themtreating(e) {
     e.preventDefault();
     $.post(
       link + "luubenh",
-      {action: "themlieutrinh", ngay: $("#ngaylieutrinh").val(), id: lid},
+      {action: "themtreating", time: $("#timetreating").val(), id: lid},
       (response, status) => {
         response = JSON.parse(response)
         // console.log(response)
@@ -234,25 +234,25 @@
           case 1:
             // thành công
             var data = response["data"]
-            d_lieutrinh.push(data)
-            // console.log(d_lieutrinh);
+            d_treating.push(data)
+            // console.log(d_treating);
             
-            id = d_lieutrinh.length - 1
+            id = d_treating.length - 1
             g_ltid = data["id"]
             g_id = id
-            $("#nhietdo").val(d_lieutrinh[id]["nhietdo"])
-            $("#niemmac").val(d_lieutrinh[id]["niemmac"])
-            $("#khac").val(d_lieutrinh[id]["khac"])
-            $("#dieutri").val(d_lieutrinh[id]["dieutri"])
-            $("#xetnghiem").val(d_lieutrinh[id]["xetnghiem"])
-            $("#lieutrinh").text(d_lieutrinh[id]["ngay"])
-            $("#tinhtrang2").val(d_lieutrinh[id]["tinhtrang"])
-            $("#doctorx").val(d_lieutrinh[id]["doctorx"])
+            $("#temperate").val(d_treating[id]["temperate"])
+            $("#rate").val(d_treating[id]["rate"])
+            $("#other").val(d_treating[id]["other"])
+            $("#treating").val(d_treating[id]["treating"])
+            $("#examine").val(d_treating[id]["examine"])
+            $("#treating").text(d_treating[id]["time"])
+            $("#status2").val(d_treating[id]["status"])
+            $("#doctorx").val(d_treating[id]["doctorx"])
 
-            html = "<span onclick='xemlieutrinh(" + d_lieutrinh[id]["id"] + ", " + g_id + ")'>" + data["ngay"] + "</span>";
-            $("#dslieutrinh").html($("#dslieutrinh").html() + html)
-            $("#qllieutrinh input").removeAttr("disabled", "");
-            $("#qllieutrinh select").removeAttr("disabled", "");
+            html = "<span onclick='xemtreating(" + d_treating[id]["id"] + ", " + g_id + ")'>" + data["time"] + "</span>";
+            $("#dstreating").html($("#dstreating").html() + html)
+            $("#qltreating input").removeAttr("disabled", "");
+            $("#qltreating select").removeAttr("disabled", "");
           break;
           case 2:
             // đã tồn tại ngày hôm nay
@@ -266,20 +266,20 @@
     )
   }
 
-  function xemlieutrinh(ltid, id) {
+  function xemtreating(ltid, id) {
     g_ltid = ltid;
     g_id = id;
     // console.log(g_ltid);
-    // console.log(d_lieutrinh);
+    // console.log(d_treating);
     
-    $("#nhietdo").val(d_lieutrinh[id]["nhietdo"])
-    $("#niemmac").val(d_lieutrinh[id]["niemmac"])
-    $("#khac").val(d_lieutrinh[id]["khac"])
-    $("#dieutri").val(d_lieutrinh[id]["dieutri"])
-    $("#xetnghiem").val(d_lieutrinh[id]["xetnghiem"])
-    $("#lieutrinh").text(d_lieutrinh[id]["ngay"])
-    $("#tinhtrang2").val(d_lieutrinh[id]["tinhtrang"])
-    $("#doctorx").val(d_lieutrinh[id]["doctorx"])
+    $("#temperate").val(d_treating[id]["temperate"])
+    $("#rate").val(d_treating[id]["rate"])
+    $("#other").val(d_treating[id]["other"])
+    $("#treating").val(d_treating[id]["treating"])
+    $("#examine").val(d_treating[id]["examine"])
+    $("#treating").text(d_treating[id]["time"])
+    $("#status2").val(d_treating[id]["status"])
+    $("#doctorx").val(d_treating[id]["doctorx"])
   }
 
   function ketthuc(val) {
@@ -291,7 +291,7 @@
         response = JSON.parse(response);
         if (response["status"]) {
           $("#" + lid).css("background", response["data"]["color"])
-          $("#" + lid + " .tinhtrang").text(response["data"]["ketqua"])
+          $("#" + lid + " .status").text(response["data"]["insult"])
           $("#vac_info").fadeOut();
           $("#reman").hide();
         }
@@ -299,39 +299,39 @@
     )    
   }
 
-  function luulieutrinh(e) {
+  function luutreating(e) {
     e.preventDefault();
-    var nhietdo = $("#nhietdo").val();
-    // console.log(nhietdo);
-    var niemmac = $("#niemmac").val();
-    // console.log(niemmac);
-    var khac = $("#khac").val();
-    // console.log(khac);
-    var xetnghiem = $("#xetnghiem").val();
-    // console.log(xetnghiem);
-    var dieutri = $("#dieutri").val();
-    // console.log(dieutri);
-    var tinhtrang = $("#tinhtrang2").val();
+    var temperate = $("#temperate").val();
+    // console.log(temperate);
+    var rate = $("#rate").val();
+    // console.log(rate);
+    var other = $("#other").val();
+    // console.log(other);
+    var examine = $("#examine").val();
+    // console.log(examine);
+    var treating = $("#treating").val();
+    // console.log(treating);
+    var status = $("#status2").val();
     var doctorx = $("#doctorx").val();
-    // console.log(tinhtrang);
+    // console.log(status);
     
     $.post(
       link + "luubenh",
-      {action: "luulieutrinh", id: g_ltid, nhietdo: nhietdo, niemmac: niemmac, khac: khac, xetnghiem: xetnghiem, dieutri: dieutri, tinhtrang: tinhtrang, doctorx: doctorx},
+      {action: "luutreating", id: g_ltid, temperate: temperate, rate: rate, other: other, examine: examine, treating: treating, status: status, doctorx: doctorx},
       (response, status) => {
         response = JSON.parse(response);
         console.log(response);
         if (response["status"]) {
           alert_msg("Đã lưu");
           $("#" + lid).css("background", response["data"]["color"])
-          $("#" + lid + " .suckhoe").text(response["data"]["tinhtrang"])
-          d_lieutrinh[g_id]["nhietdo"] = nhietdo
-          d_lieutrinh[g_id]["niemmac"] = niemmac
-          d_lieutrinh[g_id]["khac"] = khac
-          d_lieutrinh[g_id]["xetnghiem"] = xetnghiem
-          d_lieutrinh[g_id]["dieutri"] = dieutri
-          d_lieutrinh[g_id]["tinhtrang"] = tinhtrang
-          d_lieutrinh[g_id]["doctorx"] = doctorx
+          $("#" + lid + " .suckhoe").text(response["data"]["status"])
+          d_treating[g_id]["temperate"] = temperate
+          d_treating[g_id]["rate"] = rate
+          d_treating[g_id]["other"] = other
+          d_treating[g_id]["examine"] = examine
+          d_treating[g_id]["treating"] = treating
+          d_treating[g_id]["status"] = status
+          d_treating[g_id]["doctorx"] = doctorx
         }
       }
     )    

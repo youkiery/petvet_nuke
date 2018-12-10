@@ -13,21 +13,6 @@ define('VAC_PREFIX', $db_config['prefix'] . "_" . $module_name);
 define('NV_NEXTMONTH', 30 * 24 * 60 * 60);
 define('NV_NEXTWEEK', 7 * 24 * 60 * 60);
 
-function checkNewDisease($id) {
-  global $db, $db_config, $module_name;
-
-  $sql = array();
-  $sql[] = "CREATE TABLE IF NOT EXISTS " . VAC_PREFIX . "_$id ( `id` int(11) NOT NULL, `petid` int(11) NOT NULL, `cometime` int(11) NOT NULL, `calltime` int(11) NOT NULL, `status` tinyint(4) NOT NULL, `note` text NOT NULL ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
-  $sql[] = "ALTER TABLE `" . VAC_PREFIX . "_$id` ADD PRIMARY KEY (`id`);";
-  $sql[] = "ALTER TABLE `" . VAC_PREFIX . "_$id` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;";
-  $check = true;
-  foreach ($sql as $value) {
-    if (!$db->sql_query($value))
-      $check = false;
-  }
-  return $check;
-}
-
 function getDiseaseList() {
   global $db, $db_config, $module_name;
   $sql = "select * from " . VAC_PREFIX . "_disease";
@@ -52,7 +37,6 @@ function getCustomerList($key, $sort, $filter, $page) {
   $result = $db->sql_query($sql);
   $num = $db->sql_fetch_assoc($result);
   $customers["info"] = $num["num"];
-//   var_dump($customers["info"]); die();
 
   $sql = "select id, name as customer, phone, address from " . VAC_PREFIX . "_customer where name like '%$key%' or phone like '%$key%' " . $order . " limit $from_item, $end_item";
   $result = $db->sql_query($sql);
@@ -118,27 +102,20 @@ function filter($vaclist, $path, $lang, $fromtime, $amount_time, $sort, $order) 
   $hex = array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f");
   $xtpl = new XTemplate("list-1.tpl", $path);
   $xtpl->assign("lang", $lang);
+  // var_dump($vaclist);
+  // die();
 
   $fromtime = strtotime($fromtime);
 
-  $diseases = getDiseaseList();
-  $dis = array();
-  foreach ($diseases as $key => $value) {
-    $dis[$value["id"]] = $value["disease"];
-  }
-  $diseases = $dis;
-  // echo json_encode($diseases); die();
   $now = strtotime(date("Y-m-d", NV_CURRENTTIME));
   $today = date("d", $now);
   $dom = date("t");
   $xtpl->assign("title", $lang["main_title"]);
 
   $i = 1;
-  $xtpl->assign("diseaseid", $disease["id"]);
   $sort_order_left = array();
   $sort_order_right = array();
 
-  // $realvac = array();
   $price = array();
   foreach ($vaclist as $key => $row) {
     if ($order) {
@@ -150,18 +127,6 @@ function filter($vaclist, $path, $lang, $fromtime, $amount_time, $sort, $order) 
   }
   array_multisort($price, SORT_ASC, $vaclist);
 
-  // var_dump($vaclist); die();
-
-// 	foreach ($vaclist as $key => $row) {
-// 		$realvac[$row["petid"]] = $key;
-// 	}
-//     foreach ($realvac as $key => $row) {
-//   		if ($vaclist[$row]["calltime"] <= $now)
-//       $sort_order_right[] = $row;
-//     else
-//       $sort_order_left[] = $row;
-//     }
-  // echo "$vaclist, $path, $lang, $fromtime, $amount_time, $sort, $order"; die();
   foreach ($vaclist as $key => $row) {
     if ($order) {
       // echo "$row[calltime], $now<br>";
@@ -178,13 +143,11 @@ function filter($vaclist, $path, $lang, $fromtime, $amount_time, $sort, $order) 
     }
   }
   // var_dump($sort_order_right);
-  // die();
   asort($sort_order_left);
   arsort($sort_order_right);
   if ($order) $hack = 1;
   else $hack = 2;
   foreach ($sort_order_left as $key => $value) {
-    // var_dump($vaclist[$value]); die();
     $xtpl->assign("index", $i);
     $xtpl->assign("petname", $vaclist[$value]["petname"]);
     $xtpl->assign("petid", $vaclist[$value]["petid"]);
@@ -193,11 +156,14 @@ function filter($vaclist, $path, $lang, $fromtime, $amount_time, $sort, $order) 
     $xtpl->assign("phone", $vaclist[$value]["phone"]);
     $xtpl->assign("diseaseid", $vaclist[$value]["diseaseid"]);
     // $xtpl->assign("disease", $vaclist[$value]["diseaseid"]);
-    $xtpl->assign("disease", $diseases[$vaclist[$value]["diseaseid"]]);
+    $xtpl->assign("disease", $vaclist[$value]["disease"]);
     $xtpl->assign("note", $vaclist[$value]["note"]);
     $xtpl->assign("confirm", $lang["confirm_" . $vaclist[$value]["status"]]);
-    if ($vaclist[$value]["status"] == 2 && empty($vaclist[$value]["recall"]))
+
+    // var_dump($vaclist[$value]); die();
+    if (!($vaclist[$value]["status"] == 2 || empty($vaclist[$value]["recall"]))) {
       $xtpl->parse("disease.vac_body.recall_link");
+    }
     switch ($vaclist[$value]["status"]) {
       case '1':
         $xtpl->assign("color", "orange");
@@ -234,11 +200,12 @@ function filter($vaclist, $path, $lang, $fromtime, $amount_time, $sort, $order) 
     $xtpl->assign("customer", $vaclist[$value]["customer"]);
     $xtpl->assign("phone", $vaclist[$value]["phone"]);
     $xtpl->assign("diseaseid", $vaclist[$value]["diseaseid"]);
-    $xtpl->assign("disease", $diseases[$vaclist[$value]["diseaseid"]]);
+    $xtpl->assign("disease", $vaclist[$value]["disease"]);
     $xtpl->assign("note", $vaclist[$value]["note"]);
     $xtpl->assign("confirm", $lang["confirm_" . $vaclist[$value]["status"]]);
-    if ($vaclist[$value]["status"] == 2 && empty($vaclist[$value]["recall"]))
+    if (!($vaclist[$value]["status"] == 2 || empty($vaclist[$value]["recall"]))) {
       $xtpl->parse("disease.vac_body.recall_link");
+    }
     switch ($vaclist[$value]["status"]) {
       case '1':
         $xtpl->assign("color", "orange");
@@ -301,7 +268,7 @@ function doctorlist($path, $lang) {
   return $xtpl->text("main");
 }
 
-function getrecentlist($fromtime, $amount_time, $sort, $diseaseid) {
+function getrecentlist($fromtime, $amount_time, $sort) {
   global $db, $db_config, $module_name;
   $endtime = $fromtime + $amount_time;
   $fromtime -= $amount_time;
@@ -309,23 +276,22 @@ function getrecentlist($fromtime, $amount_time, $sort, $diseaseid) {
   $order = '';
   switch ($sort) {
     case '1':
-      $order = 'order by cometime, customer asc';
+      $order = 'order by cometime, c.name asc';
       break;
     case '2':
-      $order = 'order by cometime, customer desc';
+      $order = 'order by cometime, c.name desc';
       break;
     case '3':
-      $order = 'order by calltime, customer asc';
+      $order = 'order by calltime, c.name asc';
       break;
     case '4':
-      $order = 'order by calltime, customer desc';
+      $order = 'order by calltime, c.name desc';
       break;
   }
 
-  $sql = "select a.id, a.note, b.id as petid, b.petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, status, doctorid, recall, '$diseaseid' as diseaseid from " . VAC_PREFIX . "_" . $diseaseid . " a inner join " . VAC_PREFIX . "_pet b on cometime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id " . $order;
+  $sql = "select a.id, a.note, a.recall, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, status, diseaseid, dd.name as disease from " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_pet b on cometime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id inner join " . VAC_PREFIX . "_disease dd on a.diseaseid = dd.id " . $order;
 
   // if ($diseaseid == 2) {
-  // 	die($sql);
   // }
 
   $result = $db->sql_query($sql);
@@ -336,7 +302,7 @@ function getrecentlist($fromtime, $amount_time, $sort, $diseaseid) {
   return $ret;
 }
 
-function filterVac($fromtime, $amount_time, $sort, $diseaseid) {
+function filterVac($fromtime, $amount_time, $sort) {
   global $db, $db_config, $module_name;
   $endtime = $fromtime + $amount_time;
   $fromtime -= $amount_time;
@@ -344,30 +310,29 @@ function filterVac($fromtime, $amount_time, $sort, $diseaseid) {
   $order = '';
   switch ($sort) {
     case '1':
-      $order = 'order by cometime, customer asc';
+      $order = 'order by cometime, c.name asc';
       break;
     case '2':
-      $order = 'order by cometime, customer desc';
+      $order = 'order by cometime, c.name desc';
       break;
     case '3':
-      $order = 'order by calltime, customer asc';
+      $order = 'order by calltime, c.name asc';
       break;
     case '4':
-      $order = 'order by calltime, customer desc';
+      $order = 'order by calltime, c.name desc';
       break;
   }
 
-  $sql = "select a.id, a.note, b.id as petid, b.petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, status, doctorid, recall, '$diseaseid' as diseaseid from " . VAC_PREFIX . "_" . $diseaseid . " a inner join " . VAC_PREFIX . "_pet b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id " . $order;
+  $sql = "select a.id, a.note, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, status, diseaseid, dd.name as disease from " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_pet b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id inner join " . VAC_PREFIX . "_disease dd on a.diseaseid = dd.id " . $order;
 
   // if ($diseaseid == 2) {
-  // 	die($sql);
   // }
-
   $result = $db->sql_query($sql);
   $ret = array();
   while ($row = $db->sql_fetch_assoc($result)) {
     $ret[] = $row;
   }
+  
   return $ret;
 }
 
@@ -395,7 +360,6 @@ function getvaccustomer($customer, $fromtime, $amount_time, $sort, $diseaseid, $
   $sql = "select a.id, a.note, b.id as petid, b.petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, status, doctorid, recall, '$diseaseid' as diseaseid, '$disease' as disease from " . VAC_PREFIX . "_" . $diseaseid . " a inner join " . VAC_PREFIX . "_pet b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id where c.customer like '%$customer%' or c.phone like '%$customer%' " . $order;
 
   // if ($diseaseid == 2) {
-  // 	die($sql);
   // }
   // $sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status from " . VAC_PREFIX . "_" . $diseaseid . " a inner join " . VAC_PREFIX . "_pet b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id where c.customer like '%$customer%' or c.phone like '%$customer%' " . $order;
   $result = $db->sql_query($sql);
@@ -443,7 +407,6 @@ function getPatientsList($key, $sort, $filter, $page) {
   $num = $db->sql_fetch_assoc($result);
   $patients["info"] = $num["num"];
   // var_dump($patients["info"]);
-  // die();
 
   $sql = "select b.id, b.name as petname, c.id as customerid, c.name as customer, c.phone from " . VAC_PREFIX . "_pet b inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id where c.name like '%$key%' or b.name like '%$key%' or c.phone like '%$key%' " . $order . " limit $from_item, $end_item";
   $result = $db->sql_query($sql);
@@ -451,7 +414,6 @@ function getPatientsList($key, $sort, $filter, $page) {
     $patients["data"][] = $row;
   }
   // var_dump($patients);
-  // die($sql);
   return $patients;
 }
 
@@ -479,7 +441,7 @@ function getPatientsList2($customerid) {
       $patients["data"][] = array("petid" => $row["id"], "petname" => $row["petname"], "lastcome" => "", "lastname" => "");
     }
   }
-  // die();
+  // ();
   return $patients;
 }
 
@@ -566,8 +528,8 @@ function nv_generate_page_shop($base_url, $num_items, $per_page, $start_item, $a
 function quagio() {
   global $global_config, $admin_info, $module_info, $module_file;
   $today = strtotime(date("Y-m-d"));
-  $worktime = $today;
-  $resttime = $today;
+  $worktime = 0;
+  $resttime = 0;
   if (!empty($global_config["worktime"])) {
     $worktime = $global_config["worktime"];
   }
@@ -577,18 +539,20 @@ function quagio() {
   $from = $worktime ? $worktime : $today + 7 * 60 * 60;
   $end = $resttime ? $resttime : $today + 17 * 60 * 60 + 30 * 60;
 
-  if (!($admin_info["level"] == "1") && (NV_CURRENTTIME < $from || NV_CURRENTTIME > $end)) {
+  if (empty($admin_info["level"]) && ($admin_info["level"] == "1")) {
+
+  }
+  else if (NV_CURRENTTIME < $from || NV_CURRENTTIME > $end) {
+    echo date("H:i:s", $from); 
+    echo date("H:i:s", $end); 
     $xtpl = new XTemplate("overtime.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
-    // die(NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
     $xtpl->assign("lang", $lang_module);
 
     $xtpl->parse("overtime");
     $contents = $xtpl->text("overtime");
-
     include ( NV_ROOTDIR . "/includes/header.php" );
     echo nv_site_theme($contents);
     include ( NV_ROOTDIR . "/includes/footer.php" );
-    die();
   }
 }
 function fetchall($db, $query) {

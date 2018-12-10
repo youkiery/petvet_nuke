@@ -41,13 +41,13 @@
         {doctor}
       </td>
       <td class="luubenh">
-        {luubenh}
+        {cometime}
       </td>
       <td class="suckhoe">
-        {tinhtrang}
+        {status}
       </td>
       <td class="tinhtrang">
-        {ketqua}
+        {insult}
       </td>
       <td style="display: none;" class="lieutrinh">
         {lieutrinh}

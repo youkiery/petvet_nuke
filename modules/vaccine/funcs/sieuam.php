@@ -38,7 +38,7 @@ $ret = array("status" => 0, "data" => array());
 
   while ($row = $db->sql_fetch_assoc($result)) {
     $xtpl->assign("doctor_value", $row["id"]);
-    $xtpl->assign("doctor_name", $row["doctor"]);
+    $xtpl->assign("doctor_name", $row["name"]);
     $xtpl->parse("main.doctor");
   }
 

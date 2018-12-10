@@ -51,7 +51,7 @@ function vi(str) {
 }
 function getInfo(index) {
   customer_data = customer_list[index];
-  customer_name.value = customer_data["customer"];
+  customer_name.value = customer_data["name"];
   customer_phone.value = customer_data["phone"];
   customer_address.value = customer_data["address"];
   g_index = index;
@@ -157,7 +157,7 @@ function addPet() {
 function reloadPetOption(petlist) {
   html = "";
   petlist.forEach((pet_data, petid) => {
-    html += "<option value='"+ pet_data["id"] +"'>" + pet_data["petname"] + "</option>";
+    html += "<option value='"+ pet_data["id"] +"'>" + pet_data["name"] + "</option>";
   })
   document.getElementById("pet_info").innerHTML = html;
 }

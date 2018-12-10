@@ -35,7 +35,6 @@ if($array_value) {
 		$sdi ++;
 		switch ($sd["action"]) {
 			case 1:
-				checkNewDisease($sdi);
 				$sql2 = "insert into `" . VAC_PREFIX . "_disease` (id, name) values(". $sdi . ", '" . $sd['disease'] . "');";
 				break;
 			case 2:

@@ -20,8 +20,7 @@ quagio();
 	$from = $now - $time;
 	$end = $now + $time;
 
-	$sql = "select a.id, a.cometime, a.calltime, a.status, a.image, b.id as petid, b.petname, c.name as customer, c.phone, d.name as doctor from `" . VAC_PREFIX . "_usg` a inner join `" . VAC_PREFIX . "_pet` b on a.calltime between $from and $end and a.petid = b.id inner join `" . VAC_PREFIX . "_customer` c on b.customerid = c.id inner join `" . VAC_PREFIX . "_doctor` d on a.doctorid = d.id where c.customer like '%$key%' or c.phone like '%$key%' order by ngaybao";
-	// die($sql);
+	$sql = "select a.id, a.cometime, a.calltime, a.status, a.image, b.id as petid, b.name as petname, c.name as customer, c.phone, d.name as doctor from `" . VAC_PREFIX . "_usg` a inner join `" . VAC_PREFIX . "_pet` b on a.calltime between $from and $end and a.petid = b.id inner join `" . VAC_PREFIX . "_customer` c on b.customerid = c.id inner join `" . VAC_PREFIX . "_doctor` d on a.doctorid = d.id where c.name like '%$key%' or c.phone like '%$key%' order by calltime";
 	// echo date("Y-m-d", 1545238800);
 	// die($sql);
 	$result = $db->sql_query($sql);
@@ -49,7 +48,6 @@ function displaySSList($list, $time, $path, $lang_module) {
 
 	$hex = array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f");
 	$status_color = array("red", "orange", "green");
-	$fromtime = strtotime($fromtime);
 	$now = strtotime(date("Y-m-d", time()));
 	$today = date("d", $now);
 	$dom = date("t");
@@ -61,7 +59,7 @@ function displaySSList($list, $time, $path, $lang_module) {
 	$array_right = array();
 
 	foreach ($list as $key => $row) {
-		if ($row["ngaybao"] < $now) {
+		if ($row["calltime"] < $now) {
 			$sort_order_right[] = $key;
 		} else
 			$sort_order_left[] = $key;
@@ -70,7 +68,7 @@ function displaySSList($list, $time, $path, $lang_module) {
 	arsort($sort_order_right);
 
   foreach ($sort_order_left as $key => $value) {
-    $d = date("d", $list[$value]["ngaybao"]);
+    $d = date("d", $list[$value]["calltime"]);
     if ($d - $today < 0) {
       $c = $dom - $today + $d;
     } else {
@@ -106,7 +104,6 @@ function displaySSList($list, $time, $path, $lang_module) {
 		$xtpl->assign("petid", $list_data["petid"]);
 		$xtpl->assign("sieuam", date("d/m/Y", $list_data["cometime"]));
 		$xtpl->assign("dusinh", date("d/m/Y", $list_data["calltime"]));
-		$xtpl->assign("thongbao", date("d/m/Y", $list_data["ngaybao"]));
 		// $xtpl->assign("thongbao", $list_data["ngaybao"]);
 		$xtpl->assign("color", $status_color[$list_data["status"]]);
 		$xtpl->assign("bgcolor", $list_data["bgcolor"]);
@@ -121,7 +118,7 @@ function displaySSList($list, $time, $path, $lang_module) {
 			default:
 				$color = "red";
 		}
-		$xtpl->assign("status", $lang_module["confirm_" . $list_data["status"]]);
+		$xtpl->assign("status", $lang_module["confirm_value2"][$list_data["status"]]);
 		$xtpl->assign("color", $color);
 		$xtpl->parse("main.list");
 		$index ++;

@@ -41,16 +41,16 @@ if (!empty($action)) {
               $ret["data"]["status"] = $status_option[$row["status"]];
             }
 
-          // $sql = "select timeluubenh, lieutrinh from " .  VAC_PREFIX . "_treat where id = $lid";
+          // $sql = "select timeluubenh, treating from " .  VAC_PREFIX . "_treat where id = $lid";
           // $query = $db->sql_query($sql);
           // if ($row = $db->sql_fetch_assoc($query)) {
-          //   $lieutrinh = explode("|", $row["lieutrinh"]);
-          //   $arrlieutrinh = array();
+          //   $treating = explode("|", $row["treating"]);
+          //   $arrtreating = array();
           //   $timebatdau = strtotime(date("Y-m-d", $row["timeluubenh"]));
           //   $khoangcach = floor(1 + (strtotime(date("Y-m-d")) - $timebatdau) / (24 * 60 * 60));
           //   // var_dump($khoangcach); die();
 
-          //   foreach ($lieutrinh as $key => $value) {
+          //   foreach ($treating as $key => $value) {
           //     $time = date("Y-m-d", ($timebatdau + $key * 24 * 60 * 60));
           //     if ($value !== "") {
           //       $x = explode(":", $value);
@@ -60,10 +60,10 @@ if (!empty($action)) {
           //       $status = "";
           //     }
           //     // echo $time; die();
-          //     $arrlieutrinh[] = array("time" => $time, "note" => $note, "status" => $status);
+          //     $arrtreating[] = array("time" => $time, "note" => $note, "status" => $status);
           //   }
           //   $ret["status"] = 1;
-          //   $ret["data"] = json_encode($arrlieutrinh);
+          //   $ret["data"] = json_encode($arrtreating);
           // }
         }
       }
@@ -81,7 +81,7 @@ if (!empty($action)) {
           $query = $db->sql_query($sql);
           if ($row = $db->sql_fetch_assoc($query)) {
             $ret["status"] = 1;
-            $ret["data"]["color"] = mauluubenh($row["insult"], $row["status"]);
+            $ret["data"]["color"] = mauluubenh($row["insult"], 0);
             $ret["data"]["insult"] = $export[$row["insult"]];
           }
         }
@@ -105,19 +105,19 @@ if (!empty($action)) {
           $row["cometime"] = date("d/m/Y", $row["cometime"]);
           $sql = "SELECT * from " . VAC_PREFIX . "_treating where treatid = $lid order by time";
           $query = $db->sql_query($sql);
-          $lieutrinh = fetchall($db, $query);
-          if ($lieutrinh) {
-            foreach ($lieutrinh as $key => $value) {
-              $lieutrinh[$key]["time"] = date("d/m", $value["time"]);
+          $treating = fetchall($db, $query);
+          if ($treating) {
+            foreach ($treating as $key => $value) {
+              $treating[$key]["time"] = date("d/m", $value["time"]);
             }
-            $row["treating"] = $lieutrinh;
+            $row["treating"] = $treating;
           }
           $ret["status"] = 1;
           $ret["data"] = $row;
         }
       }
     break;
-    case 'themlieutrinh':
+    case 'themtreating':
       $lid = $nv_Request->get_string('id', 'post', '');
       $time = $nv_Request->get_string('time', 'post', '');
       $ret["step"] = 1;
@@ -164,7 +164,7 @@ $result = $db->sql_query($sql);
 
 while ($row = $db->sql_fetch_assoc($result)) {
   $xtpl->assign("doctor_value", $row["id"]);
-  $xtpl->assign("doctor_name", $row["doctor"]);
+  $xtpl->assign("doctor_name", $row["name"]);
   $xtpl->parse("main.doctor");
 }
 

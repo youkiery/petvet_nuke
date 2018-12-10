@@ -153,7 +153,7 @@ function addPet() {
 function reloadPetOption(petlist) {
   html = "";
   petlist.forEach((pet_data, petid) => {
-    html += "<option value='"+ pet_data["id"] +"'>" + pet_data["petname"] + "</option>";
+    html += "<option value='"+ pet_data["id"] +"'>" + pet_data["name"] + "</option>";
   })
   document.getElementById("pet_info").innerHTML = html;
 }
