@@ -2,8 +2,8 @@
 <div id="msgshow" class="msgshow"></div>
 
 <form method="GET">
-	<input type="hidden" name="nv" value="vac">
-	<input type="hidden" name="op" value="sieuam">
+	<input type="hidden" name="nv" value="{nv}">
+	<input type="hidden" name="op" value="{op}">
 	<input class="input" type="text" name="keyword" id="keyword" value="{keyword}" placeholder="{lang.keyword}">
 	<input class="input" type="date" name="from" value="{from}">
 	<input class="input" type="date" name="to" value="{to}">
@@ -92,9 +92,6 @@
 				<td>
 					<input class="input" id="ngaydusinh" type="date" name="ngaysieuam" value="{dusinh}">
 				</td>
-				<td>
-					<input class="input" id="ngaythongbao" type="date" name="ngaythongbao" value="{thongbao}">
-				</td>
 			</tr>
 			<!-- hình ảnh -->
 			<tr>
@@ -163,8 +160,7 @@
 				(data, status) => {
 					data = JSON.parse(data);
 					if (data["status"]) {
-						$("#html_content").html(data["data"]);
-						alert_msg("Đã xóa bản ghi");
+						window.location.reload()
 					}
 				}
 			)	
@@ -180,23 +176,14 @@
 			msg = "Chưa nhập số điện thoại!"
 		} else if(!pet_info.value) {
 			msg = "Khách hàng chưa có thú cưng!"
-		} else if (!$("#hinhanh").val().length) {
-			msg = "Chưa có hình ảnh!"
 		} else {
 			$.post(
 				link + "themsieuam",
-				{idthu: pet_info.value, idbacsi: $("#doctor").val(), ngaysieuam: $("#ngaysieuam").val(), ngaydusinh: $("#ngaydusinh").val(), ngaythongbao: $("#ngaythongbao").val(), hinhanh: $("#hinhanh").val(), ghichu: $("#ghichu").val()},
+				{petid: pet_info.value, doctorid: $("#doctor").val(), cometime: $("#ngaysieuam").val(), calltime: $("#ngaydusinh").val(), image: $("#hinhanh").val(), note: $("#note").val()},
 				(data, status) => {
 					data = JSON.parse(data);
 					if (data["status"] == 1) {
-						alert_msg(data["data"]);
-						customer_name.value = "";
-						customer_phone.value = "";
-						customer_address.value = "";
-						pet_info.innerHTML = "";
-						pet_note.innerText = "Ghi chú";
-						g_customer = -1;
-						$("#hinhanh").val("");
+						window.location.reload();
 					}
 					else {
 						msg = data["data"];
@@ -209,190 +196,8 @@
 		return false;
 	}
 
-	function showSuggest (id, type) {
-		var name = "", phone = "";
-		if(type) {
-			name = vi(document.getElementById("customer_name").value);
-		} else {
-			phone = String(document.getElementById("customer_phone").value);
-		}
-		var data = ["action=getcustomer", "customer=" + name, "phone=" + phone];
-		fetch(link, data).then(response => {
-			response = JSON.parse(response);
-			var suggest = document.getElementById(id + "_suggest");
-	
-			customer_list = response["data"]
-			html = "";
-			if (response["data"].length) {
-				response["data"].forEach ((data, index) => {
-					html += '<div class=\"temp\" style=\"padding: 8px 4px;border-bottom: 1px solid black;overflow: overlay; text-transform: capitalize;\" onclick=\"getInfo(\'' + index + '\')\"><span style=\"float: left;\">' + data.customer + '</span><span style=\"float: right;\">' + data.phone + '</span></div>';
-				})
-				suggest.style.display = "block";
-			}
-			else {
-				suggest.style.display = "note";
-			}
-			suggest.innerHTML = html;
-		})
-	}
+	suggest_init()
 
-	customer_name.addEventListener("keyup", (e) => {
-		showSuggest(e.target.getAttribute("id"), true);
-	})
-
-	customer_phone.addEventListener("keyup", (e) => {
-		showSuggest(e.target.getAttribute("id"), false);
-	})
-
-	suggest_name.addEventListener("mouseenter", (e) => {
-		blur = false;
-	})
-	suggest_name.addEventListener("mouseleave", (e) => {
-		blur = true;
-	})
-	customer_name.addEventListener("focus", (e) => {
-		suggest_name.style.display = "block";
-	})
-	customer_name.addEventListener("blur", (e) => {
-		if(blur) {
-			suggest_name.style.display = "none";
-		}
-	})
-	suggest_phone.addEventListener("mouseenter", (e) => {
-		blur = false;
-	})
-	suggest_phone.addEventListener("mouseleave", (e) => {
-		blur = true;
-	})
-	customer_phone.addEventListener("focus", (e) => {
-		suggest_phone.style.display = "block";
-	})
-	customer_phone.addEventListener("blur", (e) => {
-		if(blur) {
-			suggest_phone.style.display = "none";
-		}
-	})
-	function vi(str) { 
-    str= str.toLowerCase();
-    str= str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g,"a"); 
-    str= str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g,"e"); 
-    str= str.replace(/ì|í|ị|ỉ|ĩ/g,"i"); 
-    str= str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g,"o"); 
-    str= str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g,"u"); 
-    str= str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g,"y"); 
-    str= str.replace(/đ/g,"d"); 
-
-    return str; 
-	}
-	function getInfo(index) {
-		customer_data = customer_list[index];		
-		customer_name.value = customer_data["customer"];
-		customer_phone.value = customer_data["phone"];
-		customer_address.value = customer_data["address"];
-		g_customer = customer_data["id"]
-		var data = ["action=getpet", "customerid=" + customer_data["id"]];
-		fetch(link, data).then(response => {
-			var html = "";
-			response = JSON.parse(response);
-			customer_data["pet"] = response["data"];
-			reloadPetOption(customer_data["pet"])
-		})
-		
-		suggest_phone.style.display = "none";
-		suggest_name.style.display = "none";
-	}
-
-	function addCustomer() {
-		var phone = customer_phone.value;
-		var name = customer_name.value;
-		var address = customer_address.value;
-		msg = "";
-		if(phone.length) {
-			var answer = prompt("Nhập tên khách hàng cho số điện thoại(" + phone + "):", name);
-			if(answer) {
-				var data = ["action=addcustomer", "customer=" + answer, "phone=" + phone, "address=" + address];
-				fetch(link, data).then(response => {
-					response = JSON.parse(response);
-					switch (response["status"]) {
-						case 1:
-							msg = "Số điện thoại đã được sử dụng: " + phone;							
-							break;
-						case 3:
-							msg = "Tên khách hàng đã được sử dụng: " + phone;							
-							break;
-						case 2:
-							alert_msg("Đã thêm khách hàng: " + answer + "; Số điện thoại: " + phone);
-							customer_data = {
-								id: response["data"][0]["id"],
-								customer: answer,
-								phone: phone,
-								pet: []
-							}
-							customer_name.value = answer;
-							g_customer = response["data"][0]["id"];
-							reloadPetOption(customer_data["pet"])
-							break;
-						default:
-							msg = "Không để trống tên và số điện thoại!";
-					}
-					showMsg(msg);
-				})
-			}
-		}
-		else {
-			msg = "Không để trống số điện thoại!";
-		}
-		showMsg(msg);
-	}
-
-	function addPet() {
-		var msg = "";
-		if (g_customer === -1) {
-			msg = "Chưa chọn khách hàng";
-		} else {
-			var customer = document.getElementById("customer_name").value;
-
-			var answer = prompt("Nhập tên thú cưng của khách hàng("+ customer +"):", "");
-			if(answer) {
-				var data = ["action=addpet", "customerid=" + customer_data["id"], "petname=" + answer];
-				fetch(link, data).then(response => {
-					var response = JSON.parse(response);
-
-					switch (response["status"]) {
-						case 1:
-							msg = "Khách hàng hoặc tên thú cưng không tồn tại";						
-							break;
-						case 2:
-							customer_data["pet"].push({
-								id: response["data"][0].id,
-								petname: answer
-							});
-							reloadPetOption(customer_data["pet"])
-							alert_msg("Đã thêm thú cưng(" + answer + ")");
-							break;
-						case 3:
-							msg = "Tên thú cưng không hợp lệ";
-							break;
-						case 4:
-							msg = "Tên khách hàng không hợp lệ";
-							break;
-						default:
-							msg = "Lỗi mạng!";
-					}
-					showMsg(msg);
-				})
-			}
-		}
-		showMsg(msg);
-	}
-
-	function reloadPetOption(petlist) {
-		html = "";
-		petlist.forEach((pet_data, petid) => {
-			html += "<option value='"+ pet_data["id"] +"'>" + pet_data["petname"] + "</option>";
-		})
-		document.getElementById("pet_info").innerHTML = html;
-	}
 
 	$("div[name=selectimg]").click(function(){
 		var area = "hinhanh";

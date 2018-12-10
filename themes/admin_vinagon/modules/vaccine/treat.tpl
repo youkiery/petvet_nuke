@@ -28,19 +28,19 @@
       <span id="doctor"></span>
     </p>
   </div>
-  <div class="lieutrinh">
-    <span id="lieutrinh" style="float: right;"></span>
-    <form onsubmit="return themlieutrinh(event)">
-      <input type="date" id="ngaylieutrinh" value="{now}" />
+  <div class="treating">
+    <span id="treating" style="float: right;"></span>
+    <form onsubmit="return themtreating(event)">
+      <input type="date" id="ngaytreating" value="{now}" />
       <button class="submitbutton">
         {lang.add}
       </button>
     </form>
-    <div id="dslieutrinh">
+    <div id="dstreating">
       
     </div>
-    <div id="lieutrinh">
-      <form onsubmit="return luulieutrinh(event)" id="qllieutrinh">
+    <div id="treating">
+      <form onsubmit="return luutreating(event)" id="qltreating">
         <input width="100%" class="input" type="text" id="nhietdo" placeholder="{lang.nhietdo}">
         <input width="100%" class="input" type="text" id="niemmac" placeholder="{lang.niemmac}">
         <input width="100%" class="input" type="text" id="khac" placeholder="{lang.khac}">
@@ -84,7 +84,7 @@
 </div>
 
 <form method="GET">
-	<input type="hidden" name="nv" value="vac">
+	<input type="hidden" name="nv" value="vaccine">
 	<input type="hidden" name="op" value="treat">
 	<input class="input" type="text" name="keyword" id="keyword" value="{keyword}" placeholder="{lang.keyword}">
 	<input class="input" type="date" name="from" value="{from}">
@@ -173,9 +173,9 @@
 				</td>
 				<td colspan="3">
 					<select name="doctor" id="doctor2" style="width: 90%;">
-						<!-- BEGIN: doctor -->
-						<option value="{doctor_value}">{doctor_name}</option>
-						<!-- END: doctor -->
+						<!-- BEGIN: doctor2 -->
+						<option value="{doctorid}">{doctorname}</option>
+						<!-- END: doctor2 -->
 					</select>
 				</td>
 			</tr>
@@ -223,7 +223,7 @@
   var lid = -1;
   var g_ltid = -1;
   var g_id = -1;
-  var d_lieutrinh = []
+  var d_treating = []
   var g_ketqua = -1;
   var vac_index = 0;
   $("#reman").click(() => {
@@ -268,52 +268,52 @@
           $("#petname").text(data["petname"])
           $("#customer").text(data["customer"])
           $("#phone").text(data["phone"])
-          $("#luubenh").text(data["ngayluubenh"])
+          $("#luubenh").text(data["cometime"])
           $("#doctor").text(data["doctor"])
-          var h_lieutrinh = ""
+          var h_treating = ""
           g_ketqua = data["ketqua"];
-          if (data["lieutrinh"]) {
+          if (data["treating"]) {
             if (data["ketqua"] > 0) {
-              $("#qllieutrinh input").attr("disabled", "disabled");
-              $("#qllieutrinh select").attr("disabled", "disabled");
+              $("#qltreating input").attr("disabled", "disabled");
+              $("#qltreating select").attr("disabled", "disabled");
               $(".submitbutton").attr("disabled", "disabled");
             }
             else {
-              $("#qllieutrinh input").removeAttr("disabled", "");
-              $("#qllieutrinh select").removeAttr("disabled", "");
+              $("#qltreating input").removeAttr("disabled", "");
+              $("#qltreating select").removeAttr("disabled", "");
               $(".submitbutton").removeAttr("disabled", "");
             }
             select = -1;
-            d_lieutrinh = data["lieutrinh"]
-            $("#dslieutrinh").html("")
-            data["lieutrinh"].forEach(e => {
+            d_treating = data["treating"]
+            $("#dstreating").html("")
+            data["treating"].forEach(e => {
               select ++
-              var ngay = e["ngay"] * 1000;
+              var ngay = e["time"] * 1000;
               g_ltid = e["id"]
               g_id = select
-              html = "<span onclick='xemlieutrinh(" + g_ltid + ", " + select +")'>" + e["ngay"] + "</span> ";
-              $("#dslieutrinh").html($("#dslieutrinh").html() + html)
+              html = "<span onclick='xemtreating(" + g_ltid + ", " + select +")'>" + e["time"] + "</span> ";
+              $("#dstreating").html($("#dstreating").html() + html)
             })
-            $("#nhietdo").val(data["lieutrinh"][select]["nhietdo"])
-            $("#niemmac").val(data["lieutrinh"][select]["niemmac"])
-            $("#khac").val(data["lieutrinh"][select]["khac"])
-            $("#dieutri").val(data["lieutrinh"][select]["dieutri"])
-            $("#xetnghiem").val(data["lieutrinh"][select]["xetnghiem"])
-            $("#lieutrinh").text(data["lieutrinh"][select]["ngay"])
-            $("#tinhtrang2").val(data["lieutrinh"][select]["tinhtrang"])
-            $("#doctorx").val(data["lieutrinh"][select]["doctorx"])
+            $("#nhietdo").val(data["treating"][select]["temperate"])
+            $("#niemmac").val(data["treating"][select]["eye"])
+            $("#khac").val(data["treating"][select]["other"])
+            $("#dieutri").val(data["treating"][select]["treating"])
+            $("#xetnghiem").val(data["treating"][select]["examine"])
+            $("#treating").text(data["treating"][select]["time"])
+            $("#tinhtrang2").val(data["treating"][select]["status"])
+            $("#doctorx").val(data["treating"][select]["doctorx"])
           }
           else {
-            d_lieutrinh = []
-            $("#qllieutrinh input").attr("disabled", "disabled");
-            $("#qllieutrinh select").attr("disabled", "disabled");
-            $("#dslieutrinh").html("")
+            d_treating = []
+            $("#qltreating input").attr("disabled", "disabled");
+            $("#qltreating select").attr("disabled", "disabled");
+            $("#dstreating").html("")
             $("#nhietdo").val("")
             $("#niemmac").val("")
             $("#khac").val("")
             $("#dieutri").val("")
             $("#xetnghiem").val(0)
-            $("#lieutrinh").text("")
+            $("#treating").text("")
             $("#tinhtrang2").val(0)
             $("#doctorx").val(0)
           }
@@ -327,20 +327,20 @@
     vac_index = 2;
 
     var body = ""
-    var addition = "<p><b>{lang.tongngay} " + d_lieutrinh.length + " </b></p>"
-    d_lieutrinh.forEach((lieutrinh, index) => {
-      body += "<tr style='height: 32px;'><td style='width: 20%'>" + lieutrinh["ngay"] + "</td><td style='width: 50%'><b>{lang.nhietdo}</b>: " + lieutrinh["nhietdo"] + "<br><b>{lang.niemmac}</b>: " + lieutrinh["niemmac"] + "<br><b>{lang.khac}</b>: " + lieutrinh["khac"] + "</td><td style='width: 30%'>" + lieutrinh["dieutri"] + "</td></tr>"
+    var addition = "<p><b>{lang.tongngay} " + d_treating.length + " </b></p>"
+    d_treating.forEach((treating, index) => {
+      body += "<tr style='height: 32px;'><td style='width: 20%'>" + treating["time"] + "</td><td style='width: 50%'><b>{lang.nhietdo}</b>: " + treating["temperate"] + "<br><b>{lang.niemmac}</b>: " + treating["eye"] + "<br><b>{lang.khac}</b>: " + treating["other"] + "</td><td style='width: 30%'>" + treating["treating"] + "</td></tr>"
     }) 
     var html = 
     "<table border='1' style='border-collapse: collapse; width: 100%;'><thead><tr style='height: 32px;'><th><span id='tk_khachhang'>" + $("#customer").text() + "</span> / <span id='tk_thucung'>" + $("#petname").text() + "</span></th><th>{lang.trieuchung}</th><th>{lang.dieutri}</th></tr></thead><tbody>" + body + "</tbody><tfoot><tr><td colspan='3'>" + addition + "</td></tr></tfoot></table>"
     $("#vac2_body").html(html)
   }
 
-  function themlieutrinh(e) {
+  function themtreating(e) {
     e.preventDefault();
     $.post(
       link + "luubenh",
-      {action: "themlieutrinh", ngay: $("#ngaylieutrinh").val(), id: lid},
+      {action: "themtreating", time: $("#ngaytreating").val(), id: lid},
       (response, status) => {
         response = JSON.parse(response)
         // console.log(response)
@@ -348,24 +348,24 @@
           case 1:
             // thành công
             var data = response["data"]
-            d_lieutrinh.push(data)
-            // console.log(d_lieutrinh);
+            d_treating.push(data)
+            // console.log(d_treating);
             
-            id = d_lieutrinh.length - 1
+            id = d_treating.length - 1
             g_ltid = data["id"]
             g_id = id
-            $("#nhietdo").val(d_lieutrinh[id]["nhietdo"])
-            $("#niemmac").val(d_lieutrinh[id]["niemmac"])
-            $("#khac").val(d_lieutrinh[id]["khac"])
-            $("#dieutri").val(d_lieutrinh[id]["dieutri"])
-            $("#xetnghiem").val(d_lieutrinh[id]["xetnghiem"])
-            $("#lieutrinh").text(d_lieutrinh[id]["ngay"])
-            $("#tinhtrang2").val(d_lieutrinh[id]["tinhtrang"])
+            $("#nhietdo").val(d_treating[id]["temperate"])
+            $("#niemmac").val(d_treating[id]["eye"])
+            $("#khac").val(d_treating[id]["other"])
+            $("#dieutri").val(d_treating[id]["treating"])
+            $("#xetnghiem").val(d_treating[id]["examine"])
+            $("#treating").text(d_treating[id]["time"])
+            $("#tinhtrang2").val(d_treating[id]["status"])
 
-            html = "<span onclick='xemlieutrinh(" + d_lieutrinh[id]["id"] + ", " + g_id + ")'>" + data["ngay"] + "</span>";
-            $("#dslieutrinh").html($("#dslieutrinh").html() + html)
-            $("#qllieutrinh input").removeAttr("disabled", "");
-            $("#qllieutrinh select").removeAttr("disabled", "");
+            html = "<span onclick='xemtreating(" + d_treating[id]["id"] + ", " + g_id + ")'>" + data["time"] + "</span>";
+            $("#dstreating").html($("#dstreating").html() + html)
+            $("#qltreating input").removeAttr("disabled", "");
+            $("#qltreating select").removeAttr("disabled", "");
           break;
           case 2:
             // đã tồn tại ngày hôm nay
@@ -379,19 +379,19 @@
     )
   }
 
-  function xemlieutrinh(ltid, id) {
+  function xemtreating(ltid, id) {
     g_ltid = ltid;
     g_id = id;
     console.log(g_ltid);
-    // console.log(d_lieutrinh);
+    // console.log(d_treating);
     
-    $("#nhietdo").val(d_lieutrinh[id]["nhietdo"])
-    $("#niemmac").val(d_lieutrinh[id]["niemmac"])
-    $("#khac").val(d_lieutrinh[id]["khac"])
-    $("#dieutri").val(d_lieutrinh[id]["dieutri"])
-    $("#xetnghiem").val(d_lieutrinh[id]["xetnghiem"])
-    $("#lieutrinh").text(d_lieutrinh[id]["ngay"])
-    $("#tinhtrang2").val(d_lieutrinh[id]["tinhtrang"])
+    $("#nhietdo").val(d_treating[id]["temperate"])
+    $("#niemmac").val(d_treating[id]["eye"])
+    $("#khac").val(d_treating[id]["other"])
+    $("#dieutri").val(d_treating[id]["treating"])
+    $("#xetnghiem").val(d_treating[id]["examine"])
+    $("#treating").text(d_treating[id]["time"])
+    $("#tinhtrang2").val(d_treating[id]["status"])
   }
 
 	function delete_treat(id) {
@@ -422,7 +422,7 @@
         response = JSON.parse(response);
         if (response["status"]) {
           $("#" + lid).css("background", response["data"]["color"])
-          $("#" + lid + " .tinhtrang").text(response["data"]["ketqua"])
+          $("#" + lid + " .tinhtrang").text(response["data"]["insult"])
           $("#vac_info").fadeOut();
           $("#reman").hide();
         }
@@ -430,7 +430,7 @@
     )    
   }
 
-  function luulieutrinh(e) {
+  function luutreating(e) {
     e.preventDefault();
     var nhietdo = $("#nhietdo").val();
     // console.log(nhietdo);
@@ -448,21 +448,21 @@
     
     $.post(
       link + "luubenh",
-      {action: "luulieutrinh", id: g_ltid, nhietdo: nhietdo, niemmac: niemmac, khac: khac, xetnghiem: xetnghiem, dieutri: dieutri, tinhtrang: tinhtrang, doctorx: doctorx},
+      {action: "luutreating", id: g_ltid, temperate: nhietdo, eye: niemmac, other: khac, examine: xetnghiem, treating: dieutri, status: tinhtrang, doctorx: doctorx},
       (response, status) => {
         response = JSON.parse(response);
         // console.log(response);
         if (response["status"]) {
           alert_msg("Đã lưu");
           $("#" + lid).css("background", response["data"]["color"])
-          $("#" + lid + " .suckhoe").text(response["data"]["tinhtrang"])
-          d_lieutrinh[g_id]["nhietdo"] = nhietdo
-          d_lieutrinh[g_id]["niemmac"] = niemmac
-          d_lieutrinh[g_id]["khac"] = khac
-          d_lieutrinh[g_id]["xetnghiem"] = xetnghiem
-          d_lieutrinh[g_id]["dieutri"] = dieutri
-          d_lieutrinh[g_id]["tinhtrang"] = tinhtrang
-          d_lieutrinh[g_id]["doctorx"] = doctorx
+          $("#" + lid + " .suckhoe").text(response["data"]["status"])
+          d_treating[g_id]["temperate"] = temperate
+          d_treating[g_id]["eye"] = eye
+          d_treating[g_id]["other"] = other
+          d_treating[g_id]["examine"] = examine
+          d_treating[g_id]["treating"] = treating
+          d_treating[g_id]["status"] = status
+          d_treating[g_id]["doctorx"] = doctorx
         }
       }
     )    
@@ -499,7 +499,7 @@
 		} else {
 			$.post(
 				link + "themluubenh",
-				{"customer": customer_name.value, "phone": customer_phone.value, "address": customer_address.value,idthu: pet_info.value, idbacsi: $("#doctor2").val(), ngayluubenh: $("#ngayluubenh").val(), ghichu: $("#ghichu").val(), tinhtrang: $("#tinhtrang2").val(), doctorx: $("#doctor2").val()},
+				{"customer": customer_name.value, "phone": customer_phone.value, "address": customer_address.value, petid: pet_info.value, doctorid: $("#doctor2").val(), cometime: $("#ngayluubenh").val(), note: $("#ghichu").val(), status: $("#tinhtrang2").val(), doctorx: $("#doctor2").val()},
 				(data, status) => {
 					data = JSON.parse(data);
 					if (data["status"] == 1) {
@@ -516,42 +516,7 @@
 		return false;
 	}
 
-	customer_name.addEventListener("keyup", (e) => {
-		showSuggest(e.target.getAttribute("id"), true);
-	})
-
-	customer_phone.addEventListener("keyup", (e) => {
-		showSuggest(e.target.getAttribute("id"), false);
-	})
-
-	suggest_name.addEventListener("mouseenter", (e) => {
-		blur = false;
-	})
-	suggest_name.addEventListener("mouseleave", (e) => {
-		blur = true;
-	})
-	customer_name.addEventListener("focus", (e) => {
-		suggest_name.style.display = "block";
-	})
-	customer_name.addEventListener("blur", (e) => {
-		if(blur) {
-			suggest_name.style.display = "none";
-		}
-	})
-	suggest_phone.addEventListener("mouseenter", (e) => {
-		blur = false;
-	})
-	suggest_phone.addEventListener("mouseleave", (e) => {
-		blur = true;
-	})
-	customer_phone.addEventListener("focus", (e) => {
-		suggest_phone.style.display = "block";
-	})
-	customer_phone.addEventListener("blur", (e) => {
-		if(blur) {
-			suggest_phone.style.display = "none";
-		}
-	})
+  suggest_init()
 
 </script>
 <!-- END: main -->

@@ -20,16 +20,12 @@ $phone = $nv_Request->get_string('phone', 'post', '');
 $address = $nv_Request->get_string('address', 'post', '');
 $ret = array("status" => 0, "data" => array());
 // var_dump($_POST);
-
 if ( ! ( empty($petid) || empty($doctorid) || empty($cometime) || empty($calltime) ) ) {
 	$sql = "select id from `" . VAC_PREFIX . "_pet` where id = $petid";
 	$result = $db->sql_query($sql);
-
 	if ($db->sql_numrows($result)) {
-		$sql = "INSERT INTO `" . VAC_PREFIX . "_usg` (`petid`, `doctorid`, `cometime`, `calltime`, `image`, `status`, `note`) VALUES ($petid, $doctorid, ". strtotime($cometime) .", ". strtotime($calltime) .", ". strtotime($ngaythongbao) .", '$image', 0, '$note')";
+		$sql = "INSERT INTO `" . VAC_PREFIX . "_usg` (`petid`, `doctorid`, `cometime`, `calltime`, `image`, `status`, `note`) VALUES ($petid, $doctorid, ". strtotime($cometime) .", ". strtotime($calltime) .", '$image', 0, '$note')";
 		$insert_id = $db->sql_query_insert_id($sql);
-
-		// if ($sql) {
 		if ($insert_id) {
       if (!empty($phone)) {
         $sql = "update `" . VAC_PREFIX . "_customer` set name = '$customer', address = '$address' where phone = '$phone'";

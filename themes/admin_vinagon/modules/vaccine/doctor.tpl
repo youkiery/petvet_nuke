@@ -47,7 +47,7 @@
 					data = JSON.parse(data);
 					switch (data["status"]) {
 						case 1:
-							$("#doctor_red").html(data["data"]);
+							window.location.reload()
 						break;
 						case 2:
 							msg = "Tên này đã đươc sử dụng!";
@@ -73,7 +73,7 @@
 					data = JSON.parse(data);
 					switch (data["status"]) {
 						case 1:
-							$("#doctor_red").html(data["data"]);
+							window.location.reload()
 						break;
 						case 2:
 							msg = "Tên này đã đươc sử dụng!";
@@ -99,8 +99,7 @@
 					data = JSON.parse(data);
 					switch (data["status"]) {
 						case 1:
-							$("#doctor_red").html(data["data"]);
-							$("#doctor_name").val("");
+							window.location.reload()
 						break;
 						case 2:
 							msg = "Tên này đã đươc sử dụng!";

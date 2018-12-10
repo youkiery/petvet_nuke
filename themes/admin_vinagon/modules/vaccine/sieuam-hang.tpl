@@ -24,9 +24,6 @@
 				{lang.ngaydusinh}
 			</th>
 			<th>
-				{lang.ngaybao}
-			</th>
-			<th>
 			
 			</th>
 		</tr>
@@ -50,13 +47,10 @@
 				{doctor}
 			</td>
 			<td>
-				{sieuam}
+				{cometime}
 			</td>
 			<td>
-				{dusinh}
-			</td>
-			<td>
-				{ngaybao}
+				{calltime}
 			</td>
 			<td>
 				<button onclick="xoasieuam({id})">

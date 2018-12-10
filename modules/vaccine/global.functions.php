@@ -48,7 +48,7 @@ function getCustomerList($key, $sort, $filter, $page) {
   $customers = array();
   $customers["data"] = array();
 
-  $sql = "select count(id) as num from " . VAC_PREFIX . "_customer where customer like '%$key%' or phone like '%$key%'";
+  $sql = "select count(id) as num from " . VAC_PREFIX . "_customer where name like '%$key%' or phone like '%$key%'";
   $result = $db->sql_query($sql);
   $num = $db->sql_fetch_assoc($result);
   $customers["info"] = $num["num"];
@@ -81,11 +81,7 @@ function getVaccineTable($path, $lang, $key, $sort, $time) {
   $xtpl = new XTemplate("main-1.tpl", $path);
   $xtpl->assign("lang", $lang);
 
-  $diseases = getDiseaseList();
-  foreach ($diseases as $disease_index => $disease_data) {
-    $xtpl->assign("title", $disease_data["disease"]);
-
-    $sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, status from " . VAC_PREFIX . "_" . $disease_data["id"] . " a inner join " . VAC_PREFIX . "_pet b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id where c.customer like '%$key%' or phone like '%$key%' " . $order;
+    $sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, status from " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_pet b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id where c.customer like '%$key%' or phone like '%$key%' " . $order;
 
     // $sql = "select a.id, b.id as petid, b.petname, c.id as customerid, c.customer, c.phone as phone, cometime, calltime, status, recall, doctorid from " . VAC_PREFIX . "_" . $id . " a inner join " . VAC_PREFIX . "_pet b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id";
 
@@ -110,7 +106,6 @@ function getVaccineTable($path, $lang, $key, $sort, $time) {
     }
 
     $xtpl->parse("main.disease");
-  }
   $xtpl->parse("main");
 
 
@@ -298,7 +293,7 @@ function doctorlist($path, $lang) {
   foreach ($doctors as $key => $doctor_data) {
     echo
     $xtpl->assign("index", $doctor_data["id"]);
-    $xtpl->assign("name", $doctor_data["doctor"]);
+    $xtpl->assign("name", $doctor_data["name"]);
     $xtpl->parse("main.doctor");
   }
 
@@ -414,7 +409,7 @@ function getvaccustomer($customer, $fromtime, $amount_time, $sort, $diseaseid, $
 function getcustomer($customer, $phone) {
   global $db, $db_config, $module_name;
   if (!empty($customer)) {
-    $sql = "select * from `" . VAC_PREFIX . "_customer` where customer like '%$customer%'";
+    $sql = "select * from `" . VAC_PREFIX . "_customer` where name like '%$customer%'";
   } else {
     $sql = "select * from `" . VAC_PREFIX . "_customer` where phone like '%$phone%'";
   }
@@ -443,14 +438,14 @@ function getPatientsList($key, $sort, $filter, $page) {
   $from_item = ($page - 1) * $filter;
   $end_item = $from_item + $filter;
 
-  $sql = "select count(b.id) as num from " . VAC_PREFIX . "_pet b inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id where c.customer like '%$key%' or b.petname like '%$key%'";
+  $sql = "select count(b.id) as num from " . VAC_PREFIX . "_pet b inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id where c.name like '%$key%' or b.name like '%$key%'";
   $result = $db->sql_query($sql);
   $num = $db->sql_fetch_assoc($result);
   $patients["info"] = $num["num"];
   // var_dump($patients["info"]);
   // die();
 
-  $sql = "select b.id, b.petname, c.id as customerid, c.name as customer, c.phone as phone from " . VAC_PREFIX . "_pet b inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id where c.customer like '%$key%' or b.petname like '%$key%' or c.phone like '%$key%' " . $order . " limit $from_item, $end_item";
+  $sql = "select b.id, b.name as petname, c.id as customerid, c.name as customer, c.phone from " . VAC_PREFIX . "_pet b inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id where c.name like '%$key%' or b.name like '%$key%' or c.phone like '%$key%' " . $order . " limit $from_item, $end_item";
   $result = $db->sql_query($sql);
   while ($row = $db->sql_fetch_assoc($result)) {
     $patients["data"][] = $row;
@@ -571,8 +566,16 @@ function nv_generate_page_shop($base_url, $num_items, $per_page, $start_item, $a
 function quagio() {
   global $global_config, $admin_info, $module_info, $module_file;
   $today = strtotime(date("Y-m-d"));
-  $from = $global_config["giolamviec"] ? $global_config["giolamviec"] : $today + 7 * 60 * 60;
-  $end = $global_config["gionghi"] ? $global_config["gionghi"] : $today + 17 * 60 * 60 + 30 * 60;
+  $worktime = $today;
+  $resttime = $today;
+  if (!empty($global_config["worktime"])) {
+    $worktime = $global_config["worktime"];
+  }
+  if (!empty($global_config["resttime"])) {
+    $resttime = $global_config["resttime"];
+  }
+  $from = $worktime ? $worktime : $today + 7 * 60 * 60;
+  $end = $resttime ? $resttime : $today + 17 * 60 * 60 + 30 * 60;
 
   if (!($admin_info["level"] == "1") && (NV_CURRENTTIME < $from || NV_CURRENTTIME > $end)) {
     $xtpl = new XTemplate("overtime.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);

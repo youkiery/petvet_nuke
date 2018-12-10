@@ -26,6 +26,8 @@ $page = $nv_Request->get_string('page', 'get', "");
 $action = $nv_Request->get_string('action', 'post', "");
 $id = $nv_Request->get_string('id', 'post', "");
 $xtpl->assign("keyword", $keyword);
+$xtpl->assign("nv", $module_file);
+$xtpl->assign("op", "sieuam");
 
 $today = date("Y-m-d", NV_CURRENTTIME);
 $dusinh = $global_config["dusinh"];
@@ -67,18 +69,18 @@ switch ($tick) {
 			$from = $to;
 			$to = $t;
 		}
-		$where = "where ngaybao between $from and $to";
+		$where = "where calltime between $from and $to";
 		break;
 	case 1:
-		$where = "where ngaybao <= $to";
+		$where = "where calltime <= $to";
 	break;
 	case 2:
-		$where = "where ngaybao >= $from";
+		$where = "where calltime >= $from";
 		break;
 }
 if (empty($where)) {
-	$where = "where customer like '%$keyword%' or phone like '%$keyword%' or petname like '%$keyword%'";
-} else $where .= " and (customer like '%$keyword%' or phone like '%$keyword%' or petname like '%$keyword%')";
+	$where = "where c.name like '%$keyword%' or phone like '%$keyword%' or b.name like '%$keyword%'";
+} else $where .= " and (c.name like '%$keyword%' or phone like '%$keyword%' or b.name like '%$keyword%')";
 // die($where);
 
 foreach ($sort_type as $key => $sort_name) {
@@ -126,7 +128,6 @@ while ($revert) {
 	$from = $tpage * $filter;
 	$to = $from + $filter;
 	$sql = "select a.id, a.cometime, a.calltime, b.name as petname, c.name as customer, c.phone, d.name as doctor from " .  VAC_PREFIX . "_usg a inner join " .  VAC_PREFIX . "_pet b on a.petid = b.id inner join " .  VAC_PREFIX . "_customer c on b.customerid = c.id inner join " .  VAC_PREFIX . "_doctor d on a.doctorid = d.id $where $order[$sort] limit $from, $to";
-	// die($sql);
 	$result = $db->sql_query($sql);
 	$display_list = array();
 	while ($row = $db->sql_fetch_assoc($result)) {
@@ -177,15 +178,15 @@ function displayRed($list, $path, $lang_module, $index, $nav) {
 	// echo $path; die();
 	$stt = $index;
 	foreach ($list as $key => $row) {
+		// var_dump($row); die();
 		$xtpl->assign("stt", $stt);
 		$xtpl->assign("id", $row["id"]);
 		$xtpl->assign("customer", $row["customer"]);
 		$xtpl->assign("petname", $row["petname"]);
 		$xtpl->assign("phone", $row["phone"]);
 		$xtpl->assign("doctor", $row["doctor"]);
-		$xtpl->assign("sieuam", date("d/m/Y", $row["cometime"]));
-		$xtpl->assign("dusinh", date("d/m/Y", $row["calltime"]));
-		$xtpl->assign("ngaybao", date("d/m/Y", $row["ngaybao"]));
+		$xtpl->assign("cometime", date("d/m/Y", $row["cometime"]));
+		$xtpl->assign("calltime", date("d/m/Y", $row["calltime"]));
 		$xtpl->assign("nav_link", $nav);
 		// $xtpl->assign("delete_link", "");
 

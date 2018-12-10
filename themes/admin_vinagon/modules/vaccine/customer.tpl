@@ -1,5 +1,5 @@
 <!-- BEGIN: main -->
-<form id="vac_panel"  onsubmit="return vac_add_customer()">
+<form id="vac_panel">
 	<table class="tab1">
 		<tbody>
 			<tr>
@@ -32,7 +32,7 @@
 			</tr>
 			<tr>
 				<td colspan="4" style="text-align: center;">
-					<input type="submit" id="vac_button_panel" value="{lang.add}">
+					<input type="button" id="vac_button_panel" value="{lang.add}" onclick="vac_add_customer()">
 					<input type="button" id="update" onclick="vac_update_customer(-1)" value="{lang.update}">
 				</td>
 			</tr>

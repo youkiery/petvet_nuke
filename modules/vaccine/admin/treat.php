@@ -21,6 +21,7 @@ while ($row = $db->sql_fetch_assoc($result)) {
   $xtpl->assign("doctorid", $row["id"]);
   $xtpl->assign("doctorname", $row["name"]);
   $xtpl->parse("main.doctor");
+  $xtpl->parse("main.doctor2");
 }
 
 $sort_type = array("Tên A-Z", "Tên Z-A", "Mới trước", "Cũ trước");
@@ -83,18 +84,18 @@ switch ($tick) {
 			$from = $to;
 			$to = $t;
 		}
-		$where = "where ngayluubenh between $from and $to";
+		$where = "where cometime between $from and $to";
 		break;
 	case 1:
-		$where = "where ngayluubenh <= $to";
+		$where = "where cometime <= $to";
 	break;
 	case 2:
-		$where = "where ngayluubenh >= $from";
+		$where = "where cometime >= $from";
 		break;
 }
 if (empty($where)) {
-	$where = "where customer like '%$keyword%' or phone like '%$keyword%' or petname like '%$keyword%'";
-} else $where .= " and (customer like '%$keyword%' or phone like '%$keyword%' or petname like '%$keyword%')";
+	$where = "where c.name like '%$keyword%' or phone like '%$keyword%' or b.name like '%$keyword%'";
+} else $where .= " and (c.name like '%$keyword%' or phone like '%$keyword%' or b.name like '%$keyword%')";
 // die($where);
 
 foreach ($sort_type as $key => $sort_name) {
@@ -124,14 +125,6 @@ if ($action == "xoasieuam" && !empty($id)) {
 		$check = true;
 	}
 }
-$sql = "select * from " .  VAC_PREFIX . "_doctor";
-$result = $db->sql_query($sql);
-
-while ($row = $db->sql_fetch_assoc($result)) {
-	$xtpl->assign("doctor_value", $row["id"]);
-	$xtpl->assign("doctor_name", $row["name"]);
-	$xtpl->parse("main.doctor");
-}
 
 // $sql = "select * from " .  VAC_PREFIX . "_usg a inner join " .  VAC_PREFIX . "_pet b on a.petid = b.id $order[$sort]";
 $revert = true;
@@ -141,18 +134,17 @@ while ($revert) {
 	if ($tpage <= 0) $revert = false;
 	$from = $tpage * $filter;
 	$to = $from + $filter;
-	$sql = "select a.id, a.ngayluubenh, a.ketqua, b.name as petname, c.name as customer, c.phone, d.name as doctor from " .  VAC_PREFIX . "_treat a inner join " .  VAC_PREFIX . "_pet b on a.petid = b.id inner join " .  VAC_PREFIX . "_customer c on b.customerid = c.id inner join " .  VAC_PREFIX . "_doctor d on a.doctorid =d.id $where $order[$sort] limit $from, $to";
-	// die($sql);
+	$sql = "select a.id, a.cometime, a.insult, b.name as petname, c.name as customer, c.phone, d.name as doctor from " .  VAC_PREFIX . "_treat a inner join " .  VAC_PREFIX . "_pet b on a.petid = b.id inner join " .  VAC_PREFIX . "_customer c on b.customerid = c.id inner join " .  VAC_PREFIX . "_doctor d on a.doctorid =d.id $where $order[$sort] limit $from, $to";
 	$result = $db->sql_query($sql);
 	$display_list = array();
 	while ($row = $db->sql_fetch_assoc($result)) {
-		$sql = "select b.tinhtrang from " .  VAC_PREFIX . "_treat a inner join " .  VAC_PREFIX . "_treating b on b.idluubenh = $row[id] and a.id = b.idluubenh order by b.ngay desc";
+		$sql = "select b.status from " .  VAC_PREFIX . "_treat a inner join " .  VAC_PREFIX . "_treating b on b.treatid = $row[id] and a.id = b.treatid order by b.ngay desc";
 		$query = $db->sql_query($sql);
 		$row2 = $db->sql_fetch_assoc($query);
-		if (!$row2["tinhtrang"]) {
-			$row2["tinhtrang"] = 0;
+		if (!$row2["status"]) {
+			$row2["status"] = 0;
 		}
-		$row["tinhtrang"] = $row2["tinhtrang"];
+		$row["status"] = $row2["status"];
 		$display_list[] = $row;
 		
 		$revert = false;
@@ -211,11 +203,11 @@ function displayRed($list, $path, $lang_module, $index, $nav) {
 		$xtpl->assign("customer", $row["customer"]);
 		$xtpl->assign("petname", $row["petname"]);
 		$xtpl->assign("doctor", $row["doctor"]);
-		$xtpl->assign("luubenh", date("d/m/Y", $row["ngayluubenh"]));
+		$xtpl->assign("luubenh", date("d/m/Y", $row["cometime"]));
 		$xtpl->assign("nav_link", $nav);
-		$xtpl->assign("ketqua", $export[$row["ketqua"]]);
-    $xtpl->assign("tinhtrang", $status_option[$row["tinhtrang"]]);
-    $xtpl->assign("bgcolor", mauluubenh($row["ketqua"], $row["tinhtrang"]));
+		$xtpl->assign("ketqua", $export[$row["insult"]]);
+    $xtpl->assign("tinhtrang", $status_option[$row["status"]]);
+    $xtpl->assign("bgcolor", mauluubenh($row["insult"], $row["status"]));
 		// $xtpl->assign("delete_link", "");
 
 		$xtpl->parse("main.row");

@@ -16,10 +16,10 @@ if (!empty($action)) {
 		case 'doctoradd':
 			$doctor = $nv_Request->get_string('doctor', 'post', "");
 			if (!empty($doctor)) {
-				$sql = "select * from " . VAC_PREFIX . "_doctor where doctor = '$doctor'";
+				$sql = "select * from " . VAC_PREFIX . "_doctor where name = '$doctor'";
 				$result = $db->sql_query($sql);
 				if (!$db->sql_numrows($result)) {
-					$sql = "insert into " . VAC_PREFIX . "_doctor (doctor) values('$doctor')";
+					$sql = "insert into " . VAC_PREFIX . "_doctor (name) values('$doctor')";
 					if ($db->sql_query($sql)) {
 						$ret["status"] = 1;
 						$ret["data"] = doctorlist(NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file, $lang_module);
@@ -34,10 +34,10 @@ if (!empty($action)) {
 			$doctor = $nv_Request->get_string('doctor', 'post', "");
 			$id = $nv_Request->get_string('id', 'post', "");
 			if (!empty($doctor) && !empty($id)) {
-				$sql = "select * from " . VAC_PREFIX . "_doctor where doctor = '$doctor'";
+				$sql = "select * from " . VAC_PREFIX . "_doctor where name = '$doctor'";
 				$result = $db->sql_query($sql);
 				if (!$db->sql_numrows($result)) {
-					$sql = "update " . VAC_PREFIX . "_doctor set doctor = '$doctor' where id = $id";
+					$sql = "update " . VAC_PREFIX . "_doctor set name = '$doctor' where id = $id";
 					if ($db->sql_query($sql)) {
 						$ret["status"] = 1;
 						$ret["data"] = doctorlist(NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file, $lang_module);

@@ -47,7 +47,7 @@ $sql_create_module[] = "CREATE TABLE `" . VAC_PREFIX . "_treat` (
   `petid` int(11) NOT NULL,
   `doctorid` int(11) NOT NULL,
   `cometime` int(11) NOT NULL,
-  `catime` int(11) DEFAULT NULL,
+  `calltime` int(11) DEFAULT NULL,
   `insult` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
@@ -56,7 +56,7 @@ $sql_create_module[] = "CREATE TABLE `" . VAC_PREFIX . "_treating` (
   `treatid` int(11) NOT NULL,
   `temperate` varchar(200) NOT NULL,
   `eye` varchar(200) NOT NULL,
-  `orther` varchar(500) NOT NULL,
+  `other` varchar(500) NOT NULL,
   `examine` tinyint(4) NOT NULL,
   `image` varchar(200) NOT NULL,
   `time` int(11) NOT NULL,

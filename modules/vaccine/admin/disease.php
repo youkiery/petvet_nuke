@@ -57,10 +57,10 @@ $page_title = $lang_module["disease_title"];
 $xtpl = new XTemplate("disease.tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file);
 $xtpl->assign("lang", $lang_module);
 
-$index = 0;
+$index = 1;
 foreach ($diseases as $disease_index => $disease_data) {
 	$xtpl->assign("index", $index);
-	$xtpl->assign("name", $disease_data["disease"]);
+	$xtpl->assign("name", $disease_data["name"]);
 	$xtpl->parse("main.disease");
 	$index ++;
 }

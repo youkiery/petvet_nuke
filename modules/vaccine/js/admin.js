@@ -1,52 +1,3 @@
-
-function vac_disease_add(e) {
-	var index = Number(e.getAttribute("id"))  + 1;
-	e.setAttribute("id", index);
-	var form = document.getElementById("vac");
-	var div = document.createElement("div");
-	div.setAttribute("id", "vac_remove_" + index);
-	var input = document.createElement("input");
-	input.setAttribute("name", "d_name[" + index + "]");
-	input.setAttribute("type", "text");
-	input.setAttribute("class", "vac_val");
-	input.setAttribute("style", 'style="text-transform:capitalize;"');
-	input.setAttribute("value", "");
-	var button = document.createElement("input");
-	button.setAttribute("type", "button");
-	button.setAttribute("value", "Xóa");
-	button.setAttribute("onclick", "vac_disease_remove(" + index + ")");
-	div.appendChild(input);
-	div.appendChild(button);
-	form.appendChild(div);
-}
-
-function vac_disease_remove(index) {
-	var e = document.getElementById("vac_remove_" + index);
-	e.remove();
-}
-
-function vac_submit_disease() {
-	var url = "index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=disease";
-	var data = document.getElementsByClassName("vac_val");
-	var post_data = [];
-	var length = data.length;
-	for (let index = 0; index < length; index++) {
-		post_data.push(data[index].getAttribute("name") + "=" + data[index].value);
-	};
-	fetch(url, post_data).then(response => {
-		var msg = "";
-		if(response == 1) {
-			msg = "Lưu thành công";
-		}
-		else {
-			msg = "Chưa cập nhật";
-		}
-		showMsg(msg);
-	})
-
-	return false;
-}
-
 function fetch(url, data) {
 	return new Promise(resolve => {
 		var param = data.join("&");
@@ -227,7 +178,7 @@ function showSuggest (id, type) {
     html = "";
     if (response["data"].length) {
       response["data"].forEach ((data, index) => {
-        html += '<div class=\"temp\" style=\"padding: 8px 4px;border-bottom: 1px solid black;overflow: overlay; text-transform: capitalize;\" onclick=\"getInfo(\'' + index + '\')\"><span style=\"float: left;\">' + data.customer + '</span><span style=\"float: right;\">' + data.phone + '</span></div>';
+        html += '<div class=\"temp\" style=\"padding: 8px 4px;border-bottom: 1px solid black;overflow: overlay; text-transform: capitalize;\" onclick=\"getInfo(\'' + index + '\')\"><span style=\"float: left;\">' + data.name + '</span><span style=\"float: right;\">' + data.phone + '</span></div>';
       })
       suggest.style.display = "block";
     }
@@ -237,3 +188,42 @@ function showSuggest (id, type) {
     suggest.innerHTML = html;
   })
 }
+function suggest_init() {
+	customer_name.addEventListener("keyup", (e) => {
+		showSuggest(e.target.getAttribute("id"), true);
+	})
+
+	customer_phone.addEventListener("keyup", (e) => {
+		showSuggest(e.target.getAttribute("id"), false);
+	})
+
+	suggest_name.addEventListener("mouseenter", (e) => {
+		blur = false;
+	})
+	suggest_name.addEventListener("mouseleave", (e) => {
+		blur = true;
+	})
+	customer_name.addEventListener("focus", (e) => {
+		suggest_name.style.display = "block";
+	})
+	customer_name.addEventListener("blur", (e) => {
+		if(blur) {
+			suggest_name.style.display = "none";
+		}
+	})
+	suggest_phone.addEventListener("mouseenter", (e) => {
+		blur = false;
+	})
+	suggest_phone.addEventListener("mouseleave", (e) => {
+		blur = true;
+	})
+	customer_phone.addEventListener("focus", (e) => {
+		suggest_phone.style.display = "block";
+	})
+	customer_phone.addEventListener("blur", (e) => {
+		if(blur) {
+			suggest_phone.style.display = "none";
+		}
+	})
+}
+

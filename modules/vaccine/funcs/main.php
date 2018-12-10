@@ -110,7 +110,7 @@ quagio();
             $sql = "select * from `" . VAC_PREFIX . "_pet` where petname = '$petname' and customerid = $customerid";
             $result = $db->sql_query($sql);
             if (!$db->sql_numrows($result)) {
-              $sql = "insert into `" . VAC_PREFIX . "_pet` (petname, customerid) values ('$petname', $customerid);";
+            $sql = "insert into `" . VAC_PREFIX . "_pet` (name  , customerid) values ('$petname', $customerid);";
               if ($id = $db->sql_query_insert_id($sql)) {
                 $ret["status"] = 2;
                 $ret["data"][] = array("id" => $id);
@@ -144,7 +144,7 @@ quagio();
           if ($db->sql_numrows($result)) {
             $cometime = strtotime($cometime);
             $calltime = strtotime($calltime);
-
+            
             $sql = "select * from " .  VAC_PREFIX . "_$diseaseid where petid = $petid order by id desc limit 0, 1";
             $query = $db->sql_query($sql);
             $x = array();

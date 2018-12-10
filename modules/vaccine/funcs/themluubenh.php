@@ -9,8 +9,8 @@
 
 if (!defined('NV_IS_MOD_QUANLY')) die('Stop!!!');
 $petid = $nv_Request->get_string('petid', 'post/get', '');
-$ngayluubenh = $nv_Request->get_string('ngayluubenh', 'post', '');
-$tinhtrang = $nv_Request->get_string('tinhtrang', 'post', '');
+$cometime = $nv_Request->get_string('cometime', 'post', '');
+$status = $nv_Request->get_string('status', 'post', '');
 $doctorid = $nv_Request->get_string('doctorid', 'post', '');
 $note = $nv_Request->get_string('note', 'post', '');
 $customer = $nv_Request->get_string('customer', 'post', '');
@@ -18,21 +18,17 @@ $phone = $nv_Request->get_string('phone', 'post', '');
 $address = $nv_Request->get_string('address', 'post', '');
 $ret = array("status" => 0, "data" => "");
 // var_dump(strlen($tinhtrang) > 0);
-$ret["step"] = 1;
-if ( ! ( empty($petid) || empty($doctorid) || empty($ngayluubenh) || strlen($tinhtrang) == 0) ) {
-	$ret["step"] = 2;
+if ( ! ( empty($petid) || empty($doctorid) || empty($cometime) || strlen($status) == 0) ) {
   $sql = "select id from `" . VAC_PREFIX . "_pet` where id = $petid";
 	$result = $db->sql_query($sql);
   // $ret["data"] .= $sql;
 
 	if ($db->sql_numrows($result)) {
-		$ret["step"] = 3;
-		$sql = "INSERT INTO `" . VAC_PREFIX . "_treat` (`petid`, `doctorid`, `ngayluubenh`, `ketqua`) VALUES ($petid, $doctorid, ". strtotime($ngayluubenh) . ", 0)";
-    // $ret["data"] .= $sql;
+		$sql = "INSERT INTO `" . VAC_PREFIX . "_treat` (`petid`, `doctorid`, `cometime`, `insult`) VALUES ($petid, $doctorid, ". strtotime($cometime) . ", 0)";
 		$insert_id = $db->sql_query_insert_id($sql);
-		$sql = "INSERT INTO `" . VAC_PREFIX . "_treating` (`idluubenh`, `nhietdo`, `niemmac`, `khac`, `dieutri`, `xetnghiem`, `image`, `ngay`, `tinhtrang`, `doctorx`) VALUES ($insert_id, '', '', '', '', 0, '', " . strtotime(date("Y-m-d")) . ", $tinhtrang, $doctorid)";
+		$sql = "INSERT INTO `" . VAC_PREFIX . "_treating` (`treatid`, `temperate`, `eye`, `other`, `treating`, `examine`, `image`, `time`, `status`, `doctorx`) VALUES ($insert_id, '', '', '', '', 0, '', " . strtotime(date("Y-m-d")) . ", $status, $doctorid)";
 		$query = $db->sql_query($sql);
-		$ret["sql"] = $sql;
+		// $ret["sql"] = $sql;
 
 		// if ($sql) {
 		if ($query) {
