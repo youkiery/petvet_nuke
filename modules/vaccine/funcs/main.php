@@ -156,7 +156,7 @@ if (!empty($action)) {
           $db->sql_query($sql);
 
           $sql = "insert into `" . VAC_PREFIX . "_vaccine` (petid, cometime, calltime, doctorid, note, status, diseaseid, recall) values ($petid, $cometime, $calltime, $doctorid, '$note', 0, $diseaseid, 0);";
-          $ret["sql"] = $sql;
+          // $ret["sql"] = $sql;
 
           if ($id = $db->sql_query_insert_id($sql)) {
             if (!empty($phone)) {

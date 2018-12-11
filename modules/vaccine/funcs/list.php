@@ -25,15 +25,15 @@ quagio();
     $vaclist = array();
 
     if ($page == "list") {
-        $vaclist = getrecentlist(NV_CURRENTTIME, $global_config["filter_time"], $global_config["sort_type"]);
+        $vaclist = getrecentlist(NV_CURRENTTIME, $module_config[$module_file]["filter_time"], $module_config[$module_file]["sort_type"]);
     } else {
-        $vaclist = filterVac(NV_CURRENTTIME, $global_config["filter_time"], $global_config["sort_type"]);
+        $vaclist = filterVac(NV_CURRENTTIME, $module_config[$module_file]["filter_time"], $module_config[$module_file]["sort_type"]);
     }
   
     if ($page == "list") {
-      $xtpl->assign("content", filter($vaclist, NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file, $lang_module, date("Y-m-d", NV_CURRENTTIME), $global_config["filter_time"], $global_config["sort_type"], 0));
+      $xtpl->assign("content", filter($vaclist, NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file, $lang_module, date("Y-m-d", NV_CURRENTTIME), $module_config[$module_file]["filter_time"], $module_config[$module_file]["sort_type"], 0));
     } else {
-      $xtpl->assign("content", filter($vaclist, NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file, $lang_module, date("Y-m-d", NV_CURRENTTIME), $global_config["filter_time"], $global_config["sort_type"], 1));
+      $xtpl->assign("content", filter($vaclist, NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file, $lang_module, date("Y-m-d", NV_CURRENTTIME), $module_config[$module_file]["filter_time"], $module_config[$module_file]["sort_type"], 1));
     }
 
     $xtpl->parse("main");

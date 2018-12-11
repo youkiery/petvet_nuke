@@ -41,11 +41,11 @@ $month = 30 * $day;
 $date_option = array("1 tuần" => $day * 7, "2 tuần" => 14 * $day, "3 tuần" => 21 * $day, "1 tháng" => $month, "2 tháng" => 2 * $month, "3 tháng" => 3 * $month);
 $sort_option = array("1" => "Thời gian tiêm phòng giảm dần", "2" => "Thời gian tiêm phòng tăng dần", "3" => "Thời gian tái chủng giảm dần", "4" => "Thời gian tái chủng tăng dần");
 
-if(empty($global_config["sort_type"])) $sort = $date_option["3"];
-else $sort = $global_config["sort_type"];
+if(empty($module_config[$module_file]["sort_type"])) $sort = $date_option["3"];
+else $sort = $module_config[$module_file]["sort_type"];
 
-if(empty($global_config["filter_time"])) $time_amount = $date_option["2 tuần"];
-else $time_amount = $global_config["filter_time"];
+if(empty($module_config[$module_file]["filter_time"])) $time_amount = $date_option["2 tuần"];
+else $time_amount = $module_config[$module_file]["filter_time"];
 
 foreach ($sort_option as $value => $name) {
 	$xtpl->assign("sort_value", $value);

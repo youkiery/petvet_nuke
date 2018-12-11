@@ -32,7 +32,7 @@ if ( ! ( empty($petid) || empty($doctorid) || empty($cometime) || strlen($status
 
 		// if ($sql) {
 		if ($query) {
-			$ret["step"] = 4;
+			// $ret["step"] = 4;
       if (!empty($phone)) {
         $sql = "update `" . VAC_PREFIX . "_customer` set name = '$customer', address = '$address' where phone = '$phone'";
         $db->sql_query($sql);

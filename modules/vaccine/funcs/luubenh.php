@@ -26,11 +26,11 @@ if (!empty($action)) {
     $treating = $nv_Request->get_string('treating', 'post', '');
     $status = $nv_Request->get_string('status', 'post', '');
     $doctorx = $nv_Request->get_string('doctorx', 'post', '');
-    $ret["step"] = 1;
+    // $ret["step"] = 1;
 
       if (! (empty($ltid) || $examine < 0 || $status < 0) && $doctorx >= 0) {
         $sql = "update " .  VAC_PREFIX . "_treating set temperate = '$temperate', eye = '$eye', other = '$other', examine = '$examine', treating = '$treating', status = $status, doctorx = $doctorx where id = $ltid";
-        $ret["sql"] = $sql;
+        // $ret["sql"] = $sql;
 
         if ($db->sql_query($sql)) {
           $sql = "select * from `" . VAC_PREFIX . "_treat` a inner join `" . VAC_PREFIX . "_treating` b on b.id = $ltid and a.id = b.treatid";
@@ -120,20 +120,20 @@ if (!empty($action)) {
     case 'themtreating':
       $lid = $nv_Request->get_string('id', 'post', '');
       $time = $nv_Request->get_string('time', 'post', '');
-      $ret["step"] = 1;
+      // $ret["step"] = 1;
       if (! (empty($lid) || empty($time))) {
         $i_time = strtotime($time);
         $sql = "select * from `" . VAC_PREFIX . "_treating` where treatid = $lid and time = " . $i_time;
         // $ret["data"] = $sql;
         $query = $db->sql_query($sql);
         
-        $ret["sql"] = $sql;
+        // $ret["sql"] = $sql;
         $numrows = $db->sql_numrows($query);
         if (!$db->sql_numrows($query)) {
           // echo 1;
           $sql = "insert into `" . VAC_PREFIX . "_treating` (treatid, temperate, eye, other, examine, image, time, treating, status) values($lid, '', '', '', 0, '', " . $i_time . ", '', 0)";
           // $ret["data"] = $sql;
-          $ret["sql"] = $sql;
+          // $ret["sql"] = $sql;
           if ($id = $db->sql_query_insert_id($sql)) {
             $ret["status"] = 1;
             $ret["data"]["id"] = $id;

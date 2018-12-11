@@ -14,7 +14,7 @@ quagio();
 	
 	$xtpl->assign("keyword", $key);
 	$now = strtotime(date("Y-m-d", NV_CURRENTTIME));
-	$time = $global_config["filter_time"];
+	$time = $module_config[$module_file]["filter_time"];
 
 	if (empty($time)) $time = 7 * 24 * 60 * 60;
 	$from = $now - $time;

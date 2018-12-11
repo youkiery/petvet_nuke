@@ -524,18 +524,22 @@ function nv_generate_page_shop($base_url, $num_items, $per_page, $start_item, $a
 }
 // Nếu quá giờ làm việc sẽ chặn đường vào
 function quagio() {
-  global $global_config, $admin_info, $module_info, $module_file;
+  global $module_config, $admin_info, $module_info, $module_file;
   $today = strtotime(date("Y-m-d"));
   $worktime = 0;
   $resttime = 0;
-  if (!empty($global_config["worktime"])) {
-    $worktime = $global_config["worktime"];
+  if (!empty($module_config[$module_file]["worktime"])) {
+    $worktime = $module_config[$module_file]["worktime"];
   }
-  if (!empty($global_config["resttime"])) {
-    $resttime = $global_config["resttime"];
+  else {
+    $worktime = 7 * 60 * 60;
   }
-  $from = $worktime ? $worktime : $today + 7 * 60 * 60;
-  $end = $resttime ? $resttime : $today + 17 * 60 * 60 + 30 * 60;
+  if (!empty($module_config[$module_file]["resttime"])) {
+    $resttime = $module_config[$module_file]["resttime"];
+  }
+  else {
+    $resttime = 17 * 60 * 60 + 30 * 60;
+  }
 
   if (empty($admin_info["level"]) && ($admin_info["level"] == "1")) {
 

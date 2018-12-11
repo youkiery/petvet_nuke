@@ -19,19 +19,14 @@ $ret = array("status" => 0, "data" => array());
   $xtpl->assign("lang", $lang_module);
 
   $today = date("Y-m-d", NV_CURRENTTIME);
-  $dusinh = $global_config["dusinh"];
+  $dusinh = $module_config[$module_file]["dusinh"];
   if (empty($dusinh)) {
     $dusinh = 30 * 24 * 60 * 60;
-  }
-  $thongbao = $global_config["thongbao"];
-  if (empty($thongbao)) {
-    $thongbao = 30 * 24 * 60 * 60;
   }
   // echo $thongbao; die();
 
   $xtpl->assign("now", $today);
   $xtpl->assign("dusinh", date("Y-m-d", strtotime($today) + $dusinh));
-  $xtpl->assign("thongbao", date("Y-m-d", strtotime($today) + $thongbao));
 
   $sql = "select * from " .  VAC_PREFIX . "_doctor";
   $result = $db->sql_query($sql);

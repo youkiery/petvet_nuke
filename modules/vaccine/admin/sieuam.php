@@ -30,13 +30,9 @@ $xtpl->assign("nv", $module_file);
 $xtpl->assign("op", "sieuam");
 
 $today = date("Y-m-d", NV_CURRENTTIME);
-$dusinh = $global_config["dusinh"];
+$dusinh = $module_config[$module_file]["expert_time"];
 if (empty($dusinh)) {
 	$dusinh = 45 * 24 * 60 * 60;
-}
-$thongbao = $global_config["thongbao"];
-if (empty($thongbao)) {
-	$thongbao = 45 * 24 * 60 * 60;
 }
 
 if (empty($page)) {
@@ -45,7 +41,6 @@ if (empty($page)) {
 
 $xtpl->assign("now", $today);
 $xtpl->assign("dusinh", date("Y-m-d", strtotime($today) + $dusinh));
-$xtpl->assign("thongbao", date("Y-m-d", strtotime($today) + $thongbao));
 
 if (empty($sort)) $sort = 0;
 if (empty($filter)) $filter = 25;
