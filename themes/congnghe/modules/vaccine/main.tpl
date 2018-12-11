@@ -88,6 +88,19 @@
 					<input id="pet_calltime" type="date" name="calltime" value="{calltime}">
 				</td>
 			</tr>
+			<tr>
+				<td>
+					{lang.doctor2}
+				</td>
+				<td colspan="3">
+					<select id="doctor">
+						<!-- BEGIN: doctor -->
+						<option value="{doctorid}">{doctorname}</option>
+						<!-- END: doctor -->
+					</select>
+				</td>
+			</tr>
+
 			<!-- note & submit -->
 			<tr>
 				<td colspan="3">
@@ -133,7 +146,7 @@
 			msg = "Chưa có ngày tái chủng!";
 		}
 		else {
-			var data = ["action=insertvac", "customer=" + customer_name.value, "phone=" + customer_phone.value, "address=" + customer_address.value, "petid=" + pet_info.value, "diseaseid=" + pet_disease.value, "cometime=" + pet_cometime.value, "calltime=" + pet_calltime.value, "note=" + pet_note.value];
+			var data = ["action=insertvac", "customer=" + customer_name.value, "phone=" + customer_phone.value, "address=" + customer_address.value, "petid=" + pet_info.value, "diseaseid=" + pet_disease.value, "cometime=" + pet_cometime.value, "calltime=" + pet_calltime.value, "note=" + pet_note.value, "doctorid=" + document.getElementById("doctor").value];
 			fetch(link, data).then((response) => {
 				response = JSON.parse(response);
 				switch (response["status"]) {

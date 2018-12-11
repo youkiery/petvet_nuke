@@ -1,6 +1,6 @@
 <!-- BEGIN: main -->
 <form class="vac_form" method="GET">
-	<input type="hidden" name="nv" value="vac">
+	<input type="hidden" name="nv" value="{nv}">
 	<p>
 		Từ khóa:
 		<input type="text" name="key" value="{keyword}">

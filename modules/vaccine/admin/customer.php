@@ -118,6 +118,8 @@ else {
   $sort = $nv_Request->get_string('sort', 'get', "");
   $filter = $nv_Request->get_string('filter', 'get', "");
   $page = $nv_Request->get_string('page', 'get', "");
+  $xtpl->assign("nv", $module_file);
+  $xtpl->assign("op", $op);
   $xtpl->assign("keyword", $keyword);
 
   if (empty($sort)) $sort = 1;

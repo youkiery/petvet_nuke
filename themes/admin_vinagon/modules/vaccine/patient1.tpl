@@ -13,7 +13,7 @@
 	</ul>
 	<!-- <div style="display:none;"> -->
 			<div id="vac_notify" style="color: orange; background: gray; width: fit-content; display: none;"> Chọn hành động </div>
-			<form onsubmit="return ex({id})">
+			<form onsubmit="return ex(event, {id})">
 		<table class="tab1">
 			<thead>
 				<tr>
@@ -46,8 +46,17 @@
 					<td>
 						<input type="date" name="date" value="{time2}" id="calltime">
 					</td>
-					<td>
+					<td rowspan="2">
 						<input type="submit" value="{lang.add}">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						<select id="doctor">
+							<!-- BEGIN: doctor -->
+							<option value="{doctorid}">{doctorname}</option>
+							<!-- END: doctor -->
+						</select>
 					</td>
 				</tr>
 			</tbody>
@@ -99,20 +108,25 @@
 	</table>
 </div>
 <script>
-function ex(id) {
+function ex(e, id) {
+	e.preventDefault();
+	
 	var diseaseid = document.getElementById("disease").value;
 	var disease = trim(document.getElementById("disease").selectedOptions[0].innerText);
-	var cometime = document.getElementById("cometime").value;
 	var calltime = document.getElementById("calltime").value;
+	var cometime = document.getElementById("cometime").value;
+	var doctorid = document.getElementById("doctor").value;
 
 	var url = "index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=patient";
-	var post_data = ["action=addvac", "petid=" + id, "diseaseid=" + diseaseid, "disease=" + disease, "cometime=" + cometime, "calltime=" + calltime];
-	fetch(url, post_data).then(response => {
-		if(response) {
-			window.location.reload()
+	$.post(
+		url,
+		{action: "addvac", petid: id, diseaseid: diseaseid, disease: disease, cometime: cometime, calltime: calltime, doctor: doctorid},
+		(data, status) => {
+			if(data) {
+				window.location.reload()
+			}
 		}
-	})
-	return false;
+	)
 }
 
 function vac_remove_vac(id, diseaseid) {

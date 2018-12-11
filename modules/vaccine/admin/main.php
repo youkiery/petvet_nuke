@@ -1,4 +1,5 @@
 <?php
+
 /**
 * @Project NUKEVIET-MUSIC
 * @Phan Tan Dung (phantandung92@gmail.com)
@@ -25,6 +26,8 @@ if (!empty($action)) {
 
 $xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file);
 $xtpl->assign("lang", $lang_module);
+$xtpl->assign("nv", $module_file);
+$xtpl->assign("op", $op);
 $day = 24 * 60 * 60;
 $month = 30 * $day;
 $date_option = array("1 tuần" => $day * 7, "2 tuần" => 14 * $day, "3 tuần" => 21 * $day, "1 tháng" => $month, "2 tháng" => 2 * $month, "3 tháng" => 3 * $month);

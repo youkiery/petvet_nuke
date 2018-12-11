@@ -86,6 +86,9 @@
 				<td>
 					<input class="input" id="ngaysieuam" type="date" name="ngaysieuam" value="{now}">
 				</td>
+				<td>
+					<input class="input" id="ngaydusinh" type="date" name="ngaydusinh" value="{dusinh}">
+				</td>
 			</tr>
 			<!-- hình ảnh -->
 			<tr>

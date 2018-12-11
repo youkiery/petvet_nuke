@@ -1,7 +1,7 @@
 <!-- BEGIN: main -->
 	<form method="GET">
-		<input type="hidden" name="nv" value="vac">
-		<input type="hidden" name="op" value="patient">
+		<input type="hidden" name="nv" value="{nv}">
+		<input type="hidden" name="op" value="{op}">
 		<select name="sort">
 			<!-- BEGIN: fs_option -->
 			<option value="{fs_value}" {fs_select}>

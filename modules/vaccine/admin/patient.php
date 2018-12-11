@@ -19,10 +19,13 @@ if($action) {
 			$diseaseid = $nv_Request->get_string('diseaseid', 'post', '');
 			$cometime = $nv_Request->get_string('cometime', 'post', '');
 			$calltime = $nv_Request->get_string('calltime', 'post', '');
-			if(!(empty($petid) || empty($diseaseid) || empty($cometime) || empty($calltime))) {
+			$doctor  = $nv_Request->get_string('doctor ', 'post/get', '');
+			
+				if(!(empty($petid) || empty($diseaseid) || empty($cometime) || empty($calltime) || empty($_POST["doctor"]))) {
+					$doctor = $_POST["doctor"];
 				$cometime = strtotime($cometime);
 				$calltime = strtotime($calltime);
-        $sql = "insert into `" . VAC_PREFIX . "_vaccine` (petid, cometime, calltime, note, status, diseaseid) values ($petid, $cometime, $calltime, '', 0, $diseaseid);";
+				$sql = "insert into `" . VAC_PREFIX . "_vaccine` (petid, cometime, calltime, doctorid, recall, note, status, diseaseid) values ($petid, $cometime, $calltime, $doctor, 0, '', 0, $diseaseid);";
 				$id = $db->sql_query_insert_id($sql);
 
 				if($id){
@@ -74,8 +77,16 @@ if (!empty($petid)) {
 	$xtpl->assign("phone", $patient["phone"]);
 	$xtpl->assign("time", date("Y-m-d"));
 	$xtpl->assign("time2", date("Y-m-d", (NV_CURRENTTIME + 30 * 24 * 60 * 60)));
-	$diseases = getDiseaseList();
 
+	$sql = "select * from " . VAC_PREFIX . "_doctor";
+	$query = $db->sql_query($sql);
+	while ($row = $db->sql_fetch_assoc($query)) {
+		$xtpl->assign("doctorid", $row["id"]);
+		$xtpl->assign("doctorname", $row["name"]);
+		$xtpl->parse("main.doctor");
+	}
+
+	$diseases = getDiseaseList();
 	foreach ($diseases as $key => $value) {
 		$xtpl->assign("diseaseid", $value["id"]);
 		$xtpl->assign("diseasename", $value["name"]);
@@ -103,7 +114,6 @@ if (!empty($petid)) {
 }
 else {
 	$page_title = $lang_module["patient_title3"];
-
 	$xtpl = new XTemplate("patient3.tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file);
 	$xtpl->assign("lang", $lang_module);
 
@@ -111,7 +121,9 @@ else {
 	$sort = $nv_Request->get_string('sort', 'get', "");
 	$filter = $nv_Request->get_string('filter', 'get', "");
 	$page = $nv_Request->get_string('page', 'get', "");
-	$xtpl->assign("keyword", $keyword);
+	$xtpl->assign("nv", $module_file);
+	$xtpl->assign("op", $op);
+		$xtpl->assign("keyword", $keyword);
 
 	if (empty($sort)) $sort = 1;
 	if (empty($filter)) $filter = 25;
