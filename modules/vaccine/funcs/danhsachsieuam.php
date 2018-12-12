@@ -20,7 +20,7 @@ quagio();
 	$from = $now - $time;
 	$end = $now + $time;
 
-	$sql = "select a.id, a.cometime, a.calltime, a.status, a.image, a.note, b.id as petid, b.name as petname, c.name as customer, c.phone, d.name as doctor from `" . VAC_PREFIX . "_usg` a inner join `" . VAC_PREFIX . "_pet` b on a.calltime between $from and $end and a.petid = b.id inner join `" . VAC_PREFIX . "_customer` c on b.customerid = c.id inner join `" . VAC_PREFIX . "_doctor` d on a.doctorid = d.id where c.name like '%$key%' or c.phone like '%$key%' order by calltime";
+	$sql = "select a.id, a.cometime, a.calltime, a.status, a.image, a.note, a.birth, b.id as petid, b.name as petname, c.name as customer, c.phone, d.name as doctor from `" . VAC_PREFIX . "_usg` a inner join `" . VAC_PREFIX . "_pet` b on a.calltime between $from and $end and a.petid = b.id inner join `" . VAC_PREFIX . "_customer` c on b.customerid = c.id inner join `" . VAC_PREFIX . "_doctor` d on a.doctorid = d.id where c.name like '%$key%' or c.phone like '%$key%' order by calltime";
 	// echo date("Y-m-d", 1545238800);
 	// die($sql);
 	$result = $db->sql_query($sql);
@@ -47,7 +47,7 @@ function displaySSList($list, $time, $path, $lang_module) {
 	$xtpl->assign("lang", $lang_module);
 
 	$hex = array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f");
-	$status_color = array("red", "orange", "green");
+	$status_color = array("red", "orange", "yellow", "green");
 	$now = strtotime(date("Y-m-d", time()));
 	$today = date("d", $now);
 	$dom = date("t");
@@ -79,7 +79,7 @@ function displaySSList($list, $time, $path, $lang_module) {
 		$array_left[] = $list[$value];
 	}
   foreach ($sort_order_right as $key => $value) {
-    $d = date("d", $list[$value]["ngaybao"]);
+    $d = date("d", $list[$value]["calltime"]);
     if ($today - $d < 0) {
       $c = $today + $dom - $d;
     } else {
@@ -103,21 +103,27 @@ function displaySSList($list, $time, $path, $lang_module) {
 		$xtpl->assign("vacid", $list_data["id"]);
 		$xtpl->assign("petid", $list_data["petid"]);
 		$xtpl->assign("note", $list_data["note"]);
+		$xtpl->assign("birth", $list_data["birth"]);
 		$xtpl->assign("sieuam", date("d/m/Y", $list_data["cometime"]));
 		$xtpl->assign("dusinh", date("d/m/Y", $list_data["calltime"]));
 		// $xtpl->assign("thongbao", $list_data["ngaybao"]);
 		$xtpl->assign("color", $status_color[$list_data["status"]]);
 		$xtpl->assign("bgcolor", $list_data["bgcolor"]);
 		// var_dump($lang_module); die();
-		switch ($list_data["status"]) {
-			case '1':
-				$color = "orange";
-				break;
-			case '2':
-				$color = "green";
-				break;
-			default:
-				$color = "red";
+		if (!empty($status_color[$list_data["status"]])) {
+			$color = $status_color[$list_data["status"]];
+		}
+		else {
+			$color = $status_color[0];
+		}
+		if ($list_data["status"] == 3) {
+			if ($list_data["birth"] > 0) {
+				$xtpl->assign("checked", "disabled");
+			}
+			else {
+				$xtpl->assign("checked", "");
+			}
+			$xtpl->parse("main.list.birth");
 		}
 		$xtpl->assign("status", $lang_module["confirm_value2"][$list_data["status"]]);
 		$xtpl->assign("color", $color);

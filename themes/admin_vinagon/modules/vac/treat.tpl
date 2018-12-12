@@ -406,7 +406,7 @@
 					console.log(response);
 					
 					if (response["status"]) {
-						window.location.reload()
+            $("#html_content").html(response["data"])
 					}
 				}
 			)    
@@ -503,7 +503,7 @@
 				(data, status) => {
 					data = JSON.parse(data);
 					if (data["status"] == 1) {
-						window.location.reload();
+            $("#html_content").html(data["data"])
 					}
 					else {
 						msg = data["data"];

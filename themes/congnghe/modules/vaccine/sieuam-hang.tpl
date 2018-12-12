@@ -2,25 +2,25 @@
 <table class="vng_vacbox tab1">
   	<thead>
     	<tr>
-        <th style="width: 20px;">
+        <th>
           {lang.index}
         </th>  
-        <th style="width: 100px;">
+        <th>
           {lang.petname}
         </th>  
-        <th style="width: 120px;">
+        <th>
           {lang.customer}
         </th>  
-        <th style="width: 100px;">
+        <th>
           {lang.phone}
         </th>  
-        <th style="width: 50px;">
+        <th>
           {lang.usgcome}
         </th>  
-        <th style="width: 50px;">
+        <th>
           {lang.usgcall}
         </th>  
-				<th style="width: 70px;">
+				<th>
 					{lang.usgconfirm}
 				</th>
 				<th>
@@ -53,9 +53,12 @@
 					<button style="float: left;" onclick="confirm_lower({index}, {vacid}, {petid})">
 						&lt;
 					</button>
-          <span id="vac_confirm_{index}" style="color: {color};">
-            {status}
-          </span>
+					<span id="vac_confirm_{index}" style="color: {color};">
+							{status}
+						</span>
+						<!-- BEGIN: birth -->
+						<button id='birth_{index}' onclick='birth({index}, {vacid}, {petid})' {checked}>{birth}</button>
+						<!-- END: birth -->
 					<button style="float: right;" onclick="confirm_upper({index}, {vacid}, {petid})">
 						&gt;
 					</button>

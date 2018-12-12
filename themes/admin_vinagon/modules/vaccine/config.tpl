@@ -1,4 +1,5 @@
 <!-- BEGIN: main -->
+<div class="msgshow"></div>
 <form class="vac_form" onsubmit="return filter()">
   <span>
       {lang.d_sort}
@@ -44,9 +45,8 @@
 			(data, status) => {
 			    data = JSON.parse(data);
 			    if (data["status"]) {
-			        window.location.reload();
+            alert_msg("{lang.saved}")
 			    }
-				// console.log(data);
 			}
 		)
     return false;

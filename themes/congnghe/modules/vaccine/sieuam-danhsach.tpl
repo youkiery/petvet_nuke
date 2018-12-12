@@ -110,11 +110,11 @@
     if (response["status"]) {
       e.innerText = response["data"]["value"];
       e.style.color = response["data"]["color"];
-      // if (response["data"]["color"] == "green" && response["data"]["recall"]) {
-      //   e.parentElement.innerHTML += "<button id='recall_" + index + "' onclick='recall(" + index + ", " + vacid + ", " + petid + ", " + diseaseid + ")'>Tái chủng</button>";
-      // } else {
-      //   $("#recall_" + index).remove();
-      // }
+      if (response["data"]["color"] == "green" && response["data"]["birth"]) {
+        e.parentElement.innerHTML += "<button id='birth_" + index + "' onclick='birth(" + index + ", " + vacid + ", " + petid + ")'> " + response["data"]["birth"] + "</button>";
+      } else {
+        $("#birth_" + index).remove();
+      }
     }
   }
 
@@ -136,6 +136,24 @@
 
   function viewNote(index) {
     $("#note_" + index).toggle(500);
+  }
+
+  function birth(index, vacid, petid) {
+    var birth = prompt("Nhập số lượng thai:", 0);
+
+    if (isFinite(birth)) {
+      $.post(
+        link + "sieuam",
+        {action: "birth", id: vacid, petid: petid, birth: birth},
+        (response, status) => {
+          data = JSON.parse(response);
+          if (data["status"]) {
+            $("#birth_" + index).text(birth)
+            $("#birth_" + index).attr("disabled", "true")
+          }
+        }
+      )
+    }
   }
 
 

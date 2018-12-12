@@ -27,12 +27,20 @@ if(!(empty($act) || empty($value) || empty($id))) {
 			if ($result) {
 				$ret["status"] = 1;
 				$ret["data"]["value"] = $lang_module["confirm_value2"][$confirmid];
+				$birth = 0;
 				switch ($confirmid) {
 					case '1':
 						$color = "orange";
 						break;
 					case '2':
+						$color = "yellow";
+						break;
+					case '3':
 						$color = "green";
+						$sql = "select * from " . VAC_PREFIX . "_usg where id = $id";
+						$query = $db->sql_query($sql);
+						$row = $db->sql_fetch_assoc($query);
+						$ret["data"]["birth"] = $row["birth"];
 						break;
 					default:
 						$color = "red";

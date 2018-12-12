@@ -43,10 +43,10 @@
     </div>
     <div id="treating">
       <form onsubmit="return luutreating(event)" id="qltreating">
-        <input class="input" type="text" id="temperate" placeholder="{lang.temperate}">
-        <input class="input" type="text" id="rate" placeholder="{lang.rate}">
-        <input class="input" type="text" id="other" placeholder="{lang.other}">
-        <input class="input" type="text" id="treating" placeholder="{lang.treating}">
+        <input class="input" type="text" id="temperate" placeholder="{lang.nhietdo}">
+        <input class="input" type="text" id="eye" placeholder="{lang.niemmac}">
+        <input class="input" type="text" id="other" placeholder="{lang.khac}">
+        <input class="input" type="text" id="treating2" placeholder="{lang.dieutri}">
         <br>
         <label for="doctorx">{lang.doctor}</label>
         <select name="doctorx" id="doctorx"> 
@@ -148,7 +148,6 @@
           $("#doctor").text(data["doctor"])
           var h_treating = ""
           g_insult = data["insult"];
-          // console.log(data);
           
           if (data["treating"]) {
             // console.log(data["insult"]);
@@ -175,12 +174,12 @@
               html = "<span onclick='xemtreating(" + g_ltid + ", " + select +")'>" + e["time"] + "</span> ";
               $("#dstreating").html($("#dstreating").html() + html)
             })
-            // console.log(select, data["treating"]);
+            console.log(data["treating"][select]);
             
             $("#temperate").val(data["treating"][select]["temperate"])
-            $("#rate").val(data["treating"][select]["rate"])
+            $("#eye").val(data["treating"][select]["eye"])
             $("#other").val(data["treating"][select]["other"])
-            $("#treating").val(data["treating"][select]["treating"])
+            $("#treating2").val(data["treating"][select]["treating"])
             $("#examine").val(data["treating"][select]["examine"])
             $("#treating").text(data["treating"][select]["time"])
             $("#status2").val(data["treating"][select]["status"])
@@ -196,7 +195,7 @@
             $("#temperate").val("")
             $("#rate").val("")
             $("#other").val("")
-            $("#treating").val("")
+            $("#treating2").val("")
             $("#examine").val(0)
             $("#treating").text("")
             $("#status2").val(0)
@@ -241,7 +240,7 @@
             g_ltid = data["id"]
             g_id = id
             $("#temperate").val(d_treating[id]["temperate"])
-            $("#rate").val(d_treating[id]["rate"])
+            $("#eye").val(d_treating[id]["eye"])
             $("#other").val(d_treating[id]["other"])
             $("#treating").val(d_treating[id]["treating"])
             $("#examine").val(d_treating[id]["examine"])

@@ -104,3 +104,5 @@ $lang_module["confirm_value2"][1] = "Đã Gọi";
 $lang_module["confirm_value2"][2] = "Đã Siêu Âm";
 $lang_module["confirm_value2"][3] = "Đã Sinh";
 
+$lang_module["saved"] = "Đã lưu";
+

@@ -25,6 +25,20 @@ $action = $nv_Request->get_string('action', 'post', '');
         }
       }
       break;
+      case "birth":
+      $id = $nv_Request->get_string('id', 'post', '');
+      $petid = $nv_Request->get_string('petid', 'post', '');
+      $birth = $nv_Request->get_string('birth', 'post', '');
+
+      if (!(empty($id) || empty($birth))) {
+        $birthday = strtotime(date("Y-m-d"));
+        $sql = "update `" . VAC_PREFIX . "_usg` set birth = '$birth', birthday = " . $birthday . " where id = $id";
+        $result = $db->sql_query($sql);
+        if ($result) {
+          $ret["status"] = 1;
+        }
+      }
+      break;
     }
     echo json_encode($ret);
     die();

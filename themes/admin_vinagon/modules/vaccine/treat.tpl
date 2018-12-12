@@ -272,6 +272,8 @@
           $("#doctor").text(data["doctor"])
           var h_treating = ""
           g_ketqua = data["ketqua"];
+          console.log(data);
+          
           if (data["treating"]) {
             if (data["ketqua"] > 0) {
               $("#qltreating input").attr("disabled", "disabled");
@@ -294,6 +296,8 @@
               html = "<span onclick='xemtreating(" + g_ltid + ", " + select +")'>" + e["time"] + "</span> ";
               $("#dstreating").html($("#dstreating").html() + html)
             })
+            console.log(data["treating"]);
+            
             $("#nhietdo").val(data["treating"][select]["temperate"])
             $("#niemmac").val(data["treating"][select]["eye"])
             $("#khac").val(data["treating"][select]["other"])
@@ -383,7 +387,7 @@
     g_ltid = ltid;
     g_id = id;
     console.log(g_ltid);
-    // console.log(d_treating);
+    console.log(d_treating[id]);
     
     $("#nhietdo").val(d_treating[id]["temperate"])
     $("#niemmac").val(d_treating[id]["eye"])
