@@ -80,7 +80,7 @@
   <button class="button submitbutton" style="position: absolute; bottom: 26px; left: 110px;" onclick="ketthuc(2)">
     {lang.dachet}
   </button>
-  <button class="button submitbutton" style="position: absolute; bottom: 26px; left: 210px;" onclick="tongket()">
+  <button class="button" style="position: absolute; bottom: 26px; left: 210px;" onclick="tongket()">
     {lang.tongket}
   </button>
 </div>

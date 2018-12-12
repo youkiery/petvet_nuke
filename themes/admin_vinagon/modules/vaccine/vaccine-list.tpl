@@ -15,13 +15,16 @@
 				{lang.phone}
 			</th>
 			<th>
-				{lang.doctor}
+				{lang.vacdoctor}
 			</th>
 			<th>
-				{lang.usgcome}
+				{lang.disease}
 			</th>
 			<th>
-				{lang.usgcall}
+				{lang.vaccome}
+			</th>
+			<th>
+				{lang.vaccall}
 			</th>
 			<th>
 			
@@ -47,6 +50,9 @@
 				{doctor}
 			</td>
 			<td>
+				{disease}
+			</td>
+			<td>
 				{cometime}
 			</td>
 			<td>
@@ -55,6 +61,9 @@
 			<td>
 				<button onclick="xoasieuam({id})">
 					{lang.remove}
+				</button>
+				<button onclick="open_edit(event, {id})">
+					{lang.update}
 				</button>
 			</td>
 		</tr>

@@ -23,13 +23,13 @@
           {lang.disease}
         </th>  
         <th style="width: 50px;">
-          {lang.cometime}
+          {lang.vaccome}
         </th>  
         <th style="width: 50px;">
-          {lang.calltime}
+          {lang.vaccall}
         </th>  
       	<th style="width: 80px;">
-        	{lang.confirm}
+        	{lang.vacconfirm}
 				</th>
 				<th>
 					{lang.note}

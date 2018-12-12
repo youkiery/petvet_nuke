@@ -8,6 +8,7 @@
  */
 if (!defined('NV_MAINFILE'))
   die('Stop!!!');
+define('VAC_PREFIX', $db_config['prefix'] . "_" . $module_name);
 define('NV_NEXTMONTH', 30 * 24 * 60 * 60);
 define('NV_NEXTWEEK', 7 * 24 * 60 * 60);
 
@@ -482,7 +483,7 @@ function getPatientsList2($customerid) {
     $petid = $row["id"];
     $union = array();
     foreach ($diseases as $key => $value) {
-      $result = $db->sql_query("select *, $value[id] as disease from vng_vac_$value[id] where petid = $petid order by calltime desc LIMIT 1");
+      $result = $db->sql_query("select *, $value[id] as disease from " . VAC_PREFIX . "_$value[id] where petid = $petid order by calltime desc LIMIT 1");
       while ($row2 = $db->sql_fetch_assoc($result)) {
         $union[] = $row2;
       }
@@ -497,9 +498,9 @@ function getPatientsList2($customerid) {
 
 // 		foreach ($diseases as $key => $value) {
 // 			$key ++;
-// 			$union[] = "(select *, $key as disease from vng_vac_$key where petid = $petid order by calltime desc LIMIT 1)";
+// 			$union[] = "(select *, $key as disease from " . VAC_PREFIX . "_$key where petid = $petid order by calltime desc LIMIT 1)";
 // 		}
-    // $sql = "SELECT * from	( (select *, 1 as disease from vng_vac_1 LIMIT 1) UNION  (select *, 2 as disease  from vng_vac_2 LIMIT 1) UNION  (select *, 3 as disease from vng_vac_3 LIMIT 1) ) as a limit 1";
+    // $sql = "SELECT * from	( (select *, 1 as disease from " . VAC_PREFIX . "_1 LIMIT 1) UNION  (select *, 2 as disease  from " . VAC_PREFIX . "_2 LIMIT 1) UNION  (select *, 3 as disease from " . VAC_PREFIX . "_3 LIMIT 1) ) as a limit 1";
 // 		$sql = "SELECT * from	( " . implode(" union ", $union) . ") as a limit 1";
     // die($sql);
 // 		$result2 = $db->sql_query($sql);
@@ -525,7 +526,7 @@ function getPatientDetail($petid) {
   $union = array();
   foreach ($diseases as $key => $value) {
     $key ++;
-    $result = $db->sql_query("select *, $key as disease from vng_vac_$key where petid = $petid");
+    $result = $db->sql_query("select *, $key as disease from " . VAC_PREFIX . "_$key where petid = $petid");
     while ($row = $db->sql_fetch_assoc($result)) {
       $patients["data"][] = $row;
     }

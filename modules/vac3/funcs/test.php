@@ -12,7 +12,9 @@ if (!defined('NV_IS_MOD_VAC')) {
 }
 $page_title = $lang_module["tester"];
 
-$tester = find_vaccine(2352, 1);
-echo json_encode($tester);
+// parse_order(array());
+
+// $tester = find_vaccine(2352, 1);
+// echo json_encode($tester);
 die();
 ?>

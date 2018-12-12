@@ -1,9 +1,3 @@
-<!-- BEGIN: overtime -->
- <p>
-   Đã hết thời gian làm việc, xin hãy quay trở lại vào ngày mai!  
- </p>
- 
-<!-- END: overtime -->
 <!-- BEGIN: main -->
 <div id="msgshow" class="msgshow"></div>
 <div id="vac_notify" style="display: none; position: fixed; top: 0; right: 0; background: white; padding: 8px; border: 1px solid black; z-index: 1000;"></div>
@@ -61,10 +55,10 @@
 					{lang.disease}
 				</td>
 				<td>
-					{lang.cometime}
+					{lang.vaccome}
 				</td>
 				<td>
-					{lang.calltime}
+					{lang.vaccall}
 				</td>
 			</tr>
 			<!-- pet input -->
@@ -90,7 +84,7 @@
 			</tr>
 			<tr>
 				<td>
-					{lang.doctor2}
+					{lang.vacdoctor}
 				</td>
 				<td colspan="3">
 					<select id="doctor">
@@ -160,7 +154,6 @@
             customer_address.value = ""
 						pet_info.innerHTML = ""
             pet_note.value = "Ghi chú"
-            console.log(customer_list, g_index);
             
 						break;
 					case 3:

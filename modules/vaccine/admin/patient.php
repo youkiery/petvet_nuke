@@ -27,7 +27,6 @@ if($action) {
 				$calltime = strtotime($calltime);
 				$sql = "insert into `" . VAC_PREFIX . "_vaccine` (petid, cometime, calltime, doctorid, recall, note, status, diseaseid) values ($petid, $cometime, $calltime, $doctor, 0, '', 0, $diseaseid);";
 				$id = $db->sql_query_insert_id($sql);
-
 				if($id){
 					$row = array("id" => $id, "cometime" => date("d/m/Y", $cometime), "calltime" => date("d/m/Y", $calltime), "confirm" => $lang_module["confirm_value"][0]);
 					echo json_encode($row);
@@ -87,6 +86,8 @@ if (!empty($petid)) {
 	}
 
 	$diseases = getDiseaseList();
+	// var_dump($diseases);
+	// die();
 	foreach ($diseases as $key => $value) {
 		$xtpl->assign("diseaseid", $value["id"]);
 		$xtpl->assign("diseasename", $value["name"]);
@@ -150,7 +151,7 @@ else {
 		$xtpl->parse("main.ff_option");
 	}
 
-	$url = $link . "patient&sort=$sort&filter=$filter";
+	$url = $link . $op . "&sort=$sort&filter=$filter";
 	if(!empty($key)) {
 		$url .= "&key=$keyword";
 	}

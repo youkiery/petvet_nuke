@@ -15,13 +15,16 @@
           {lang.phone}
         </th>  
         <th style="width: 50px;">
-          {lang.ngaysieuam}
+          {lang.usgcome}
         </th>  
         <th style="width: 50px;">
-          {lang.ngaydusinh}
+          {lang.usgcall}
         </th>  
 				<th style="width: 70px;">
-					{lang.confirm}
+					{lang.usgconfirm}
+				</th>
+				<th>
+					{lang.note}
 				</th>
     	</tr>
   	</thead>
@@ -57,8 +60,17 @@
 						&gt;
 					</button>
 				</td>
-    	</tr>
-    	<!-- END: list -->
+				<td>
+					<img class="mini-icon" src="/uploads/vac/note_add.png" alt="thêm ghi chú" onclick="editNote({vacid})">
+					<img class="mini-icon" src="/uploads/vac/note_info.png" alt="xem ghi chú" onclick="viewNote({vacid})">
+				</td>
+			</tr>
+			<tr style="display: none; background: #fa0;" id="note_{vacid}">
+				<td colspan="9" id="note_v{vacid}">
+					{note}
+				</td>
+			</tr>
+		<!-- END: list -->
   	</tbody>
 	</table>
 <br>

@@ -31,10 +31,10 @@ if (!defined('NV_IS_FILE_MODULES')) die('Stop!!!');
 // $sql_create_module[] = "ALTER TABLE `" . $db_config['prefix'] . "_" . $module_data . "_pets`
 // 	ADD PRIMARY KEY (`id`);";
 
-// $sql_create_module[] = "ALTER TABLE `vng_vac_pets`
+// $sql_create_module[] = "ALTER TABLE `" . VAC_PREFIX . "_pets`
 // MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;";
 
-// $sql_create_module[] = "CREATE TABLE `vng_vac_diseases` (
+// $sql_create_module[] = "CREATE TABLE `" . VAC_PREFIX . "_diseases` (
 //   `id` int(11) NOT NULL,
 //   `disease` varchar(100) NOT NULL
 // ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";

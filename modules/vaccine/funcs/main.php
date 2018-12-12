@@ -114,7 +114,7 @@ if (!empty($action)) {
             $sql = "insert into `" . VAC_PREFIX . "_pet` (name  , customerid) values ('$petname', $customerid);";
             if ($id = $db->sql_query_insert_id($sql)) {
               $ret["status"] = 2;
-              $ret["data"][] = array("id" => $id);
+              $ret["data"] = array("id" => $id, "name" => $petname, "customerid" => $customerid);
             }
           } else {
             $ret["status"] = 1;

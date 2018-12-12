@@ -9,7 +9,6 @@
 
 if (!defined('NV_SYSTEM')) die('Stop!!!'); 
 define('NV_IS_MOD_VAC', true); 
-define(VAC_PREFIX, $db_config['prefix'] . "_" . $module_data);
 
 require_once ( NV_ROOTDIR . "/modules/" . $module_file . "/global.functions.php" );
 ?>

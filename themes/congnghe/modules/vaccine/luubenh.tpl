@@ -13,7 +13,7 @@
 		<thead>
 			<tr>
 				<th colspan="4">
-					{lang.tieude_luubenh}
+					{lang.treat_title}
 					<span id="e_notify" style="display: none;"></span>
 				</th>
 			</tr>

@@ -9,9 +9,24 @@
 
 if (!defined('NV_IS_MOD_QUANLY')) die('Stop!!!');
 $action = $nv_Request->get_string('action', 'post', '');
-$ret = array("status" => 0, "data" => array());
 
   if (!empty($action)) {
+    $ret = array("status" => 0, "data" => array());
+    switch ($action) {
+      case "editNote":
+      $note = $nv_Request->get_string('note', 'post', '');
+      $id = $nv_Request->get_string('id', 'post', '');
+
+      if (!(empty($id))) {
+        $sql = "update `" . VAC_PREFIX . "_usg` set note = '$note' where id = $id";
+        $result = $db->sql_query($sql);
+        if ($result) {
+          $ret["status"] = 1;
+        }
+      }
+      break;
+    }
+    echo json_encode($ret);
     die();
   }
 
@@ -19,7 +34,7 @@ $ret = array("status" => 0, "data" => array());
   $xtpl->assign("lang", $lang_module);
 
   $today = date("Y-m-d", NV_CURRENTTIME);
-  $dusinh = $module_config[$module_file]["dusinh"];
+  $dusinh = $module_config[$module_file]["expert_time"];
   if (empty($dusinh)) {
     $dusinh = 30 * 24 * 60 * 60;
   }

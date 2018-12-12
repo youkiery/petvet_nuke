@@ -47,7 +47,7 @@ function vi(str) {
 }
 function getInfo(index) {
   customer_data = customer_list[index];
-  customer_name.value = customer_data["customer"];
+  customer_name.value = customer_data["name"];
   customer_phone.value = customer_data["phone"];
   customer_address.value = customer_data["address"];
   g_index = index;
@@ -127,10 +127,7 @@ function addPet() {
             msg = "Khách hàng hoặc tên thú cưng không tồn tại";						
             break;
           case 2:
-            customer_data["pet"].push({
-              id: response["data"][0].id,
-              petname: answer
-            });
+            customer_data["pet"].push(response["data"]);
             reloadPetOption(customer_data["pet"])
             alert_msg("Đã thêm thú cưng(" + answer + ")");
             break;
@@ -152,6 +149,7 @@ function addPet() {
 
 function reloadPetOption(petlist) {
   html = "";
+  console.log(petlist);
   petlist.forEach((pet_data, petid) => {
     html += "<option value='"+ pet_data["id"] +"'>" + pet_data["name"] + "</option>";
   })

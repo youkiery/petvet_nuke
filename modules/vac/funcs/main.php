@@ -145,11 +145,11 @@ quagio();
             $cometime = strtotime($cometime);
             $calltime = strtotime($calltime);
 
-            $sql = "select * from vng_vac_$diseaseid where petid = $petid order by id desc limit 0, 1";
+            $sql = "select * from " . VAC_PREFIX . "_$diseaseid where petid = $petid order by id desc limit 0, 1";
             $query = $db->sql_query($sql);
             $x = array();
             $row = $db->sql_fetch_assoc($query);
-            $sql = "update vng_vac_$diseaseid set status = 2, recall = $calltime where id = $row[id]";
+            $sql = "update " . VAC_PREFIX . "_$diseaseid set status = 2, recall = $calltime where id = $row[id]";
             // echo($sql); die();
             $db->sql_query($sql);
 

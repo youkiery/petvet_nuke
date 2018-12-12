@@ -161,7 +161,7 @@ $row = $db->sql_fetch_assoc($result);
 
 // die($sql);
 $num = $row["num"];
-$url = $link . "sieuam&sort=$sort&filter=$filter";
+$url = $link . $op . "&sort=$sort&filter=$filter";
 if(!empty($keyword)) {
 	$url .= "&key=$keyword";
 }

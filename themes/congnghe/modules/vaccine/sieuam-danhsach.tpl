@@ -21,11 +21,11 @@
       <span id="phone"></span>
     </p>
     <p>
-      {lang.ngaysieuam}: 
+      {lang.usgcome}: 
       <span id="sieuam"></span>
     </p>
     <p>
-      {lang.ngaydusinh}: 
+      {lang.usgcall}: 
       <span id="dusinh"></span>
     </p>
   </div>
@@ -110,13 +110,34 @@
     if (response["status"]) {
       e.innerText = response["data"]["value"];
       e.style.color = response["data"]["color"];
-      if (response["data"]["color"] == "green" && response["data"]["recall"]) {
-        e.parentElement.innerHTML += "<button id='recall_" + index + "' onclick='recall(" + index + ", " + vacid + ", " + petid + ", " + diseaseid + ")'>Tái chủng</button>";
-      } else {
-        $("#recall_" + index).remove();
-      }
+      // if (response["data"]["color"] == "green" && response["data"]["recall"]) {
+      //   e.parentElement.innerHTML += "<button id='recall_" + index + "' onclick='recall(" + index + ", " + vacid + ", " + petid + ", " + diseaseid + ")'>Tái chủng</button>";
+      // } else {
+      //   $("#recall_" + index).remove();
+      // }
     }
   }
+
+  function editNote(index) {
+    var answer = prompt("Ghi chú: ", trim($("#note_v" + index).text()));
+    if (answer) {
+      $.post(
+        link + "sieuam&act=post",
+        {action: "editNote", note: answer, id: index},
+        (data, status) => {
+          data = JSON.parse(data);
+          if(data["status"]) {
+            $("#note_v" + index).text(answer);
+          }
+        }
+      )
+    }
+  }
+
+  function viewNote(index) {
+    $("#note_" + index).toggle(500);
+  }
+
 
   $("#reman").click(() => {
     $("#vac_info").fadeOut();

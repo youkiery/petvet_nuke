@@ -23,6 +23,7 @@ $lang_module["confirm_value"][2] = "Đã Tiêm";
 $lang_module["confirm_value2"][0] = "Chưa Gọi";
 $lang_module["confirm_value2"][1] = "Đã Gọi";
 $lang_module["confirm_value2"][2] = "Đã Siêu Âm";
+$lang_module["confirm_value2"][3] = "Đã Sinh";
 //disease
 $lang_module["disease_title"] = "Quản lý tiêm phòng";
 $lang_module["disease"] = "Loại tiêm phòng";
@@ -52,9 +53,10 @@ $lang_module["confirm_mess"] = "Thời gian tái chủng";
 $lang_module["doctor"] = "Người trực";
 
 // sieuam
-$lang_module["tieude_usg"] = "Quản lý siêu âm";
+$lang_module["usg_title"] = "Quản lý siêu âm";
 $lang_module["tieude_usg_danhsach"] = "Danh sách siêu âm";
 $lang_module["image"] = "Hình ảnh";
+$lang_module["hinhanh"] = "Hình ảnh";
 $lang_module["chonanh"] = "Chọn ảnh";
 $lang_module["themsatc"] = "Đã lưu bản ghi";
 $lang_module["themsatb"] = "Bản ghi chưa được lưu";
@@ -66,7 +68,7 @@ $lang_module["filter_result"] = "Tổng số <span style='color: red'>%d</span> 
 $lang_module["list"] = "Danh sách quản lý tiêm phòng";
 $lang_module["list2"] = "Danh sách tiêm phòng mới thêm";
 
-$lang_module["tieude_treat"] = "Quản lý lưu bệnh";
+$lang_module["treat_title"] = "Quản lý lưu bệnh";
 $lang_module["ngayluubenh"] = "Ngày lưu bệnh";
 $lang_module["tinhtrang"] = "Tình trạng";
 $lang_module["trihet"] = "Điều trị xong";
@@ -86,3 +88,11 @@ $lang_module["tongngay"] = "Tổng số ngày điều trị: ";
 $lang_module["doctor2"] = "Người nhận";
 
 $lang_module["themsieuam"] = "Thêm siêu âm";
+
+$lang_module["vacdoctor"] = "Người tiêm phòng";
+$lang_module["vaccome"] = "Ngày tiêm phòng";
+$lang_module["vaccall"] = "Người tái chủng";
+$lang_module["usgcome"] = "Ngày siêu âm";
+$lang_module["usgcall"] = "Người dự sinh";
+$lang_module["usgconfirm"] = "Nhắc siêu âm";
+$lang_module["vacconfirm"] = "Nhắc tái chủng";

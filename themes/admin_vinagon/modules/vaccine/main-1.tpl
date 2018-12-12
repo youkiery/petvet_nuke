@@ -4,8 +4,8 @@
 	<table class="vng_vacbox tab1">
 		<thead>
 			<tr>
-				<th colspan="6" class="vng_vacbox_title" style="text-align: center">
-					{title}
+				<th colspan="9" class="vng_vacbox_title" style="text-align: center">
+					{lang.main_title}
 				</th>
 			</tr>
 			<tr>
@@ -22,10 +22,19 @@
 					{lang.phone}
 				</th>				
 				<th>
-					{lang.cometime}
+					{lang.disease}
 				</th>				
 				<th>
-					{lang.calltime}
+					{lang.vacdoctor}
+				</th>				
+				<th>
+					{lang.vaccome}
+				</th>				
+				<th>
+					{lang.vaccall}
+				</th>				
+				<th>
+					{lang.vacconfirm}
 				</th>				
 			</tr>
 		</thead>
@@ -49,10 +58,19 @@
 					{phone}
 				</td>				
 				<td>
+					{disease}
+				</td>				
+				<td>
+					{doctor}
+				</td>				
+				<td>
 					{cometime}
 				</td>				
 				<td>
 					{calltime}
+				</td>				
+				<td>
+					{confirm}
 				</td>				
 			</tr>
 			<!-- END: vac_body -->

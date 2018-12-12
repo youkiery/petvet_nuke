@@ -7,7 +7,7 @@
  * @createdate 01/11/2018 08:00 AM
  */
 
- if (!defined('NV_MAINFILE')) {
+if (!defined('NV_MAINFILE')) {
   die('Stop!!!');
 }
 
@@ -16,7 +16,7 @@ function insert_vaccine($petid, $diseaseid, $cometime, $calltime, $note) {
   if (!(empty($petid) || empty($diseaseid) || empty($cometime) || empty($calltime))) {
     $vaccine_sql = "INSERT INTO " . VAC_PREFIX . "_vaccine (petid, diseaseid, cometime, calltime, status, note, recall) VALUES ($petid, $diseaseid, $cometime, $calltime, $status, $note, $recall)";
     $vaccine_query = $db->sql_query($vaccine_sql);
-    if () {
+    if ($vaccine_query) {
       return true;
     }
   }
@@ -147,6 +147,67 @@ function get_disease_list() {
     $result = transform($disease_list);
   }
   return $result;
+}
+
+// nofinish
+function parse_order($filter) {
+  $sort = array("1" => array("name" => "Tên A-Z", "value" => "c.name asc"), "2" => array("name" => "Tên Z-A", "value" => "c.name desc"), "3" => array("name" => "Ngày báo giảm", "value" => "calltime desc"), "4" => array("name" => "Ngày báo tăng", "value" => "calltime asc"), "5" => array("name" => "Ngày đến giảm", "value" => "cometime asc"), "6" => array("name" => "Ngày đến tăng", "value" => "cometime desc"));
+  $order = array();
+  $where = array();
+  if (!empty($filter["sort"])) {
+    $order[] = $sort[$filter["sort"]]["value"];
+  }
+  if (!empty($filter["keyword"])) {
+    if (!empty($filter["customer"])) {
+      $where[] = "c.name like '%" . $filter["keyword"] . "%' or c.phone like '" . $filter["keyword"] . "'";
+    }
+    if (!empty($filter["pet"])) {
+      $where[] = "p.name like '%" . $filter["keyword"] . "%'";
+    }
+  }
+  $tick = 0;
+  if (!empty($filter["from"])) {
+    $tick += 1;
+  }
+  if (!empty($filter["end"])) {
+    $tick += 2;    
+  }
+  if (!empty($filter["time_type"])) {
+    switch ($filter["time_type"]) {
+      case 1:
+      $time_type = "cometime";
+      break;
+      case 2:
+      $time_type = "time";
+      break;
+      default:
+      $time_type = "calltime";
+    }
+  }
+  switch ($tick) {
+    case 1:
+    $where[] = $time_type . " >= " . $filter["from"];
+    break;
+    case 2:
+    $where[] = $time_type . " <= " . $filter["end"];
+    break;
+    case 3:
+    // if ($filter["end"] < $filter["from"]) {
+    //   $temp = $filter["end"];
+    //   $filter["end"] = $filter["from"];
+    //   $filter["end"]
+    // }
+    $where[] = $time_type . " <= " . $filter["end"];
+    break;
+  }
+  // $xxx = json_decode('[{name:, value: }, {name: "", value: ""}, {name: "", value: ""}, {name: "", value: ""}, {name: "", value: ""}, {name: "", value: ""}]');
+  return 0;
+}
+
+function swap(&$a, &$b) {
+  $temp = $a;
+  $a = $b;
+  $b = $temp;
 }
 
 // chuyển list thành object

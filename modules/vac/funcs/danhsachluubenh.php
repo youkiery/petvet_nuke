@@ -31,7 +31,7 @@ if (empty($time)) {
 $from = $now - $time;
 $end = $now + $time;
 
-$sql = "select * from vng_vac_doctor";
+$sql = "select * from " . VAC_PREFIX . "_doctor";
 $result = $db->sql_query($sql);
 
 while ($row = $db->sql_fetch_assoc($result)) {

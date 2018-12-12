@@ -16,13 +16,17 @@ if($action) {
 		case "save":
 			$sort = $nv_Request->get_string('sort', 'post', '');
 			$time = $nv_Request->get_string('time', 'post', '');
-			if(!(empty($sort) || empty($time))) {
-				$sql = "update `" . $db_config['prefix'] . "_config` set config_value = '$time' where config_name = 'filter_time'";
-				if($db->sql_query($sql)) {
-					$sql = "update `" . $db_config['prefix'] . "_config` set config_value = '$sort' where config_name = 'sort_type'";
-					if($db->sql_query($sql)) {
-						$ret["status"] = 1;
-					}
+			$expert = $nv_Request->get_string('expert', 'post', '');
+			$ret["step"] = 1;
+			if(!(empty($sort) || empty($time) || empty($expert))) {
+				$sql = "update `" . $db_config['prefix'] . "_config` set config_value = '$time' where config_name = 'filter_time' and module = '" . $module_file . "'";
+			    $time_query = $db->sql_query($sql);
+				$sql = "update `" . $db_config['prefix'] . "_config` set config_value = '$sort' where config_name = 'sort_type' and module = '" . $module_file . "'";
+				$sort_query = $db->sql_query($sql);
+				$sql = "update `" . $db_config['prefix'] . "_config` set config_value = '$expert' where config_name = 'expert_time' and module = '" . $module_file . "'";
+				$expert_query = $db->sql_query($sql);
+				if($time_query && $sort_query && $expert_query) {
+					$ret["status"] = 1;
 				}
 			}
 		break;
@@ -41,11 +45,14 @@ $month = 30 * $day;
 $date_option = array("1 tuần" => $day * 7, "2 tuần" => 14 * $day, "3 tuần" => 21 * $day, "1 tháng" => $month, "2 tháng" => 2 * $month, "3 tháng" => 3 * $month);
 $sort_option = array("1" => "Thời gian tiêm phòng giảm dần", "2" => "Thời gian tiêm phòng tăng dần", "3" => "Thời gian tái chủng giảm dần", "4" => "Thời gian tái chủng tăng dần");
 
-if(empty($module_config[$module_file]["sort_type"])) $sort = $date_option["3"];
+if(empty($module_config[$module_file]["sort_type"])) $sort = $sort_option["3"];
 else $sort = $module_config[$module_file]["sort_type"];
 
 if(empty($module_config[$module_file]["filter_time"])) $time_amount = $date_option["2 tuần"];
 else $time_amount = $module_config[$module_file]["filter_time"];
+
+if(empty($module_config[$module_file]["expert_time"])) $expert_time = $date_option["2 tuần"];
+else $expert_time = $module_config[$module_file]["expert_time"];
 
 foreach ($sort_option as $value => $name) {
 	$xtpl->assign("sort_value", $value);
@@ -60,6 +67,9 @@ foreach ($date_option as $name => $value) {
 	if($value == $time_amount) $xtpl->assign("fo_select", "selected");
 	else $xtpl->assign("fo_select", "");
 	$xtpl->parse("main.fo_time");
+	if($value == $expert_time) $xtpl->assign("et_select", "selected");
+	else $xtpl->assign("et_select", "");
+	$xtpl->parse("main.et_time");
 }
 $xtpl->assign("fromtime", date("Y-m-d", NV_CURRENTTIME));
 $xtpl->assign("totime", date("Y-m-d", NV_CURRENTTIME + NV_NEXTMONTH));	

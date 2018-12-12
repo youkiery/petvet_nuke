@@ -1,5 +1,8 @@
 <!-- BEGIN: main -->
 <form class="vac_form" onsubmit="return filter()">
+  <span>
+      {lang.d_sort}
+  </span>
   <select id="f_sort" class="vac_select">
     <!-- BEGIN: fs_time -->
     <option value="{sort_value}" {fs_select}>
@@ -7,6 +10,10 @@
     </option>
     <!-- END: fs_time -->
   </select>
+  <br>
+  <span>
+      {lang.d_time}
+  </span>
   <select id="f_moment" class="vac_select">
     <!-- BEGIN: fo_time -->
     <option value="{time_amount}" {fo_select}>
@@ -14,6 +21,18 @@
     </option>
     <!-- END: fo_time -->
   </select>
+  <br>
+  <span>
+      {lang.d_expert}
+  </span>
+  <select id="f_expert" class="vac_select">
+    <!-- BEGIN: et_time -->
+    <option value="{time_amount}" {et_select}>
+      {time_name}
+    </option>
+    <!-- END: et_time -->
+  </select>
+  <br>
   <input type="submit" class="vac_button" value="{lang.save}">
 </form>
 <script>
@@ -21,8 +40,12 @@
   function filter() {
 		$.post(
 			link,
-			{action: "save", sort: $("#f_sort").val(), time: $("#f_moment").val()},
+			{action: "save", sort: $("#f_sort").val(), time: $("#f_moment").val(), expert: $("#f_expert").val()},
 			(data, status) => {
+			    data = JSON.parse(data);
+			    if (data["status"]) {
+			        window.location.reload();
+			    }
 				// console.log(data);
 			}
 		)

@@ -72,10 +72,10 @@
 					{lang.petname}
 				</td>
 				<td>
-					{lang.ngaysieuam}
+					{lang.usgcome}
 				</td>
 				<td>
-					{lang.ngaydusinh}
+					{lang.usgcall}
 				</td>
 			</tr>
 			<!-- pet input -->
@@ -156,7 +156,7 @@
 				{action: "xoasieuam", id: id},
 				(data, status) => {
 					data = JSON.parse(data);
-					if (data["status"]) {
+					if (data) {
 						window.location.reload()
 					}
 				}

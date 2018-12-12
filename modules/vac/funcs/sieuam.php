@@ -33,7 +33,7 @@ $ret = array("status" => 0, "data" => array());
   $xtpl->assign("dusinh", date("Y-m-d", strtotime($today) + $dusinh));
   $xtpl->assign("thongbao", date("Y-m-d", strtotime($today) + $thongbao));
 
-  $sql = "select * from vng_vac_doctor";
+  $sql = "select * from " . VAC_PREFIX . "_doctor";
   $result = $db->sql_query($sql);
 
   while ($row = $db->sql_fetch_assoc($result)) {

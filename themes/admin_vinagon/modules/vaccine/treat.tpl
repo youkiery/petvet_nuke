@@ -41,10 +41,10 @@
     </div>
     <div id="treating">
       <form onsubmit="return luutreating(event)" id="qltreating">
-        <input width="100%" class="input" type="text" id="nhietdo" placeholder="{lang.nhietdo}">
-        <input width="100%" class="input" type="text" id="niemmac" placeholder="{lang.niemmac}">
-        <input width="100%" class="input" type="text" id="khac" placeholder="{lang.khac}">
-        <input width="100%" class="input" type="text" id="dieutri" placeholder="{lang.dieutri}">
+        <input style="width:100%" class="input" type="text" id="nhietdo" placeholder="{lang.nhietdo}">
+        <input style="width:100%" class="input" type="text" id="niemmac" placeholder="{lang.niemmac}">
+        <input style="width:100%" class="input" type="text" id="khac" placeholder="{lang.khac}">
+        <input style="width:100%" class="input" type="text" id="dieutri" placeholder="{lang.dieutri}">
         <br>
         <label for="doctorx">{lang.doctor}</label>
         <select name="doctorx" id="doctorx"> 
@@ -78,7 +78,7 @@
   <button class="button submitbutton" style="position: absolute; bottom: 26px; left: 110px;" onclick="ketthuc(2)">
     {lang.dachet}
   </button>
-  <button class="button submitbutton" style="position: absolute; bottom: 26px; left: 210px;" onclick="tongket()">
+  <button class="button" style="position: absolute; bottom: 26px; left: 210px;" onclick="tongket()">
     {lang.tongket}
   </button>
 </div>

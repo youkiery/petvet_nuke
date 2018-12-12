@@ -15,9 +15,10 @@ $submenu['disease'] = $lang_module["disease_title"];
 $submenu['doctor'] = $lang_module["doctor_title"];
 $submenu['sieuam'] = $lang_module["tieude_usg"];
 $submenu['treat'] = $lang_module["treat_title"];
+$submenu['vaccine'] = $lang_module["vaccine_title"];
 $submenu['config'] = $lang_module["doctor_config"];
 
-$allow_func = array('main', "disease", "patient", "customer", "doctor", "sieuam", "treat", "config"); 
+$allow_func = array('main', "disease", "patient", "customer", "doctor", "vaccine", "sieuam", "treat", "config"); 
 define( 'NV_IS_QUANLY_ADMIN', true );
 require_once ( NV_ROOTDIR . "/modules/" . $module_file . "/global.functions.php" );
 ?>

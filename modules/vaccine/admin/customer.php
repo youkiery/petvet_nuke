@@ -20,7 +20,6 @@ if($action) {
       $address = $nv_Request -> get_string('address', 'post', '');
       if(!(empty($name) || empty($phone))) {
         $sql = "insert into `" . VAC_PREFIX . "_customer` (name, phone, address) values('$name', '$phone', '$address');";
-        
         $id = $db->sql_query_insert_id($sql);
         if($id){
           $row = array("id" => $id, "name" => $name, "phone" => $phone, "address" => $address);
@@ -150,7 +149,7 @@ else {
   //   echo "<span style='color: red'>$i</span>: " . $page_nav . "<br>";
   // }
   // $page_nav = getNavPage($page, ceil($customers["info"] / $filter), $link . "customer&sort=$sort&filter=$filter");
-  $url = $link . "customer&sort=$sort&filter=$filter";
+  $url = $link . $op . "&sort=$sort&filter=$filter";
   if(!empty($key)) {
     $url .= "&key=$keyword";
   }

@@ -29,7 +29,7 @@ if (!empty($action)) {
     $ret["step"] = 1;
 
       if (! (empty($ltid) || $xetnghiem < 0 || $tinhtrang < 0) && $doctorx >= 0) {
-        $sql = "update vng_vac_lieutrinh set nhietdo = '$nhietdo', niemmac = '$niemmac', khac = '$khac', xetnghiem = '$xetnghiem', dieutri = '$dieutri', tinhtrang = $tinhtrang, doctorx = $doctorx where id = $ltid";
+        $sql = "update " . VAC_PREFIX . "_lieutrinh set nhietdo = '$nhietdo', niemmac = '$niemmac', khac = '$khac', xetnghiem = '$xetnghiem', dieutri = '$dieutri', tinhtrang = $tinhtrang, doctorx = $doctorx where id = $ltid";
         $ret["sql"] = $sql;
 
         if ($db->sql_query($sql)) {
@@ -41,7 +41,7 @@ if (!empty($action)) {
               $ret["data"]["tinhtrang"] = $status_option[$row["tinhtrang"]];
             }
 
-          // $sql = "select ngayluubenh, lieutrinh from vng_vac_luubenh where id = $lid";
+          // $sql = "select ngayluubenh, lieutrinh from " . VAC_PREFIX . "_luubenh where id = $lid";
           // $query = $db->sql_query($sql);
           // if ($row = $db->sql_fetch_assoc($query)) {
           //   $lieutrinh = explode("|", $row["lieutrinh"]);
@@ -73,7 +73,7 @@ if (!empty($action)) {
       $val = $nv_Request->get_string('val', 'post', '');
       
       if (!(empty($lid) || empty($val))) {
-        $sql = "update vng_vac_luubenh set ketqua = $val where id = $lid";
+        $sql = "update " . VAC_PREFIX . "_luubenh set ketqua = $val where id = $lid";
         // $ret["data"] = $sql;
         if ($db->sql_query($sql)) {
           $sql = "select * from `" . VAC_PREFIX . "_luubenh` where id = $lid";
@@ -90,7 +90,7 @@ if (!empty($action)) {
     case 'delete_treat':
       $id = $nv_Request->get_string('id', 'post', '');
       if (!(empty($id))) {
-        $sql = "delete from vng_vac_luubenh where id = $id";
+        $sql = "delete from " . VAC_PREFIX . "_luubenh where id = $id";
         if ($db->sql_query($sql)) {
           $ret["status"] = 1;
         }
@@ -158,7 +158,7 @@ $today = date("Y-m-d", NV_CURRENTTIME);
 
 $xtpl->assign("now", $today);
 
-$sql = "select * from vng_vac_doctor";
+$sql = "select * from " . VAC_PREFIX . "_doctor";
 $result = $db->sql_query($sql);
 
 while ($row = $db->sql_fetch_assoc($result)) {

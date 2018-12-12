@@ -20,7 +20,7 @@ quagio();
 	$from = $now - $time;
 	$end = $now + $time;
 
-	$sql = "select a.id, a.cometime, a.calltime, a.status, a.image, b.id as petid, b.name as petname, c.name as customer, c.phone, d.name as doctor from `" . VAC_PREFIX . "_usg` a inner join `" . VAC_PREFIX . "_pet` b on a.calltime between $from and $end and a.petid = b.id inner join `" . VAC_PREFIX . "_customer` c on b.customerid = c.id inner join `" . VAC_PREFIX . "_doctor` d on a.doctorid = d.id where c.name like '%$key%' or c.phone like '%$key%' order by calltime";
+	$sql = "select a.id, a.cometime, a.calltime, a.status, a.image, a.note, b.id as petid, b.name as petname, c.name as customer, c.phone, d.name as doctor from `" . VAC_PREFIX . "_usg` a inner join `" . VAC_PREFIX . "_pet` b on a.calltime between $from and $end and a.petid = b.id inner join `" . VAC_PREFIX . "_customer` c on b.customerid = c.id inner join `" . VAC_PREFIX . "_doctor` d on a.doctorid = d.id where c.name like '%$key%' or c.phone like '%$key%' order by calltime";
 	// echo date("Y-m-d", 1545238800);
 	// die($sql);
 	$result = $db->sql_query($sql);
@@ -51,7 +51,7 @@ function displaySSList($list, $time, $path, $lang_module) {
 	$now = strtotime(date("Y-m-d", time()));
 	$today = date("d", $now);
 	$dom = date("t");
-	$time = ceil($time / 60 / 60 / 24 / 7) + 1;
+	$time = ceil($time / 60 / 60 / 24 / 14) + 1;
 	
 	$sort_order_left = array();
 	$sort_order_right = array();
@@ -74,7 +74,7 @@ function displaySSList($list, $time, $path, $lang_module) {
     } else {
       $c = $d - $today;
     }
-		$c = 15 - round($c / $time);
+		$c = 15 - round($c / 3);
 		$list[$value]["bgcolor"] = "#4" . $hex[$c] . "4";
 		$array_left[] = $list[$value];
 	}
@@ -85,7 +85,7 @@ function displaySSList($list, $time, $path, $lang_module) {
     } else {
       $c = $today - $d;
     }
-    $c = 14 - round($c / $time);
+    $c = 14 - round($c / 3);
 		$list[$value]["bgcolor"] = "#$hex[$c]$hex[$c]$hex[$c]";
 		$array_right[] = $list[$value];
 	}
@@ -102,6 +102,7 @@ function displaySSList($list, $time, $path, $lang_module) {
 		$xtpl->assign("phone", $list_data["phone"]);
 		$xtpl->assign("vacid", $list_data["id"]);
 		$xtpl->assign("petid", $list_data["petid"]);
+		$xtpl->assign("note", $list_data["note"]);
 		$xtpl->assign("sieuam", date("d/m/Y", $list_data["cometime"]));
 		$xtpl->assign("dusinh", date("d/m/Y", $list_data["calltime"]));
 		// $xtpl->assign("thongbao", $list_data["ngaybao"]);

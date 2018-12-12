@@ -1,12 +1,20 @@
 <!-- BEGIN: main -->
 <div id="msgshow" class="msgshow"></div>
+<div style="float: right;">
+	<div style="width: 32px; height: 32px; cursor: pointer; display: inline-block; background-image: url('/themes/congnghe/images/vac/contact_add_small.png')" class="vac_icon" onclick="addCustomer()">
+		<img src="/themes/congnghe/images/vac/trans.png" title="Thêm khách hàng"> 
+	</div>
+	<div style="width: 32px; height: 32px; cursor: pointer; display: inline-block; background-image: url('/themes/congnghe/images/vac/pet_add.png')" class="vac_icon" tooltip="Thêm thú cưng" onclick="addPet()">
+		<img src="/themes/congnghe/images/vac/trans.png" title="Thêm thú cưng"> 
+	</div>
+</div>
 
 <form id="add" onsubmit="return themsieuam(event)" autocomplete="off">
 	<table class="tab1 vac">
 		<thead>
 			<tr>
 				<th colspan="4">
-					{lang.tieude_sieuam}
+					{lang.usg_title}
 					<span id="e_notify" style="display: none;"></span>
 				</th>
 			</tr>
@@ -44,10 +52,10 @@
 					{lang.petname}
 				</td>
 				<td>
-					{lang.ngaysieuam}
+					{lang.usgcome}
 				</td>
-				<td>
-					{lang.ngaydusinh}
+				<td colspan="2">
+					{lang.usgcall}
 				</td>
 			</tr>
 			<!-- pet input -->
@@ -58,10 +66,9 @@
 				<td>
 					<input class="input" id="ngaysieuam" type="date" name="ngaysieuam" value="{now}">
 				</td>
-				<td>
+				<td colspan="2">
 					<input class="input" id="calltime" type="date" name="calltime" value="{dusinh}">
 				</td>
-			</tr>
 			<!-- hình ảnh -->
 			<tr>
 				<td>
@@ -148,7 +155,14 @@
 				(data, status) => {
 					data = JSON.parse(data);
 					if (data["status"] == 1) {
-						window.location.reload();
+						alert_msg("Đã lưu vào lịch báo siêu âm");
+            customer_list[g_index]["customer"] = customer_name.value
+            customer_list[g_index]["address"] = customer_address.value
+            g_index = -1;
+						customer_name.value = ""
+						customer_phone.value = ""
+            customer_address.value = ""
+						pet_info.innerHTML = ""
 					}
 					else {
 						msg = data["data"];

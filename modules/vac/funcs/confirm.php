@@ -16,10 +16,10 @@ if(!(empty($act) || empty($value) || empty($vacid) || empty($diseaseid))) {
 		$confirmid = array_search($value, $lang_module["confirm_value"]);
 		$confirmid += $mod;
 		if (!empty($lang_module["confirm_value"][$confirmid])) {
-			$sql = "update vng_vac_$diseaseid set status = $confirmid where id = $vacid";
+			$sql = "update " . VAC_PREFIX . "_$diseaseid set status = $confirmid where id = $vacid";
 			$result = $db->sql_query($sql);
 			if ($result) {
-		    $sql = "select * from vng_vac_$diseaseid where id = $vacid";
+		    $sql = "select * from " . VAC_PREFIX . "_$diseaseid where id = $vacid";
 		    $result = $db->sql_query($sql);
 				$row = $db->sql_fetch_assoc($result);
 		    if (empty($row["recall"]) || $row["recall"] == "0") $ret["data"]["recall"] = 0;

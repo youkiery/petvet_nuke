@@ -5,17 +5,72 @@
 * @Copyright (C) 2011
 * @Createdate 26-01-2011 14:43
 */
-
 if (!defined('NV_IS_QUANLY_ADMIN')) die('Stop!!!');
 $link = NV_BASE_ADMINURL . "index.php?" . NV_NAME_VARIABLE . "=" . $module_name . "&" . NV_OP_VARIABLE . "=";
+$action = $nv_Request->get_string('action', 'post', "");
+if ($action) {
+	switch ($action) {
+		case 'editvac':
+			$id = $nv_Request->get_string('id', 'post', "");
+			$diseaseid = $nv_Request->get_string('diseaseid', 'post', "");
+			$cometime = $nv_Request->get_string('cometime', 'post', "");
+			$doctorid = $nv_Request->get_string('doctorid', 'post', "");
+			$calltime = $nv_Request->get_string('calltime', 'post', "");
+			$note = $nv_Request->get_string('note', 'post', "");
+			if (!(empty($id) || empty($diseaseid) || empty($cometime) || empty($calltime))) {
+				$cometime = strtotime($cometime);
+				$calltime = strtotime($calltime);
+				$sql = "update " . VAC_PREFIX . "_vaccine set diseaseid = $diseaseid, cometime = $cometime, calltime = $calltime, note = '$note', doctorid = $doctorid	 where id = $id";
+				$result = $db->sql_query($sql);
+				if ($result) {
+					echo 1;
+				}
+			}
+			break;
+		case 'remove_vaccine':
+			$id = $nv_Request->get_string('id', 'post', "");
+			if (!empty($id)) {
+				$sql = "delete from " .  VAC_PREFIX . "_vaccine where id = $id";
+				$result = $db->sql_query($sql);
+				if ($result) {
+					$check = true;
+				}
+				echo 1;
+			}
+			break;
+		case 'getvac':
+			$id = $nv_Request->get_string('id', 'post', "");	
+			if (!empty($id)) {
+				$sql = "select * from " .  VAC_PREFIX . "_vaccine where id = $id";
+				$result = $db->sql_query($sql);
+				$row = $db->sql_fetch_assoc($result);
+				$row["cometime"] = date("Y-m-d", $row["cometime"]);
+				$row["calltime"] = date("Y-m-d", $row["calltime"]);
+				if ($row) {
+					echo json_encode($row);
+				}
+			}
+			break;
+	}
+	die();
+}
 
-$xtpl = new XTemplate("sieuam.tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file);
+$xtpl = new XTemplate("vaccine.tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file);
 $xtpl->assign("lang", $lang_module);
-$sort_type = array("Tên A-Z", "Tên Z-A", "Ngày siêu âm", "Ngày báo");
-$order = array("order by customer asc", "order by customer desc", "order by cometime", "order by calltime");
+$sort_type = array("Ngày tái chủng giảm", "Ngày tái chủng tăng", "Ngày tiêm phòng giảm", "Ngày tiêm phòng tăng", "Tên A-Z", "Tên Z-A");
+$order = array("order by calltime desc", "order by calltime asc", "order by cometime desc", "order by cometime asc", "order by customer asc", "order by customer desc");
 $filter_type = array("25", "50", "100", "200", "Tất cả");
 $ret = array("status" => 0, "data" => "");
 $check = false;
+
+if (!empty($module_config[$module_name]["filter_time"])) {
+	$filter_time = $module_config[$module_name]["filter_time"];
+}
+else {
+	$filter_time = 24 * 60 * 60 * 7;
+}
+
+
 
 $sort = $nv_Request -> get_string('sort', 'get', '');
 $filter = $nv_Request -> get_string('filter', 'get', '');
@@ -23,16 +78,26 @@ $from = $nv_Request -> get_string('from', 'get', '');
 $to = $nv_Request -> get_string('to', 'get', '');
 $keyword = $nv_Request -> get_string('keyword', 'get', '');
 $page = $nv_Request->get_string('page', 'get', "");
-$action = $nv_Request->get_string('action', 'post', "");
 $id = $nv_Request->get_string('id', 'post', "");
 $xtpl->assign("keyword", $keyword);
 $xtpl->assign("nv", $module_file);
-$xtpl->assign("op", "sieuam");
+$xtpl->assign("op", $op);
 
 $today = date("Y-m-d", NV_CURRENTTIME);
-$dusinh = $module_config[$module_file]["expert_time"];
-if (empty($dusinh)) {
-	$dusinh = 45 * 24 * 60 * 60;
+$sql = "select * from " . VAC_PREFIX . "_doctor";
+$query = $db->sql_query($sql);
+while ($row = $db->sql_fetch_assoc($query)) {
+	$xtpl->assign("doctorid", $row["id"]);
+	$xtpl->assign("doctorname", $row["name"]);
+	$xtpl->parse("main.doctor");
+	$xtpl->parse("main.doctor2");
+}
+$diseases = getDiseaseList();
+foreach ($diseases as $key => $value) {
+	$xtpl->assign("disease_id", $value["id"]);
+	$xtpl->assign("disease_name", $value["name"]);
+	$xtpl->parse("main.option");
+	$xtpl->parse("main.option2");
 }
 
 if (empty($page)) {
@@ -40,7 +105,7 @@ if (empty($page)) {
 }
 
 $xtpl->assign("now", $today);
-$xtpl->assign("dusinh", date("Y-m-d", strtotime($today) + $dusinh));
+$xtpl->assign("calltime", date("Y-m-d", strtotime(date("Y-m-d")) + $filter_time));
 
 if (empty($sort)) $sort = 0;
 if (empty($filter)) $filter = 25;
@@ -94,19 +159,6 @@ foreach ($filter_type as $filter_value) {
 	$xtpl->parse("main.time");
 }
 
-if ($action == "xoasieuam" && !empty($id)) {
-	$sql = "delete from " .  VAC_PREFIX . "_usg where id = $id";
-	$ret["data"] = $sql;
-	// echo json_encode($ret);
-	// die();
-	$result = $db->sql_query($sql);
-
-	if ($result) {
-		$check = true;
-	}
-	echo 1;
-	die();
-}
 $sql = "select * from " .  VAC_PREFIX . "_doctor";
 $result = $db->sql_query($sql);
 
@@ -124,7 +176,7 @@ while ($revert) {
 	if ($tpage <= 0) $revert = false;
 	$from = $tpage * $filter;
 	$to = $from + $filter;
-	$sql = "select a.id, a.cometime, a.calltime, b.name as petname, c.name as customer, c.phone, d.name as doctor from " .  VAC_PREFIX . "_usg a inner join " .  VAC_PREFIX . "_pet b on a.petid = b.id inner join " .  VAC_PREFIX . "_customer c on b.customerid = c.id inner join " .  VAC_PREFIX . "_doctor d on a.doctorid = d.id $where $order[$sort] limit $from, $to";
+	$sql = "select a.id, a.cometime, a.calltime, b.name as petname, c.name as customer, c.phone, d.name as doctor, a.diseaseid, dd.name as disease from " .  VAC_PREFIX . "_vaccine a inner join " .  VAC_PREFIX . "_pet b on a.petid = b.id inner join " .  VAC_PREFIX . "_customer c on b.customerid = c.id inner join " .  VAC_PREFIX . "_doctor d on a.doctorid = d.id inner join ". VAC_PREFIX ."_disease dd on a.diseaseid = dd.id $where $order[$sort] limit $from, $to";
 	$result = $db->sql_query($sql);
 	$display_list = array();
 	while ($row = $db->sql_fetch_assoc($result)) {
@@ -133,11 +185,10 @@ while ($revert) {
 	}
 }
 
-$sql = "select count(a.id) as num from " .  VAC_PREFIX . "_usg a inner join " .  VAC_PREFIX . "_pet b on a.petid = b.id inner join " .  VAC_PREFIX . "_customer c on b.customerid = c.id inner join " .  VAC_PREFIX . "_doctor d on a.doctorid = d.id $where";
+$sql = "select count(a.id) as num from " .  VAC_PREFIX . "_vaccine a inner join " .  VAC_PREFIX . "_pet b on a.petid = b.id inner join " .  VAC_PREFIX . "_customer c on b.customerid = c.id inner join " .  VAC_PREFIX . "_doctor d on a.doctorid = d.id inner join ". VAC_PREFIX ."_disease dd on a.diseaseid = dd.id $where";
 $result = $db->sql_query($sql);
 $row = $db->sql_fetch_assoc($result);
 
-// die($sql);
 $num = $row["num"];
 $url = $link . $op . "&sort=$sort&filter=$filter";
 if(!empty($keyword)) {
@@ -147,7 +198,7 @@ if(!empty($keyword)) {
 // echo "$url, $num, $filter, $page";die();
 
 $nav = nv_generate_page_shop($url, $num, $filter, $page);
-// var_dump($display_list);
+// var_dump($nav);
 // die();
 if ($action == "xoasieuam") {
 	if ($check) {
@@ -169,7 +220,7 @@ echo nv_admin_theme($contents);
 include (NV_ROOTDIR . "/includes/footer.php");
 
 function displayRed($list, $path, $lang_module, $index, $nav) {
-	$xtpl = new XTemplate("sieuam-hang.tpl", $path);
+	$xtpl = new XTemplate("vaccine-list.tpl", $path);
 	$xtpl->assign("lang", $lang_module);	
 
 	// echo $path; die();
@@ -182,6 +233,7 @@ function displayRed($list, $path, $lang_module, $index, $nav) {
 		$xtpl->assign("petname", $row["petname"]);
 		$xtpl->assign("phone", $row["phone"]);
 		$xtpl->assign("doctor", $row["doctor"]);
+		$xtpl->assign("disease", $row["disease"]);
 		$xtpl->assign("cometime", date("d/m/Y", $row["cometime"]));
 		$xtpl->assign("calltime", date("d/m/Y", $row["calltime"]));
 		$xtpl->assign("nav_link", $nav);

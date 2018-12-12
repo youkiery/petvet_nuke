@@ -85,7 +85,7 @@ $sql_create_module[] = "CREATE TABLE `" . VAC_PREFIX . "_vaccine` (
   `note` text NOT NULL,
   `status` tinyint(4) NOT NULL,
   `recall` int(11) NOT NULL,
-  `doctorid` int(11) NOT NULL
+  `doctorid` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 $sql_create_module[] = "INSERT INTO " . $db_config["prefix"] . "_config (lang, module, config_name, config_value) values ('vi', '" . $module_data . "', 'filter_time', 1209600)";

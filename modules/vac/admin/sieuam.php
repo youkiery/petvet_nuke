@@ -98,7 +98,7 @@ foreach ($filter_type as $filter_value) {
 }
 
 if ($action == "xoasieuam" && !empty($id)) {
-	$sql = "delete from vng_vac_sieuam where id = $id";
+	$sql = "delete from " . VAC_PREFIX . "_sieuam where id = $id";
 	$ret["data"] = $sql;
 	// echo json_encode($ret);
 	// die();
@@ -108,7 +108,7 @@ if ($action == "xoasieuam" && !empty($id)) {
 		$check = true;
 	}
 }
-$sql = "select * from vng_vac_doctor";
+$sql = "select * from " . VAC_PREFIX . "_doctor";
 $result = $db->sql_query($sql);
 
 while ($row = $db->sql_fetch_assoc($result)) {
@@ -117,7 +117,7 @@ while ($row = $db->sql_fetch_assoc($result)) {
 	$xtpl->parse("main.doctor");
 }
 
-// $sql = "select * from vng_vac_sieuam a inner join vng_vac_pets b on a.idthucung = b.id $order[$sort]";
+// $sql = "select * from " . VAC_PREFIX . "_sieuam a inner join " . VAC_PREFIX . "_pets b on a.idthucung = b.id $order[$sort]";
 $revert = true;
 $tpage = $page;
 while ($revert) {
@@ -125,7 +125,7 @@ while ($revert) {
 	if ($tpage <= 0) $revert = false;
 	$from = $tpage * $filter;
 	$to = $from + $filter;
-	$sql = "select a.id, a.ngaysieuam, a.ngaydusinh, a.ngaybao, b.petname, c.customer, c.phone, d.doctor from vng_vac_sieuam a inner join vng_vac_pets b on a.idthucung = b.id inner join vng_vac_customers c on b.customerid = c.id inner join vng_vac_doctor d on a.idbacsi = d.id $where $order[$sort] limit $from, $to";
+	$sql = "select a.id, a.ngaysieuam, a.ngaydusinh, a.ngaybao, b.petname, c.customer, c.phone, d.doctor from " . VAC_PREFIX . "_sieuam a inner join " . VAC_PREFIX . "_pets b on a.idthucung = b.id inner join " . VAC_PREFIX . "_customers c on b.customerid = c.id inner join " . VAC_PREFIX . "_doctor d on a.idbacsi = d.id $where $order[$sort] limit $from, $to";
 	// die($sql);
 	$result = $db->sql_query($sql);
 	$display_list = array();
@@ -135,7 +135,7 @@ while ($revert) {
 	}
 }
 
-$sql = "select count(a.id) as num from vng_vac_sieuam a inner join vng_vac_pets b on a.idthucung = b.id inner join vng_vac_customers c on b.customerid = c.id inner join vng_vac_doctor d on a.idbacsi = d.id $where";
+$sql = "select count(a.id) as num from " . VAC_PREFIX . "_sieuam a inner join " . VAC_PREFIX . "_pets b on a.idthucung = b.id inner join " . VAC_PREFIX . "_customers c on b.customerid = c.id inner join " . VAC_PREFIX . "_doctor d on a.idbacsi = d.id $where";
 $result = $db->sql_query($sql);
 $row = $db->sql_fetch_assoc($result);
 

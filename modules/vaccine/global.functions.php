@@ -48,7 +48,7 @@ function getCustomerList($key, $sort, $filter, $page) {
 
 function getVaccineTable($path, $lang, $key, $sort, $time) {
   // next a week
-  global $db, $db_config, $module_name, $global_config;
+  global $db, $db_config, $module_name, $global_config, $lang_module;
   $fromtime = strtotime(date("Y-m-d", NV_CURRENTTIME)) - $time;
   $endtime = $fromtime + 2 * $time;
   $link = NV_BASE_ADMINURL . "index.php?" . NV_NAME_VARIABLE . "=" . $module_name . "&" . NV_OP_VARIABLE . "=";
@@ -65,10 +65,11 @@ function getVaccineTable($path, $lang, $key, $sort, $time) {
   $xtpl = new XTemplate("main-1.tpl", $path);
   $xtpl->assign("lang", $lang);
 
-    $sql = "select a.id, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, status from " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_pet b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id where c.name like '%$key%' or phone like '%$key%' " . $order;
+    $sql = "select a.id, b.id as petid, a.status, b.name as petname, c.id as customerid, c.name as customer, c.phone, cometime, calltime, a.status, dd.name as disease, dt.name as doctor from " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_pet b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id inner join " . VAC_PREFIX . "_disease dd on a.diseaseid = dd.id inner join " . VAC_PREFIX . "_doctor dt on dt.id = a.doctorid where c.name like '%$key%' or phone like '%$key%' " . $order;
 
     $result = $db->sql_query($sql);
     $vaccines = array();
+
     while ($row = $db->sql_fetch_assoc($result)) {
       $vaccines[] = $row;
     }
@@ -81,6 +82,9 @@ function getVaccineTable($path, $lang, $key, $sort, $time) {
       $xtpl->assign("pet_link", $link . "patient&petid=" . $vac_data["petid"]);
       $xtpl->assign("customer_link", $link . "customer&customerid=" . $vac_data["customerid"]);
       $xtpl->assign("phone", $vac_data["phone"]);
+      $xtpl->assign("disease", $vac_data["disease"]);
+      $xtpl->assign("confirm", $lang_module["confirm_value"][$vac_data["status"]]);
+      $xtpl->assign("doctor", $vac_data["doctor"]);
       $xtpl->assign("cometime", date("d/m/Y", $vac_data["cometime"]));
       $xtpl->assign("calltime", date("d/m/Y", $vac_data["calltime"]));
       $i++;
@@ -183,7 +187,7 @@ function filter($vaclist, $path, $lang, $fromtime, $amount_time, $sort, $order) 
     } else {
       $c = $d - $today;
     }
-    $c = 15 - round($c / 2 / $hack);
+    $c = 15 - round($c / 3);
     $xtpl->assign("bgcolor", "#4" . $hex[$c] . "4");
     $xtpl->assign("cometime", date("d/m/Y", $vaclist[$value]["cometime"]));
     $xtpl->assign("calltime", date("d/m/Y", $vaclist[$value]["calltime"]));
@@ -226,7 +230,7 @@ function filter($vaclist, $path, $lang, $fromtime, $amount_time, $sort, $order) 
     } else {
       $c = $today - $d;
     }
-    $c = 14 - round($c / 2 / $hack);
+    $c = 14 - round($c / 3);
     $xtpl->assign("bgcolor", "#$hex[$c]$hex[$c]$hex[$c]");
     $xtpl->assign("cometime", date("d/m/Y", $vaclist[$value]["cometime"]));
     $xtpl->assign("calltime", date("d/m/Y", $vaclist[$value]["calltime"]));
@@ -524,7 +528,7 @@ function nv_generate_page_shop($base_url, $num_items, $per_page, $start_item, $a
 }
 // Nếu quá giờ làm việc sẽ chặn đường vào
 function quagio() {
-  global $module_config, $admin_info, $module_info, $module_file;
+  global $module_config, $admin_info, $module_info, $module_file, $lang_module;
   $today = strtotime(date("Y-m-d"));
   $worktime = 0;
   $resttime = 0;
@@ -532,7 +536,6 @@ function quagio() {
     $worktime = $module_config[$module_file]["worktime"];
   }
   else {
-    $worktime = 7 * 60 * 60;
   }
   if (!empty($module_config[$module_file]["resttime"])) {
     $resttime = $module_config[$module_file]["resttime"];
@@ -540,13 +543,15 @@ function quagio() {
   else {
     $resttime = 17 * 60 * 60 + 30 * 60;
   }
+  $from = $today + $worktime;
+  $end = $today + $resttime;
 
   if (empty($admin_info["level"]) && ($admin_info["level"] == "1")) {
 
   }
   else if (NV_CURRENTTIME < $from || NV_CURRENTTIME > $end) {
-    echo date("H:i:s", $from); 
-    echo date("H:i:s", $end); 
+    // echo date("H:i:s", $worktime); 
+    // echo date("H:i:s", $resttime); 
     $xtpl = new XTemplate("overtime.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
     $xtpl->assign("lang", $lang_module);
 
