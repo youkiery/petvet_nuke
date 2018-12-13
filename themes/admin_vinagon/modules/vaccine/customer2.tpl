@@ -63,7 +63,6 @@
 		var url = "index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=customer";
 		post_data = ["action=addpet", "id=" + customerid, "petname=" + petname];
 		fetch(url, post_data).then(response => {
-			// console.log(response);
 			
 			var msg = "";
 			if(response) {

@@ -43,7 +43,6 @@
 				link,
 				{action: "doctoredit", doctor: name, id: index},
 				(data, status) => {
-					// console.log(data);
 					data = JSON.parse(data);
 					switch (data["status"]) {
 						case 1:
@@ -69,7 +68,6 @@
 				link,
 				{action: "doctordel", id: index},
 				(data, status) => {
-					// console.log(data);
 					data = JSON.parse(data);
 					switch (data["status"]) {
 						case 1:
@@ -95,7 +93,6 @@
 				link,
 				{action: "doctoradd", doctor: doctor},
 				(data, status) => {
-					// console.log(data);
 					data = JSON.parse(data);
 					switch (data["status"]) {
 						case 1:

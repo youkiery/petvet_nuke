@@ -1,5 +1,84 @@
 <!-- BEGIN: main -->
 <div id="msgshow" class="msgshow"></div>
+<div id="reman"></div>
+<div id="vac_info" class="vac_info" style="display: none;">
+	<!-- Sửa siêu âm -->
+	<div style="width: 32px; height: 32px; cursor: pointer; display: inline-block; background-image: url('/themes/congnghe/images/vaccine/contact_edit.png')" class="vac_icon" onclick="update_customer(g_customerid)">
+		<img src="/themes/congnghe/images/vac/trans.png" title="Sửa khách hàng"> 
+	</div>
+	<div style="width: 32px; height: 32px; cursor: pointer; display: inline-block; background-image: url('/themes/congnghe/images/vaccine/pet_edit.png')" class="vac_icon" tooltip="Sửa thú cưng" onclick="update_pet(g_petid, g_pet)">
+		<img src="/themes/congnghe/images/vac/trans.png" title="Thêm thú cưng"> 
+	</div>
+	<form onsubmit="return update_usg(event)" autocomplete="off">
+			<table class="tab1 vac">
+				<thead>
+					<tr>
+						<th colspan="3">
+							{lang.usg_update}
+							<span id="e_notify" style="display: none;"></span>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td colspan="2">
+							{lang.usgcome}
+						</td>
+						<td>
+							{lang.usgcall}
+						</td>
+					</tr>
+					<!-- pet input -->
+					<tr>
+						<td colspan="2">
+							<input class="input" id="cometime2" type="date" name="ngaysieuam" value="{now}">
+						</td>
+						<td>
+							<input class="input" id="calltime2" type="date" name="calltime" value="{dusinh}">
+						</td>
+					<!-- hình ảnh -->
+					<tr>
+						<td colspan="2">
+							{lang.doctor}
+						</td>
+						<td>
+							<select name="doctor" id="doctor2" style="width: 90%;">
+								<!-- BEGIN: doctor3 -->
+								<option value="{doctor_value}">{doctor_name}</option>
+								<!-- END: doctor3 -->
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							{lang.image}
+						</td>
+						<td>
+							<input class="input inmax" type="text" name="hinhanh" id="image2" style="width: 80%;" disabled>
+							<div class="icon upload" type="button" value="{lang.chonanh}" name="selectimg" ></div>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3">
+							<img class="thump" id="thump">
+						</td>
+					</tr>
+					<!-- note & submit -->
+					<tr>
+						<td colspan="2">
+							<textarea id="note2" rows="3" style="width: 98%;"></textarea>
+						</td>
+						<td>
+							<input type="submit" value="{lang.submit}">
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+		</div>
+<div id="vac_info2" class="vac_info" style="display: none;">
+	<!-- Sửa khách hàng -->
+</div>
 
 <form method="GET">
 	<input type="hidden" name="nv" value="{nv}">
@@ -136,6 +215,10 @@
 <script>
 	var link = "/index.php?" + nv_name_variable + "=" + nv_module_name + "&act=post&" + nv_fc_variable + "=";
 	var adlink = "/adminpet/index.php?" + nv_name_variable + "=" + nv_module_name + "&act=post&" + nv_fc_variable + "=";
+	var g_id = -1
+	var g_customerid = -1
+	var g_petid = -1
+	var g_pet = ""
 	var blur = true;
 	var g_customer = -1;
 	var customer_data = [];
@@ -162,6 +245,22 @@
 				}
 			)	
 		}
+	}
+
+	function update_usg(e) {
+		e.preventDefault()
+
+		$.post(
+			adlink + "sieuam",
+			{action: "update_usg", id: g_id, cometime: $("#cometime2").val(), calltime: $("#calltime2").val(), doctorid: $("#doctor2").val(), note: $("#note2").val(), image: $("#image2").val()},
+			(response, status) => {
+				var data = JSON.parse(response)
+				if (data["status"]) {
+					g_id = -1
+					window.location.reload()
+				}
+			}
+		)
 	}
 
 	function themsieuam(event) {
@@ -193,8 +292,49 @@
 		return false;
 	}
 
-	suggest_init()
+	function update(e, id) {
+		g_id = id
+		$.post(
+			adlink + "sieuam",
+			{action: "usg_info", id: g_id},
+			(response, status) => {
+				var data = JSON.parse(response);
+				if (data["status"]) {
+					$("#vac_info").fadeIn();
+					$("#reman").show();
+					g_customerid = data["data"]["customerid"]
+					g_petid = data["data"]["petid"]
+					.log(e);
+					
+					g_pet = trim(e.target.parentElement.parentElement.children[1].innerText)
+					$("#cometime2").val(data["data"]["cometime"])					
+					$("#calltime2").val(data["data"]["calltime"])					
+					$("#doctor2").val(data["data"]["doctorid"])					
+					$("#note2").val(data["data"]["note"])					
+					$("#image2").val(data["data"]["image"])					
+				}
+			}
+		)
+	}
 
+	$("body").keydown((e) => {
+    if (e.key == "Escape") {
+      iclose()
+    }
+  })
+
+
+	$("#reman").click(() => {
+		iclose();
+	})
+
+	function iclose() {
+		$("#vac_info").fadeOut();
+		$("#vac_info2").fadeOut();
+		$("#reman").hide();
+	}
+
+	suggest_init()
 
 	$("div[name=selectimg]").click(function(){
 		var area = "hinhanh";

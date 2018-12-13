@@ -131,10 +131,7 @@ function addPet() {
             msg = "Khách hàng hoặc tên thú cưng không tồn tại";						
             break;
           case 2:
-            customer_data["pet"].push({
-              id: response["data"][0].id,
-              petname: answer
-            });
+            customer_data["pet"].push(response["data"]);
             reloadPetOption(customer_data["pet"])
             alert_msg("Đã thêm thú cưng(" + answer + ")");
             break;
@@ -225,5 +222,29 @@ function suggest_init() {
 			suggest_phone.style.display = "none";
 		}
 	})
+}
+
+function update_customer(id) {
+  window.location.replace(adlink + "customer&pan=update&id=" + id);
+}
+function update_pet(id, petname) {
+  var confirm = prompt("Nhập tên thú cưng mới", petname)
+  console.log(petname);
+  if (confirm) {
+    $.post(
+      adlink + "customer",
+      {
+        action: "updatepet", id: id, petname: confirm
+      },
+      (response, status) => {
+        console.log(response);
+        
+        var data = JSON.parse(response)
+        if (data) {
+          g_pet = confirm
+        }
+      }
+    )
+  }
 }
 

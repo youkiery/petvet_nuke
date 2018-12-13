@@ -13,7 +13,7 @@ if (!defined('NV_IS_MOD_QUANLY')) {
 quagio();
 
 $keyword = $nv_Request->get_string('key', 'get', '');
-$page_title = $lang_module["tieude_treat"];
+$page_title = $lang_module["treat_title"];
 $xtpl = new XTemplate("luubenh-danhsach.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
 $xtpl->assign("lang", $lang_module);
 $status_option = array("Bình thường", "Hơi yếu", "Yếu", "Sắp chết");

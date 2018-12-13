@@ -56,6 +56,9 @@
 				<button onclick="xoasieuam({id})">
 					{lang.remove}
 				</button>
+				<button onclick="update(event, {id})">
+					{lang.update}
+				</button>
 			</td>
 		</tr>
 		<!-- END: row -->

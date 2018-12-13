@@ -17,7 +17,6 @@ if($action) {
 			$sort = $nv_Request->get_string('sort', 'post', '');
 			$time = $nv_Request->get_string('time', 'post', '');
 			$expert = $nv_Request->get_string('expert', 'post', '');
-			$ret["step"] = 1;
 			if(!(empty($sort) || empty($time) || empty($expert))) {
 				$sql = "update `" . $db_config['prefix'] . "_config` set config_value = '$time' where config_name = 'filter_time' and module = '" . $module_file . "'";
 			    $time_query = $db->sql_query($sql);

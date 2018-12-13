@@ -113,6 +113,20 @@ else {
   $xtpl = new XTemplate("customer.tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file);
   $xtpl->assign("lang", $lang_module);
   
+	$pan = $nv_Request->get_string('pan', 'get', "");
+	$id = $nv_Request->get_string('id', 'get', "");
+
+	if (!(empty($pan) || empty($id))) {
+		$sql = "select * from " . VAC_PREFIX . "_customer where id = $id";
+		$query = $db->sql_query($sql);
+		$row = $db->sql_fetch_assoc($query);
+		if ($row) {
+			$xtpl->assign("customer2", $row["name"]);
+			$xtpl->assign("phone2", $row["phone"]);
+			$xtpl->assign("address2", $row["address"]);
+		}
+	}
+
   $keyword = $nv_Request->get_string('key', 'get', "");
   $sort = $nv_Request->get_string('sort', 'get', "");
   $filter = $nv_Request->get_string('filter', 'get', "");

@@ -17,6 +17,7 @@ $filter_type = array("25", "50", "100", "200", "Tất cả");
 $ret = array("status" => 0, "data" => "");
 $check = false;
 
+
 $sort = $nv_Request -> get_string('sort', 'get', '');
 $filter = $nv_Request -> get_string('filter', 'get', '');
 $from = $nv_Request -> get_string('from', 'get', '');
@@ -94,17 +95,61 @@ foreach ($filter_type as $filter_value) {
 	$xtpl->parse("main.time");
 }
 
-if ($action == "xoasieuam" && !empty($id)) {
-	$sql = "delete from " .  VAC_PREFIX . "_usg where id = $id";
-	$ret["data"] = $sql;
-	// echo json_encode($ret);
-	// die();
-	$result = $db->sql_query($sql);
+if ($action) {
+	$ret = array("status" => 0, "data" => array());
+	switch ($action) {
+		case 'xoasieuam':
+			$id = $nv_Request->get_string('id', 'post', "");
+			if (!empty($id)) {
+				$sql = "delete from " .  VAC_PREFIX . "_usg where id = $id";
+				// echo json_encode($ret);
+				// die();
+				$result = $db->sql_query($sql);
+			
+				if ($result) {
+					$check = true;
+				}
+				echo 1;
+			}
+		break;
+		case 'usg_info':
+			$id = $nv_Request->get_string('id', 'post', "");
+			if (!empty($id)) {
+				$sql = "select * from " .  VAC_PREFIX . "_usg where id = $id";
+				$result = $db->sql_query($sql);
 
-	if ($result) {
-		$check = true;
+				
+				if ($result) {
+					$row = $db->sql_fetch_assoc($result);
+					$sql = "select * from " .  VAC_PREFIX . "_pet where id = $row[petid]";
+					$result = $db->sql_query($sql);
+					$row2 = $db->sql_fetch_assoc($result);
+					$ret["status"] = 1;
+					$ret["data"] = array("calltime" => date("Y-m-d", $row["calltime"]), "cometime" => date("Y-m-d", $row["cometime"]), "doctorid" => $row["doctorid"], "note" => $row["note"], "image" => $row["image"], "customerid" => $row2["customerid"], "petid" => $row["petid"]);
+				}
+				echo json_encode($ret);
+			}
+		break;
+		case 'update_usg':
+			$id = $nv_Request->get_string('id', 'post', "");
+			$cometime = $nv_Request->get_string('cometime', 'post', "");
+			$calltime = $nv_Request->get_string('calltime', 'post', "");
+			$doctorid = $nv_Request->get_string('doctorid', 'post', "");
+			$note = $nv_Request->get_string('note', 'post', "");
+			$image = $nv_Request->get_string('image', 'post', "");
+			if (!(empty($id) || empty($cometime) || empty($calltime) || empty($doctorid))) {
+				$cometime = strtotime($cometime);
+				$calltime = strtotime($calltime);
+				$sql = "update " .  VAC_PREFIX . "_usg set cometime = $cometime, calltime = $calltime, doctorid = $doctorid, note = '$note', image = '$image' where id = $id";
+				$result = $db->sql_query($sql);
+				
+				if ($result) {
+					$ret["status"] = 1;
+				}
+				echo json_encode($ret);
+			}
+		break;
 	}
-	echo 1;
 	die();
 }
 $sql = "select * from " .  VAC_PREFIX . "_doctor";
@@ -114,6 +159,7 @@ while ($row = $db->sql_fetch_assoc($result)) {
 	$xtpl->assign("doctor_value", $row["id"]);
 	$xtpl->assign("doctor_name", $row["name"]);
 	$xtpl->parse("main.doctor");
+	$xtpl->parse("main.doctor3");
 }
 
 // $sql = "select * from " .  VAC_PREFIX . "_usg a inner join " .  VAC_PREFIX . "_pet b on a.petid = b.id $order[$sort]";

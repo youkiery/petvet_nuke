@@ -74,6 +74,8 @@ $sql_create_module[] = "CREATE TABLE `" . VAC_PREFIX . "_usg` (
   `image` varchar(200) NOT NULL,
   `status` int(11) NOT NULL,
   `note` varchar(200) NOT NULL,
+  `bỉrth` int(11) DEFAULT 0,
+  `bỉrthday` int(11) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 $sql_create_module[] = "CREATE TABLE `" . VAC_PREFIX . "_vaccine` (

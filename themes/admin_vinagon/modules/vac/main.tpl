@@ -25,16 +25,5 @@
 {table}
 <script>
   var link = "/adminpet/index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=main&act=post";
-  function filter() {
-		$.get(
-			link,
-			{sort: $("#f_sort").val(), time: $("#f_moment").val()},
-			(data, status) => {
-				// console.log(data);
-				
-			}
-		)
-    return false;
-  }
 </script>
 <!-- END: main -->

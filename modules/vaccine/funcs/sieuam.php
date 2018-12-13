@@ -29,12 +29,24 @@ $action = $nv_Request->get_string('action', 'post', '');
       $id = $nv_Request->get_string('id', 'post', '');
       $petid = $nv_Request->get_string('petid', 'post', '');
       $birth = $nv_Request->get_string('birth', 'post', '');
+      $birthday = $nv_Request->get_string('birthday', 'post', '');
 
-      if (!(empty($id) || empty($birth))) {
-        $birthday = strtotime(date("Y-m-d"));
+      if (!(empty($id) || empty($petid) || empty($birth) || empty($birthday))) {
+        $birthday = strtotime($birthday);
+        $recall = $birthday + 60 * 60 * 24 * 60;
+        $sql = "select * from " . VAC_PREFIX . "_pet where id = $petid";
+        $query = $db->sql_query($sql);
+        $customer = $db->sql_fetch_assoc($query);
+
         $sql = "update `" . VAC_PREFIX . "_usg` set birth = '$birth', birthday = " . $birthday . " where id = $id";
         $result = $db->sql_query($sql);
-        if ($result) {
+        
+        $sql = "insert into " . VAC_PREFIX . "_pet (name, customerid) values('" . date("d/m/Y", $birthday) . "', $customer[id])";
+        $pet_query = $db->sql_query($sql);
+        
+        $sql = "insert into " . VAC_PREFIX . "_vaccine (petid, diseaseid, cometime, calltime, note, status, recall, doctorid) values($petid, 0, $birthday, $recall, 'Tiêm phòng siêu âm', 0, 0, 0)";
+        $usg_query = $db->sql_query($sql);
+        if ($result && $pet_query && $usg_query) {
           $ret["status"] = 1;
         }
       }

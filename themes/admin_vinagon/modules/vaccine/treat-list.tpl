@@ -18,10 +18,10 @@
 				{lang.treat_day}
 			</th>
 			<th>
-				{lang.tinhtrang}
+				{lang.pet_status}
 			</th>
 			<th>
-				{lang.suckhoe}
+				{lang.insult}
 			</th>
 			<th>
 			
@@ -55,6 +55,9 @@
 			<td>
 				<button onclick="delete_treat({id})">
 					{lang.remove}
+				</button>
+				<button onclick="update(event, {id})">
+					{lang.update}
 				</button>
 			</td>
       <td style="display: none;" class="lieutrinh">

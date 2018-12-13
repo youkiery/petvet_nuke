@@ -224,16 +224,12 @@
   })
 
   $("body").keydown((e) => {
-		console.log(e);
-		
     if (e.keyCode == 27) {
       closeVac()
     }
   })
 
   function closeVac() {
-		console.log(1);
-		
     if (vac_index == 1) {
       $("#vac_info").fadeOut();
       $("#reman").hide();
@@ -257,7 +253,6 @@
         response = JSON.parse(response)
         if (response["status"]) {
           data = response["data"]
-          // console.log(data);
           $("#petname").text(data["petname"])
           $("#customer").text(data["customer"])
           $("#phone").text(data["phone"])
@@ -326,13 +321,11 @@
       {action: "themlieutrinh", ngay: $("#ngaylieutrinh").val(), id: lid},
       (response, status) => {
         response = JSON.parse(response)
-        // console.log(response)
         switch (response["status"]) {
           case 1:
             // thành công
             var data = response["data"]
             d_lieutrinh.push(data)
-            // console.log(d_lieutrinh);
             
             id = d_lieutrinh.length - 1
             g_ltid = data["id"]
@@ -365,8 +358,6 @@
   function xemlieutrinh(ltid, id) {
     g_ltid = ltid;
     g_id = id;
-    console.log(g_ltid);
-    // console.log(d_lieutrinh);
     
     $("#nhietdo").val(d_lieutrinh[id]["nhietdo"])
     $("#niemmac").val(d_lieutrinh[id]["niemmac"])
@@ -384,9 +375,7 @@
 				link + "luubenh",
 				{action: "delete_treat", id: id},
 				(response, status) => {
-					// console.log(response);
 					response = JSON.parse(response);
-					console.log(response);
 					
 					if (response["status"]) {
 						window.location.reload()
@@ -401,7 +390,6 @@
       link + "luubenh",
       {action: "trihet", id: lid, val: val},
       (response, status) => {
-        // console.log(response);
         response = JSON.parse(response);
         if (response["status"]) {
           $("#" + lid).css("background", response["data"]["color"])
@@ -416,24 +404,17 @@
   function luulieutrinh(e) {
     e.preventDefault();
     var nhietdo = $("#nhietdo").val();
-    // console.log(nhietdo);
     var niemmac = $("#niemmac").val();
-    // console.log(niemmac);
     var khac = $("#khac").val();
-    // console.log(khac);
     var xetnghiem = $("#xetnghiem").val();
-    // console.log(xetnghiem);
     var dieutri = $("#dieutri").val();
-    // console.log(dieutri);
     var tinhtrang = $("#tinhtrang2").val();
-    // console.log(tinhtrang);
     
     $.post(
       link + "luubenh",
       {action: "luulieutrinh", id: g_ltid, nhietdo: nhietdo, niemmac: niemmac, khac: khac, xetnghiem: xetnghiem, dieutri: dieutri, tinhtrang: tinhtrang},
       (response, status) => {
         response = JSON.parse(response);
-        // console.log(response);
         if (response["status"]) {
           $("#" + lid).css("background", response["data"]["color"])
           $("#" + lid + " .suckhoe").text(response["data"]["tinhtrang"])

@@ -9,7 +9,7 @@
 					</label>
 				</td>
 				<td>
-					<input class="vac_val" style="display: block;" type="text" name="customer" id="customer">
+					<input class="vac_val" style="display: block;" type="text" name="customer" id="customer" value="{customer2}">
 				</td>
 				<td rowspan="2">
 					<label for="address">
@@ -17,7 +17,7 @@
 					</label>
 				</td>
 				<td rowspan="2">
-					<input class="vac_val" style="display: block; height: 40px;" type="text" name="address" id="address">
+					<input class="vac_val" style="display: block; height: 40px;" type="text" name="address" id="address" value="{address2}">
 				</td>
 			</tr>
 			<tr>
@@ -27,7 +27,7 @@
 					</label>
 				</td>
 				<td>
-					<input class="vac_val" style="display: block;" type="number" maxlength="15" name="phone" id="phone">
+					<input class="vac_val" style="display: block;" type="number" maxlength="15" name="phone" id="phone" value="{phone2}">
 				</td>
 			</tr>
 			<tr>
@@ -119,7 +119,6 @@ function vac_get_update_customer(id, customer, phone, address) {
 	document.getElementById("phone").value = phone;
 	document.getElementById("address").value = address;
 	document.getElementById("update").setAttribute("onclick", "vac_update_customer("+ id +")");
-	console.log(id, name, phone, address);
 }
 
 function vac_update_customer(id) {

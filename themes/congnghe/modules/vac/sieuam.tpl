@@ -146,8 +146,6 @@
 					data = JSON.parse(data);
 					if (data["status"] == 1) {
             alert_msg(data["data"]);
-            console.log(g_index);
-            
             customer_list[g_index]["customer"] = customer_name.value
             customer_list[g_index]["address"] = customer_address.value
             g_index = -1;

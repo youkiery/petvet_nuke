@@ -51,9 +51,8 @@ if($action) {
 			$id = $nv_Request->get_string('id', 'post', '');
 			$name = $nv_Request -> get_string('customer', 'post', '');
 			$phone = $nv_Request -> get_string('phone', 'post', '');
-			$note = $nv_Request -> get_string('note', 'post', '');
 			if(!(empty($id) || empty($name) || empty($phone))) {
-				$sql = "update `" . VAC_PREFIX . "_customer` set name = '$name', phone = '$phone', note = '$note' where id = $id";
+				$sql = "update `" . VAC_PREFIX . "_customer` set name = '$name', phone = '$phone' where id = $id";
 				if($db->sql_query($sql)) {
 					$row = array("id" => $id, "name" => $name, "phone" => $phone, "note" => $note);
 					echo json_encode($row);

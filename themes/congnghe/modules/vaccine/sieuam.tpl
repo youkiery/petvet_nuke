@@ -84,11 +84,11 @@
 			</tr>
 			<tr>
 				<td>
-					{lang.hinhanh}
+					{lang.image}
 				</td>
 				<td colspan="3">
 					<input class="input inmax" type="text" name="hinhanh" id="hinhanh" disabled>
-					<div class="icon upload" type="button" value="{lang.chonanh}" name="selectimg" ></div>
+					<div class="icon upload" type="button" value="{lang.selimage}" name="selectimg" ></div>
 				</td>
 			</tr>
 			<tr>

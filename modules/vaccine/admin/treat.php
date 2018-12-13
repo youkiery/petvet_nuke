@@ -22,6 +22,7 @@ while ($row = $db->sql_fetch_assoc($result)) {
   $xtpl->assign("doctorname", $row["name"]);
   $xtpl->parse("main.doctor");
   $xtpl->parse("main.doctor2");
+  $xtpl->parse("main.doctor3");
 }
 
 $sort_type = array("Tên A-Z", "Tên Z-A", "Mới trước", "Cũ trước");
@@ -35,6 +36,7 @@ foreach ($status_option as $key => $value) {
 	$xtpl->assign("status_value", $key);
 	$xtpl->assign("status_name", $value);
 	$xtpl->parse("main.status_option");
+	$xtpl->parse("main.status2");
 }
 foreach ($status_option as $key => $value) {
 	// echo $value;
@@ -114,16 +116,43 @@ foreach ($filter_type as $filter_value) {
 	$xtpl->parse("main.time");
 }
 
-if ($action == "xoasieuam" && !empty($id)) {
-	$sql = "delete from " .  VAC_PREFIX . "_usg where id = $id";
-	$ret["data"] = $sql;
-	// echo json_encode($ret);
-	// die();
-	$result = $db->sql_query($sql);
+if ($action) {
+	$ret = array("status" => 0, "data" => array());
+	switch ($action) {
+		case 'treat_info':
+			$id = $nv_Request->get_string('id', 'post', "");
+			if (!empty($id)) {
+				$sql = "select * from " .  VAC_PREFIX . "_treat where id = $id";
+				$result = $db->sql_query($sql);
+				
+				if ($result) {
+					$row = $db->sql_fetch_assoc($result);
+					$sql = "select * from " .  VAC_PREFIX . "_pet where id = $row[petid]";
+					$result = $db->sql_query($sql);
+					$row2 = $db->sql_fetch_assoc($result);
+					$ret["status"] = 1;
+					$ret["data"] = array("calltime" => date("Y-m-d", $row["calltime"]), "cometime" => date("Y-m-d", $row["cometime"]), "doctorid" => $row["doctorid"], "customerid" => $row2["customerid"], "petid" => $row["petid"]);
+				}
+				echo json_encode($ret);
+			}
+		break;
+		case 'update_treat':
+			$id = $nv_Request->get_string('id', 'post', "");
+			$cometime = $nv_Request->get_string('cometime', 'post', "");
+			$doctorid = $nv_Request->get_string('doctorid', 'post', "");
+			if (!(empty($id) || empty($cometime) || empty($doctorid))) {
+				$cometime = strtotime($cometime);
+				$sql = "update " .  VAC_PREFIX . "_treat set cometime = $cometime, doctorid = $doctorid where id = $id";
+				$result = $db->sql_query($sql);
 
-	if ($result) {
-		$check = true;
+				if ($result) {
+					$ret["status"] = 1;
+				}
+				echo json_encode($ret);
+			}
+		break;
 	}
+	die();
 }
 
 // $sql = "select * from " .  VAC_PREFIX . "_usg a inner join " .  VAC_PREFIX . "_pet b on a.petid = b.id $order[$sort]";

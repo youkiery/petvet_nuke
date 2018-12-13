@@ -108,7 +108,13 @@
 </div>
 
 <div id="vac_info2" style="display:none;">
-	<form onsubmit="return editvac()" autocomplete="off">
+		<div style="width: 32px; height: 32px; cursor: pointer; display: inline-block; background-image: url('/themes/congnghe/images/vaccine/contact_edit.png')" class="vac_icon" onclick="update_customer(g_customerid)">
+			<img src="/themes/congnghe/images/vac/trans.png" title="Sửa khách hàng"> 
+		</div>
+		<div style="width: 32px; height: 32px; cursor: pointer; display: inline-block; background-image: url('/themes/congnghe/images/vaccine/pet_edit.png')" class="vac_icon" tooltip="Sửa thú cưng" onclick="update_pet(g_petid, g_pet)">
+			<img src="/themes/congnghe/images/vac/trans.png" title="Thêm thú cưng"> 
+		</div>
+		<form onsubmit="return editvac()" autocomplete="off">
 		<table class="tab1 vac">
 			<thead>
 				<tr>
@@ -205,6 +211,10 @@
 	var link = "/index.php?" + nv_name_variable + "=" + nv_module_name + "&act=post&" + nv_fc_variable + "=";
 	var adlink = "/adminpet/index.php?" + nv_name_variable + "=" + nv_module_name + "&act=post&" + nv_fc_variable + "=";
 	var blur = true;
+	var g_customerid = -1
+	var g_petid = -1
+	var g_pet = ""
+
 	var g_customer = -1;
 	var g_id = -1;
 	var customer_data = [];
@@ -223,14 +233,17 @@
 	}
 
 	function open_edit(event, id) {
+		g_id = id
+
 		$.post(
 			adlink + "vaccine",
 			{action: "getvac", id: id},
 			(response, status) => {
 				data = JSON.parse(response)
 				if (data) {
-					console.log(data);
 					g_id = id
+					g_pet = data.petname
+					g_customerid = data.customerid
 					$("#doctor2").val(data.doctorid);
 					$("#disease2").val(data.diseaseid);
 					$("#cometime2").val(data.cometime);

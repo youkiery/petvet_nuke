@@ -22,7 +22,7 @@
       <span id="phone"></span>
     </p>
     <p>
-      {lang.cometime}: 
+      {lang.treatcome}: 
       <span id="luubenh"></span>
     </p>
     <p>
@@ -43,45 +43,50 @@
     </div>
     <div id="treating">
       <form onsubmit="return luutreating(event)" id="qltreating">
-        <input class="input" type="text" id="temperate" placeholder="{lang.nhietdo}">
-        <input class="input" type="text" id="eye" placeholder="{lang.niemmac}">
-        <input class="input" type="text" id="other" placeholder="{lang.khac}">
-        <input class="input" type="text" id="treating2" placeholder="{lang.dieutri}">
-        <br>
-        <label for="doctorx">{lang.doctor}</label>
-        <select name="doctorx" id="doctorx"> 
-          <!-- BEGIN: doctor -->
-          <option value="{doctorid}"> {doctorname} </option>
-          <!-- END: doctor -->
-        </select>
+        <div style="font-size:0px;">
+          <input class="input" type="text" id="temperate" placeholder="{lang.temperate}">
+          <input class="input" type="text" id="eye" placeholder="{lang.eye}">
+          <input class="input" type="text" id="other" placeholder="{lang.other}">
+          <input class="input" type="text" id="treating2" placeholder="{lang.treating}">
+        </div>
+        <div>
+          <label for="doctorx">{lang.doctor}</label>
+          <select name="doctorx" id="doctorx"> 
+            <!-- BEGIN: doctor -->
+            <option value="{doctorid}"> {doctorname} </option>
+            <!-- END: doctor -->
+          </select>
+        </div>
+        <div>
+          <label for="status">{lang.status}</label>
+          <select name="status" id="status2"> 
+            <!-- BEGIN: status_option -->
+            <option value="{status_value}"> {status_name} </option>
+            <!-- END: status_option -->
+          </select>
+        </div>
+        <div>
+          <label for="xetnhiem">{lang.examine}</label>
+          <select name="examine" id="examine"> 
+            <option value="0"> {lang.non} </option>
+            <option value="1"> {lang.have} </option>
+          </select>
+        </div>
         <button class="submitbutton">
           {lang.submit}
         </button>
-        <br>
-        <label for="status">{lang.status}</label>
-        <select name="status" id="status2"> 
-          <!-- BEGIN: status_option -->
-          <option value="{status_value}"> {status_name} </option>
-          <!-- END: status_option -->
-        </select>
-        <br>
-        <label for="xetnhiem">{lang.examine}</label>
-        <select name="examine" id="examine"> 
-          <option value="0"> {lang.non} </option>
-          <option value="1"> {lang.have} </option>
-        </select>
       </form>
     </div>
   </div>
 
   <button class="button submitbutton" style="position: absolute; bottom: 26px; left: 10px;" onclick="ketthuc(1)">
-    {lang.trihet}
+    {lang.treated}
   </button>
   <button class="button submitbutton" style="position: absolute; bottom: 26px; left: 110px;" onclick="ketthuc(2)">
-    {lang.dachet}
+    {lang.dead}
   </button>
   <button class="button" style="position: absolute; bottom: 26px; left: 210px;" onclick="tongket()">
-    {lang.tongket}
+    {lang.summary}
   </button>
 </div>
 <!-- <form class="vac_form" method="GET">
@@ -106,15 +111,12 @@
   })
 
   $("body").keydown((e) => {
-    // console.log(e);
     if (e.key == "Escape") {
       closeVac()
     }
   })
 
   function closeVac() {
-    // console.log(vac_index);
-    
     if (vac_index == 1) {
       $("#vac_info").fadeOut();
       $("#reman").hide();
@@ -140,7 +142,6 @@
         response = JSON.parse(response)
         if (response["status"]) {
           data = response["data"]
-          // console.log(data);
           $("#petname").text(data["petname"])
           $("#customer").text(data["customer"])
           $("#phone").text(data["phone"])
@@ -150,8 +151,6 @@
           g_insult = data["insult"];
           
           if (data["treating"]) {
-            // console.log(data["insult"]);
-            
             if (data["insult"] > 0) {
               $("#qltreating input").attr("disabled", "disabled");
               $("#qltreating select").attr("disabled", "disabled");
@@ -168,14 +167,11 @@
             data["treating"].forEach(e => {
               select ++
               var time = e["time"] * 1000;
-              // console.log(time);
               g_ltid = e["id"]
               g_id = select
               html = "<span onclick='xemtreating(" + g_ltid + ", " + select +")'>" + e["time"] + "</span> ";
               $("#dstreating").html($("#dstreating").html() + html)
             })
-            console.log(data["treating"][select]);
-            
             $("#temperate").val(data["treating"][select]["temperate"])
             $("#eye").val(data["treating"][select]["eye"])
             $("#other").val(data["treating"][select]["other"])
@@ -186,7 +182,6 @@
             $("#doctorx").val(data["treating"][select]["doctorx"])
           }
           else {
-            // console.log("2");
             d_treating = []
             $("#qltreating input").attr("disabled", "disabled");
             $("#qltreating select").attr("disabled", "disabled");
@@ -212,12 +207,12 @@
     vac_index = 2;
 
     var body = ""
-    var addition = "<p><b>{lang.tongtime} " + d_treating.length + " </b></p>"
+    var addition = "<p><b>{lang.totaltreat} " + d_treating.length + " </b></p>"
     d_treating.forEach((treating, index) => {
-      body += "<tr style='height: 32px;'><td style='width: 20%'>" + treating["time"] + "</td><td style='width: 50%'><b>{lang.temperate}</b>: " + treating["temperate"] + "<br><b>{lang.rate}</b>: " + treating["rate"] + "<br><b>{lang.other}</b>: " + treating["other"] + "</td><td style='width: 30%'>" + treating["treating"] + "</td></tr>"
+      body += "<tr style='height: 32px;'><td style='width: 20%'>" + treating["time"] + "</td><td style='width: 50%'><b>{lang.temperate}</b>: " + treating["temperate"] + "<br><b>{lang.eye}</b>: " + treating["eye"] + "<br><b>{lang.other}</b>: " + treating["other"] + "</td><td style='width: 30%'>" + treating["treating"] + "</td></tr>"
     }) 
     var html = 
-    "<table border='1' style='border-collapse: collapse; width: 100%;'><thead><tr style='height: 32px;'><th><span id='tk_otherhhang'>" + $("#customer").text() + "</span> / <span id='tk_thucung'>" + $("#petname").text() + "</span></th><th>{lang.trieuchung}</th><th>{lang.treating}</th></tr></thead><tbody>" + body + "</tbody><tfoot><tr><td colspan='3'>" + addition + "</td></tr></tfoot></table>"
+    "<table border='1' style='border-collapse: collapse; width: 100%;'><thead><tr style='height: 32px;'><th><span id='tk_otherhhang'>" + $("#customer").text() + "</span> / <span id='tk_thucung'>" + $("#petname").text() + "</span></th><th>{lang.eviden}</th><th>{lang.treating}</th></tr></thead><tbody>" + body + "</tbody><tfoot><tr><td colspan='3'>" + addition + "</td></tr></tfoot></table>"
     $("#vac2_body").html(html)
   }
 
@@ -228,14 +223,11 @@
       {action: "themtreating", time: $("#timetreating").val(), id: lid},
       (response, status) => {
         response = JSON.parse(response)
-        // console.log(response)
         switch (response["status"]) {
           case 1:
             // thành công
             var data = response["data"]
             d_treating.push(data)
-            // console.log(d_treating);
-            
             id = d_treating.length - 1
             g_ltid = data["id"]
             g_id = id
@@ -268,8 +260,6 @@
   function xemtreating(ltid, id) {
     g_ltid = ltid;
     g_id = id;
-    // console.log(g_ltid);
-    // console.log(d_treating);
     
     $("#temperate").val(d_treating[id]["temperate"])
     $("#rate").val(d_treating[id]["rate"])
@@ -286,7 +276,6 @@
       link + "luubenh",
       {action: "trihet", id: lid, val: val},
       (response, status) => {
-        // console.log(response);
         response = JSON.parse(response);
         if (response["status"]) {
           $("#" + lid).css("background", response["data"]["color"])
@@ -301,25 +290,18 @@
   function luutreating(e) {
     e.preventDefault();
     var temperate = $("#temperate").val();
-    // console.log(temperate);
     var rate = $("#rate").val();
-    // console.log(rate);
     var other = $("#other").val();
-    // console.log(other);
     var examine = $("#examine").val();
-    // console.log(examine);
     var treating = $("#treating").val();
-    // console.log(treating);
     var status = $("#status2").val();
     var doctorx = $("#doctorx").val();
-    // console.log(status);
     
     $.post(
       link + "luubenh",
       {action: "luutreating", id: g_ltid, temperate: temperate, rate: rate, other: other, examine: examine, treating: treating, status: status, doctorx: doctorx},
       (response, status) => {
         response = JSON.parse(response);
-        console.log(response);
         if (response["status"]) {
           alert_msg("Đã lưu");
           $("#" + lid).css("background", response["data"]["color"])

@@ -44,8 +44,13 @@ if ($action) {
 				$sql = "select * from " .  VAC_PREFIX . "_vaccine where id = $id";
 				$result = $db->sql_query($sql);
 				$row = $db->sql_fetch_assoc($result);
+				$sql = "select * from " .  VAC_PREFIX . "_pet where id = $row[petid]";
+				$result = $db->sql_query($sql);
+				$pet = $db->sql_fetch_assoc($result);
 				$row["cometime"] = date("Y-m-d", $row["cometime"]);
 				$row["calltime"] = date("Y-m-d", $row["calltime"]);
+				$row["customerid"] = $pet["customerid"];
+				$row["petname"] = $pet["name"];
 				if ($row) {
 					echo json_encode($row);
 				}

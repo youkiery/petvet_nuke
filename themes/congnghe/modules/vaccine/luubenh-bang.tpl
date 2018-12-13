@@ -15,13 +15,13 @@
         {lang.doctor2}
       </th>  
       <th style="width: 50px;">
-        {lang.ngayluubenh}
+        {lang.treatcome}
       </th>
       <th style="width: 50px;">
-        {lang.tinhtrang}
+        {lang.pet_status}
       </th>
       <th style="width: 50px;">
-        {lang.ketqua}
+        {lang.insult}
       </th>
     </tr>
   </thead>

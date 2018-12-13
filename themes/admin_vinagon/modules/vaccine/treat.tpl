@@ -1,7 +1,57 @@
 <!-- BEGIN: main -->
 <div id="msgshow" class="msgshow"></div>
 <div id="reman"></div>
-<div id="vac_info2" style="display:none;">
+<div id="vac_info3" class="vac_info" style="display: none;">
+    <!-- Sửa siêu âm -->
+    <div style="width: 32px; height: 32px; cursor: pointer; display: inline-block; background-image: url('/themes/congnghe/images/vaccine/contact_edit.png')" class="vac_icon" onclick="update_customer(g_customerid)">
+      <img src="/themes/congnghe/images/vac/trans.png" title="Sửa khách hàng"> 
+    </div>
+    <div style="width: 32px; height: 32px; cursor: pointer; display: inline-block; background-image: url('/themes/congnghe/images/vaccine/pet_edit.png')" class="vac_icon" tooltip="Thêm thú cưng" onclick="update_pet(g_petid, g_pet)">
+      <img src="/themes/congnghe/images/vac/trans.png" title="Sửa thú cưng"> 
+    </div>
+    <form onsubmit="return update_treat(event)" autocomplete="off">
+        <table class="tab1 vac">
+          <thead>
+            <tr>
+              <th colspan="3">
+                {lang.usg_update}
+                <span id="e_notify" style="display: none;"></span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colspan="2">
+                {lang.usgcome}
+              </td>
+              <td>
+                  <input class="input" id="cometime3" type="date" name="ngaysieuam" value="{now}">
+                </td>
+            </tr>
+            <!-- hình ảnh -->
+            <tr>
+              <td colspan="2">
+                {lang.doctor}
+              </td>
+              <td>
+                <select name="doctor" id="doctor3" style="width: 90%;">
+                  <!-- BEGIN: doctor3 -->
+                  <option value="{doctorid}">{doctorname}</option>
+                  <!-- END: doctor3 -->
+                </select>
+              </td>
+            </tr>
+            <!-- note & submit -->
+            <tr>
+              <td colspan="3">
+                <input type="submit" value="{lang.submit}">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </form>
+      </div>
+  <div id="vac_info2" style="display:none;">
   <div id="vac2_header"></div>
   <div id="vac2_body"></div>
 </div>
@@ -52,9 +102,6 @@
           <option value="{doctorid}"> {doctorname} </option>
           <!-- END: doctor -->
         </select>
-        <button class="submitbutton">
-          {lang.submit}
-        </button>
         <br>
         <label for="tinhtrang">{lang.tinhtrang}</label>
         <select name="tinhtrang" id="tinhtrang2"> 
@@ -68,6 +115,9 @@
           <option value="0"> {lang.non} </option>
           <option value="1"> {lang.have} </option>
         </select>
+        <button class="submitbutton">
+          {lang.submit}
+        </button>
       </form>
     </div>
   </div>
@@ -209,6 +259,10 @@
 	var adlink = "/adminpet/index.php?" + nv_name_variable + "=" + nv_module_name + "&act=post&" + nv_fc_variable + "=";
 	var blur = true;
 	var g_customer = -1;
+	var g_id = -1
+	var g_customerid = -1
+	var g_petid = -1
+	var g_pet = ""
 	var customer_data = [];
 	var customer_list = [];
 	var customer_name = document.getElementById("customer_name");
@@ -231,18 +285,15 @@
   })
 
   $("body").keydown((e) => {
-		console.log(e);
-		
     if (e.keyCode == 27) {
       closeVac()
     }
   })
 
   function closeVac() {
-		console.log(1);
-		
     if (vac_index == 1) {
       $("#vac_info").fadeOut();
+      $("#vac_info3").fadeOut();
       $("#reman").hide();
       vac_index = 0;
     }
@@ -250,6 +301,47 @@
       $("#vac_info2").fadeOut();
       vac_index = 1;
     }
+  }
+
+	function update_treat(e) {
+		e.preventDefault()
+
+		$.post(
+			adlink + "treat",
+			{action: "update_treat", id: g_id, cometime: $("#cometime3").val(), doctorid: $("#doctor3").val()},
+			(response, status) => {
+				var data = JSON.parse(response)
+				if (data["status"]) {
+					g_id = -1
+					window.location.reload()
+				}
+			}
+		)
+	}
+
+
+  function update(e, id) {
+		g_id = id
+    vac_index = 1;
+    
+		$.post(
+			adlink + "treat",
+			{action: "treat_info", id: g_id},
+			(response, status) => {
+				var data = JSON.parse(response);
+				if (data["status"]) {
+					$("#vac_info3").fadeIn();
+					$("#reman").show();
+					g_customerid = data["data"]["customerid"]
+					g_petid = data["data"]["petid"]
+					
+					g_pet = trim(e.target.parentElement.parentElement.children[1].innerText)
+					$("#cometime3").val(data["data"]["cometime"])					
+					$("#calltime3").val(data["data"]["calltime"])					
+					$("#doctor3").val(data["data"]["doctorid"])					
+				}
+			}
+		)
   }
 
   $("#html_content tbody tr td[class]").click((e) => {
@@ -264,7 +356,6 @@
         response = JSON.parse(response)
         if (response["status"]) {
           data = response["data"]
-          // console.log(data);
           $("#petname").text(data["petname"])
           $("#customer").text(data["customer"])
           $("#phone").text(data["phone"])
@@ -272,7 +363,6 @@
           $("#doctor").text(data["doctor"])
           var h_treating = ""
           g_ketqua = data["ketqua"];
-          console.log(data);
           
           if (data["treating"]) {
             if (data["ketqua"] > 0) {
@@ -296,7 +386,6 @@
               html = "<span onclick='xemtreating(" + g_ltid + ", " + select +")'>" + e["time"] + "</span> ";
               $("#dstreating").html($("#dstreating").html() + html)
             })
-            console.log(data["treating"]);
             
             $("#nhietdo").val(data["treating"][select]["temperate"])
             $("#niemmac").val(data["treating"][select]["eye"])
@@ -347,13 +436,11 @@
       {action: "themtreating", time: $("#ngaytreating").val(), id: lid},
       (response, status) => {
         response = JSON.parse(response)
-        // console.log(response)
         switch (response["status"]) {
           case 1:
             // thành công
             var data = response["data"]
             d_treating.push(data)
-            // console.log(d_treating);
             
             id = d_treating.length - 1
             g_ltid = data["id"]
@@ -386,8 +473,6 @@
   function xemtreating(ltid, id) {
     g_ltid = ltid;
     g_id = id;
-    console.log(g_ltid);
-    console.log(d_treating[id]);
     
     $("#nhietdo").val(d_treating[id]["temperate"])
     $("#niemmac").val(d_treating[id]["eye"])
@@ -405,9 +490,7 @@
 				link + "luubenh",
 				{action: "delete_treat", id: id},
 				(response, status) => {
-					// console.log(response);
 					response = JSON.parse(response);
-					console.log(response);
 					
 					if (response["status"]) {
 						window.location.reload()
@@ -422,7 +505,6 @@
       link + "luubenh",
       {action: "trihet", id: lid, val: val},
       (response, status) => {
-        // console.log(response);
         response = JSON.parse(response);
         if (response["status"]) {
           $("#" + lid).css("background", response["data"]["color"])
@@ -437,25 +519,18 @@
   function luutreating(e) {
     e.preventDefault();
     var nhietdo = $("#nhietdo").val();
-    // console.log(nhietdo);
     var niemmac = $("#niemmac").val();
-    // console.log(niemmac);
     var khac = $("#khac").val();
-    // console.log(khac);
     var xetnghiem = $("#xetnghiem").val();
-    // console.log(xetnghiem);
     var dieutri = $("#dieutri").val();
-    // console.log(dieutri);
     var tinhtrang = $("#tinhtrang2").val();
     var doctorx = $("#doctorx").val();
-    // console.log(tinhtrang);
     
     $.post(
       link + "luubenh",
       {action: "luutreating", id: g_ltid, temperate: nhietdo, eye: niemmac, other: khac, examine: xetnghiem, treating: dieutri, status: tinhtrang, doctorx: doctorx},
       (response, status) => {
         response = JSON.parse(response);
-        // console.log(response);
         if (response["status"]) {
           alert_msg("Đã lưu");
           $("#" + lid).css("background", response["data"]["color"])

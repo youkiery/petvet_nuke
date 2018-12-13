@@ -147,8 +147,6 @@
             customer_address.value = ""
 						pet_info.innerHTML = ""
             pet_note.value = "Ghi chú"
-            console.log(customer_list, g_index);
-            
 						break;
 					case 3:
 						msg = "Thú cưng không tồn tại!";

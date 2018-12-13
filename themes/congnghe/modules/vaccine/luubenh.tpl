@@ -51,7 +51,7 @@
 					{lang.petname}
 				</td>
 				<td colspan="3">
-					{lang.ngayluubenh}
+					{lang.treatcome}
 				</td>
 			</tr>
 			<!-- pet input -->
@@ -79,7 +79,7 @@
 			<!-- note & submit -->
 			<tr>
         <td>
-          {lang.tinhtrang}
+          {lang.pet_status}
         </td>
 				<td colspan="3">
 					<select name="tinhtrang" id="tinhtrang2" style="width: 90%;">

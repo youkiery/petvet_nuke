@@ -546,7 +546,7 @@ function quagio() {
   $from = $today + $worktime;
   $end = $today + $resttime;
 
-  if (empty($admin_info["level"]) && ($admin_info["level"] == "1")) {
+  if (!empty($admin_info) && !empty($admin_info["level"]) && ($admin_info["level"] == "1")) {
 
   }
   else if (NV_CURRENTTIME < $from || NV_CURRENTTIME > $end) {

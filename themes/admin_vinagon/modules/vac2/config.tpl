@@ -18,16 +18,5 @@
 </form>
 <script>
   var link = "/adminpet/index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=config&act=post";
-  function filter() {
-		$.post(
-			link,
-			{action: "save", sort: $("#f_sort").val(), time: $("#f_moment").val()},
-			(data, status) => {
-				// console.log(data);
-			}
-		)
-    return false;
-  }
-
 </script>
 <!-- END: main -->
