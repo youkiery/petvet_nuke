@@ -65,12 +65,16 @@ function getVaccineTable($path, $lang, $key, $sort, $time) {
   $xtpl = new XTemplate("main-1.tpl", $path);
   $xtpl->assign("lang", $lang);
 
-    $sql = "select a.id, b.id as petid, a.status, b.name as petname, c.id as customerid, c.name as customer, c.phone, cometime, calltime, a.status, dd.name as disease, dt.name as doctor from " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_pet b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id inner join " . VAC_PREFIX . "_disease dd on a.diseaseid = dd.id inner join " . VAC_PREFIX . "_doctor dt on dt.id = a.doctorid where c.name like '%$key%' or phone like '%$key%' " . $order;
-
+    $sql = "SELECT a.id, p.id as petid, a.status, p.name as petname, c.id as customerid, c.name as customer, c.phone, cometime, calltime, a.status, dd.name as disease, d.name as doctor FROM " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_disease dd on calltime between " . $fromtime . " and " . $endtime . " and a.diseaseid = dd.id inner join " . VAC_PREFIX . "_pet p on a.petid = p.id inner join " . VAC_PREFIX . "_customer c on p.customerid = c.id inner join " . VAC_PREFIX . "_doctor d on a.doctorid = d.id where c.name like '%$key%' or phone like '%$key%' " . $order;
     $result = $db->sql_query($sql);
+    $sql = "SELECT a.id, p.id as petid, a.status, p.name as petname, c.id as customerid, c.name as customer, c.phone, cometime, calltime, a.status, dd.name as disease, d.name as doctor FROM " . VAC_PREFIX . "_vaccine a inner join (select 0 as id, 'Siêu Âm' as name from DUAL) dd on calltime between " . $fromtime . " and " . $endtime . " and a.diseaseid = dd.id inner join " . VAC_PREFIX . "_pet p on a.petid = p.id inner join " . VAC_PREFIX . "_customer c on p.customerid = c.id inner join " . VAC_PREFIX . "_doctor d on a.doctorid = d.id where c.name like '%$key%' or phone like '%$key%' " . $order;
+    $result2 = $db->sql_query($sql);
     $vaccines = array();
 
     while ($row = $db->sql_fetch_assoc($result)) {
+      $vaccines[] = $row;
+    }
+    while ($row = $db->sql_fetch_assoc($result2)) {
       $vaccines[] = $row;
     }
 
@@ -131,7 +135,6 @@ function filter($vaclist, $path, $lang, $fromtime, $amount_time, $sort, $order) 
 
   foreach ($vaclist as $key => $row) {
     if ($order) {
-      // echo "$row[calltime], $now<br>";
       if ($row["calltime"] < $now)
         $sort_order_right[] = $key;
       else
@@ -144,11 +147,14 @@ function filter($vaclist, $path, $lang, $fromtime, $amount_time, $sort, $order) 
         $sort_order_left[] = $key;      
     }
   }
-  // var_dump($sort_order_right);
   asort($sort_order_left);
   arsort($sort_order_right);
-  if ($order) $hack = 1;
-  else $hack = 2;
+  if ($order) {
+    $hack = ($vaclist[$sort_order_left[count($sort_order_left) - 1]]["calltime"] - $vaclist[$sort_order_left[0]]["calltime"]) + 1;
+  }
+  else {
+    $hack = ($vaclist[$sort_order_left[count($sort_order_left) - 1]]["cometime"] - $vaclist[$sort_order_left[0]]["cometime"]) + 1;
+  }
   foreach ($sort_order_left as $key => $value) {
     $xtpl->assign("index", $i);
     $xtpl->assign("petname", $vaclist[$value]["petname"]);
@@ -178,16 +184,11 @@ function filter($vaclist, $path, $lang, $fromtime, $amount_time, $sort, $order) 
         break;
     }
     if ($order) {
-      $d = date("d", $vaclist[$value]["calltime"]);
+      $d = $vaclist[$value]["calltime"];
     } else {
-      $d = date("d", $vaclist[$value]["cometime"]);
+      $d = $vaclist[$value]["cometime"];
     }
-    if ($d - $today < 0) {
-      $c = $dom - $today + $d;
-    } else {
-      $c = $d - $today;
-    }
-    $c = 15 - round($c / 3);
+    $c = 15 - round(($d - $now) * 2 / $hack);
     $xtpl->assign("bgcolor", "#4" . $hex[$c] . "4");
     $xtpl->assign("cometime", date("d/m/Y", $vaclist[$value]["cometime"]));
     $xtpl->assign("calltime", date("d/m/Y", $vaclist[$value]["calltime"]));
@@ -220,17 +221,11 @@ function filter($vaclist, $path, $lang, $fromtime, $amount_time, $sort, $order) 
         break;
     }
     if ($order) {
-      $d = date("d", $vaclist[$value]["calltime"]);
+      $d = $vaclist[$value]["calltime"];
     } else {
-      $d = date("d", $vaclist[$value]["cometime"]);
+      $d = $vaclist[$value]["cometime"];
     }
-    if ($today - $d < 0) {
-      $c = $today + $dom - $d;
-      // day of prv month
-    } else {
-      $c = $today - $d;
-    }
-    $c = 14 - round($c / 3);
+    $c = 14 - round(($now - $d) * 2 / $hack);
     $xtpl->assign("bgcolor", "#$hex[$c]$hex[$c]$hex[$c]");
     $xtpl->assign("cometime", date("d/m/Y", $vaclist[$value]["cometime"]));
     $xtpl->assign("calltime", date("d/m/Y", $vaclist[$value]["calltime"]));
@@ -292,13 +287,14 @@ function getrecentlist($fromtime, $amount_time, $sort) {
   }
 
   $sql = "select a.id, a.note, a.recall, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, status, diseaseid, dd.name as disease from " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_pet b on cometime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id inner join " . VAC_PREFIX . "_disease dd on a.diseaseid = dd.id " . $order;
-
-  // if ($diseaseid == 2) {
-  // }
-
   $result = $db->sql_query($sql);
+  $sql = "select a.id, a.note, a.recall, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, status, diseaseid, dd.name as disease from " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_pet b on cometime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id inner join (select 0 as id, 'Siêu Âm' as name from DUAL) dd on a.diseaseid = dd.id " . $order;
+  $result2 = $db->sql_query($sql);
   $ret = array();
   while ($row = $db->sql_fetch_assoc($result)) {
+    $ret[] = $row;
+  }
+  while ($row = $db->sql_fetch_assoc($result2)) {
     $ret[] = $row;
   }
   return $ret;
@@ -326,14 +322,18 @@ function filterVac($fromtime, $amount_time, $sort) {
   }
 
   $sql = "select a.id, a.note, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, status, diseaseid, dd.name as disease from " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_pet b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id inner join " . VAC_PREFIX . "_disease dd on a.diseaseid = dd.id " . $order;
-
-  // if ($diseaseid == 2) {
-  // }
   $result = $db->sql_query($sql);
+  $sql = "select a.id, a.note, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, status, diseaseid, dd.name as disease from " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_pet b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id inner join (select 0 as id, 'Siêu Âm' as name from DUAL) dd on a.diseaseid = dd.id " . $order;
+  $result2 = $db->sql_query($sql);
   $ret = array();
   while ($row = $db->sql_fetch_assoc($result)) {
     $ret[] = $row;
   }
+  while ($row = $db->sql_fetch_assoc($result2)) {
+    $ret[] = $row;
+  }
+//   var_dump($ret);
+//   die();
   
   return $ret;
 }
@@ -433,12 +433,21 @@ function getPatientsList2($customerid) {
   }
   foreach ($ax as $key => $row) {
     $petid = $row["id"];
-    $sql = "SELECT v.calltime, dd.name as disease from " . VAC_PREFIX . "_vaccine v inner join " . VAC_PREFIX . "_pet p on  v.petid = " . $petid . " and v.petid = p.id inner join " . VAC_PREFIX . "_customer c on p.customerid = c.id inner join disease dd on v.disease = dd.id order by v.id desc";
+    $sql = "SELECT v.calltime, dd.name as disease from " . VAC_PREFIX . "_vaccine v inner join " . VAC_PREFIX . "_pet p on  v.petid = " . $petid . " and v.petid = p.id inner join " . VAC_PREFIX . "_customer c on p.customerid = c.id inner join " . VAC_PREFIX . "_disease dd on v.diseaseid = dd.id order by v.id desc";
     $query = $db->sql_query($sql);
+    $crow = $db->sql_fetch_assoc($query);
+    $sql = "SELECT v.calltime, dd.name as disease from " . VAC_PREFIX . "_vaccine v inner join " . VAC_PREFIX . "_pet p on  v.petid = " . $petid . " and v.petid = p.id inner join " . VAC_PREFIX . "_customer c on p.customerid = c.id inner join (select 0 as id, 'Siêu Âm' as name from DUAL) dd on v.diseaseid = dd.id order by v.id desc";
+    $query2 = $db->sql_query($sql);
+    $crow2 = $db->sql_fetch_assoc($query2);
 
-    if ($query) {
-      $row2 = $db->sql_fetch_assoc($query);
-      $patients["data"][] = array("petid" => $row["id"], "petname" => $row["petname"], "lastcome" => $row2["calltime"], "lastname" => $row2["disease"]);
+    if ($row["cometime"] > $row2["cometime"]) {
+        $data = $crow;
+    }
+    else {
+        $data = $crow2;
+    }
+    if ($data) {
+      $patients["data"][] = array("petid" => $row["id"], "petname" => $row["petname"], "lastcome" => $crow["calltime"], "lastname" => $crow["disease"]);
     } else {
       $patients["data"][] = array("petid" => $row["id"], "petname" => $row["petname"], "lastcome" => "", "lastname" => "");
     }
@@ -453,9 +462,14 @@ function getPatientDetail($petid) {
   $result = $db->sql_query($sql);
   $patients = $db->sql_fetch_assoc($result);
 
-  $sql = "select v.*, dd.name as disease, dd.id as diseaseid from " . VAC_PREFIX . "_vaccine v inner join " . VAC_PREFIX . "_disease dd on petid = $petid and v.diseaseid = dd.id";
+  $sql = "select v.*, dd.name as disease, dd.id as diseaseid from " . VAC_PREFIX . "_vaccine v inner join " . VAC_PREFIX . "_disease dd on v.diseaseid = dd.id and petid = $petid";
   $result = $db->sql_query($sql);
-  $patients["data"] = fetchall($db, $result);
+  $sql = "select v.*, dd.name as disease, dd.id as diseaseid from " . VAC_PREFIX . "_vaccine v inner join (select 0 as id, 'Siêu Âm' as name from DUAL) dd on v.diseaseid = dd.id and petid = $petid";
+  $result2 = $db->sql_query($sql);
+  $data = fetchall($db, $result);
+  $data2 = fetchall($db, $result2);
+  $patients["data"] = array_merge($data, $data2);
+  
   return $patients;
 }
 
@@ -528,17 +542,18 @@ function nv_generate_page_shop($base_url, $num_items, $per_page, $start_item, $a
 }
 // Nếu quá giờ làm việc sẽ chặn đường vào
 function quagio() {
-  global $module_config, $admin_info, $module_info, $module_file, $lang_module;
+  global $module_config, $admin_info, $module_info, $module_name, $module_file, $lang_module;
   $today = strtotime(date("Y-m-d"));
   $worktime = 0;
   $resttime = 0;
-  if (!empty($module_config[$module_file]["worktime"])) {
-    $worktime = $module_config[$module_file]["worktime"];
+  if (!empty($module_config[$module_name]["worktime"])) {
+    $worktime = $module_config[$module_name]["worktime"];
   }
   else {
+    $worktime = 7 * 60 * 60;
   }
-  if (!empty($module_config[$module_file]["resttime"])) {
-    $resttime = $module_config[$module_file]["resttime"];
+  if (!empty($module_config[$module_name]["resttime"])) {
+    $resttime = $module_config[$module_name]["resttime"];
   }
   else {
     $resttime = 17 * 60 * 60 + 30 * 60;

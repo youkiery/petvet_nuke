@@ -3,7 +3,7 @@
 
 <div id="vac_notify"></div>
 <div id="reman"></div>
-<div id="vac_info2" style="display:none; width: 400px; height: 250px;">
+<div id="vac_info2" style="display:none;">
   <form onsubmit="return onbirth(event)">
     <table style="width: 100%; line-height: 56px;">
       <thead>
@@ -244,6 +244,7 @@
       $("#thumb").attr("src", image_data);
     }
 
+    $("#thumb").attr("src", "");
     $("#petname").text(data_collect[1].innerText);
     $("#customer").text(data_collect[2].innerText);
     $("#phone").text(data_collect[3].innerText);

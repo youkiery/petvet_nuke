@@ -115,13 +115,12 @@
 #vac_info, #vac_info2, #vac_info3 {
   background: #eee;
   border: 1px solid black;
-  margin: 1px;
-  position: fixed;
-  width: 640px;
-  height: 400px;
   z-index: 1001;
   padding: 10px;
-  top: calc(50% - 200px);
+  width: 75%;
+  position: fixed;
+  left: 50%;
+  margin-left: -37.5%;
 }
 
 #vac_info2 {

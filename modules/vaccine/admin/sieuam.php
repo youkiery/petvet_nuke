@@ -27,11 +27,11 @@ $page = $nv_Request->get_string('page', 'get', "");
 $action = $nv_Request->get_string('action', 'post', "");
 $id = $nv_Request->get_string('id', 'post', "");
 $xtpl->assign("keyword", $keyword);
-$xtpl->assign("nv", $module_file);
+$xtpl->assign("nv", $module_name);
 $xtpl->assign("op", "sieuam");
 
 $today = date("Y-m-d", NV_CURRENTTIME);
-$dusinh = $module_config[$module_file]["expert_time"];
+$dusinh = $module_config[$module_name]["expert_time"];
 if (empty($dusinh)) {
 	$dusinh = 45 * 24 * 60 * 60;
 }
@@ -170,7 +170,7 @@ while ($revert) {
 	if ($tpage <= 0) $revert = false;
 	$from = $tpage * $filter;
 	$to = $from + $filter;
-	$sql = "select a.id, a.cometime, a.calltime, b.name as petname, c.name as customer, c.phone, d.name as doctor from " .  VAC_PREFIX . "_usg a inner join " .  VAC_PREFIX . "_pet b on a.petid = b.id inner join " .  VAC_PREFIX . "_customer c on b.customerid = c.id inner join " .  VAC_PREFIX . "_doctor d on a.doctorid = d.id $where $order[$sort] limit $from, $to";
+	$sql = "select a.id, a.cometime, a.calltime, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone, d.name as doctor from " .  VAC_PREFIX . "_usg a inner join " .  VAC_PREFIX . "_pet b on a.petid = b.id inner join " .  VAC_PREFIX . "_customer c on b.customerid = c.id inner join " .  VAC_PREFIX . "_doctor d on a.doctorid = d.id $where $order[$sort] limit $from, $to";
 	$result = $db->sql_query($sql);
 	$display_list = array();
 	while ($row = $db->sql_fetch_assoc($result)) {
@@ -215,6 +215,7 @@ echo nv_admin_theme($contents);
 include (NV_ROOTDIR . "/includes/footer.php");
 
 function displayRed($list, $path, $lang_module, $index, $nav) {
+	global $link;
 	$xtpl = new XTemplate("sieuam-hang.tpl", $path);
 	$xtpl->assign("lang", $lang_module);	
 
@@ -226,6 +227,8 @@ function displayRed($list, $path, $lang_module, $index, $nav) {
 		$xtpl->assign("id", $row["id"]);
 		$xtpl->assign("customer", $row["customer"]);
 		$xtpl->assign("petname", $row["petname"]);
+		$xtpl->assign("pet_link", $link . "patient&petid=" . $row["petid"]);
+		$xtpl->assign("customer_link", $link . "customer&customerid=" . $row["customerid"]);
 		$xtpl->assign("phone", $row["phone"]);
 		$xtpl->assign("doctor", $row["doctor"]);
 		$xtpl->assign("cometime", date("d/m/Y", $row["cometime"]));

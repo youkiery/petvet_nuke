@@ -13,6 +13,8 @@ quagio();
 
     $sql = "select * from " . VAC_PREFIX . "_doctor";
     $query = $db->sql_query($sql);
+    $xtpl->assign("nv", $module_name);
+    $xtpl->assign("op", $op);
     while($row = $db->sql_fetch_assoc($query)) {
       $xtpl->assign("doctorid", $row["id"]);
       $xtpl->assign("doctorname", $row["name"]);
@@ -25,15 +27,15 @@ quagio();
     $vaclist = array();
 
     if ($page == "list") {
-        $vaclist = getrecentlist(NV_CURRENTTIME, $module_config[$module_file]["filter_time"], $module_config[$module_file]["sort_type"]);
+        $vaclist = getrecentlist(NV_CURRENTTIME, $module_config[$module_name]["filter_time"], $module_config[$module_name]["sort_type"]);
     } else {
-        $vaclist = filterVac(NV_CURRENTTIME, $module_config[$module_file]["filter_time"], $module_config[$module_file]["sort_type"]);
+        $vaclist = filterVac(NV_CURRENTTIME, $module_config[$module_name]["filter_time"], $module_config[$module_name]["sort_type"]);
     }
   
     if ($page == "list") {
-      $xtpl->assign("content", filter($vaclist, NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file, $lang_module, date("Y-m-d", NV_CURRENTTIME), $module_config[$module_file]["filter_time"], $module_config[$module_file]["sort_type"], 0));
+      $xtpl->assign("content", filter($vaclist, NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file, $lang_module, date("Y-m-d", NV_CURRENTTIME), $module_config[$module_name]["filter_time"], $module_config[$module_name]["sort_type"], 0));
     } else {
-      $xtpl->assign("content", filter($vaclist, NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file, $lang_module, date("Y-m-d", NV_CURRENTTIME), $module_config[$module_file]["filter_time"], $module_config[$module_file]["sort_type"], 1));
+      $xtpl->assign("content", filter($vaclist, NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file, $lang_module, date("Y-m-d", NV_CURRENTTIME), $module_config[$module_name]["filter_time"], $module_config[$module_name]["sort_type"], 1));
     }
 
     $xtpl->parse("main");

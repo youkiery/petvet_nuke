@@ -173,6 +173,7 @@
               $("#dstreating").html($("#dstreating").html() + html)
             })
             $("#temperate").val(data["treating"][select]["temperate"])
+
             $("#eye").val(data["treating"][select]["eye"])
             $("#other").val(data["treating"][select]["other"])
             $("#treating2").val(data["treating"][select]["treating"])
@@ -234,7 +235,7 @@
             $("#temperate").val(d_treating[id]["temperate"])
             $("#eye").val(d_treating[id]["eye"])
             $("#other").val(d_treating[id]["other"])
-            $("#treating").val(d_treating[id]["treating"])
+            $("#treating2").val(d_treating[id]["treating"])
             $("#examine").val(d_treating[id]["examine"])
             $("#treating").text(d_treating[id]["time"])
             $("#status2").val(d_treating[id]["status"])
@@ -262,9 +263,9 @@
     g_id = id;
     
     $("#temperate").val(d_treating[id]["temperate"])
-    $("#rate").val(d_treating[id]["rate"])
+    $("#eye").val(d_treating[id]["eye"])
     $("#other").val(d_treating[id]["other"])
-    $("#treating").val(d_treating[id]["treating"])
+    $("#treating2").val(d_treating[id]["treating"])
     $("#examine").val(d_treating[id]["examine"])
     $("#treating").text(d_treating[id]["time"])
     $("#status2").val(d_treating[id]["status"])
@@ -290,16 +291,16 @@
   function luutreating(e) {
     e.preventDefault();
     var temperate = $("#temperate").val();
-    var rate = $("#rate").val();
+    var eye = $("#eye").val();
     var other = $("#other").val();
     var examine = $("#examine").val();
-    var treating = $("#treating").val();
+    var treating = $("#treating2").val();
     var status = $("#status2").val();
     var doctorx = $("#doctorx").val();
     
     $.post(
       link + "luubenh",
-      {action: "luutreating", id: g_ltid, temperate: temperate, rate: rate, other: other, examine: examine, treating: treating, status: status, doctorx: doctorx},
+      {action: "luutreating", id: g_ltid, temperate: temperate, eye: eye, other: other, examine: examine, treating: treating, status: status, doctorx: doctorx},
       (response, status) => {
         response = JSON.parse(response);
         if (response["status"]) {
@@ -307,10 +308,10 @@
           $("#" + lid).css("background", response["data"]["color"])
           $("#" + lid + " .suckhoe").text(response["data"]["status"])
           d_treating[g_id]["temperate"] = temperate
-          d_treating[g_id]["rate"] = rate
+          d_treating[g_id]["eye"] = eye
           d_treating[g_id]["other"] = other
           d_treating[g_id]["examine"] = examine
-          d_treating[g_id]["treating"] = treating
+          d_treating[g_id]["treating2"] = treating
           d_treating[g_id]["status"] = status
           d_treating[g_id]["doctorx"] = doctorx
         }

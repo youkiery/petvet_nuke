@@ -85,7 +85,7 @@ $keyword = $nv_Request -> get_string('keyword', 'get', '');
 $page = $nv_Request->get_string('page', 'get', "");
 $id = $nv_Request->get_string('id', 'post', "");
 $xtpl->assign("keyword", $keyword);
-$xtpl->assign("nv", $module_file);
+$xtpl->assign("nv", $module_name);
 $xtpl->assign("op", $op);
 
 $today = date("Y-m-d", NV_CURRENTTIME);
@@ -181,16 +181,26 @@ while ($revert) {
 	if ($tpage <= 0) $revert = false;
 	$from = $tpage * $filter;
 	$to = $from + $filter;
-	$sql = "select a.id, a.cometime, a.calltime, b.name as petname, c.name as customer, c.phone, d.name as doctor, a.diseaseid, dd.name as disease from " .  VAC_PREFIX . "_vaccine a inner join " .  VAC_PREFIX . "_pet b on a.petid = b.id inner join " .  VAC_PREFIX . "_customer c on b.customerid = c.id inner join " .  VAC_PREFIX . "_doctor d on a.doctorid = d.id inner join ". VAC_PREFIX ."_disease dd on a.diseaseid = dd.id $where $order[$sort] limit $from, $to";
+// 	$sql = "select a.id, a.cometime, a.calltime, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone, d.name as doctor, a.diseaseid, dd.name as disease from " .  VAC_PREFIX . "_vaccine a inner join " .  VAC_PREFIX . "_pet b on a.petid = b.id inner join " .  VAC_PREFIX . "_customer c on b.customerid = c.id inner join " .  VAC_PREFIX . "_doctor d on a.doctorid = d.id inner join (select * from " . VAC_PREFIX . "_disease union (select 0 as id, 'Siêu Âm' as name from DUAL)) dd on a.diseaseid = dd.id $where $order[$sort] limit $from, $to";
+	$sql = "select a.id, a.cometime, a.calltime, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone, d.name as doctor, a.diseaseid, dd.name as disease from " .  VAC_PREFIX . "_vaccine a inner join " .  VAC_PREFIX . "_pet b on a.petid = b.id inner join " .  VAC_PREFIX . "_customer c on b.customerid = c.id inner join " .  VAC_PREFIX . "_doctor d on a.doctorid = d.id inner join " . VAC_PREFIX . "_disease dd on a.diseaseid = dd.id $where $order[$sort] limit $from, $to";
 	$result = $db->sql_query($sql);
+	$sql = "select a.id, a.cometime, a.calltime, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone, d.name as doctor, a.diseaseid, dd.name as disease from " .  VAC_PREFIX . "_vaccine a inner join " .  VAC_PREFIX . "_pet b on a.petid = b.id inner join " .  VAC_PREFIX . "_customer c on b.customerid = c.id inner join " .  VAC_PREFIX . "_doctor d on a.doctorid = d.id inner join (select 0 as id, 'Siêu Âm' as name from DUAL) dd on a.diseaseid = dd.id $where $order[$sort] limit $from, $to";
+	$result2 = $db->sql_query($sql);
 	$display_list = array();
 	while ($row = $db->sql_fetch_assoc($result)) {
 		$display_list[] = $row;
+	}
+	while ($row = $db->sql_fetch_assoc($result2)) {
+		$display_list[] = $row;
+	}
+	if (count($display_list)) {
 		$revert = false;
 	}
 }
+// var_dump($display_list);
+// die();
 
-$sql = "select count(a.id) as num from " .  VAC_PREFIX . "_vaccine a inner join " .  VAC_PREFIX . "_pet b on a.petid = b.id inner join " .  VAC_PREFIX . "_customer c on b.customerid = c.id inner join " .  VAC_PREFIX . "_doctor d on a.doctorid = d.id inner join ". VAC_PREFIX ."_disease dd on a.diseaseid = dd.id $where";
+$sql = "select count(a.id) as num from " .  VAC_PREFIX . "_vaccine a inner join " .  VAC_PREFIX . "_pet b on a.petid = b.id inner join " .  VAC_PREFIX . "_customer c on b.customerid = c.id inner join " .  VAC_PREFIX . "_doctor d on a.doctorid = d.id inner join(select * from " . VAC_PREFIX . "_disease union (select 0 as id, 'Siêu Âm' as name from DUAL)) dd on a.diseaseid = dd.id $where";
 $result = $db->sql_query($sql);
 $row = $db->sql_fetch_assoc($result);
 
@@ -225,6 +235,7 @@ echo nv_admin_theme($contents);
 include (NV_ROOTDIR . "/includes/footer.php");
 
 function displayRed($list, $path, $lang_module, $index, $nav) {
+	global $link;
 	$xtpl = new XTemplate("vaccine-list.tpl", $path);
 	$xtpl->assign("lang", $lang_module);	
 
@@ -236,6 +247,8 @@ function displayRed($list, $path, $lang_module, $index, $nav) {
 		$xtpl->assign("id", $row["id"]);
 		$xtpl->assign("customer", $row["customer"]);
 		$xtpl->assign("petname", $row["petname"]);
+		$xtpl->assign("pet_link", $link . "patient&petid=" . $row["petid"]);
+		$xtpl->assign("customer_link", $link . "customer&customerid=" . $row["customerid"]);
 		$xtpl->assign("phone", $row["phone"]);
 		$xtpl->assign("doctor", $row["doctor"]);
 		$xtpl->assign("disease", $row["disease"]);

@@ -26,7 +26,7 @@ if (!empty($action)) {
 
 $xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file);
 $xtpl->assign("lang", $lang_module);
-$xtpl->assign("nv", $module_file);
+$xtpl->assign("nv", $module_name);
 $xtpl->assign("op", $op);
 $day = 24 * 60 * 60;
 $month = 30 * $day;
@@ -36,7 +36,6 @@ $sort_option = array("1" => "Thời gian tái chủng tăng dần","2" => "Thờ
 $key = $nv_Request->get_string('key', 'get', "");
 $sort = $nv_Request->get_string('sort', 'get', "");
 $time = $nv_Request->get_string('time', 'get', "");
-
 
 if (empty($time)) $time = $date_option["1 tuần"];
 if (empty($sort)) $sort = 1;

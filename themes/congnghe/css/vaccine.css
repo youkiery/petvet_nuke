@@ -49,7 +49,7 @@
 }
 
 .upload {
-	background: url("/uploads/vac/movie_up.png");
+	background: url("/uploads/movie_up.png");
 	float: right;
 	margin: 4px;
 	border: 1px solid black;
@@ -65,16 +65,15 @@
   cursor: pointer;
 }
 
-#vac_info, #vac_info2 {
+#vac_info, #vac_info2, #vac_info3 {
   background: #eee;
   border: 1px solid black;
-  margin: 1px;
-  position: fixed;
-  width: 640px;
-  height: 400px;
   z-index: 1001;
   padding: 10px;
-  top: calc(50% - 200px);
+  width: 75%;
+  position: fixed;
+  left: 50%;
+  margin-left: -37.5%;
 }
 
 #vac_info2 {
@@ -113,7 +112,7 @@
 #vac_info #thumb, #vac_info2 #thumb {
   width: 200px;
   height: 200px;
-  background: url('/uploads/vac/no_image.jpg');
+  background: url('/uploads/no_image.jpg');
 }
 
 #vac_info #info, #vac_info2 #info {

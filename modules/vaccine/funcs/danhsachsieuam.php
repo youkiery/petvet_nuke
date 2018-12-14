@@ -14,15 +14,15 @@ quagio();
 	
 	$xtpl->assign("keyword", $key);
 	$now = strtotime(date("Y-m-d", NV_CURRENTTIME));
-	$time = $module_config[$module_file]["filter_time"];
+	$time = $module_config[$module_name]["filter_time"];
 
 	if (empty($time)) $time = 7 * 24 * 60 * 60;
 	$from = $now - $time;
 	$end = $now + $time;
 
-	$sql = "select a.id, a.cometime, a.calltime, a.status, a.image, a.note, a.birth, b.id as petid, b.name as petname, c.name as customer, c.phone, d.name as doctor from `" . VAC_PREFIX . "_usg` a inner join `" . VAC_PREFIX . "_pet` b on a.calltime between $from and $end and a.petid = b.id inner join `" . VAC_PREFIX . "_customer` c on b.customerid = c.id inner join `" . VAC_PREFIX . "_doctor` d on a.doctorid = d.id where c.name like '%$key%' or c.phone like '%$key%' order by calltime";
+	$sql = "select a.id, a.cometime, a.calltime, a.status, a.image, a.note, a.birthday, a.birth, b.id as petid, b.name as petname, c.name as customer, c.phone, d.name as doctor from `" . VAC_PREFIX . "_usg` a inner join `" . VAC_PREFIX . "_pet` b on a.calltime between $from and $end and a.petid = b.id inner join `" . VAC_PREFIX . "_customer` c on b.customerid = c.id inner join `" . VAC_PREFIX . "_doctor` d on a.doctorid = d.id where c.name like '%$key%' or c.phone like '%$key%' order by calltime";
 	// echo date("Y-m-d", 1545238800);
-	// die($sql);
+// 	die($sql);
 	$result = $db->sql_query($sql);
 
 	$display_list = array();
@@ -66,26 +66,16 @@ function displaySSList($list, $time, $path, $lang_module) {
 	}
 	asort($sort_order_left);
 	arsort($sort_order_right);
-
+	$hack = ($list[$sort_order_left[count($sort_order_left) - 1]]["calltime"] - $list[$sort_order_left[0]]["calltime"]) + 1;
   foreach ($sort_order_left as $key => $value) {
-    $d = date("d", $list[$value]["calltime"]);
-    if ($d - $today < 0) {
-      $c = $dom - $today + $d;
-    } else {
-      $c = $d - $today;
-    }
-		$c = 15 - round($c / 3);
+		$d = $list[$value]["calltime"];
+    $c = 15 - round(($d - $now) * 2 / $hack);
 		$list[$value]["bgcolor"] = "#4" . $hex[$c] . "4";
 		$array_left[] = $list[$value];
 	}
   foreach ($sort_order_right as $key => $value) {
-    $d = date("d", $list[$value]["calltime"]);
-    if ($today - $d < 0) {
-      $c = $today + $dom - $d;
-    } else {
-      $c = $today - $d;
-    }
-    $c = 14 - round($c / 3);
+		$d = $list[$value]["calltime"];
+    $c = 14 - round(($now - $d) * 2 / $hack);
 		$list[$value]["bgcolor"] = "#$hex[$c]$hex[$c]$hex[$c]";
 		$array_right[] = $list[$value];
 	}
@@ -117,7 +107,7 @@ function displaySSList($list, $time, $path, $lang_module) {
 			$color = $status_color[0];
 		}
 		if ($list_data["status"] == 3) {
-			if ($list_data["birth"] > 0) {
+			if ($list_data["birthday"] > 0) {
 				$xtpl->assign("checked", "disabled");
 			}
 			else {

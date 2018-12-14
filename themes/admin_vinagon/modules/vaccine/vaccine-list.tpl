@@ -38,10 +38,14 @@
 				{stt}
 			</td>
 			<td>
-				{petname}
+				<a href="{pet_link}">
+					{petname}
+				</a>
 			</td>
 			<td>
-				{customer}
+				<a href="{customer_link}">
+					{customer}
+				</a>
 			</td>
 			<td>
 				{phone}

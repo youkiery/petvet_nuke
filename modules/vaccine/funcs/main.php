@@ -55,7 +55,7 @@ if (!empty($action)) {
       $diseaseid = $nv_Request->get_string('diseaseid', 'post', '');
       $petid = $nv_Request->get_string('petid', 'post', '');
 
-      if (!(empty($petid) || empty($recall) || empty($doctor) || empty($vacid) || empty($diseaseid))) {
+      if (!(empty($petid) || empty($recall) || empty($doctor) || empty($vacid)) && $diseaseid >= 0) {
         $cometime = time();
         $calltime = strtotime($recall);
 

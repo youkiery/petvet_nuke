@@ -3,8 +3,8 @@
 
 <div id="vac_notify" style="display: none; position: fixed; top: 0; right: 0; background: white; padding: 8px; border: 1px solid black; z-index: 1000;"></div>
 <div id="reman"></div>
-<a href="/index.php?nv=vaccine&op=list"> {lang.list} </a>
-<a href="/index.php?nv=vaccine&op=list&page=list"> {lang.list2} </a>
+<a href="/index.php?nv={nv}&op={op}"> {lang.list} </a>
+<a href="/index.php?nv={nv}&op={op}&page=list"> {lang.list2} </a>
 <div id="vac_panel" style="display: none; position: fixed; margin:auto; z-index: 1001;">
   <form>
     <table class="tab1" style="width: 500px;">

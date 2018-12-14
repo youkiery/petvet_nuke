@@ -163,6 +163,7 @@
 						customer_phone.value = ""
             customer_address.value = ""
 						pet_info.innerHTML = ""
+						$("#hinhanh").val("");
 					}
 					else {
 						msg = data["data"];

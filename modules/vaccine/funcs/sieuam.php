@@ -28,10 +28,10 @@ $action = $nv_Request->get_string('action', 'post', '');
       case "birth":
       $id = $nv_Request->get_string('id', 'post', '');
       $petid = $nv_Request->get_string('petid', 'post', '');
-      $birth = $nv_Request->get_string('birth', 'post', '');
+      $birth = $nv_Request->get_int('birth', 'post', 0);
       $birthday = $nv_Request->get_string('birthday', 'post', '');
 
-      if (!(empty($id) || empty($petid) || empty($birth) || empty($birthday))) {
+      if (!(empty($id) || empty($petid) || empty($birthday))) {
         $birthday = strtotime($birthday);
         $recall = $birthday + 60 * 60 * 24 * 60;
         $sql = "select * from " . VAC_PREFIX . "_pet where id = $petid";
@@ -41,10 +41,14 @@ $action = $nv_Request->get_string('action', 'post', '');
         $sql = "update `" . VAC_PREFIX . "_usg` set birth = '$birth', birthday = " . $birthday . " where id = $id";
         $result = $db->sql_query($sql);
         
+        $sql = "select * from " . VAC_PREFIX . "_usg where id = $id";
+        $query = $db->sql_query($sql);
+        $usg = $db->sql_fetch_assoc($query);
+
         $sql = "insert into " . VAC_PREFIX . "_pet (name, customerid) values('" . date("d/m/Y", $birthday) . "', $customer[id])";
         $pet_query = $db->sql_query($sql);
         
-        $sql = "insert into " . VAC_PREFIX . "_vaccine (petid, diseaseid, cometime, calltime, note, status, recall, doctorid) values($petid, 0, $birthday, $recall, 'Tiêm phòng siêu âm', 0, 0, 0)";
+        $sql = "insert into " . VAC_PREFIX . "_vaccine (petid, diseaseid, cometime, calltime, note, status, recall, doctorid) values($petid, 0, $birthday, $recall, 'Tiêm phòng siêu âm', 0, 0, $usg[doctorid])";
         $usg_query = $db->sql_query($sql);
         if ($result && $pet_query && $usg_query) {
           $ret["status"] = 1;
@@ -60,7 +64,7 @@ $action = $nv_Request->get_string('action', 'post', '');
   $xtpl->assign("lang", $lang_module);
 
   $today = date("Y-m-d", NV_CURRENTTIME);
-  $dusinh = $module_config[$module_file]["expert_time"];
+  $dusinh = $module_config[$module_name]["expert_time"];
   if (empty($dusinh)) {
     $dusinh = 30 * 24 * 60 * 60;
   }

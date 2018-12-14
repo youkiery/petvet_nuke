@@ -14,7 +14,7 @@
           <thead>
             <tr>
               <th colspan="3">
-                {lang.usg_update}
+                {lang.treat_update}
                 <span id="e_notify" style="display: none;"></span>
               </th>
             </tr>
@@ -22,7 +22,7 @@
           <tbody>
             <tr>
               <td colspan="2">
-                {lang.usgcome}
+                {lang.treatcome}
               </td>
               <td>
                   <input class="input" id="cometime3" type="date" name="ngaysieuam" value="{now}">
@@ -166,7 +166,7 @@
 		<thead>
 			<tr>
 				<th colspan="4">
-					{lang.tieude_luubenh}
+					{lang.treat_title}
 					<span id="e_notify" style="display: none;"></span>
 				</th>
 			</tr>

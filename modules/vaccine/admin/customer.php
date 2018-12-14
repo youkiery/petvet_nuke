@@ -98,7 +98,7 @@ if (!empty($customerid)) {
   foreach ($patients["data"] as $key => $patient_data) {
     if(!empty($patient_data["lastcome"])) $lasttime = date("d/m/Y", $patient_data["lastcome"]);
     else $lasttime = "";
-    if(!empty($patient_data["lastname"])) $lastname = $patient_data["lastname"]["disease"];
+    if(!empty($patient_data["lastname"])) $lastname = $patient_data["lastname"];
     else $lastname = "";
     $xtpl->assign("id", $patient_data["petid"]);
     $xtpl->assign("detail_link", $link . "patient&petid=" . $patient_data["petid"]);
@@ -131,7 +131,7 @@ else {
   $sort = $nv_Request->get_string('sort', 'get', "");
   $filter = $nv_Request->get_string('filter', 'get', "");
   $page = $nv_Request->get_string('page', 'get', "");
-  $xtpl->assign("nv", $module_file);
+  $xtpl->assign("nv", $module_name);
   $xtpl->assign("op", $op);
   $xtpl->assign("keyword", $keyword);
 

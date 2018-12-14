@@ -23,7 +23,7 @@ $xtpl->assign("now", $now);
 
 $xtpl->assign("keyword", $keyword);
 $now = strtotime($now);
-$time = $module_config[$module_file]["filter_time"];
+$time = $module_config[$module_name]["filter_time"];
 
 if (empty($time)) {
   $time = 7 * 24 * 60 * 60;

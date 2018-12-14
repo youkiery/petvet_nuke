@@ -15,11 +15,11 @@ $diseases = getDiseaseList();
 $vaclist = array();
 // echo $global_config["filter_time"]; die();
 foreach ($diseases as $disease) {
-  $vaclist_disease = getvaccustomer($key, strtotime(date("Y-m-d", NV_CURRENTTIME)), $module_config[$module_file]["filter_time"], $module_config[$module_file]["sort_type"], $disease["id"], $disease["disease"]);
+  $vaclist_disease = getvaccustomer($key, strtotime(date("Y-m-d", NV_CURRENTTIME)), $module_config[$module_name]["filter_time"], $module_config[$module_name]["sort_type"], $disease["id"], $disease["disease"]);
   $vaclist = array_merge($vaclist, $vaclist_disease);
 }
 // echo json_encode($vaclist); die();
 
-echo filter($vaclist, NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file, $lang_module, date("Y-m-d", NV_CURRENTTIME), $module_config[$module_file]["filter_time"], $module_config[$module_file]["sort_type"], 1);
+echo filter($vaclist, NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file, $lang_module, date("Y-m-d", NV_CURRENTTIME), $module_config[$module_name]["filter_time"], $module_config[$module_name]["sort_type"], 1);
 die();
 ?>

@@ -167,7 +167,7 @@ while ($revert) {
 	$result = $db->sql_query($sql);
 	$display_list = array();
 	while ($row = $db->sql_fetch_assoc($result)) {
-		$sql = "select b.status from " .  VAC_PREFIX . "_treat a inner join " .  VAC_PREFIX . "_treating b on b.treatid = $row[id] and a.id = b.treatid order by b.ngay desc";
+		$sql = "select b.status from " .  VAC_PREFIX . "_treat a inner join " .  VAC_PREFIX . "_treating b on b.treatid = $row[id] and a.id = b.treatid order by b.time desc";
 		$query = $db->sql_query($sql);
 		$row2 = $db->sql_fetch_assoc($query);
 		if (!$row2["status"]) {
@@ -235,7 +235,7 @@ function displayRed($list, $path, $lang_module, $index, $nav) {
 		$xtpl->assign("luubenh", date("d/m/Y", $row["cometime"]));
 		$xtpl->assign("nav_link", $nav);
 		$xtpl->assign("ketqua", $export[$row["insult"]]);
-    $xtpl->assign("tinhtrang", $status_option[$row["status"]]);
+		$xtpl->assign("tinhtrang", $status_option[$row["status"]]);
     $xtpl->assign("bgcolor", mauluubenh($row["insult"], $row["status"]));
 		// $xtpl->assign("delete_link", "");
 

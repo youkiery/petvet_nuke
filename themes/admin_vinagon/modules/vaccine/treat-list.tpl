@@ -12,7 +12,7 @@
 				{lang.customer}
 			</th>
 			<th>
-				{lang.doctor}
+				{lang.doctor2}
 			</th>
 			<th>
 				{lang.treat_day}

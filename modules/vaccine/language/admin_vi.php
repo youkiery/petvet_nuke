@@ -107,4 +107,8 @@ $lang_module["confirm_value2"][3] = "Đã Sinh";
 $lang_module["saved"] = "Đã lưu";
 $lang_module["image"] = "Hình ảnh";
 $lang_module["usg_update"] = "Cập nhật siêu âm";
+$lang_module["treat_update"] = "Cập nhật lưu bệnh";
+$lang_module["treat_title"] = "Thêm khách lưu bệnh";
+$lang_module["pet_status"] = "Sức khỏe";
+$lang_module["insult"] = "Kết quả điều trị";
 

@@ -4,8 +4,7 @@ $vacid = $nv_Request->get_string('vacid', 'get', '');
 $diseaseid = $nv_Request->get_string('diseaseid', 'get', '');
 $act = $nv_Request->get_string('act', 'get', '');
 $ret = array("status" => 0, "data" => "");
-
-if(!(empty($act) || empty($value) || empty($vacid) || empty($diseaseid))) {
+if(!(empty($act) || empty($value) || empty($vacid)) && $diseaseid >= 0) {
 	$mod = 0;
 	if ($act == "up") {
 		$mod = 1;
@@ -19,7 +18,7 @@ if(!(empty($act) || empty($value) || empty($vacid) || empty($diseaseid))) {
 			$sql = "update " .  VAC_PREFIX . "_vaccine set status = $confirmid where id = $vacid";
 			$result = $db->sql_query($sql);
 			if ($result) {
-		    $sql = "select * from " .  VAC_PREFIX . "_vaccine where id = $vacid";
+				$sql = "select * from " .  VAC_PREFIX . "_vaccine where id = $vacid";
 		    $result = $db->sql_query($sql);
 				$row = $db->sql_fetch_assoc($result);
 		    if (empty($row["recall"]) || $row["recall"] == "0") $ret["data"]["recall"] = 0;
