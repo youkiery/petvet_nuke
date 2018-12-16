@@ -9,7 +9,11 @@ quagio();
     if ( ! defined( 'NV_IS_MOD_QUANLY' ) ) die( 'Stop!!!' );
     $page_title = $lang_module["main_title"];
     $xtpl = new XTemplate("list.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
+    $keyword = $nv_Request->get_string('keyword', 'get', '');
     $xtpl->assign("lang", $lang_module);
+    $xtpl->assign("nv", $module_name);
+    $xtpl->assign("op", $op);
+    $xtpl->assign("keyword", $keyword);
 
     $sql = "select * from " . VAC_PREFIX . "_doctor";
     $query = $db->sql_query($sql);
@@ -27,9 +31,9 @@ quagio();
     $vaclist = array();
 
     if ($page == "list") {
-        $vaclist = getrecentlist(NV_CURRENTTIME, $module_config[$module_name]["filter_time"], $module_config[$module_name]["sort_type"]);
+        $vaclist = getrecentlist(NV_CURRENTTIME, $module_config[$module_name]["filter_time"], $module_config[$module_name]["sort_type"], $keyword);
     } else {
-        $vaclist = filterVac(NV_CURRENTTIME, $module_config[$module_name]["filter_time"], $module_config[$module_name]["sort_type"]);
+        $vaclist = filterVac(NV_CURRENTTIME, $module_config[$module_name]["filter_time"], $module_config[$module_name]["sort_type"], $keyword);
     }
   
     if ($page == "list") {

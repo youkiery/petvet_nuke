@@ -703,6 +703,8 @@ $lang_module['sort1'] = "Tên theo thứ tự A-Z";
 $lang_module['sort2'] = "Tên theo thứ tự Z-A";
 $lang_module['sort3'] = "Giá bán tăng dần";
 $lang_module['sort4'] = "Giá bán giảm dần";
+$lang_module['sort5'] = "Mới trước";
+$lang_module['sort6'] = "Cũ trước";
 
 //zsize
 $lang_module['note'] = "Tùy chọn";

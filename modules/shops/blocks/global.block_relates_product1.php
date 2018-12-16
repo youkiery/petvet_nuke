@@ -100,18 +100,22 @@ if(!nv_function_exists('nv_relates_product1')) {
 		$xtpl = new XTemplate("block.others_product1.tpl", NV_ROOTDIR . "/themes/" . $block_theme . "/modules/" . $mod_file);
 		$xtpl->assign('LANG', $lang_module);
 		$xtpl->assign('TEMPLATE', $block_theme);
-		$sql = "SELECT  t1.id, t1.listcatid, t1." . NV_LANG_DATA . "_title as title, t1." . NV_LANG_DATA . "_alias as alias, t1." . NV_LANG_DATA . "_hometext as hometext, t1.addtime,t1.homeimgthumb,t1.product_price,t1.product_discounts,t1.money_unit,t1.showprice FROM `" . $db_config['prefix'] . "_" . $module . "_rows` as t1 INNER JOIN `" . $db_config['prefix'] . "_" . $module . "_block` AS t2 ON t1.id = t2.id WHERE t2.bid= " . $block_config['blockid'] . " AND t1.status= 1 AND  t1.publtime < " . NV_CURRENTTIME . " AND (t1.exptime=0 OR t1.exptime >" . NV_CURRENTTIME . ") ORDER BY t1.addtime DESC, t2.weight ASC LIMIT 0 , " . $block_config['numrow'];
+		// $sql = "SELECT  t1.id, t1.listcatid, t1." . NV_LANG_DATA . "_title as title, t1." . NV_LANG_DATA . "_alias as alias, t1." . NV_LANG_DATA . "_hometext as hometext, t1.addtime,t1.homeimgthumb,t1.product_price,t1.product_discounts,t1.money_unit,t1.showprice FROM `" . $db_config['prefix'] . "_" . $module . "_rows` as t1 INNER JOIN `" . $db_config['prefix'] . "_" . $module . "_block` AS t2 ON t1.id = t2.id WHERE t2.bid= " . $block_config['blockid'] . " AND t1.status= 1 AND  t1.publtime < " . NV_CURRENTTIME . " AND (t1.exptime=0 OR t1.exptime >" . NV_CURRENTTIME . ") ORDER BY t1.addtime DESC, t2.weight ASC LIMIT 0 , " . $block_config['numrow'];
+		$sql = "SELECT  t1.id, t1.listcatid, t1." . NV_LANG_DATA . "_title as title, t1." . NV_LANG_DATA . "_alias as alias, t1." . NV_LANG_DATA . "_hometext as hometext, t1.addtime,t1.homeimgthumb,t1.product_price,t1.product_discounts,t1.money_unit,t1.showprice FROM `" . $db_config['prefix'] . "_" . $module . "_rows` as t1 INNER JOIN `" . $db_config['prefix'] . "_" . $module . "_block` AS t2 ON t1.id = t2.id WHERE t2.bid= " . $block_config['blockid'] . " AND t1.status= 1 AND  t1.publtime < " . NV_CURRENTTIME . " AND (t1.exptime=0 OR t1.exptime >" . NV_CURRENTTIME . ") ORDER BY rand(), t2.weight ASC LIMIT 0 , " . $block_config['numrow'];
 		
 		$list = nv_db_cache_adv($sql, 'block_cateid'.$block_config['bid'], $module);
 		//print($list);exit();
-		$i = 1;
 		
 		$cut_num = $block_config['cut_num'];
 		$cut_num2 = $block_config['cut_num2'];
 		///////////////////////////////////////////////////////////
 		$y = 0;
 
-		foreach ($list as $l) {
+		$l = array();
+		$query = $db->sql_query($sql);
+		$i = 1;
+		while($l = $db->sql_fetch_assoc($query)) {
+		// foreach ($list as $l) {
 			$thumb = explode("|", $l['homeimgthumb']);
 			if(!empty($thumb[0]) && !nv_is_url($thumb[0])) {
 				$thumb[0] = NV_BASE_SITEURL . NV_UPLOADS_DIR . "/" . $module . "/" . $thumb[0];

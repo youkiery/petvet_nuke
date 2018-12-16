@@ -106,8 +106,8 @@
   </form>
 </div>
 <form class="vac_form" method="GET">
-  <input type="hidden" name="nv" value="vac">
-  <input type="hidden" name="op" value="danhsachsieuam">
+  <input type="hidden" name="nv" value="{nv}">
+  <input type="hidden" name="op" value="{op}">
   <input type="text" name="key" value="{keyword}" class="vac_input">
   <input type="submit" class="vac_button" value="{lang.search}">
 </form>

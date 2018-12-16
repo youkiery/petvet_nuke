@@ -272,37 +272,27 @@ else
 
     {
 
-    	if ( $sort_id == 1)
-
+    	if ( $sort_id == 3)
     	{
-
     		$order_by = "ORDER BY " . NV_LANG_DATA . "_title ASC ";
-
     	}
-
-    	elseif ( $sort_id == 2 )
-
-    	{
-
-    		$order_by = "ORDER BY " . NV_LANG_DATA . "_title DESC ";
-
-    	}
-
-    	elseif ( $sort_id == 3 )
-
-    	{
-
-    		$order_by = "ORDER BY product_discounts ASC ";
-
-    	}
-
     	elseif ( $sort_id == 4 )
-
     	{
-
-    		$order_by = "ORDER BY product_discounts DESC ";
-
+    		$order_by = "ORDER BY " . NV_LANG_DATA . "_title DESC ";
     	}
+    	elseif ( $sort_id == 5 )
+    	{
+    		$order_by = "ORDER BY product_price ASC ";
+    	}
+    	elseif ( $sort_id == 6 )
+    	{
+    		$order_by = "ORDER BY product_price DESC ";
+        }
+        else if ($sort_id == 1) {
+        }
+        else {
+    		$order_by = "ORDER BY id ASC ";
+        }
 
     }
 
@@ -341,9 +331,9 @@ else
     	$pages = nv_products_page( $base_url, $all_page, $per_page, $page );
 
     }
-	//print_r($data_content);die();
+    //print_r($data_content);die();
     $contents = call_user_func( $global_array_cat[$catid]['viewcat'], $data_content, $pages );
-
+    // die($contents);
 }
 
 include ( NV_ROOTDIR . "/includes/header.php" );

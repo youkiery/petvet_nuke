@@ -477,7 +477,7 @@ function viewcat_page_list($data_content, $pages) {
     }
   }
 
-  $array_sort = array($lang_module['sort1'], $lang_module['sort2'], $lang_module['sort3'], $lang_module['sort4']);
+  $array_sort = array($lang_module['sort5'], $lang_module['sort6'], $lang_module['sort1'], $lang_module['sort2'], $lang_module['sort3'], $lang_module['sort4']);
   foreach ($array_sort as $array_sort_i => $value) {
     if ($array_sort_i + 1 == $sort_id)
       $select = "selected='selected'";

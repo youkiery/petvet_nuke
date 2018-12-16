@@ -150,10 +150,20 @@ function filter($vaclist, $path, $lang, $fromtime, $amount_time, $sort, $order) 
   asort($sort_order_left);
   arsort($sort_order_right);
   if ($order) {
-    $hack = ($vaclist[$sort_order_left[count($sort_order_left) - 1]]["calltime"] - $vaclist[$sort_order_left[0]]["calltime"]) + 1;
+    if (count($sort_order_left) > 1) {
+      $hack = ($vaclist[$sort_order_left[count($sort_order_left) - 1]]["calltime"] - $vaclist[$sort_order_left[0]]["calltime"]) + 1;
+    }
+    else {
+      $hack = 24 * 60 * 60 * 7;
+    }
   }
   else {
-    $hack = ($vaclist[$sort_order_left[count($sort_order_left) - 1]]["cometime"] - $vaclist[$sort_order_left[0]]["cometime"]) + 1;
+    if (count($sort_order_left) > 1) {
+      $hack = ($vaclist[$sort_order_left[count($sort_order_left) - 1]]["cometime"] - $vaclist[$sort_order_left[0]]["cometime"]) + 1;
+    }
+    else {
+      $hack = 24 * 60 * 60 * 7;
+    }
   }
   foreach ($sort_order_left as $key => $value) {
     $xtpl->assign("index", $i);
@@ -265,7 +275,7 @@ function doctorlist($path, $lang) {
   return $xtpl->text("main");
 }
 
-function getrecentlist($fromtime, $amount_time, $sort) {
+function getrecentlist($fromtime, $amount_time, $sort, $keyword) {
   global $db, $db_config, $module_name;
   $endtime = $fromtime + $amount_time;
   $fromtime -= $amount_time;
@@ -286,9 +296,11 @@ function getrecentlist($fromtime, $amount_time, $sort) {
       break;
   }
 
-  $sql = "select a.id, a.note, a.recall, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, status, diseaseid, dd.name as disease from " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_pet b on cometime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id inner join " . VAC_PREFIX . "_disease dd on a.diseaseid = dd.id " . $order;
+  $where = "where b.name like '%$keyword%' or c.name like '%$keyword%' or c.phone like '%$keyword%'";
+
+  $sql = "select a.id, a.note, a.recall, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, status, diseaseid, dd.name as disease from " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_pet b on cometime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id inner join " . VAC_PREFIX . "_disease dd on a.diseaseid = dd.id $where " . $order;
   $result = $db->sql_query($sql);
-  $sql = "select a.id, a.note, a.recall, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, status, diseaseid, dd.name as disease from " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_pet b on cometime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id inner join (select 0 as id, 'Siêu Âm' as name from DUAL) dd on a.diseaseid = dd.id " . $order;
+  $sql = "select a.id, a.note, a.recall, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, status, diseaseid, dd.name as disease from " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_pet b on cometime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id inner join (select 0 as id, 'Siêu Âm' as name from DUAL) dd on a.diseaseid = dd.id $where " . $order;
   $result2 = $db->sql_query($sql);
   $ret = array();
   while ($row = $db->sql_fetch_assoc($result)) {
@@ -300,7 +312,7 @@ function getrecentlist($fromtime, $amount_time, $sort) {
   return $ret;
 }
 
-function filterVac($fromtime, $amount_time, $sort) {
+function filterVac($fromtime, $amount_time, $sort, $keyword) {
   global $db, $db_config, $module_name;
   $endtime = $fromtime + $amount_time;
   $fromtime -= $amount_time;
@@ -321,9 +333,11 @@ function filterVac($fromtime, $amount_time, $sort) {
       break;
   }
 
-  $sql = "select a.id, a.note, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, status, diseaseid, dd.name as disease from " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_pet b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id inner join " . VAC_PREFIX . "_disease dd on a.diseaseid = dd.id " . $order;
+  $where = "where b.name like '%$keyword%' or c.name like '%$keyword%' or c.phone like '%$keyword%'";
+
+  $sql = "select a.id, a.note, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, status, diseaseid, dd.name as disease from " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_pet b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id inner join " . VAC_PREFIX . "_disease dd on a.diseaseid = dd.id $where " . $order;
   $result = $db->sql_query($sql);
-  $sql = "select a.id, a.note, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, status, diseaseid, dd.name as disease from " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_pet b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id inner join (select 0 as id, 'Siêu Âm' as name from DUAL) dd on a.diseaseid = dd.id " . $order;
+  $sql = "select a.id, a.note, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, status, diseaseid, dd.name as disease from " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_pet b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id inner join (select 0 as id, 'Siêu Âm' as name from DUAL) dd on a.diseaseid = dd.id where " . $order;
   $result2 = $db->sql_query($sql);
   $ret = array();
   while ($row = $db->sql_fetch_assoc($result)) {

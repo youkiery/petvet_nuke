@@ -78,8 +78,10 @@ if (! nv_function_exists('nv_cate_product')) {
 		$xtpl->assign('TEMPLATE', $block_theme);
 		$xtpl->assign('LANG', $lang_module);
 		$xtpl->assign('STYLE', $block_config['style_cat']);
-		$xtpl->assign('TITLE_CATALOG', $global_array_cat[$block_config['catid']]['title']);
-		$xtpl->assign('LINK_CATALOG', $global_array_cat[$block_config['catid']]['link'] );
+		// $xtpl->assign('TITLE_CATALOG', $global_array_cat[$block_config['catid']]['title']);
+		// $xtpl->assign('LINK_CATALOG', $global_array_cat[$block_config['catid']]['link'] );
+		$xtpl->assign('TITLE_CATALOG', "Sản phẩm mới");
+		$xtpl->assign('LINK_CATALOG', "/index.php?nv=" . $module_name . "&op=shop-cho-meo-cung&sort=1");
 		$xtpl->assign('IMG_CATALOG', $global_array_cat[$block_config['catid']]['image']);
 		$xtpl->assign('ICON_CATALOG', $global_array_cat[$block_config['catid']]['icon']);
 		$xtpl->assign('IDCAT', $block_config['catid']);
@@ -95,11 +97,15 @@ if (! nv_function_exists('nv_cate_product')) {
 				$i++;
 			}
 		}
-		$sql = "SELECT  t1.id, t1.listcatid, t1." . NV_LANG_DATA . "_title as title, t1." . NV_LANG_DATA . "_alias as alias, t1.addtime,t1.homeimgthumb,t1.product_price,t1.product_discounts,t1.money_unit,t1.showprice,t1." . NV_LANG_DATA . "_hometext as hometext,t1.homeimgfile FROM `" . $db_config['prefix'] . "_" . $module . "_rows` as t1 WHERE listcatid IN (" . implode(',',$array_cat_list) . ") AND t1.status= 1 AND  t1.publtime < " . NV_CURRENTTIME . " AND (t1.exptime=0 OR t1.exptime >" . NV_CURRENTTIME . ") AND inhome=1 ORDER BY t1.addtime DESC LIMIT 0 , " . $block_config['numrow'] . "";
+		// $sql = "SELECT  t1.id, t1.listcatid, t1." . NV_LANG_DATA . "_title as title, t1." . NV_LANG_DATA . "_alias as alias, t1.addtime,t1.homeimgthumb,t1.product_price,t1.product_discounts,t1.money_unit,t1.showprice,t1." . NV_LANG_DATA . "_hometext as hometext,t1.homeimgfile FROM `" . $db_config['prefix'] . "_" . $module . "_rows` as t1 WHERE listcatid IN (" . implode(',',$array_cat_list) . ") AND t1.status= 1 AND  t1.publtime < " . NV_CURRENTTIME . " AND (t1.exptime=0 OR t1.exptime >" . NV_CURRENTTIME . ") AND inhome=1 ORDER BY t1.addtime DESC LIMIT 0 , " . $block_config['numrow'] . "";
+		$sql = "SELECT * from (SELECT  t1.id, t1.listcatid, t1." . NV_LANG_DATA . "_title as title, t1." . NV_LANG_DATA . "_alias as alias, t1.addtime,t1.homeimgthumb,t1.product_price,t1.product_discounts,t1.money_unit,t1.showprice,t1." . NV_LANG_DATA . "_hometext as hometext,t1.homeimgfile FROM `" . $db_config['prefix'] . "_" . $module . "_rows` as t1 WHERE t1.status= 1 AND t1.publtime < " . NV_CURRENTTIME . " AND (t1.exptime=0 OR t1.exptime >" . NV_CURRENTTIME . ") ORDER by id desc limit 0, 50) a order by rand() LIMIT 0 , " . $block_config['numrow'] . "";
 		$cut_num = $block_config['cut_num'];
-		$list = nv_db_cache_adv($sql, 'block_cateid'.$block_config['bid'], $module);
+		// $list = nv_db_cache_adv($sql, 'block_cateid'.$block_config['bid'], $module);
+		$l = array();
+		$query = $db->sql_query($sql);
 		$i = 1;
-		foreach ($list as $l) {
+		while($l = $db->sql_fetch_assoc($query)) {
+		// foreach ($list as $l) {
 			$thumb = explode("|", $l['homeimgthumb']);
 			if (! empty($thumb[0]) && ! nv_is_url($thumb[0])) {
 				$thumb[0] = NV_BASE_SITEURL . NV_UPLOADS_DIR . "/" . $module . "/" . $thumb[0];
@@ -109,9 +115,7 @@ if (! nv_function_exists('nv_cate_product')) {
 				// $thumb[0] = NV_BASE_SITEURL . "themes/" . $module_info['template'] . "/images/" . $mod_file . "/no-image.jpg";
 			}
 			$homeimgfile_i = NV_BASE_SITEURL . NV_UPLOADS_DIR . "/" . $module . "/" . $l['homeimgfile'];
-			$xtpl->assign('link', $link . $global_array_cat[$l['listcatid']]['alias'] . "/" . $l['alias'] . "-" . $l['id']);            
-			$xtpl->assign('TITLE_CATALOG', $global_array_cat[$block_config['catid']]['title']);
-			$xtpl->assign('LINK_CATALOG', $global_array_cat[$block_config['catid']]['link'] . "&sort=1");
+			$xtpl->assign('link', $link . $global_array_cat[$l['listcatid']]['alias'] . "/" . $l['alias'] . "-" . $l['id']);
 			$title_i = nv_clean60($l['title'], $cut_num);
 			$hometext_i = nv_clean60($l['hometext'], 200);
 			$xtpl->assign('title', $title_i);

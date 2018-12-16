@@ -13,6 +13,8 @@ quagio();
 	$xtpl->assign("lang", $lang_module);
 	
 	$xtpl->assign("keyword", $key);
+	$xtpl->assign("nv", $module_name);
+	$xtpl->assign("op", $op);
 	$now = strtotime(date("Y-m-d", NV_CURRENTTIME));
 	$time = $module_config[$module_name]["filter_time"];
 
@@ -66,7 +68,12 @@ function displaySSList($list, $time, $path, $lang_module) {
 	}
 	asort($sort_order_left);
 	arsort($sort_order_right);
-	$hack = ($list[$sort_order_left[count($sort_order_left) - 1]]["calltime"] - $list[$sort_order_left[0]]["calltime"]) + 1;
+	if (count($sort_order_left) > 1) {
+		$hack = ($list[$sort_order_left[count($sort_order_left) - 1]]["calltime"] - $list[$sort_order_left[0]]["calltime"]) + 1;
+	}
+	else {
+		$hack = 60 * 60 * 24 * 7;
+	}
   foreach ($sort_order_left as $key => $value) {
 		$d = $list[$value]["calltime"];
     $c = 15 - round(($d - $now) * 2 / $hack);

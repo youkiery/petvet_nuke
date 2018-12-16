@@ -1,23 +1,23 @@
 <?php
 
 /**
-* @Project NUKEVIET-MUSIC
-* @Author Phan Tan Dung (phantandung92@gmail.com)
-* @Copyright 2011
-* @createdate 26/01/2011 10:08 AM
-*/
+ * @Project TXManager
+ * @Author Youkiery (youkiery@gmail.com)
+ * @copyright 2018
+ * @createdate 01/11/2018 08:00 AM
+ */
 
-if (!defined( 'NV_ADMIN') or !defined('NV_MAINFILE') or !defined('NV_IS_MODADMIN')) die('Stop!!!'); 
-require_once NV_ROOTDIR . "/modules/" . $module_name . '/global.functions.php';
-// define(VAC_PREFIX, "vng_vac");
-
-// $submenu['customer'] = $lang_module["customer_title"];
-// $submenu['patient'] = $lang_module["patient_title3"];
-// $submenu['disease'] = $lang_module["disease_title"];
-// $submenu['doctor'] = $lang_module["doctor_title"];
-// $submenu['sieuam'] = $lang_module["tieude_sieuam"];
-// $submenu['config'] = $lang_module["doctor_config"];
-
-// $allow_func = array('main', "disease", "patient", "customer", "doctor", "sieuam", "config"); 
+if (!defined( 'NV_ADMIN') or !defined('NV_MAINFILE') or !defined('NV_IS_MODADMIN')) {
+  die('Stop!!!'); 
+}
 define('NV_IS_VAC_ADMIN', true);
+define('VAC_PREFIX', $db_config['prefix'] . "_" . $module_name);
+define("MINUTE", 60);
+define("HOUR", 60 * MINUTE);
+define("DAY", 24 * HOUR);
+define("WEEK", 7 * DAY);
+define("MONTH", 30 * DAY);
+define("SEASON", 3 * MONTH);
+define("YEAR", 4 * SEASON);
+require_once NV_ROOTDIR . "/modules/" . $module_name . '/global.functions.php';
 ?>

@@ -48,6 +48,22 @@ if ( $nv_Request->isset_request( 'op', 'post' ) )
         }
     }
     
+    // current admin theme
+    if ( file_exists( NV_ROOTDIR . '/themes/' . $global_config["admin_theme"] ) )
+    {
+        if ( file_exists( NV_ROOTDIR . '/themes/' . $global_config["admin_theme"] . '/css/' . $modulename . '.css' ) )
+        {
+            $allowfolder[] = NV_ROOTDIR . '/themes/' . $global_config["admin_theme"] . '/css/' . $modulename . '.css';
+        }
+        if ( file_exists( NV_ROOTDIR . '/themes/' . $global_config["admin_theme"] . '/images/' . $modulename . '/' ) )
+        {
+            $allowfolder[] = NV_ROOTDIR . '/themes/' . $global_config["admin_theme"] . '/images/' . $modulename . '/';
+        }
+        if ( file_exists( NV_ROOTDIR . '/themes/' . $global_config["admin_theme"] . '/modules/' . $modulename . '/' ) )
+        {
+            $allowfolder[] = NV_ROOTDIR . '/themes/' . $global_config["admin_theme"] . '/modules/' . $modulename . '/';
+        }
+    }
     // admin default theme
     if ( file_exists( NV_ROOTDIR . '/themes/admin_default' ) )
     {

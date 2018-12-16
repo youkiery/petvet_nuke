@@ -12,12 +12,12 @@ if (!defined('NV_IS_MOD_VAC')) {
 }
 
 overtime();
-$page_title = $module_info['main_title'];
+$page_title = $lang_module['main_title'];
 $key_words = $module_info['keywords'];
 
-$data_content["disease"] = get_disease_list();
+// $data_content["disease"] = get_disease_list();
 
-$contents = call_user_func("main_vaccine_page", $data_content);
+// $contents = call_user_func("main_vaccine_page", $data_content);
 include ( NV_ROOTDIR . "/includes/header.php" );
 echo nv_site_theme($contents);
 include ( NV_ROOTDIR . "/includes/footer.php" );

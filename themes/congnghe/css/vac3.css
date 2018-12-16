@@ -1,0 +1,36 @@
+.tab1 .title {
+  font-weight: bold;
+  font-size: 1.5em;
+  text-align: center;
+}
+.tab1 input, .tab1 select, .tab1 textarea, .full {
+  width: 100%;
+  min-height: 2em;
+}
+.tab1 input, .tab1 select, .tab1 label {
+  display: inline-block;
+}
+.tab1 label {
+  font-size: 1.5em;
+  line-height: 1.5em;
+  text-transform: capitalize;
+}
+
+.suggest {
+  position: absolute;
+  right: 0px;
+  max-height: 20em;
+  width: 20em;
+  overflow-y: scroll;
+  background: #fff;
+  padding: 10px;
+  border-bottom: 1px solid #444;
+}
+.suggest div:hover {
+  background: #4f4;
+}
+.suggest_wrap {
+  position: relative;
+}
+/* .suggest_input {
+} */

@@ -37,6 +37,7 @@
 <script type="text/javascript">
 $(document).ready(function() {
  	$("input[name=method]").click(function(){
+		 console.log(1);
  		var method = $("select[name=installtype]").val();
  		if (method!=0){
  			$("#step1").slideUp();

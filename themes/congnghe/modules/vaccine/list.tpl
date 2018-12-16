@@ -47,8 +47,10 @@
     </table>
   </form>
 </div>
-<form class="vac_form" onsubmit="return search()">
-  <input type="text" id="customer_key" class="vac_input">
+<form class="vac_form" method="GET">
+  <input type="hidden" name="nv" value="{nv}">
+  <input type="hidden" name="op" value="{op}">
+  <input type="text" id="customer_key" name="keyword" value="{keyword}" class="vac_input">
   <input type="submit" class="vac_button" value="{lang.search}">
 </form>
 <div id="disease_display">
