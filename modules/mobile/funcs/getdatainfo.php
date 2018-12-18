@@ -7,8 +7,7 @@ if (!defined('NV_IS_MOD_VAC')) {
 $pid = $nv_Request->get_string('pid', 'post/get', '');
 $uid = $nv_Request->get_string('uid', 'post/get', '');
 $page = $nv_Request->get_string('page', 'post/get', '');
-$result["data"]["step"] = 0;
-if ($pid > 0 && $uid > 0 && $page > 0) {
+if ($pid > 0 && $page > 0) {
   $userdata = array();
   $order = 0;
   $rate = 0;
@@ -18,13 +17,10 @@ if ($pid > 0 && $uid > 0 && $page > 0) {
   $row = $db->sql_fetch_assoc($query);
   $puid = $row["user"];
   
-  $result["data"]["step"] = 1;
   if ($puid) {
-    $result["data"]["step"] .= 2;
+    $rateval = 0;
     if (!empty($uid) && $uid > 0) {
-      $result["data"]["step"] .= 3;
       $sql = "SELECT name, phone, address from user where id = $puid";
-      // $result["data"]["sql"] = $sql;
       // die(var_dump($_GET));
       $query = $db->sql_query($sql);
       $userdata = $db->sql_fetch_assoc($query);
@@ -68,8 +64,6 @@ if ($pid > 0 && $uid > 0 && $page > 0) {
     $sql = "SELECT * from rate where user = $puid";
     $query = $db->sql_query($sql);
     $total = $db->sql_numrows($query);
-    // $result["data"]["sql"] = $sql;
-  
     if ($total) {
       $rate = sqlfetchall($db, $query);
       $totalpoint = 0;
@@ -84,7 +78,7 @@ if ($pid > 0 && $uid > 0 && $page > 0) {
     $result["data"]["average"] = $average;
   
     $commentlimit = 10;
-    if ($config["comment"] > 0) {
+    if (!empty($config["comment"]) && $config["comment"] > 0) {
       $commentlimit = $config["comment"];
     }
     $from = 0;
@@ -112,13 +106,18 @@ if ($pid > 0 && $uid > 0 && $page > 0) {
     if ($countid["count"] > $to) {
       $result["data"]["next"] = true;
     }
-    $sql = "insert into notify (type, user, uid, pid, time) values(4, $ouid, $uid, $pid, " . strtotime(date("Y-m-d")) . ")";
+    $sql = "SELECT * from petoder where pid = $pid";
+    $query = $db->sql_query($sql);
+    $petorder = $db->sql_fetch_assoc($query);
+
+    $sql = "insert into notify (type, user, uid, pid, time) values(4, $petorder[id], $uid, $pid, " . strtotime(date("Y-m-d")) . ")";
     $query = $db->sql_query($sql);
     $result["status"] = 1;
     $result["data"]["owner"] = $userdata;
     $result["data"]["comment"] = $comment;
     $result["data"]["order"] = $order;
     $result["data"]["rate"] = $rateval;
+
     $sql = "SELECT a.type as typeid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, a.description, b.name as owner, c.name as species, d.name as kind, b.province from post a inner join user b on a.id = $pid and a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id";
     if ($query = $db->sql_query($sql)) {
       $owner = parseData(array($db->sql_fetch_assoc($query)));
@@ -128,7 +127,6 @@ if ($pid > 0 && $uid > 0 && $page > 0) {
     }
   }
   else {
-    $result["data"]["step"] .= 4;
     $result["data"]["status"] = 2; // deleted
     $result["status"] = 1;
   }

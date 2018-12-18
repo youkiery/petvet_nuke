@@ -47,8 +47,6 @@ if (!(empty($uid) || empty($page))) {
 
     $sql = "UPDATE notify set view = 1 where id in (select id from (select id from notify where user = $uid and view = 0 order by time desc $limit) tpl )";
     $db->sql_query($sql);
-    // $result["data"]["sql"] = $sql;
-
     $result["status"] = 1;
     $result["data"]["notify"] = $data;
   }

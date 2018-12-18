@@ -19,7 +19,6 @@ if ($pid > 0 && $puid > 0 && $page > 0) {
 
   if ($numrows) {
     $sql = "SELECT name, phone, address from user where id = $puid";
-    // $result["data"]["sql"] = $sql;
     // die(var_dump($_GET));
     $query = $db->sql_query($sql);
     $userdata = $db->sql_fetch_assoc($query);
@@ -60,7 +59,6 @@ if ($pid > 0 && $puid > 0 && $page > 0) {
     $sql = "SELECT * from rate where user = $puid";
     $query = $db->sql_query($sql);
     $total = $db->sql_numrows($query);
-    // $result["data"]["sql"] = $sql;
 
     if ($total) {
       $rate = sqlfetchall($db, $query);

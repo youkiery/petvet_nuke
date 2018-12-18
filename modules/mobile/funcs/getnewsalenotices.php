@@ -15,7 +15,6 @@ if ($uid) {
     foreach ($allrow as $key => $row) {
       $new[$row["type"]] = $row["count"];
     }
-    // $result["data"]["sql"] = $sql;
     $result["data"]["new"] = $new;
     $result["status"] = 1;
   }

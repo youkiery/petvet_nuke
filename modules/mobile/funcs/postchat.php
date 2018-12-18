@@ -25,7 +25,7 @@ if (empty($uid)) {
 
 if ($db->sql_query($sql)) {
   $commentlimit = 10;
-  if ($config["comment"] > 0) {
+  if (!empty($config["comment"]) && $config["comment"] > 0) {
     $commentlimit = $config["comment"];
   }
   // $result["data"]["page"] = $page;
@@ -36,7 +36,6 @@ if ($db->sql_query($sql)) {
   $limit = "limit $from, $to";
 
   $sql = "SELECT a.user, a.name, a.phone, a.address, a.time, a.comment from comment a where a.pid = $pid  order by a.time asc $limit";
-  // $result["data"]["sql"] = $sql;
   $query = $db->sql_query($sql);
   $comment = sqlfetchall($db, $query);
 
@@ -57,9 +56,9 @@ if ($db->sql_query($sql)) {
   $row = $db->sql_fetch_assoc($query);
 
   $sql = "insert into notify (type, user, uid, pid, time) values(4, $row[user], $uid, $pid, " . strtotime(date("Y-m-d")) . ")";
-  // $result["data"]["sql"] = $sql;
   $query = $db->sql_query($sql);
 
   $result["status"] = 1;
   $result["data"]["comment"] = $comment;
+  $result["data"]["status"] = 1;
 }

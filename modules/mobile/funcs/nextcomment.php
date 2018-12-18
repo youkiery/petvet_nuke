@@ -17,7 +17,6 @@ if (!(empty($pid) || empty($page))) {
   $limit = "limit $from, $to";
 
   $sql = "SELECT a.user, a.name, a.phone, a.address, a.time, a.comment from comment a where a.pid = $pid  order by a.time asc $limit";
-  // $result["data"]["sql"] = $sql;
   $query = $db->sql_query($sql);
   $comment = sqlfetchall($db, $query);
 

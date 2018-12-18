@@ -25,11 +25,9 @@ if (!(empty($name) || (empty($phone))) && $page > 0) {
     $result["data"]["next"] = false;
   }
   
-  $sql = "SELECT * from rate where user = $puid order by time $limit";
+  $sql = "SELECT a.*, b.name from rate a inner join user b on a.uid = b.id where user = $puid order by time $limit";
   $query = $db->sql_query($sql);
   $total = $db->sql_numrows($query);
-  // $result["data"]["sql"] = $sql;
-
   if ($total) {
     $rate = sqlfetchall($db, $query);
     $totalpoint = 0;
@@ -44,7 +42,6 @@ if (!(empty($name) || (empty($phone))) && $page > 0) {
   $sql = "SELECT * from post a inner join user b on b.name = '$name' and b.phone = '$phone' and a.sold = 1 and a.user = b.id";
   $query = $db->sql_query($sql);
   $totalsale = $db->sql_numrows($query);
-  // $result["data"]["sql"] = $sql;
 
   $crate = array();
   foreach ($rate as $key => $row) {

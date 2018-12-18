@@ -32,7 +32,6 @@ if (!(empty($name) || empty($address) || empty($phone)) && $pid >= 0) {
     }
     if ($prow) {
       $sql = "insert into notify (type, user, uid, pid, time) values(1, $prow[user], $uid, $pid, $time)";
-      // $result["sql"] = $sql;
       $query = $db->sql_query($sql);
       $result["status"] = 1;
     }

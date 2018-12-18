@@ -1,6 +1,6 @@
 <?php
 if (!defined('NV_IS_MOD_VAC')) {
-      die('Stop!!!');
+  die('Stop!!!');
 }
 $action = $nv_Request->get_string('action', 'post/get', '');
 $connectkey = $nv_Request->get_string('ck', 'post/get', '');
@@ -34,7 +34,7 @@ if (!(empty($action) || empty($connectkey))) {
   $config["province"] = $newprovince;
   $sorttype = array("time desc", "time asc", "price asc", "price desc");
   
-  $allow_action = "getlogin, login, signup, savepost, removepost, order, getinfo, filter, salefilter, disorder, postchat, rate, submitorder, getproviderpet, getnotify, getvender, getorderlist, changepass, changeinfo, changeprovince, getdatainfo, nextcomment, getnewnotice, getnewsalenotices, getnewsalenotice";
+  $allow_action = array("getlogin, login, signup, savepost, removepost, order, getinfo, filter, salefilter, disorder, postchat, rate, submitorder, getproviderpet, getnotify, getvender, getorderlist, changepass, changeinfo, changeprovince, getdatainfo, nextcomment, getnewnotice, getnewsalenotices, getnewsalenotice");
   if (in_array($action, $allow_action) >= 0) {
     $path = NV_ROOTDIR . "/modules/" . $module_name . "/funcs/" . $action . ".php";
     include_once($path);

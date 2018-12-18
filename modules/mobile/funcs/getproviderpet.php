@@ -24,8 +24,6 @@ if (!(empty($name) || (empty($phone))) && $page > 0) {
     $result["data"]["next"] = false;
   }
 
-  // $result["data"]["sql"] = $sql;
-
   $sql = "SELECT a.type as typeid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, a.description, b.name as owner, c.name as species, d.name as kind, b.province from post a inner join user b on b.name = '$name' and b.phone = '$phone' and a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id where sold = 0 order by a.time desc $limit";
   $query = $db->sql_query($sql);
   if ($query) {

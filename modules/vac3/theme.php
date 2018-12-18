@@ -10,8 +10,14 @@
 if (!defined('NV_IS_MOD_VAC')) {
   die( 'Stop!!!' );
 }
+define("VAC_PATH", NV_ROOTDIR . "/themes/" . $module_info['theme'] . "/modules/" . $module_file);
 
-// define(VAC_PATH, NV_ROOTDIR . "/themes/" . $module_info['theme'] . "/modules/" . $module_file);
+function main_page($data_content, $html_page) {
+  $xtpl = new XTemplate("main.tpl", VAC_PATH);
+  $xtpl->parse("main");
+  return $xtpl->text();
+}
+
 // $hex = array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f");
 
 // function main_vaccine_page($data_content, $html_page = "") {

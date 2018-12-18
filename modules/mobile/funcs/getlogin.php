@@ -14,8 +14,6 @@ $uid = $nv_Request->get_string('uid', 'post/get', '');
         }
         if ($uid) {
           $sql = "SELECT count(id) as count from notify where user = $uid and view = 0 order by time desc";
-          // $result["sql"] = $sql;
-  
           $query = $db->sql_query($sql);
           $row = $db->sql_fetch_assoc($query);
           $count = $row["count"];

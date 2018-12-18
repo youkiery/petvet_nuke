@@ -10,6 +10,11 @@
 if (!defined('NV_MAINFILE')) {
   die('Stop!!!');
 }
+
+// $my_head = "<script src='/js/bootstrap.min.js'></script>";
+// $my_head .= "<link rel='stylesheet' href='/themes/" . $global_config["site_theme"] . "/site_code/includes/tpl_script/bootstrap.min.css'>";
+
+
 if (!empty($global_config['module_theme'])) {
   define('THEME', $global_config['module_theme']);
 } else if (!empty($module_info['theme'])) {

@@ -19,7 +19,7 @@ if (!(empty($username) || empty($password) || empty($name) || empty($phone)) && 
     $id = $db->sql_query_insert_id($sql);
     if ($id) {
       $result["data"]["status"] = 2;
-      $result["data"]["info"] = array("uid" => $id, "name" => $name, "phone" => $phone, "address" => $address);
+      $result["data"]["info"] = array("uid" => $id, "name" => $name, "phone" => $phone, "address" => $address, "province" => $province);
     }
   } else {
     $result["data"]["status"] = 1;
