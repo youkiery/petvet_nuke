@@ -68,6 +68,7 @@ function filterbase() {
     }
 
     $sql = "SELECT a.type as typeid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, a.description, b.name as owner, c.name as species, d.name as kind, b.province from post a inner join user b on a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id $where $order limit $from, $to";
+    $result["sql"] = $sql;
     $query = $db->sql_query($sql);
 
     if ($query) {
@@ -79,6 +80,7 @@ function filterbase() {
 
 function filterorder() {
   global $result, $db, $sorttype, $nv_Request;
+  $sold = $nv_Request->get_int('sold', 'post/get', 0);
   $uid = $nv_Request->get_string('uid', 'post/get', '');
   $sort = $nv_Request->get_string('sort', 'post/get', '');
   $type = $nv_Request->get_string('type', 'post/get', '');
@@ -93,25 +95,37 @@ function filterorder() {
       $where = " (a.name like '%$keyword%' or a.description like '%$keyword%' or b.name like '%$keyword%' or b.phone like '%$keyword%')";
     }
 
+    $sorttype = array("e.time desc", "e.time asc", "price asc", "price desc");
     $order = "order by " . $sorttype[$sort];
-    $main = "SELECT a.type as typeid, a.kind as kindid, a.species as speciesid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, b.name as owner, a.description, c.name as species, d.name as kind, b.province from post a inner join user b on a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id";
-    $main2 = "SELECT e.id as oid, a.type as typeid, a.kind as kindid, a.species as speciesid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, b.name as owner, a.description, c.name as species, d.name as kind, b.province from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id";
-    $count = "SELECT count(a.id) as count from post a inner join user b on a.user = b.id";
-    $count2 = "SELECT count(a.id) as count from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id";
+    // $main = "SELECT a.type as typeid, a.kind as kindid, a.species as speciesid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, b.name as owner, a.description, c.name as species, d.name as kind, b.province from post a inner join user b on a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id";
+    // $main2 = "SELECT e.id as oid, a.type as typeid, a.kind as kindid, a.species as speciesid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, b.name as owner, a.description, c.name as species, d.name as kind, b.province from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id";
+    // $count = "SELECT count(a.id) as count from post a inner join user b on a.user = b.id";
+    // $count2 = "SELECT count(a.id) as count from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id";
 
     $typeid = 0;
     $allrow = array();
+    if ($sold) {
+      $sold_s = "and status > 0";
+    }
+    else {
+      $sold_s = "and status = 0";
+    }
     switch ($type) {
       case '1':
         // buy
-        $sql = "select * from petorder e inner join user b on e.user = b.id $where limit " . ($page * 12);
-        $sql2 = "select count(e.id) as count from petorder e inner join user b on e.user = b.id $where";
+        $sql = "select e.* from petorder e inner join user b on e.user = b.id $where and user = $uid $sold_s limit " . ($page * 12);
+        $sql2 = "select count(e.id) as count from petorder e inner join user b on e.user = b.id $where and user = $uid $sold_s $where";
         $query = $db->sql_query($sql);
         while ($row = $db->sql_fetch_assoc($query)) {
           $sql = "select * from post where id = " . $row["pid"];
           $query2 = $db->sql_query($sql);
           $crow = $db->sql_fetch_assoc($query2);
-          if ($crow) {
+          $sql = "select * from user where id = " . $crow["user"];
+          $query2 = $db->sql_query($sql);
+          $urow = $db->sql_fetch_assoc($query2);
+          if ($urow) {
+            $row["owner"] = $urow["name"];
+            $row["province"] = $urow["province"];
             $row["image"] = $crow["image"];
             $row["ageid"] = $crow["age"];
             $row["price"] = $crow["price"];
@@ -130,13 +144,18 @@ function filterorder() {
         break;
       case '2':
         // order
-        $sql = "select * from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id $where and type > 0 $order limit " . ($page * 12);
-        $sql2 = "select count(e.id) as count from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id $where and type > 0";
+        $sql = "select * from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id $where and a.user = $uid and type > 0 and a.sold = 0 group by a.id $order, a.id limit " . ($page * 12);
+        // die($sql);
+        $sql2 = "select count(e.id) as count from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id $where and a.user = $uid and type > 0 and status = 0 group by a.id order by a.id";
         $query = $db->sql_query($sql);
         while ($row = $db->sql_fetch_assoc($query)) {
           $sql = "select * from post where id = " . $row["pid"];
           $query2 = $db->sql_query($sql);
           $crow = $db->sql_fetch_assoc($query2);
+          $sql = "select count(e.id) as count from petorder e where e.pid = $row[pid]";
+          $query2 = $db->sql_query($sql);
+          $r_count = $db->sql_fetch_assoc($query2);
+          $row["count"] = $r_count["count"];
           $row["image"] = $crow["image"];
           $row["ageid"] = $crow["age"];
           $row["price"] = $crow["price"];
@@ -149,8 +168,8 @@ function filterorder() {
         break;
       case '3':
         // mating
-        $sql = "select * from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id $where and type = 0 $order limit " . ($page * 12);
-        $sql2 = "select count(e.id) as count from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id $where and type = 0";
+        $sql = "select * from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id $where and a.user = $uid and type = 0 $order limit " . ($page * 12);
+        $sql2 = "select count(e.id) as count from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id $where and a.user = $uid and type = 0";
         $query = $db->sql_query($sql);
         while ($row = $db->sql_fetch_assoc($query)) {
           $sql = "select * from post where id = " . $row["pid"];
@@ -160,6 +179,10 @@ function filterorder() {
           // $query2 = $db->sql_query($sql);
           // $result = $db->sql_fetch_assoc($query2);
           // $row["count"] = $result["count"];
+          $sql = "select count(e.id) as count from petorder e where e.pid = $row[pid]";
+          $query2 = $db->sql_query($sql);
+          $r_count = $db->sql_fetch_assoc($query2);
+          $row["count"] = $r_count["count"];
           $row["image"] = $crow["image"];
           $row["ageid"] = $crow["age"];
           $row["price"] = $crow["price"];
@@ -172,8 +195,16 @@ function filterorder() {
         break;
       default:
         //sell
-        $sql = "select b.*, a.* from post a inner join user b on a.user = b.id $where $order limit " . ($page * 12 - 1);
-        $sql2 = "select count(a.id) from post a inner join user on a.user = b.id $where $order";
+        if ($sold) {
+          $sold_s = "";
+        }
+        else {
+          $sold_s = "and sold = 0";
+        }
+        $sorttype = array("a.time desc", "a.time asc", "price asc", "price desc");
+        $order = "order by " . $sorttype[$sort];
+        $sql = "select b.*, a.* from post a inner join user b on a.user = b.id $where $sold_s and a.user = $uid $order limit " . ($page * 12 - 1);
+        $sql2 = "select count(a.id) from post a inner join user b on a.user = b.id $where $sold_s and a.user = $uid $order";
         $query = $db->sql_query($sql);
         while ($row = $db->sql_fetch_assoc($query)) {
           $sql = "select count(e.id) as count from petorder e where e.pid = $row[id]";
@@ -189,15 +220,14 @@ function filterorder() {
 
     $alldata = parseData($allrow);
     $result["data"]["userpet"] = $alldata;
-    $result["data"]["next"] = false;
-    if ($count > $total) {
-      $result["data"]["next"] = true;
-    }
-
     $count_result = $db->sql_query($sql2);
     $count = $count_result["count"];
     if (!$count > 0) {
       $count = 0;
+    }
+    $result["data"]["next"] = false;
+    if ($count > $total) {
+      $result["data"]["next"] = true;
     }
 
     if ($query) {
@@ -256,6 +286,44 @@ function filterorder() {
     //   }
     // }
   }
+}
+
+function validphone($phone) {
+  global $db;
+  $length = strlen($phone);
+  if (!($length < 4 || $length > 12)) {
+    $sql = "select * from user where phone = '$phone'";
+    $query = $db->sql_query($sql);
+    if ($query) {
+      return 1;
+    }
+  }
+  return 0;
+}
+
+function validuser($username) {
+  global $db;
+  if (!empty($username)) {
+    $sql = "select * from user where username = '$username'";
+    $query = $db->sql_query($sql);
+    if ($query) {
+      return 1;
+    }
+  }
+  return 0;
+}
+
+function validuserid($uid) {
+  global $db;
+  if (!empty($uid)) {
+    $sql = "select * from user where id = $uid";
+    $query = $db->sql_query($sql);
+    $row = $db->sql_fetch_assoc($query);
+    if ($row) {
+      return $row;
+    }
+  }
+  return 0;
 }
 
 function parseData($petlist) {

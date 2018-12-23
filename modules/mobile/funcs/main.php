@@ -37,10 +37,8 @@ if (!(empty($action) || empty($connectkey))) {
   $sorttype = array("time desc", "time asc", "price asc", "price desc");
   
   $allow_action = array("getlogin, login, signup, savepost, removepost, order, getinfo, filter, salefilter, disorder, postchat, rate, submitorder, getproviderpet, getnotify, getvender, getorderlist, changepass, changeinfo, changeprovince, getdatainfo, nextcomment, getnewnotice, getnewsalenotices, getnewsalenotice");
-  if (in_array($action, $allow_action) >= 0) {
     $path = NV_ROOTDIR . "/modules/" . $module_name . "/funcs/" . $action . ".php";
     include_once($path);
-  }
 }
 
 // var_dump($result);

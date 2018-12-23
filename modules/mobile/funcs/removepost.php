@@ -17,8 +17,8 @@ if ($pid > 0 && $uid > 0) {
 
   if ($db->sql_query($sql)) {
     if (!empty($allrow)) {
-      foreach ($allrow as $key => $row) {
-        $sql = "insert into notify (type, user, uid, pid, time) values(5, $row[uid], $row[user], $pid, " . strtotime(date("Y-m-d")) . ")";
+      foreach ($allrow as $key => $row2) {
+        $sql = "insert into notify (type, user, uid, pid, time) values(5, $row[user], $row[user], $pid, " . strtotime(date("Y-m-d")) . ")";
         $query = $db->sql_query($sql);
       }
     }

@@ -19,9 +19,14 @@ $images = $nv_Request->get_array('image', 'post/get', '');
 if (!(empty($name)) && $uid >= 0 && $age >= 0 && $price >= 0 && $species >= 0 && $kind >= 0 && $vaccine >= 0 && $typeid >= 0) {
   $id = $pid;
   $result["data"]["status"] = 0;
+  if ($species == "undefined") {
+    $species = 0;
+  }
+  if ($kind == "undefined") {
+    $kind = 0;
+  }
   if (!empty($pid) && $pid !== "undefined") {
     $sql = "UPDATE post set name = '$name', age = $age, description = '$description', price = '$price', vaccine = $vaccine, species = $species, kind = $kind, type = $typeid where id = $pid";
-    // echo $sql;
     if (!$db->sql_query($sql)) {
       $pid = 0;
     }
@@ -37,7 +42,7 @@ if (!(empty($name)) && $uid >= 0 && $age >= 0 && $price >= 0 && $species >= 0 &&
     if ($images) {
       $length = count($images);
     }
-    if ($length && $images[0]) {
+    if ($length && !empty($images[0])) {
       $image = array();
       for ($i = 0; $i < $length; $i ++) {
         if ($images[$i]) {
@@ -54,8 +59,10 @@ if (!(empty($name)) && $uid >= 0 && $age >= 0 && $price >= 0 && $species >= 0 &&
             }
           }
           else {
-            $images[$i] = substr($images[$i], strripos($images[$i] , "/upload"));
-            $image[] = $images[$i];
+            if ($images[$i] !== "../assets/imgs/noimage.png") {
+              $images[$i] = substr($images[$i], strripos($images[$i] , "/upload"));
+              $image[] = $images[$i];
+            }
           }
         }
       }
@@ -70,6 +77,8 @@ if (!(empty($name)) && $uid >= 0 && $age >= 0 && $price >= 0 && $species >= 0 &&
       }
     }
     else {
+      $sql = "UPDATE post set image = '' where id = $pid";
+      $db->sql_query($sql);
       $result["data"]["status"] = 1;
     }
     // else if ($_FILES && $_FILES['file']['name']) {

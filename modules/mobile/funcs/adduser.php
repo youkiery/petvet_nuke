@@ -8,6 +8,7 @@ define('USER_PAGE_LIMIT', 12);
 define('INITIAL_PAGE', 1);
 define('NV_OK', 1);
 define('NV_EXISTED', 2);
+define('NV_PHONEHAVE', 3);
 
 $username = $nv_Request->get_string('username', 'post/get', '');
 $password = $nv_Request->get_string('password', 'post/get', '');
@@ -27,7 +28,13 @@ if (!(empty($username) || empty($name) || empty($phone))) {
   $sql = "select * from user where id = " . $uid;
   $query = $db->sql_query($sql);
   $uorow = $db->sql_fetch_assoc($query);
-  if (!$urow && ($role < $uorow["role"] || $uorow["role"] == 3)) {
+  if (!validuser($username)) {
+    $result["data"]["status"] = NV_EXISTED;
+  }
+  else if (!validphone($phone)) {
+    $result["data"]["status"] = NV_PHONEHAVE;
+  }
+  else if (!$urow && ($role < $uorow["role"] || $uorow["role"] == 3)) {
     $sql = "INSERT into user (username, password, name, phone, address, province, area, role, roles) values ('$username', '$password', '$name', '$phone', '$address', 0, 0, $role, '$roles')";
     $id = $db->sql_query_insert_id($sql);
     if ($id) {
