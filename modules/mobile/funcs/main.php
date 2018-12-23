@@ -8,7 +8,9 @@ $connectkey = $nv_Request->get_string('ck', 'post/get', '');
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 
-$type = array("Cần bán", "Cần mua", "Muốn tặng", "Tìm thú lạc");
+$type = array("Phối giống", "Cần bán", "Cần mua", "Muốn tặng", "Tìm thú lạc");
+$role_type = array("Thành viên", "Mod", "Smod", "Admin");
+$roles_type = array("a" => "Quản trị chung", "k" => "Thêm giống", "u" => "Sửa người dùng");
 $result = array("status" => 0, "data" => array());
 if (!(empty($action) || empty($connectkey))) {
   $result["data"]["key"] = $connectkey;

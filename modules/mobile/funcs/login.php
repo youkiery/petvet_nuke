@@ -19,7 +19,7 @@ if (!(empty($username) || empty($password))) {
     if ($db->sql_numrows($query)) {
       $row = $db->sql_fetch_assoc($query);
       $result["data"]["status"] = 3;
-      $result["data"]["logininfo"] = array("uid" => $row["id"], "name" => $row["name"], "phone" => $row["phone"], "address" => $row["address"], "province" => $row["province"]);
+      $result["data"]["logininfo"] = $row;
 
       $sql = "SELECT count(id) as count from notify where user = $row[id] and view = 0 order by time desc";
       $query = $db->sql_query($sql);

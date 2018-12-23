@@ -11,7 +11,7 @@ $phone = $nv_Request->get_string('phone', 'post/get', '');
 $address = $nv_Request->get_string('address', 'post/get', '');
 $province = $nv_Request->get_string('province', 'post/get', '');
 if (!(empty($username) || empty($password) || empty($name) || empty($phone)) && $province >= 0) {
-  $sql = "SELECT * from user where username = '$username'";
+  $sql = "SELECT * from user where username = '$username' or phone = '" . $phone . "'";
   $query = $db->sql_query($sql);
 
   if (!$db->sql_numrows($query)) {
@@ -19,7 +19,7 @@ if (!(empty($username) || empty($password) || empty($name) || empty($phone)) && 
     $id = $db->sql_query_insert_id($sql);
     if ($id) {
       $result["data"]["status"] = 2;
-      $result["data"]["info"] = array("uid" => $id, "name" => $name, "phone" => $phone, "address" => $address, "province" => $province);
+      $result["data"]["info"] = $row;
     }
   } else {
     $result["data"]["status"] = 1;

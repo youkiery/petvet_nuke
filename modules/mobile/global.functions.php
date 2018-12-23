@@ -26,8 +26,20 @@ function filterbase() {
     if ($province > 0) {
       $whereprovince = "and b.province = $province";
     }
+    $l = strlen($type);
+    $type = explode(",", $type);
+    $check_type = array();
+    foreach ($type as $key => $value) {
+      if ($value !== "false") {
+        $check_type[] = $key;
+      }
+    }
+    $type_set = "";
+    if (count($check_type)) {
+      $type_set = "and a.type in (" . implode(",", $check_type) . ")";
+    }
 
-    $where = " where (a.name like '%$keyword%' or a.description like '%$keyword%' or b.name like '%$keyword%' or b.phone like '%$keyword%') $whereprovince and a.sold = 0 and a.type = $type";
+    $where = "where (a.name like '%$keyword%' or a.description like '%$keyword%' or b.name like '%$keyword%' or b.phone like '%$keyword%') $whereprovince and a.sold = 0 $type_set";
     $order = " order by " . $sorttype[$sort];
 
     if ($price[1] >= 100000) {
@@ -56,7 +68,6 @@ function filterbase() {
     }
 
     $sql = "SELECT a.type as typeid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, a.description, b.name as owner, c.name as species, d.name as kind, b.province from post a inner join user b on a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id $where $order limit $from, $to";
-    // die($sql);
     $query = $db->sql_query($sql);
 
     if ($query) {
@@ -74,109 +85,176 @@ function filterorder() {
   $keyword = $nv_Request->get_string('keyword', 'post/get', '');
   $page = $nv_Request->get_string('page', 'post/get', '');
   // echo 1;
-  if ($uid > 0 && $sort >= 0 && $type >= 0 && $page) {
-    // echo 2;
-    $from = 0;
-    $to = (12 * $page);
 
-    $where = " where (a.name like '%$keyword%' or a.description like '%$keyword%' or b.name like '%$keyword%' or b.phone like '%$keyword%')";
-    $order = " order by " . $sorttype[$sort];
+  if ($uid > 0 && $sort >= 0 && $type >= 0 && $page) {
+    $where = "";
+    $total = $page * 12;
+    if (!empty($keyword)) {
+      $where = " (a.name like '%$keyword%' or a.description like '%$keyword%' or b.name like '%$keyword%' or b.phone like '%$keyword%')";
+    }
+
+    $order = "order by " . $sorttype[$sort];
     $main = "SELECT a.type as typeid, a.kind as kindid, a.species as speciesid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, b.name as owner, a.description, c.name as species, d.name as kind, b.province from post a inner join user b on a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id";
     $main2 = "SELECT e.id as oid, a.type as typeid, a.kind as kindid, a.species as speciesid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, b.name as owner, a.description, c.name as species, d.name as kind, b.province from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id";
     $count = "SELECT count(a.id) as count from post a inner join user b on a.user = b.id";
     $count2 = "SELECT count(a.id) as count from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id";
 
-
     $typeid = 0;
+    $allrow = array();
     switch ($type) {
       case '1':
         // buy
-        $sql = "$main2 $where and e.user = $uid and a.sold = 0 $order limit $from, $to";
-        $sql2 = "$count2 $where and e.user = $uid and a.sold = 0 $order";
+        $sql = "select * from petorder e inner join user b on e.user = b.id $where limit " . ($page * 12);
+        $sql2 = "select count(e.id) as count from petorder e inner join user b on e.user = b.id $where";
+        $query = $db->sql_query($sql);
+        while ($row = $db->sql_fetch_assoc($query)) {
+          $sql = "select * from post where id = " . $row["pid"];
+          $query2 = $db->sql_query($sql);
+          $crow = $db->sql_fetch_assoc($query2);
+          if ($crow) {
+            $row["image"] = $crow["image"];
+            $row["ageid"] = $crow["age"];
+            $row["price"] = $crow["price"];
+            $row["time"] = $crow["time"];
+            $row["typeid"] = $crow["type"];
+            $row["kind"] = $crow["kind"];
+            $row["species"] = $crow["species"];
+            $allrow[] = $row;
+          }
+          // $sql = "select count(e.id) as count from petorder e inner join user b on e.user = a.id where e.pid = $row[id]";
+          // $query2 = $db->sql_query($sql);
+          // $result = $db->sql_fetch_assoc($query2);
+          // $row["count"] = $result["count"];
+          // var_dump();
+        }
         break;
       case '2':
         // order
-        // $sql = "SELECT * from petorder e inner join post a  e.user = $uid";
-        $sql = "$main2 $where and a.user = $uid and a.sold = 0 group by e.pid $order, e.pid limit $from, $to";
-        $sql2 = "$count2 $where and a.user = $uid and a.sold = 0 group by e.pid $order, e.pid";
-        $typeid = 1;
+        $sql = "select * from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id $where and type > 0 $order limit " . ($page * 12);
+        $sql2 = "select count(e.id) as count from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id $where and type > 0";
+        $query = $db->sql_query($sql);
+        while ($row = $db->sql_fetch_assoc($query)) {
+          $sql = "select * from post where id = " . $row["pid"];
+          $query2 = $db->sql_query($sql);
+          $crow = $db->sql_fetch_assoc($query2);
+          $row["image"] = $crow["image"];
+          $row["ageid"] = $crow["age"];
+          $row["price"] = $crow["price"];
+          $row["time"] = $crow["time"];
+          $row["typeid"] = $crow["type"];
+          $row["kind"] = $crow["kind"];
+          $row["species"] = $crow["species"];
+          $allrow[] = $row;
+        }
         break;
       case '3':
-        // sold
-        $sql = "$main2 $where and a.user = $uid and a.sold = 1 and e.status = 1 $order limit $from, $to";
-        $sql2 = "$count2 $where and a.user = $uid and a.sold = 1 and e.status = 1 $order";
-        $typeid = 6;
-        break;
-      case '4':
-        // bought
-        $sql = "$main2 $where and e.user = $uid and a.sold = 1 and e.status = 1 $order limit $from, $to";
-        $sql2 = "$count2 $where and e.user = $uid and a.sold = 1 and e.status = 1 $order";
-        $typeid = 7;
+        // mating
+        $sql = "select * from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id $where and type = 0 $order limit " . ($page * 12);
+        $sql2 = "select count(e.id) as count from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id $where and type = 0";
+        $query = $db->sql_query($sql);
+        while ($row = $db->sql_fetch_assoc($query)) {
+          $sql = "select * from post where id = " . $row["pid"];
+          $query2 = $db->sql_query($sql);
+          $crow = $db->sql_fetch_assoc($query2);
+          // $sql = "select count(e.id) as count from petorder e inner join user b on e.user = a.id where e.pid = $row[id]";
+          // $query2 = $db->sql_query($sql);
+          // $result = $db->sql_fetch_assoc($query2);
+          // $row["count"] = $result["count"];
+          $row["image"] = $crow["image"];
+          $row["ageid"] = $crow["age"];
+          $row["price"] = $crow["price"];
+          $row["time"] = $crow["time"];
+          $row["typeid"] = $crow["type"];
+          $row["kind"] = $crow["kind"];
+          $row["species"] = $crow["species"];
+          $allrow[] = $row;
+        }
         break;
       default:
         //sell
-        $sql = "$main $where and a.user = $uid and a.sold = 0 $order limit $from, " . ($to - 1);
-        $sql2 = "$count $where and a.user = $uid and a.sold = 0 $order";
+        $sql = "select b.*, a.* from post a inner join user b on a.user = b.id $where $order limit " . ($page * 12 - 1);
+        $sql2 = "select count(a.id) from post a inner join user on a.user = b.id $where $order";
+        $query = $db->sql_query($sql);
+        while ($row = $db->sql_fetch_assoc($query)) {
+          $sql = "select count(e.id) as count from petorder e where e.pid = $row[id]";
+          $query2 = $db->sql_query($sql);
+          $r_count = $db->sql_fetch_assoc($query2);
+          $row["count"] = $r_count["count"];
+          $row["ageid"] = $row["age"];
+          $row["typeid"] = $row["type"];
+          $allrow[] = $row;
+        }
+        $total --;
     }
 
-    $query = $db->sql_query($sql2);
-    $countid = $db->sql_fetch_assoc($query);
+    $alldata = parseData($allrow);
+    $result["data"]["userpet"] = $alldata;
     $result["data"]["next"] = false;
-    // $result["count"] = $countid["count"];
-    // $result["to"] = $to;
-    if ($countid["count"] > $to) {
+    if ($count > $total) {
       $result["data"]["next"] = true;
     }
 
-    // echo $type;
-    $query = $db->sql_query($sql);
+    $count_result = $db->sql_query($sql2);
+    $count = $count_result["count"];
+    if (!$count > 0) {
+      $count = 0;
+    }
 
     if ($query) {
-      if (!$result["status"]) {
-        $result["status"] = 1;
-      }
-      $userpet = sqlfetchall($db, $query);
-      foreach ($userpet as $key => $row) {
-        $userpet[$key]["realtime"] = date("d/m/Y", $row["time"]);
-        $sql = "select * from petorder where pid = $row[id]";
-        $query = $db->sql_query($sql);
-        $petorder = sqlfetchall($db, $query);
-        $userpet[$key]["count"] = count($petorder);
-        $sql = "select b.* from petorder a inner join user b on a.user = b.id where a.pid = $row[id] and a.status = 1";
-        $userpet[$key]["soldsql"] = $sql;
-        $query = $db->sql_query($sql);
-        $bought = $db->sql_fetch_assoc($query);
-        $sql = "select b.* from petorder a inner join post c on a.pid = c.id inner join user b on c.user = b.id where a.pid = $row[id] and a.status = 1";
-        $userpet[$key]["boughtsql"] = $sql;
-        $query = $db->sql_query($sql);
-        $sold = $db->sql_fetch_assoc($query);
-        if (!empty($sold)) {
-          $userpet[$key]["sold"] = $sold;
-        }
-        if (!empty($bought)) {
-          $userpet[$key]["bought"] = $bought;
-        }
-      }
-
-      $result["data"]["userpet"] = parseData($userpet);
-      if ($typeid) {
-
-        $sql = "select count(type) as count from notify where user = $uid and view = 0 and type = $typeid group by type order by type";
-        $query = $db->sql_query($sql);
-        $row = $db->sql_fetch_assoc($query);
-        if ($row) {
-          $result["data"]["new"] = $row["count"];
-        } else {
-          $result["data"]["new"] = 0;
-        }
-        $result["data"]["newtype"] = $typeid;
-
-        $sql = "update notify set view = 1 where type = $typeid and user = $uid and view = 0";
-        $query = $db->sql_query($sql);
-        $row = $db->sql_fetch_assoc($query);
-        $result["status"] = 1;
-      }
+      $result["status"] = 1;
     }
+
+    // $result["count"] = $countid["count"];
+    // $result["to"] = $to;
+
+    // $query = $db->sql_query($sql);
+
+    // if ($query) {
+    //   if (!$result["status"]) {
+    //     $result["status"] = 1;
+    //   }
+    //   $userpet = sqlfetchall($db, $query);
+    //   foreach ($userpet as $key => $row) {
+    //     $userpet[$key]["realtime"] = date("d/m/Y", $row["time"]);
+    //     $sql = "select * from petorder pid = $row[id]";
+    //     $query = $db->sql_query($sql);
+    //     $petorder = sqlfetchall($db, $query);
+    //     $userpet[$key]["count"] = count($petorder);
+    //     $sql = "select b.* from petorder a inner join user b on a.user = b.id a.pid = $row[id] and a.status = 1";
+    //     $userpet[$key]["soldsql"] = $sql;
+    //     $query = $db->sql_query($sql);
+    //     $bought = $db->sql_fetch_assoc($query);
+    //     $sql = "select b.* from petorder a inner join post c on a.pid = c.id inner join user b on c.user = b.id a.pid = $row[id] and a.status = 1";
+    //     $userpet[$key]["boughtsql"] = $sql;
+    //     $query = $db->sql_query($sql);
+    //     $sold = $db->sql_fetch_assoc($query);
+    //     if (!empty($sold)) {
+    //       $userpet[$key]["sold"] = $sold;
+    //     }
+    //     if (!empty($bought)) {
+    //       $userpet[$key]["bought"] = $bought;
+    //     }
+    //   }
+
+    //   $result["data"]["userpet"] = parseData($userpet);
+    //   if ($typeid) {
+
+    //     $sql = "select count(type) as count from notify user = $uid and view = 0 and type = $typeid group by type order by type";
+    //     $query = $db->sql_query($sql);
+    //     $row = $db->sql_fetch_assoc($query);
+    //     if ($row) {
+    //       $result["data"]["new"] = $row["count"];
+    //     } else {
+    //       $result["data"]["new"] = 0;
+    //     }
+    //     $result["data"]["newtype"] = $typeid;
+
+    //     $sql = "update notify set view = 1 type = $typeid and user = $uid and view = 0";
+    //     $query = $db->sql_query($sql);
+    //     $row = $db->sql_fetch_assoc($query);
+    //     $result["status"] = 1;
+    //   }
+    // }
   }
 }
 
@@ -200,8 +278,6 @@ function parseData($petlist) {
       }
     }
     $petlist[$key]["image"] = $images;
-    // var_dump($config["age"][$value["age"]]);
-    // die();
     $petlist[$key]["age"] = $config["age"][$value["ageid"]];
     $petlist[$key]["province"] = $config["province"][$value["province"]];
     $petlist[$key]["pricevalue"] = $value["price"];
@@ -232,25 +308,6 @@ function parseData($petlist) {
     }
   }
   return $petlist;
-}
-
-function checkParam($param, $post = false) {
-  $check = true;
-  if ($post) {
-    foreach ($param as $value) {
-      if (!$check && (!isset($_POST[$value]) && $_POST[$value] !== "")) {
-        $check = false;
-      }
-    }
-  } else {
-    foreach ($param as $value) {
-      if (!$check || (!isset($_GET[$value]) || $_GET[$value] == "")) {
-        $check = false;
-      }
-    }
-  }
-  // var_dump($check);
-  return $check;
 }
 
 function sqlfetchall($db, $query) {

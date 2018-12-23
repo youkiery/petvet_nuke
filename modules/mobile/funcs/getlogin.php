@@ -10,7 +10,7 @@ $uid = $nv_Request->get_string('uid', 'post/get', '');
 
         if ($db->sql_numrows($query)) {
           $row = $db->sql_fetch_assoc($query);
-          $result["data"]["logininfo"] = array("uid" => $row["id"], "name" => $row["name"], "phone" => $row["phone"], "address" => $row["address"], "province" => $row["province"]);
+          $result["data"]["logininfo"] = $row;
         }
         if ($uid) {
           $sql = "SELECT count(id) as count from notify where user = $uid and view = 0 order by time desc";

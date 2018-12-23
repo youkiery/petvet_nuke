@@ -109,6 +109,11 @@
   <input type="hidden" name="nv" value="{nv}">
   <input type="hidden" name="op" value="{op}">
   <input type="text" name="key" value="{keyword}" class="vac_input">
+  <select name="limit">
+    <!-- BEGIN: limit -->
+    <option value="{limitvalue}" {lcheck}>{limitname}</option>
+    <!-- END: limit -->
+  </select>
   <input type="submit" class="vac_button" value="{lang.search}">
 </form>
 <div id="disease_display">

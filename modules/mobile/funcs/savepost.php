@@ -17,6 +17,7 @@ $description = $nv_Request->get_string('description', 'post/get', '');
 $files = $nv_Request->get_string('file', 'post/get', '');
 $images = $nv_Request->get_array('image', 'post/get', '');
 if (!(empty($name)) && $uid >= 0 && $age >= 0 && $price >= 0 && $species >= 0 && $kind >= 0 && $vaccine >= 0 && $typeid >= 0) {
+  $id = $pid;
   $result["data"]["status"] = 0;
   if (!empty($pid) && $pid !== "undefined") {
     $sql = "UPDATE post set name = '$name', age = $age, description = '$description', price = '$price', vaccine = $vaccine, species = $species, kind = $kind, type = $typeid where id = $pid";
@@ -29,28 +30,33 @@ if (!(empty($name)) && $uid >= 0 && $age >= 0 && $price >= 0 && $species >= 0 &&
     $sql = "INSERT into post(user, name, age, description, species, kind, price, vaccine, type, sold, time) values($uid, '$name', $age, '$description', $species, $kind, $price, $vaccine, $typeid, 0, $time)";
     $pid = $db->sql_query_insert_id($sql);
   }
-    $result["data"]["pid"] = $pid;
   if ($pid) {
     $target_path = "uploads/mobile/";
     $index = 1;
     $length = 0;
-    $result["data"]["img"] = $images;
     if ($images) {
       $length = count($images);
     }
-    $result["data"]["length"] = $length;
-    if ($length) {
+    if ($length && $images[0]) {
       $image = array();
       for ($i = 0; $i < $length; $i ++) {
-        $save_path = $target_path . $pid . "_" . $i . ".jpg";
-        $ifp = fopen( $save_path, 'wb' ); 
-        $data = explode( ',', $images[$i] );
-        fwrite( $ifp, base64_decode( $data[ 1 ] ) );
-        fclose( $ifp ); 
-        // $data = base64_decode($images[$i]);
-        // if (move_uploaded_file($data, $save_path)) {
-        if ($save_path) {
-          $image[] = $save_path;
+        if ($images[$i]) {
+          if (strlen($images[$i]) > 100) {
+            $save_path = $target_path . $pid . "_" . $i . ".jpg";
+            $ifp = fopen( $save_path, 'wb' ); 
+            $data = explode( ',', $images[$i] );
+            fwrite( $ifp, base64_decode( $data[ 1 ] ) );
+            fclose( $ifp ); 
+            // $data = base64_decode($images[$i]);
+            // if (move_uploaded_file($data, $save_path)) {
+            if ($save_path) {
+              $image[] = $save_path;
+            }
+          }
+          else {
+            $images[$i] = substr($images[$i], strripos($images[$i] , "/upload"));
+            $image[] = $images[$i];
+          }
         }
       }
       if (count($image)) {
@@ -62,6 +68,9 @@ if (!(empty($name)) && $uid >= 0 && $age >= 0 && $price >= 0 && $species >= 0 &&
           $result["data"]["status"] = 3;
         }
       }
+    }
+    else {
+      $result["data"]["status"] = 1;
     }
     // else if ($_FILES && $_FILES['file']['name']) {
     //     $file = $_FILES['file']['name'][0];
@@ -87,7 +96,7 @@ if (!(empty($name)) && $uid >= 0 && $age >= 0 && $price >= 0 && $species >= 0 &&
   }
   if ($result["data"]["status"] === 1) {
     $result["data"]["id"] = $pid;
-    if ($pid && $pid !== "undefined") {
+    if ($id && $id !== "undefined") {
       $result["data"]["status"] = 2;
     }
     filterorder();

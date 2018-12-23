@@ -74,6 +74,13 @@
 				</td>
 			</tr>
 		<!-- END: list -->
+			<tr>
+				<td colspan="9">
+					<p style="float: right;">
+						{nav}
+					</p>
+				</td>
+			</tr>
   	</tbody>
 	</table>
 <br>

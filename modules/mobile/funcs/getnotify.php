@@ -13,21 +13,17 @@ if (!(empty($uid) || empty($page))) {
   $sql = "SELECT count(a.id) as count from notify a where a.user = $uid";
   $query = $db->sql_query($sql);
   $row = $db->sql_fetch_assoc($query);
-  $result["data"]["count"] = $sql;
-
   if ($row["count"] > $to) {
     $result["data"]["next"] = true;
   } else {
     $result["data"]["next"] = false;
   }
-
   $sql = "SELECT a.type, a.time, a.pid, b.name as title from notify a inner join post b on a.pid = b.id where a.user = $uid order by a.time desc $limit";
-  $result["data"]["sql2"] = $sql;
 
   if ($query = $db->sql_query($sql)) {
     $data = sqlfetchall($db, $query);
     foreach ($data as $key => $row) {
-      if ($row["uid"]) {
+      if (!empty($row["uid"])) {
         $sql = "select * from user where id = $row[id]";
         $query = $db->sql_query($sql);
         $urow = $db->sql_fetch_assoc($query);
