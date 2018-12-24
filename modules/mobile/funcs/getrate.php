@@ -28,6 +28,7 @@ if (!(empty($name) || (empty($phone))) && $page > 0) {
   $sql = "SELECT a.*, b.name from rate a inner join user b on a.uid = b.id where user = $puid order by time $limit";
   $query = $db->sql_query($sql);
   $total = $db->sql_numrows($query);
+  $rate = array();
   if ($total) {
     $rate = sqlfetchall($db, $query);
     $totalpoint = 0;

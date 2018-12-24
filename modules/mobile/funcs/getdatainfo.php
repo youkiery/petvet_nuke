@@ -110,7 +110,7 @@ if ($pid > 0 && $page > 0) {
     $query = $db->sql_query($sql);
     $petorder = $db->sql_fetch_assoc($query);
 
-    $sql = "insert into notify (type, user, uid, pid, time) values(4, $petorder[id], $uid, $pid, " . strtotime(date("Y-m-d")) . ")";
+    $sql = "insert into notify (type, user, uid, pid, time) values(4, $petorder[id], $uid, $pid, " . time() . ")";
     $query = $db->sql_query($sql);
     $result["status"] = 1;
     $result["data"]["owner"] = $userdata;

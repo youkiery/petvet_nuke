@@ -8,7 +8,8 @@ define("NV_MATE", 2);
 
 $oid = $nv_Request->get_string('oid', 'post/get', '');
 if ($oid) {
-  $sql = "update petorder set status = 1 where id = " . $oid;
+  $today = strtotime(date("Y-m-d"));
+  $sql = "update petorder set status = 1, time = $today where id = " . $oid;
   if ($db->sql_query($sql)) {
     filterorder();
     $result["status"] = 1;

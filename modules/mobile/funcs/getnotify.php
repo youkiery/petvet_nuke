@@ -31,7 +31,7 @@ if (!(empty($uid) || empty($page))) {
       } else {
         $data[$key]["name"] = $lang_module["guest"];
       }
-      $data[$key]["time"] = date("d/m/Y", $row["time"]);
+      $data[$key]["time"] = date("d/m/Y H:i", $row["time"]);
     }
 
     $sql = "SELECT count(id) as count from notify where user = $uid and view = 0 order by time desc";

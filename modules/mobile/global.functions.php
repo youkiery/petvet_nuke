@@ -97,10 +97,6 @@ function filterorder() {
 
     $sorttype = array("e.time desc", "e.time asc", "price asc", "price desc");
     $order = "order by " . $sorttype[$sort];
-    // $main = "SELECT a.type as typeid, a.kind as kindid, a.species as speciesid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, b.name as owner, a.description, c.name as species, d.name as kind, b.province from post a inner join user b on a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id";
-    // $main2 = "SELECT e.id as oid, a.type as typeid, a.kind as kindid, a.species as speciesid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, b.name as owner, a.description, c.name as species, d.name as kind, b.province from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id";
-    // $count = "SELECT count(a.id) as count from post a inner join user b on a.user = b.id";
-    // $count2 = "SELECT count(a.id) as count from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id";
 
     $typeid = 0;
     $allrow = array();
@@ -129,17 +125,12 @@ function filterorder() {
             $row["image"] = $crow["image"];
             $row["ageid"] = $crow["age"];
             $row["price"] = $crow["price"];
-            $row["time"] = $crow["time"];
+            // $row["time"] = $crow["time"];
             $row["typeid"] = $crow["type"];
             $row["kind"] = $crow["kind"];
             $row["species"] = $crow["species"];
             $allrow[] = $row;
           }
-          // $sql = "select count(e.id) as count from petorder e inner join user b on e.user = a.id where e.pid = $row[id]";
-          // $query2 = $db->sql_query($sql);
-          // $result = $db->sql_fetch_assoc($query2);
-          // $row["count"] = $result["count"];
-          // var_dump();
         }
         break;
       case '2':
@@ -168,8 +159,14 @@ function filterorder() {
         break;
       case '3':
         // mating
-        $sql = "select * from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id $where and a.user = $uid and type = 0 $order limit " . ($page * 12);
-        $sql2 = "select count(e.id) as count from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id $where and a.user = $uid and type = 0";
+        if ($sold) {
+          $sold_s = "";
+        }
+        else {
+          $sold_s = "and status = 0";
+        }
+        $sql = "select e.id as oid, e.user, e.phone, e.address, e.pid, e.status, e.time, a.name as title, a.age as ageid, a.image, a.price, a.vaccine, a.species, a.kind, a.sold from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id $where $sold_s and a.user = $uid and type = 0 $order limit " . ($page * 12);
+        $sql2 = "select count(e.id) as count from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id $where $sold_s and a.user = $uid and type = 0";
         $query = $db->sql_query($sql);
         while ($row = $db->sql_fetch_assoc($query)) {
           $sql = "select * from post where id = " . $row["pid"];
@@ -182,6 +179,7 @@ function filterorder() {
           $sql = "select count(e.id) as count from petorder e where e.pid = $row[pid]";
           $query2 = $db->sql_query($sql);
           $r_count = $db->sql_fetch_assoc($query2);
+          $row["province"] = 0;
           $row["count"] = $r_count["count"];
           $row["image"] = $crow["image"];
           $row["ageid"] = $crow["age"];

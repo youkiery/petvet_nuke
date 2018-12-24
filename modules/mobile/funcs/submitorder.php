@@ -13,10 +13,11 @@ if ($uid > 0 && $oid > 0 && $pid) {
   $sql = "select * from post where id = " . $pid;
   $query = $db->sql_query($sql);
   $post = $db->sql_fetch_assoc($query);
+  $today = strtotime(date("Y-m-d"));
   if ($post["type"] > 0) {
-    $sql = "UPDATE petorder set status = 1 where id = $oid";
+    $sql = "UPDATE petorder set status = 1, time = " . $today . " where id = $oid";
     if ($db->sql_query($sql)) {
-      $sql = "UPDATE petorder set status = 2 where status = 0 and id <> $oid";
+      $sql = "UPDATE petorder set status = 2, time = " . $today . "  where status = 0 and id <> $oid";
       if ($db->sql_query($sql)) {
         $sql = "UPDATE post set sold = 1 where id = $pid";
         if ($db->sql_query($sql)) {

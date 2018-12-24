@@ -55,7 +55,7 @@ if ($db->sql_query($sql)) {
   $query = $db->sql_query($sql);
   $row = $db->sql_fetch_assoc($query);
 
-  $sql = "insert into notify (type, user, uid, pid, time) values(4, $row[user], $uid, $pid, " . strtotime(date("Y-m-d")) . ")";
+  $sql = "insert into notify (type, user, uid, pid, time) values(4, $row[user], $uid, $pid, " . time() . ")";
   $query = $db->sql_query($sql);
 
   $result["status"] = 1;

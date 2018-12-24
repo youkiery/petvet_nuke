@@ -102,7 +102,7 @@ if ($pid > 0 && $puid > 0 && $page > 0) {
     if ($countid["count"] > $to) {
       $result["data"]["next"] = true;
     }
-    $sql = "insert into notify (type, user, uid, pid, time) values(4, $ouid, $uid, $pid, " . strtotime(date("Y-m-d")) . ")";
+    $sql = "insert into notify (type, user, uid, pid, time) values(4, $ouid, $uid, $pid, " . time() . ")";
     $query = $db->sql_query($sql);
     $result["data"]["status"] = 1; // exist
     $result["status"] = 1;

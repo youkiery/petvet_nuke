@@ -16,22 +16,22 @@ if (!(empty($name) || empty($phone)) && $pid >= 0) {
   if (!($uid && $uid !== "null")) {
     $uid = 0;
   }
-  if ($uid == 0) {
-    $sql = "select * from petorder where user = 0 and phone = '$phone'";
-    $query = $db->sql_query($sql);
-    $petorder = $db->sql_fetch_assoc($query);
 
-    if ($petorder) {
-      $result["data"]["status"] = NV_PHONEEXIST;
-      $result["status"] = 1;
-    }
+  $sql = "select * from petorder where user = 0 and phone = '$phone' and pid = " . $pid;
+  $query = $db->sql_query($sql);
+  $petorder = $db->sql_fetch_assoc($query);
+  
+  if ($petorder) {
+    $result["data"]["status"] = NV_PHONEEXIST;
+    $result["status"] = 1;
   }
 
+  $today = strtotime(date("Y-m-d"));
   if (!$result["status"]) {
-    $sql = "INSERT into petorder(pid, user, name, address, phone, status) values ($pid, $uid, '$name', '$address', '$phone', 0)";
+    $sql = "INSERT into petorder(pid, user, name, address, phone, status, time) values ($pid, $uid, '$name', '$address', '$phone', 0, " . $today . ")";
     $query = $db->sql_query($sql);
     if ($query) {
-      $time = strtotime(date("Y-m-d"));
+      $time = time();
       $sql = "SELECT user, type from post where id = $pid";
       $query = $db->sql_query($sql);
       $prow = $db->sql_fetch_assoc($query);

@@ -56,7 +56,7 @@ if ($uid > 0 && $pid > 0 && $value > 0) {
       $result["data"]["total"] = $total;
       $result["data"]["average"] = $average;
 
-      $sql = "insert into notify (type, user, uid, pid, time) values(3, $row[user], $uid, $pid, " . strtotime(date("Y-m-d")) . ")";
+      $sql = "insert into notify (type, user, uid, pid, time) values(3, $row[user], $uid, $pid, " . time() . ")";
       $query = $db->sql_query($sql);
       $result["status"] = 1;
     }

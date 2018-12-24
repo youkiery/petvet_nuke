@@ -27,7 +27,7 @@ if ($uid > 0 && $oid > 0 && $sort >= 0 && $type >= 0) {
       $query = $db->sql_query($sql);
 
       if ($query) {
-        $sql = "insert into notify (type, user, uid, pid, time) values(2, $row[user], $uid, $row[id], " . strtotime(date("Y-m-d")) . ")";
+        $sql = "insert into notify (type, user, uid, pid, time) values(2, $row[user], $uid, $row[id], " . time() . ")";
         $query = $db->sql_query($sql);
         $query = $db->sql_query($sql);
         $result["status"] = 1;
