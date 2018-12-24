@@ -135,8 +135,9 @@ function filterorder() {
         break;
       case '2':
         // order
-        $sql = "select * from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id $where and a.user = $uid and type > 0 and a.sold = 0 group by a.id $order, a.id limit " . ($page * 12);
+        $sql = "select e.id as oid, e.user, e.name, e.phone, e.address, e.pid, e.status, e.time, a.name as title, a.age as ageid, a.image, a.price, a.vaccine, a.species, a.kind, a.sold from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id $where and a.user = $uid and type > 0 and a.sold = 0 group by a.id $order, a.id limit " . ($page * 12);
         // die($sql);
+
         $sql2 = "select count(e.id) as count from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id $where and a.user = $uid and type > 0 and status = 0 group by a.id order by a.id";
         $query = $db->sql_query($sql);
         while ($row = $db->sql_fetch_assoc($query)) {
@@ -154,6 +155,7 @@ function filterorder() {
           $row["typeid"] = $crow["type"];
           $row["kind"] = $crow["kind"];
           $row["species"] = $crow["species"];
+          $row["province"] = 0;
           $allrow[] = $row;
         }
         break;
@@ -165,7 +167,7 @@ function filterorder() {
         else {
           $sold_s = "and status = 0";
         }
-        $sql = "select e.id as oid, e.user, e.phone, e.address, e.pid, e.status, e.time, a.name as title, a.age as ageid, a.image, a.price, a.vaccine, a.species, a.kind, a.sold from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id $where $sold_s and a.user = $uid and type = 0 $order limit " . ($page * 12);
+        $sql = "select e.id as oid, e.name, e.user, e.phone, e.address, e.pid, e.status, e.time, a.name as title, a.age as ageid, a.image, a.price, a.vaccine, a.species, a.kind, a.sold from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id $where $sold_s and a.user = $uid and type = 0 $order limit " . ($page * 12);
         $sql2 = "select count(e.id) as count from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id $where $sold_s and a.user = $uid and type = 0";
         $query = $db->sql_query($sql);
         while ($row = $db->sql_fetch_assoc($query)) {
@@ -215,6 +217,7 @@ function filterorder() {
         }
         $total --;
     }
+    $result["sql"] = $sql;
 
     $alldata = parseData($allrow);
     $result["data"]["userpet"] = $alldata;
@@ -326,13 +329,15 @@ function validuserid($uid) {
 
 function parseData($petlist) {
   global $config;
+  $kind = getKind();
+  $species = getSpecies();
   $time = time();
   $hour = 60 * 60;
   $day = 24 * $hour;
   $week = 7 * $day;
   $month = 30 * $day;
   $year = 365 * $day;
-  $type = array("Cần bán", "Cần mua", "Muốn tặng", "Tìm thú lạc");
+  $type = array("Phối giống", "Cần bán", "Cần mua", "Muốn tặng", "Tìm thú lạc");
   // var_dump($petlist);
   foreach ($petlist as $key => $value) {
     $images = explode("|", $petlist[$key]["image"]);
@@ -350,10 +355,15 @@ function parseData($petlist) {
     $petlist[$key]["price"] = number_format(preg_replace("/[^0-9.]/", "", $value["price"])) . " ₫";
     $timedistance = $time - $value["time"];
     $petlist[$key]["type"] = $type[$value["typeid"]];
-    if ($value["kind"] == "Chưa chọn" || $value["species"] == "Chưa chọn") {
-      $petlist[$key]["typename"] = "Chưa chọn";
+    if ($value["species"] == 0 || $value["species"] == "Chưa chọn") {
+      if ($value["kind"] == 0 || $value["kind"] == "Chưa chọn") {
+        $petlist[$key]["typename"] = "Chưa chọn";
+      }
+      else {
+        $petlist[$key]["typename"] = $kind[$value["kind"]];
+      }
     } else {
-      $petlist[$key]["typename"] = $value["kind"] . " " . $value["species"];
+      $petlist[$key]["typename"] = $kind[$value["kind"]] . " " . $species[$value["species"]];
     }
 
     if ($timedistance > (3 * $year)) {
@@ -382,4 +392,26 @@ function sqlfetchall($db, $query) {
     $result[] = $row;
   }
   return $result;
+}
+
+function getSpecies() {
+  global $db;
+  $sql = "select * from species";
+  $query = $db->sql_query($sql);
+  $species = array();
+  while ($row = $db->sql_fetch_assoc($query)) {
+    $species[$row["id"]] = $row["name"];
+  }
+  return $species;
+}
+
+function getKind() {
+  global $db;
+  $sql = "select * from kind";
+  $query = $db->sql_query($sql);
+  $kind = array();
+  while ($row = $db->sql_fetch_assoc($query)) {
+    $kind[$row["id"]] = $row["name"];
+  }
+  return $kind;
 }

@@ -17,7 +17,7 @@ if (!(empty($name) || empty($phone)) && $pid >= 0) {
     $uid = 0;
   }
 
-  $sql = "select * from petorder where user = 0 and phone = '$phone' and pid = " . $pid;
+  $sql = "select * from petorder where user = 0 and status <> 0 and phone = '$phone' and pid = " . $pid;
   $query = $db->sql_query($sql);
   $petorder = $db->sql_fetch_assoc($query);
   
@@ -26,7 +26,7 @@ if (!(empty($name) || empty($phone)) && $pid >= 0) {
     $result["status"] = 1;
   }
 
-  $today = strtotime(date("Y-m-d"));
+  $today = time();
   if (!$result["status"]) {
     $sql = "INSERT into petorder(pid, user, name, address, phone, status, time) values ($pid, $uid, '$name', '$address', '$phone', 0, " . $today . ")";
     $query = $db->sql_query($sql);

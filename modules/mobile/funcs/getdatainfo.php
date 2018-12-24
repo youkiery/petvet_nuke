@@ -41,7 +41,8 @@ if ($pid > 0 && $page > 0) {
         }
       }
   
-      $sql = "SELECT * from petorder where user = $uid and pid = $pid";
+      $sql = "SELECT * from petorder where user = $uid and pid = $pid and status = 0";
+      $result["sql"] = $sql;
       $query = $db->sql_query($sql);
       // $order = "1: " . $sql;
       $order = $db->sql_numrows($query);
@@ -118,9 +119,10 @@ if ($pid > 0 && $page > 0) {
     $result["data"]["order"] = $order;
     $result["data"]["rate"] = $rateval;
 
-    $sql = "SELECT a.type as typeid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, a.description, b.name as owner, c.name as species, d.name as kind, b.province from post a inner join user b on a.id = $pid and a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id";
+    $sql = "SELECT a.type as typeid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, a.description, b.name as owner, a.species, a.kind, b.province from post a inner join user b on a.id = $pid and a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id";
     if ($query = $db->sql_query($sql)) {
-      $owner = parseData(array($db->sql_fetch_assoc($query)));
+      $res = array($db->sql_fetch_assoc($query));
+      $owner = parseData($res);
       $result["data"]["status"] = 1; // existed
       $result["data"]["data"] = $owner[0];
       $result["status"] = 1;

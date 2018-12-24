@@ -13,7 +13,7 @@ if ($uid > 0 && $oid > 0 && $pid) {
   $sql = "select * from post where id = " . $pid;
   $query = $db->sql_query($sql);
   $post = $db->sql_fetch_assoc($query);
-  $today = strtotime(date("Y-m-d"));
+  $today = time();
   if ($post["type"] > 0) {
     $sql = "UPDATE petorder set status = 1, time = " . $today . " where id = $oid";
     if ($db->sql_query($sql)) {
@@ -24,9 +24,9 @@ if ($uid > 0 && $oid > 0 && $pid) {
           $sql = "SELECT * from petorder where id = $oid";
           $pquery = $db->sql_query($sql);
           $row = $db->sql_fetch_assoc($pquery);
-          $sql = "insert into notify (type, user, uid, pid, time) values(6, $uid, $row[user], $pid, " . strtotime(date("Y-m-d")) . ")";
+          $sql = "insert into notify (type, user, uid, pid, time) values(6, $uid, $row[user], $pid, " . $today . ")";
           $in1query = $db->sql_query($sql);
-          $sql = "insert into notify (type, user, uid, pid, time) values(7, $row[user], $uid, $pid, " . strtotime(date("Y-m-d")) . ")";
+          $sql = "insert into notify (type, user, uid, pid, time) values(7, $row[user], $uid, $pid, " . $today . ")";
           $in2query = $db->sql_query($sql);
           $result["status"] = 1;
           $result["data"]["status"] = NV_ORDER;
@@ -41,9 +41,9 @@ if ($uid > 0 && $oid > 0 && $pid) {
       $sql = "SELECT * from petorder where id = $oid";
       $pquery = $db->sql_query($sql);
       $row = $db->sql_fetch_assoc($pquery);
-      $sql = "insert into notify (type, user, uid, pid, time) values(6, $uid, $row[user], $pid, " . strtotime(date("Y-m-d")) . ")";
+      $sql = "insert into notify (type, user, uid, pid, time) values(6, $uid, $row[user], $pid, " . $today . ")";
       $in1query = $db->sql_query($sql);
-      $sql = "insert into notify (type, user, uid, pid, time) values(7, $row[user], $uid, $pid, " . strtotime(date("Y-m-d")) . ")";
+      $sql = "insert into notify (type, user, uid, pid, time) values(7, $row[user], $uid, $pid, " . $today . ")";
     }
     $sql = "select * from petorder where pid = " . $pid;
     $query = $db->sql_query($sql);

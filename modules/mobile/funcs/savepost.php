@@ -108,6 +108,7 @@ if (!(empty($name)) && $uid >= 0 && $age >= 0 && $price >= 0 && $species >= 0 &&
     if ($id && $id !== "undefined") {
       $result["data"]["status"] = 2;
     }
+    $result["step"] = 1;
     filterorder();
   }
 }

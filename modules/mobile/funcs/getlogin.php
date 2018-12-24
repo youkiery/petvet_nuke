@@ -28,7 +28,6 @@ $uid = $nv_Request->get_string('uid', 'post/get', '');
       $query = $db->sql_query($sql);
       $result["data"]["kind"] = sqlfetchall($db, $query);
       $result["data"]["species"] = array();
-
       foreach ($result["data"]["kind"] as $key => $value) {
         $sql = "SELECT * from species where kind = $value[id]";
         $query = $db->sql_query($sql);
