@@ -62,11 +62,13 @@ function filterbase() {
     $sql = "SELECT count(a.id) as count from post a inner join user b on a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id $where";
     $query = $db->sql_query($sql);
     $countid = $db->sql_fetch_assoc($query);
+    $count = $countid["count"];
     $result["data"]["next"] = false;
-    if ($countid["count"] > $to) {
+    if ($count > $to) {
       $result["data"]["next"] = true;
     }
-
+    $result["data"]["total"] = $count;
+    
     $sql = "SELECT a.type as typeid, a.id, a.user, a.name, a.price, a.age as ageid, a.image, a.time, a.vaccine, a.description, b.name as owner, c.name as species, d.name as kind, b.province from post a inner join user b on a.user = b.id inner join species c on a.species = c.id inner join kind d on c.kind = d.id $where $order limit $from, $to";
     $result["sql"] = $sql;
     $query = $db->sql_query($sql);
@@ -109,7 +111,7 @@ function filterorder() {
     switch ($type) {
       case '1':
         // buy
-        $sql = "select e.* from petorder e inner join user b on e.user = b.id $where and user = $uid $sold_s limit " . ($page * 12);
+        $sql = "select e.id as oid, e.user, e.name, e.phone, e.address, e.pid, e.status, e.time from petorder e inner join user b on e.user = b.id $where and user = $uid $sold_s limit " . ($page * 12);
         $sql2 = "select count(e.id) as count from petorder e inner join user b on e.user = b.id $where and user = $uid $sold_s $where";
         $query = $db->sql_query($sql);
         while ($row = $db->sql_fetch_assoc($query)) {
@@ -122,6 +124,11 @@ function filterorder() {
           if ($urow) {
             $row["owner"] = $urow["name"];
             $row["province"] = $urow["province"];
+            $row["title"] = $crow["name"];
+            $row["vaccine"] = $crow["vaccine"];
+            $row["species"] = $crow["species"];
+            $row["kind"] = $crow["kind"];
+            $row["sold"] = $crow["sold"];
             $row["image"] = $crow["image"];
             $row["ageid"] = $crow["age"];
             $row["price"] = $crow["price"];
