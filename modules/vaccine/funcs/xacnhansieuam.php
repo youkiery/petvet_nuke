@@ -30,10 +30,10 @@ if(!(empty($act) || empty($value) || empty($id))) {
 				$birth = 0;
 				switch ($confirmid) {
 					case '1':
-						$color = "orange";
+						$color = "darkorange";
 						break;
 					case '2':
-						$color = "yellow";
+						$color = "dodgerblue";
 						break;
 					case '3':
 						$color = "green";

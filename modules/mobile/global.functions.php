@@ -90,7 +90,9 @@ function filterorder() {
   $page = $nv_Request->get_string('page', 'post/get', '');
   // echo 1;
 
+  $result["step"] = 2;
   if ($uid > 0 && $sort >= 0 && $type >= 0 && $page) {
+    $result["step"] = 3;
     $where = "";
     $total = $page * 12;
     if (!empty($keyword)) {
@@ -103,7 +105,7 @@ function filterorder() {
     $typeid = 0;
     $allrow = array();
     if ($sold) {
-      $sold_s = "and status > 0";
+      $sold_s = "and status >= 0";
     }
     else {
       $sold_s = "and status = 0";
@@ -142,12 +144,15 @@ function filterorder() {
         break;
       case '2':
         // order
-        $sql = "select e.id as oid, e.user, e.name, e.phone, e.address, e.pid, e.status, e.time, a.name as title, a.age as ageid, a.image, a.price, a.vaccine, a.species, a.kind, a.sold from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id $where and a.user = $uid and type > 0 and a.sold = 0 group by a.id $order, a.id limit " . ($page * 12);
+        $sql = "select e.id as oid, e.user, e.name, e.phone, e.address, e.pid, e.status, e.time, a.name as title, a.age as ageid, a.image, a.price, a.vaccine, a.species, a.kind, a.sold from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id $where and a.user = $uid $sold_s and type > 0 group by a.id $order, a.id limit " . ($page * 12);
+        $result["sq"] = $sql;
         // die($sql);
 
-        $sql2 = "select count(e.id) as count from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id $where and a.user = $uid and type > 0 and status = 0 group by a.id order by a.id";
+        $sql2 = "select count(e.id) as count from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id $where and a.user = $uid $sold_s and type > 0 and status = 0 group by a.id order by a.id";
         $query = $db->sql_query($sql);
+        $poid = array();
         while ($row = $db->sql_fetch_assoc($query)) {
+          $poid[] = $row["pid"];
           $sql = "select * from post where id = " . $row["pid"];
           $query2 = $db->sql_query($sql);
           $crow = $db->sql_fetch_assoc($query2);
@@ -158,13 +163,14 @@ function filterorder() {
           $row["image"] = $crow["image"];
           $row["ageid"] = $crow["age"];
           $row["price"] = $crow["price"];
-          $row["time"] = $crow["time"];
           $row["typeid"] = $crow["type"];
           $row["kind"] = $crow["kind"];
           $row["species"] = $crow["species"];
           $row["province"] = 0;
           $allrow[] = $row;
         }
+        $sql = "update notify set view = 1 where pid in (" . implode(", ", $poid) . ") and user = " . $uid;
+        $db->sql_query($sql);
         break;
       case '3':
         // mating
@@ -177,7 +183,9 @@ function filterorder() {
         $sql = "select e.id as oid, e.name, e.user, e.phone, e.address, e.pid, e.status, e.time, a.name as title, a.age as ageid, a.image, a.price, a.vaccine, a.species, a.kind, a.sold from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id $where $sold_s and a.user = $uid and type = 0 $order limit " . ($page * 12);
         $sql2 = "select count(e.id) as count from petorder e inner join post a on e.pid = a.id inner join user b on a.user = b.id $where $sold_s and a.user = $uid and type = 0";
         $query = $db->sql_query($sql);
+        $poid = array();
         while ($row = $db->sql_fetch_assoc($query)) {
+          $poid[] = $row["pid"];
           $sql = "select * from post where id = " . $row["pid"];
           $query2 = $db->sql_query($sql);
           $crow = $db->sql_fetch_assoc($query2);
@@ -193,12 +201,13 @@ function filterorder() {
           $row["image"] = $crow["image"];
           $row["ageid"] = $crow["age"];
           $row["price"] = $crow["price"];
-          $row["time"] = $crow["time"];
           $row["typeid"] = $crow["type"];
           $row["kind"] = $crow["kind"];
           $row["species"] = $crow["species"];
           $allrow[] = $row;
         }
+        $sql = "update notify set view = 1 where pid in (" . implode(", ", $poid) . ") and user = " . $uid;
+        $db->sql_query($sql);
         break;
       default:
         //sell
@@ -211,7 +220,10 @@ function filterorder() {
         $sorttype = array("a.time desc", "a.time asc", "price asc", "price desc");
         $order = "order by " . $sorttype[$sort];
         $sql = "select b.*, a.* from post a inner join user b on a.user = b.id $where $sold_s and a.user = $uid $order limit " . ($page * 12 - 1);
-        $sql2 = "select count(a.id) from post a inner join user b on a.user = b.id $where $sold_s and a.user = $uid $order";
+        $result["sql"] = $sql;
+        
+        $sql2 = "select count(a.id) as count from post a inner join user b on a.user = b.id $where $sold_s and a.user = $uid";
+        $result["sql2"] = $sql2;
         $query = $db->sql_query($sql);
         while ($row = $db->sql_fetch_assoc($query)) {
           $sql = "select count(e.id) as count from petorder e where e.pid = $row[id]";
@@ -224,20 +236,26 @@ function filterorder() {
         }
         $total --;
     }
-    $result["sql"] = $sql;
 
     $alldata = parseData($allrow);
     $result["data"]["userpet"] = $alldata;
-    $count_result = $db->sql_query($sql2);
+    $count_query = $db->sql_query($sql2);
+    $count_result = $db->sql_fetch_assoc($count_query);
     $count = $count_result["count"];
     if (!$count > 0) {
       $count = 0;
     }
     $result["data"]["next"] = false;
+    $result["total"] = $total;
+    $result["count"] = $count;
     if ($count > $total) {
       $result["data"]["next"] = true;
+      if ($type == 0) {
+        $total ++;
+      }
     }
 
+    $result["data"]["page"] = intval($total / 12) + 1;
     if ($query) {
       $result["status"] = 1;
     }
@@ -302,11 +320,11 @@ function validphone($phone) {
   if (!($length < 4 || $length > 12)) {
     $sql = "select * from user where phone = '$phone'";
     $query = $db->sql_query($sql);
-    if ($query) {
-      return 1;
+    if ($row = $db->sql_numrows($query)) {
+      return 0;
     }
   }
-  return 0;
+  return 1;
 }
 
 function validuser($username) {
@@ -314,17 +332,132 @@ function validuser($username) {
   if (!empty($username)) {
     $sql = "select * from user where username = '$username'";
     $query = $db->sql_query($sql);
-    if ($query) {
-      return 1;
+    if ($row = $db->sql_numrows($query)) {
+      return 0;
+    }
+  }
+  return 1;
+}
+
+function getuserbyid($uid) {
+  global $db;
+  if (!empty($uid)) {
+    $sql = "select * from user where uid = $uid";
+    $query = $db->sql_query($sql);
+    if ($row = $db->sql_fetch_assoc($query)) {
+      return $row;
     }
   }
   return 0;
 }
 
+function getnotify($uid) {
+  global $db;
+  $count = 0;
+  if (!empty($uid)) {
+    $sql = "select * from notify where uid = $uid and view = 0 order by id desc limit 12";
+    $query = $db->sql_query($sql);
+    $count = $db->sql_numrows($query);
+  }
+  return $count;
+}
+
+function getarea() {
+  global $db;
+  $list = array();
+  $sql = "select * from area where parentid = 0 order by position";
+  $query = $db->sql_query($sql);
+  while ($row = $db->sql_fetch_assoc($query)) {
+    $list[$row["areaid"]] = $row;
+    $list[$row["areaid"]]["list"] = getareachild($row["areaid"]);
+  }
+  return $list;
+}
+
+function getareachild($parentid) {
+  global $db;
+  $list = array();
+  $sql = "select * from area where parentid = $parentid order by position";
+  $query = $db->sql_query($sql);
+  if ($query) {
+    while ($row = $db->sql_fetch_assoc($query)) {
+      $list[$row["areaid"]] = $row;
+      $list[$row["areaid"]]["list"] = getareachild($row["areaid"]);
+        // $list[$row["areaid"]] = $row;
+    }
+  }
+  return $list;
+}
+
+function getbroadcast($user) {
+  global $db;
+  $list = array();
+  $where = array();
+  $where_s = "";
+  if (!empty($user["role"])) {
+    $roles = explode(",", $user["role"]);
+    $roles_r = array();
+    foreach ($roles as $key => $value) {
+      $roles_r[] = "(target like '%r$value%')";
+    }
+    $where[] = "(" . implode(" or ", $roles_r) . ")";
+  }
+  if (!empty($user)) {
+    $where[] = "(target not like '%u%')";
+    $where[] = "(target like '%id$row[id]%')";
+    if (!empty($user["sale"])) {
+      $where[] = "(target not like '%s%')";
+    }
+  }
+  if (count($where)) {
+    $where_s = "where " . implode(" and ", $where);
+  }
+
+  $sql = "select * from broadcast $where_s order by id desc";
+  $query = $db->sql_query($sql);
+  while ($row = $db->sql_fetch_assoc($query)) {
+    $list[] = $row;
+  }
+  return $list;
+}
+
+function getcategory() {
+  global $db;
+  $list = array();
+  $sql = "select * from category order by position";
+  $query = $db->sql_query($sql);
+  while ($row = $db->sql_fetch_assoc($query)) {
+    $list[$row["cateid"]] = $row;
+  }
+  return $list;
+}
+
+function getpost() {
+  global $db;
+  $list = array();
+  $sql = "select * from post order by id desc";
+  $query = $db->sql_query($sql);
+  while ($row = $db->sql_fetch_assoc($query)) {
+    $list[$row["pid"]] = $row;
+  }
+  return $list;
+}
+
+function getage() {
+  global $db;
+  $list = array();
+  $sql = "select * from age order by position";
+  $query = $db->sql_query($sql);
+  while ($row = $db->sql_fetch_assoc($query)) {
+    $list[$row["ageid"]] = $row;
+  }
+  return $list;
+}
+
 function validuserid($uid) {
   global $db;
   if (!empty($uid)) {
-    $sql = "select * from user where id = $uid";
+    $sql = "select * from user where uid = $uid";
     $query = $db->sql_query($sql);
     $row = $db->sql_fetch_assoc($query);
     if ($row) {
@@ -339,7 +472,8 @@ function parseData($petlist) {
   $kind = getKind();
   $species = getSpecies();
   $time = time();
-  $hour = 60 * 60;
+  $minute = 60;
+  $hour = 60 * $minute;
   $day = 24 * $hour;
   $week = 7 * $day;
   $month = 30 * $day;
@@ -381,13 +515,10 @@ function parseData($petlist) {
       $petlist[$key]["timer"] = floor($timedistance / $week) . " tuần";
     } else if ($timedistance > (3 * $day)) {
       $petlist[$key]["timer"] = floor($timedistance / $day) . " ngày";
+    } else if ($timedistance > $hour) {
+      $petlist[$key]["timer"] = floor($timedistance / $hour) . " giờ";
     } else {
-      $h = floor($timedistance / $hour);
-      if ($h) {
-        $petlist[$key]["timer"] = $h . " giờ";
-      } else {
-        $petlist[$key]["timer"] = "vừa mới";
-      }
+      $petlist[$key]["timer"] = floor($timedistance / $minute) . " phút";
     }
   }
   return $petlist;

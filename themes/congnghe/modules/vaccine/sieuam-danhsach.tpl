@@ -201,7 +201,7 @@
         (response, status) => {
           data = JSON.parse(response);
           if (data["status"]) {
-            $("#birth_" + g_index).text($("#birthnumber").val())
+            $("#birth_" + g_index).text(data["data"]["birth"])
             $("#birth_" + g_index).attr("disabled", "true")
             g_index = -1
             g_id = -1

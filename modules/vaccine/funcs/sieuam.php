@@ -28,10 +28,16 @@ $action = $nv_Request->get_string('action', 'post', '');
       case "birth":
       $id = $nv_Request->get_string('id', 'post', '');
       $petid = $nv_Request->get_string('petid', 'post', '');
-      $birth = $nv_Request->get_int('birth', 'post', 0);
+      $birth = $nv_Request->get_int('birth', 'post', 1);
       $birthday = $nv_Request->get_string('birthday', 'post', '');
 
-      if (!(empty($id) || empty($petid) || empty($birthday))) {
+      if (!(empty($id) || empty($petid))) {
+        if (empty($birthday)) {
+          $birthday = date("Y-m-d");
+        }
+        if (!$birth) {
+          $birth = 1;
+        }
         $birthday = strtotime($birthday);
         $recall = $birthday + 60 * 60 * 24 * 60;
         $sql = "select * from " . VAC_PREFIX . "_pet where id = $petid";
@@ -52,6 +58,7 @@ $action = $nv_Request->get_string('action', 'post', '');
         $usg_query = $db->sql_query($sql);
         if ($result && $pet_query && $usg_query) {
           $ret["status"] = 1;
+          $ret["data"]["birth"] = $birth;
         }
       }
       break;

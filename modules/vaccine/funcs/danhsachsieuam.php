@@ -115,7 +115,7 @@ function displaySSList($list, $time, $path, $lang_module) {
 	$xtpl->assign("lang", $lang_module);
 
 	$hex = array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f");
-	$status_color = array("red", "orange", "yellow", "green");
+	$status_color = array("red", "darkorange", "dodgerblue", "green");
 
 	// $now = strtotime(date("Y-m-d", time()));
 	// $today = date("d", $now);
