@@ -54,11 +54,16 @@
 						&lt;
 					</button>
 					<span id="vac_confirm_{index}" style="color: {color};">
-							{status}
-						</span>
+						{status}
+					</span>
+					<span id='birth_{index}'>
 						<!-- BEGIN: birth -->
-						<button id='birth_{index}' onclick='birth({index}, {vacid}, {petid})' {checked}>{birth}</button>
+						<button onclick='birth({index}, {vacid}, {petid})' {checked}>{birth}</button>
 						<!-- END: birth -->
+						<!-- BEGIN: exbirth -->
+						<button onclick='exbirth({index}, {vacid}, {petid})' {checked}>{birth}</button>
+						<!-- END: exbirth -->
+					</span>
 					<button style="float: right;" onclick="confirm_upper({index}, {vacid}, {petid})">
 						&gt;
 					</button>

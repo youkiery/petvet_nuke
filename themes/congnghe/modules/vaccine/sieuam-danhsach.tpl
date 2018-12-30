@@ -135,7 +135,6 @@
         change_color(e, data, index, vacid, petid);
       }
     )
-    // fetch(link + "confirm&act=up&value=" + trim(value.innerText) + "&vacid=" + vacid + "&diseaseid=" + diseaseid, []).then(response => {
   }
 
   function confirm_upper(index, vacid, petid) {
@@ -154,10 +153,15 @@
     if (response["status"]) {
       e.innerText = response["data"]["value"];
       e.style.color = response["data"]["color"];
-      if (response["data"]["color"] == "green" && response["data"]["birth"]) {
-        e.parentElement.innerHTML += "<button id='birth_" + index + "' onclick='birth(" + index + ", " + vacid + ", " + petid + ")'> " + response["data"]["birth"] + "</button>";
+      if (response["data"]["birth"]) {
+        if (response["data"]["color"] == "green") {
+          $("#birth_" + index).html("<button id='birth_" + index + "' onclick='birth(" + index + ", " + vacid + ", " + petid + ")'> " + response["data"]["birth"] + "</button>");
+        }
+        else if (response["data"]["color"] == "dodgerblue") {
+          $("#birth_" + index).html("<button id='birth_" + index + "' onclick='exbirth(" + index + ", " + vacid + ", " + petid + ")'> " + response["data"]["birth"] + "</button>");
+        }
       } else {
-        $("#birth_" + index).remove();
+        $("#birth_" + index).html();
       }
     }
   }
@@ -191,6 +195,23 @@
     g_index = index
     g_id = vacid
     g_petid = petid
+  }
+
+  function exbirth(index, vacid, petid) {
+    var exbirth_val = prompt("Dự đoán được bao nhiêu thai", 1)
+    if (exbirth_val) {
+      $.post(
+        link + "sieuam",
+        {action: "exbirth", id: vacid, petid: petid, birth: exbirth_val},
+        (response, status) => {
+          data = JSON.parse(response);
+          if (data["status"]) {
+            var x = $("#birth_" + index).children()[0]
+            x.innerText = data["birth"]
+          }
+        }
+      )
+    }
   }
 
   function onbirth(event) {

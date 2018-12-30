@@ -54,9 +54,27 @@ $action = $nv_Request->get_string('action', 'post', '');
         $sql = "insert into " . VAC_PREFIX . "_pet (name, customerid) values('" . date("d/m/Y", $birthday) . "', $customer[id])";
         $pet_query = $db->sql_query($sql);
         
-        $sql = "insert into " . VAC_PREFIX . "_vaccine (petid, diseaseid, cometime, calltime, note, status, recall, doctorid) values($petid, 0, $birthday, $recall, 'Tiêm phòng siêu âm', 0, 0, $usg[doctorid])";
-        $usg_query = $db->sql_query($sql);
-        if ($result && $pet_query && $usg_query) {
+        if ($result && $pet_query) {
+          $ret["status"] = 1;
+          $ret["data"]["birth"] = $birth;
+        }
+      }
+      break;
+      case "exbirth":
+      $id = $nv_Request->get_string('id', 'post', '');
+      $petid = $nv_Request->get_string('petid', 'post', '');
+      $birth = $nv_Request->get_int('birth', 'post', 1);
+
+      if (!(empty($id) || empty($petid))) {
+        if (!$birth) {
+          $birth = 1;
+        }
+        
+        $sql = "update `" . VAC_PREFIX . "_usg` set expectbirth = '$birth' where id = $id";
+        $result = $db->sql_query($sql);
+        echo $sql;
+        
+        if ($result) {
           $ret["status"] = 1;
           $ret["data"]["birth"] = $birth;
         }

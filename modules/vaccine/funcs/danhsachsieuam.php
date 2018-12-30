@@ -68,7 +68,7 @@ quagio();
 		$doctor[$doctor_row["id"]] = $doctor_row["name"];
 	}
 
-	$sql = "select a.id, a.cometime, a.calltime, a.status, a.image, a.note, a.birthday, a.birth, a.doctorid, b.id as petid, b.name as petname, c.name as customer, c.phone from `" . VAC_PREFIX . "_usg` a inner join `" . VAC_PREFIX . "_pet` b on a.calltime between $from and $end and a.petid = b.id inner join `" . VAC_PREFIX . "_customer` c on b.customerid = c.id where c.name like '%$keyword%' or c.phone like '%$keyword%' order by calltime " . $limit_page;
+	$sql = "select a.id, a.cometime, a.calltime, a.status, a.image, a.note, a.birthday, a.birth, a.expectbirth, a.doctorid, b.id as petid, b.name as petname, c.name as customer, c.phone from `" . VAC_PREFIX . "_usg` a inner join `" . VAC_PREFIX . "_pet` b on a.calltime between $from and $end and a.petid = b.id inner join `" . VAC_PREFIX . "_customer` c on b.customerid = c.id where c.name like '%$keyword%' or c.phone like '%$keyword%' order by calltime " . $limit_page;
 	// $sql = "select * from " . VAC_PREFIX . "_usg where calltime between " . $from . " and " . $end . " order by calltime limit";
 	$query = $db->sql_query($sql);
 	$list = array();
@@ -167,7 +167,6 @@ function displaySSList($list, $time, $path, $lang_module) {
 		$xtpl->assign("vacid", $list_data["id"]);
 		$xtpl->assign("petid", $list_data["petid"]);
 		$xtpl->assign("note", $list_data["note"]);
-		$xtpl->assign("birth", $list_data["birth"]);
 		$xtpl->assign("sieuam", date("d/m/Y", $list_data["cometime"]));
 		$xtpl->assign("dusinh", date("d/m/Y", $list_data["calltime"]));
 		$xtpl->assign("color", $status_color[$list_data["status"]]);
@@ -179,14 +178,19 @@ function displaySSList($list, $time, $path, $lang_module) {
 		else {
 			$color = $status_color[0];
 		}
+		if ($list_data["birthday"] > 0) {
+			$xtpl->assign("checked", "disabled");
+		}
+		else {
+			$xtpl->assign("checked", "");
+		}
 		if ($list_data["status"] == 3) {
-			if ($list_data["birthday"] > 0) {
-				$xtpl->assign("checked", "disabled");
-			}
-			else {
-				$xtpl->assign("checked", "");
-			}
+			$xtpl->assign("birth", $list_data["birth"]);
 			$xtpl->parse("main.list.birth");
+		}
+		else if ($list_data["status"] == 2) {
+			$xtpl->assign("birth", $list_data["expectbirth"]);
+			$xtpl->parse("main.list.exbirth");
 		}
 		$xtpl->assign("status", $lang_module["confirm_value2"][$list_data["status"]]);
 		$xtpl->assign("color", $color);

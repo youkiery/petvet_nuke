@@ -34,13 +34,15 @@ if(!(empty($act) || empty($value) || empty($id))) {
 						break;
 					case '2':
 						$color = "dodgerblue";
-						break;
+						$ret["data"]["birth"] = $row["expectbirth"];
 					case '3':
-						$color = "green";
+						if (empty($color)) {
+							$color = "green";
+							$ret["data"]["birth"] = $row["birth"];
+						}
 						$sql = "select * from " . VAC_PREFIX . "_usg where id = $id";
 						$query = $db->sql_query($sql);
 						$row = $db->sql_fetch_assoc($query);
-						$ret["data"]["birth"] = $row["birth"];
 						break;
 					default:
 						$color = "red";
