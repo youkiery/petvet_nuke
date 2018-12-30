@@ -24,6 +24,10 @@ if(!(empty($act) || empty($value) || empty($id))) {
 		if (!empty($lang_module["confirm_value2"][$confirmid])) {
 			$sql = "update `" . VAC_PREFIX . "_usg` set status = $confirmid where id = $id";
 			$result = $db->sql_query($sql);
+
+			$sql = "select * from `" . VAC_PREFIX . "_usg` where id = $id";
+			$query = $db->sql_query($sql);
+			$row = $db->sql_fetch_assoc($query);
 			if ($result) {
 				$ret["status"] = 1;
 				$ret["data"]["value"] = $lang_module["confirm_value2"][$confirmid];

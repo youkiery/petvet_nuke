@@ -178,12 +178,12 @@ function displaySSList($list, $time, $path, $lang_module) {
 		else {
 			$color = $status_color[0];
 		}
-		if ($list_data["birthday"] > 0) {
-			$xtpl->assign("checked", "disabled");
-		}
-		else {
-			$xtpl->assign("checked", "");
-		}
+		// if ($list_data["birthday"] > 0) {
+		// 	$xtpl->assign("checked", "disabled");
+		// }
+		// else {
+		// 	$xtpl->assign("checked", "");
+		// }
 		if ($list_data["status"] == 3) {
 			$xtpl->assign("birth", $list_data["birth"]);
 			$xtpl->parse("main.list.birth");

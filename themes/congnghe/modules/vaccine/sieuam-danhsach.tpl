@@ -153,7 +153,8 @@
     if (response["status"]) {
       e.innerText = response["data"]["value"];
       e.style.color = response["data"]["color"];
-      if (response["data"]["birth"]) {
+      var check = response["data"].hasOwnProperty("birth");
+      if (check) {
         if (response["data"]["color"] == "green") {
           $("#birth_" + index).html("<button id='birth_" + index + "' onclick='birth(" + index + ", " + vacid + ", " + petid + ")'> " + response["data"]["birth"] + "</button>");
         }
@@ -161,7 +162,7 @@
           $("#birth_" + index).html("<button id='birth_" + index + "' onclick='exbirth(" + index + ", " + vacid + ", " + petid + ")'> " + response["data"]["birth"] + "</button>");
         }
       } else {
-        $("#birth_" + index).html();
+        $("#birth_" + index).html("");
       }
     }
   }
@@ -223,7 +224,7 @@
           data = JSON.parse(response);
           if (data["status"]) {
             $("#birth_" + g_index).text(data["data"]["birth"])
-            $("#birth_" + g_index).attr("disabled", "true")
+            // $("#birth_" + g_index).attr("disabled", "true")
             g_index = -1
             g_id = -1
             g_petid = -1
