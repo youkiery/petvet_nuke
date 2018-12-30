@@ -27,7 +27,21 @@
             {lang.usgbirthday}
           </td>
           <td>
-            <input type="date" id="birthday">
+            <input type="date" id="birthday" value="{now}">
+          </td>
+        </tr>
+        <tr>
+          <td>
+            {lang.doctor}
+          </td>
+          <td>
+            <select id="doctor_select" style="width: 100%; height: 2em;">
+              <!-- BEGIN: doctor -->
+              <option value="{doctorid}">
+                {doctorname}
+              </option>
+              <!-- END: doctor -->
+            </select>      
           </td>
         </tr>
         <tr>
@@ -208,7 +222,7 @@
           data = JSON.parse(response);
           if (data["status"]) {
             var x = $("#birth_" + index).children()[0]
-            x.innerText = data["birth"]
+            x.innerText = data["data"]["birth"]
           }
         }
       )
@@ -219,7 +233,7 @@
     event.preventDefault()
       $.post(
         link + "sieuam",
-        {action: "birth", id: g_id, petid: g_petid, birth: $("#birthnumber").val(), birthday: $("#birthday").val()},
+        {action: "birth", id: g_id, petid: g_petid, birth: $("#birthnumber").val(), birthday: $("#birthday").val(), doctor: $("doctor_select").val()},
         (response, status) => {
           data = JSON.parse(response);
           if (data["status"]) {

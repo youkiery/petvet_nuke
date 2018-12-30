@@ -17,6 +17,7 @@ quagio();
 	$xtpl->assign("keyword", $keyword);
 	$xtpl->assign("nv", $module_name);
 	$xtpl->assign("op", $op);
+	$xtpl->assign("now", date("Y-m-d"));
 	$link = "/index.php?" . NV_NAME_VARIABLE . "=" . $module_name . "&" . NV_OP_VARIABLE . "=";
 	$limit_option = array(10, 20, 30, 40, 50, 75, 100); 
 
@@ -65,6 +66,9 @@ quagio();
 	$query = $db->sql_query($sql);
 	$doctor = array();
 	while ($doctor_row = $db->sql_fetch_assoc($query)) {
+		$xtpl->assign("doctorid", $doctor_row["id"]);
+		$xtpl->assign("doctorname", $doctor_row["name"]);
+		$xtpl->parse("main.doctor");
 		$doctor[$doctor_row["id"]] = $doctor_row["name"];
 	}
 

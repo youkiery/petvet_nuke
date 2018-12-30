@@ -28,9 +28,13 @@ $action = $nv_Request->get_string('action', 'get/post', '');
       $id = $nv_Request->get_string('id', 'post', '');
       $petid = $nv_Request->get_string('petid', 'post', '');
       $birth = $nv_Request->get_int('birth', 'post', 1);
+      $doctor = $nv_Request->get_int('doctor', 'post', 1);
       $birthday = $nv_Request->get_string('birthday', 'post', '');
 
       if (!(empty($id) || empty($petid))) {
+        if (empty($doctor)) {
+          $doctor = 1;
+        }
         if (empty($birthday)) {
           $birthday = date("Y-m-d");
         }
@@ -43,7 +47,7 @@ $action = $nv_Request->get_string('action', 'get/post', '');
         $query = $db->sql_query($sql);
         $customer = $db->sql_fetch_assoc($query);
 
-        $sql = "update `" . VAC_PREFIX . "_usg` set birth = '$birth', birthday = " . $birthday . " where id = $id";
+        $sql = "update `" . VAC_PREFIX . "_usg` set birth = '$birth', birthday = " . $birthday . ", doctorid = $doctor where id = $id";
         $result = $db->sql_query($sql);
         
         $sql = "select * from " . VAC_PREFIX . "_usg where id = $id";
@@ -71,7 +75,6 @@ $action = $nv_Request->get_string('action', 'get/post', '');
         
         $sql = "update `" . VAC_PREFIX . "_usg` set expectbirth = '$birth' where id = $id";
         $result = $db->sql_query($sql);
-        echo $sql;
         
         if ($result) {
           $ret["status"] = 1;
