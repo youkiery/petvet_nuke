@@ -8,8 +8,7 @@
  */
 
 if (!defined('NV_IS_MOD_QUANLY')) die('Stop!!!');
-$action = $nv_Request->get_string('action', 'post', '');
-
+$action = $nv_Request->get_string('action', 'get/post', '');
   if (!empty($action)) {
     $ret = array("status" => 0, "data" => array());
     switch ($action) {
@@ -77,6 +76,69 @@ $action = $nv_Request->get_string('action', 'post', '');
         if ($result) {
           $ret["status"] = 1;
           $ret["data"]["birth"] = $birth;
+        }
+      }
+      break;
+      case "cvsieuam":
+        $value = $nv_Request->get_string('value', 'get', '');
+        $vacid = $nv_Request->get_string('vacid', 'get', '');
+        $act = $nv_Request->get_string('act', 'get', '');
+        if(!(empty($act) || empty($value) || empty($vacid))) {
+          $mod = 0;
+          if ($act == "up") {
+            $mod = 1;
+          } else {
+            $mod = -1;
+          }
+          if (in_array($value, $lang_module["confirm_value"])) {
+            $confirmid = array_search($value, $lang_module["confirm_value"]);
+            $confirmid += $mod;
+            if (!empty($lang_module["confirm_value"][$confirmid])) {
+              $sql = "update " .  VAC_PREFIX . "_usg set vaccine = $confirmid where id = $vacid";
+              $result = $db->sql_query($sql);
+              if ($result) {
+                $sql = "select * from " .  VAC_PREFIX . "_usg where id = $vacid";
+                $result = $db->sql_query($sql);
+                $row = $db->sql_fetch_assoc($result);
+                if (empty($row["recall"]) || $row["recall"] == "0") $ret["data"]["recall"] = 0;
+                else $ret["data"]["recall"] = 1;
+                $ret["data"]["recall"] = $row["recall"];
+                $ret["status"] = 1;
+                $ret["data"]["value"] = $lang_module["confirm_value"][$confirmid];
+                switch ($confirmid) {
+                  case '1':
+                    $color = "orange";
+                    break;
+                  case '2':
+                    $color = "green";
+                    break;
+                  default:
+                    $color = "red";
+                }
+                $ret["data"]["color"] = $color;
+              }
+            }
+          }
+        }
+      break;
+      case 'save':
+      $recall = $nv_Request->get_string('recall', 'post', '');
+      $doctor = $nv_Request->get_string('doctor', 'post', '');
+      $vacid = $nv_Request->get_string('vacid', 'post', '');
+      $petid = $nv_Request->get_string('petid', 'post', '');
+
+      if (!(empty($petid) || empty($recall) || empty($doctor) || empty($vacid))) {
+        $cometime = time();
+        $calltime = strtotime($recall);
+
+        $sql = "update `" . VAC_PREFIX . "_usg` set recall = $calltime where id = $vacid;";
+        // echo $sql;
+        if ($db->sql_query($sql)) {
+          $sql = "insert into `" . VAC_PREFIX . "_vaccine` (petid, diseaseid, cometime, calltime, status, note, recall, doctorid) values ($petid, 0, $cometime, $calltime, 0, '', 0, 0);";
+          // echo $sql;
+          if ($db->sql_query($sql)) {
+            $ret["status"] = 1;
+          }
         }
       }
       break;

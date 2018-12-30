@@ -102,3 +102,4 @@ $lang_module["usgrecall"] = "Tái chủng siêu âm";
 $lang_module["usgnumber"] = "Số thai";
 $lang_module["usgbirthday"] = "Ngày sinh";
 $lang_module["usgbirth"] = "Số con";
+$lang_module["usgexbirth"] = "Số thai dự kiến";

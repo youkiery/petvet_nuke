@@ -1,6 +1,49 @@
 <!-- BEGIN: main -->
 <div id="msgshow" class="msgshow"></div>
-<div id="vac_notify"></div>
+<div id="vac_notify" style="display: none; position: fixed; top: 0; right: 0; background: white; padding: 8px; border: 1px solid black; z-index: 1000;"></div>
+<div id="reman"></div>
+<div id="vac_panel" style="display: none; position: fixed; margin:auto; z-index: 1001;">
+  <form>
+    <table class="tab1" style="width: 500px;">
+      <thead>
+        <tr>
+          <td colspan="2" style="text-align: center">
+            {lang.confirm_mess}
+          </td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            {lang.recall}
+          </td>
+          <td style="width: 60%;">
+            <input id="confirm_recall" type="date" value="{now}">
+          </td>
+        </tr>
+        <tr>
+          <td>
+            {lang.doctor}
+          </td>
+          <td>
+            <select id="doctor_select" style="width: 100%; height: 2em;">
+              <!-- BEGIN: doctor -->
+              <option value="{doctorid}">
+                {doctorname}
+              </option>
+              <!-- END: doctor -->
+            </select>      
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" style="text-align: center">
+            <input type="button" style="height: 2em; padding: 4px;" onclick="save_form()" value="{lang.save}">
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </form>
+</div>
 <form class="vac_form" method="GET">
   <input type="hidden" name="nv" value="{nv}">
   <input type="hidden" name="op" value="{op}">
@@ -31,11 +74,17 @@
         {lang.doctor}
       </th>  
       <th>
-        {lang.usgbirthday}
+        {lang.usgexbirth}
       </th>  
       <th>
         {lang.usgbirth}
       </th>  
+      <th>
+        {lang.usgbirthday}
+      </th>  
+      <th>
+
+      </th>
     </tr>
   </thead>
   <tbody>
@@ -56,16 +105,35 @@
       <td class="nphone">
         {doctor}
       </td>    
-      <td class="sieuam">
-        {birthday}
-      </td>    
+      <td class="dusinh">
+        {exbirth}
+      </td>
       <td class="dusinh">
         {birth}
       </td>
+      <td class="sieuam">
+        {birthday}
+      </td>    
+      <td>
+        <button style="float: left;" onclick="confirm_lower({index}, {id}, {petid})">
+          &lt;
+        </button>
+        <span id="vac_confirm_{index}" style="color: {color};">
+          {confirm}
+        </span>
+        <button style="float: right;" onclick="confirm_upper({index}, {id}, {petid})">
+          &gt;
+        </button>
+        <!-- BEGIN: recall_link -->
+        <button id="recall_{index}" onclick="recall({index}, {id}, {petid})">
+          {lang.recall}
+        </button>
+        <!-- END: recall_link -->
+      </td>    
     </tr>
-  <!-- END: list -->
+    <!-- END: list -->
     <tr>
-      <td colspan="7">
+      <td colspan="9">
         <p style="float: right;">
           {nav}
         </p>
@@ -73,4 +141,97 @@
     </tr>
   </tbody>
 </table>
+<script>
+  var link = "/index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=";
+  var g_index = -1;
+  var g_vacid = -1;
+  var g_petid = -1;
+  function confirm_upper(index, vacid, petid) {
+    var value = document.getElementById("vac_confirm_" + index);
+    fetch(link + "sieuam&action=cvsieuam&act=up&value=" + trim(value.innerText) + "&vacid=" + vacid, []).then(response => {
+      response = JSON.parse(response);
+      change_color(value, response, index, vacid, petid);
+    })
+  }
+
+  $("#reman").click(() => {
+    $("#vac_panel").fadeOut();
+    $("#reman").hide();
+  })
+
+  function confirm_lower(index, vacid, petid) {
+    var value = document.getElementById("vac_confirm_" + index);
+    fetch(link + "sieuam&action=cvsieuam&act=low&value=" + trim(value.innerText) + "&vacid=" + vacid, []).then(response => {
+      response = JSON.parse(response);
+      change_color(value, response, index, vacid, petid);
+    })
+  }
+
+  function change_color(e, response, index, vacid, petid) {
+    if (response["status"]) {
+      e.innerText = response["data"]["value"];
+      e.style.color = response["data"]["color"];
+        
+      if (response["data"]["color"] == "green" && !response["data"]["recall"] == 0) {
+        e.parentElement.innerHTML += '<button id="recall_' + index + '" onclick="recall('+index+', '+id+', '+petid+')">';
+      } else {
+        $("#recall_" + index).remove();
+      }
+    }
+  }
+
+  function recall(index, vacid, petid) {
+    $("#reman").fadeIn();
+    $("#vac_panel").fadeIn();
+    $.post(
+			link + "main&act=post",
+      {action: "getrecall", vacid: vacid},
+      (data, status) => {
+				data = JSON.parse(data);
+				g_vacid = vacid
+				g_petid = petid
+				g_index = index
+				if (data["status"]) {
+					$("#confirm_recall").val(data["data"]["recall"]);
+					$("#doctor_select").val(data["data"]["doctor"]);
+					$("#confirm_recall").attr("disabled", true);
+					$("#doctor_select").attr("disabled", true);
+				} else {
+					var now = new Date(Number(new Date()) + 3 * 7 * 24 * 60 * 60 * 1000);
+					timestring = now.getFullYear() + "-" + (((now.getMonth() + 1) < 10 ? "0" : "") + (now.getMonth() + 1)) + "-" + (now.getDate() < 10 ? "0" : "") + now.getDate();
+					var html = "";
+
+					$("#confirm_recall").val(timestring);
+					data["data"].forEach((doctor, index) => {
+						html += "<option value='" + index + "'>" + doctor["doctor"] + "</option>";
+					})
+					$("#confirm_recall").attr("disabled", false);
+					$("#doctor_select").attr("disabled", false);
+				}
+			}
+    )
+  }
+
+  function save_form() {
+    $.post(
+      link + "sieuam&act=post",
+      {action: "save", petid: g_petid, recall: $("#confirm_recall").val(), doctor: $("#doctor_select").val(), vacid: g_vacid},
+      (data, status) => {
+				data = JSON.parse(data);
+				if (data["status"]) {
+					$("#vac_panel").fadeOut();
+					$("#reman").hide();
+					$("#recall_" + g_index).remove();
+					g_vacid = -1;
+					g_petid = -1;
+					g_index = -1;
+				} else {
+
+				}
+			}
+    )
+  }
+
+
+</script>
 <!-- END: main -->

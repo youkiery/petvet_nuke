@@ -19,6 +19,13 @@ $xtpl->assign("lang", $lang_module);
 $today = date("Y-m-d", NV_CURRENTTIME);
 $xtpl->assign("now", $today);
 
+$sql = "select * from " . VAC_PREFIX . "_doctor";
+$query = $db->sql_query($sql);
+while($row = $db->sql_fetch_assoc($query)) {
+  $xtpl->assign("doctorid", $row["id"]);
+  $xtpl->assign("doctorname", $row["name"]);
+  $xtpl->parse("main.doctor");
+}
 
 $xtpl->assign("lang", $lang_module);	
 $xtpl->assign("keyword", $keyword);
@@ -76,12 +83,13 @@ while ($doctor_row = $db->sql_fetch_assoc($query)) {
 }
 
 // $xtpl->assign("dusinh", date("Y-m-d", strtotime($today) + $dusinh));
-$sql = "select a.id, a.birthday, a.birth, a.doctorid, b.id as petid, b.name as petname, c.name as customer, c.phone from `" . VAC_PREFIX . "_usg` a inner join `" . VAC_PREFIX . "_pet` b on a.petid = b.id inner join `" . VAC_PREFIX . "_customer` c on b.customerid = c.id where (c.name like '%$keyword%' or c.phone like '%$keyword%') and birthday > 0 order by birthday " . $limit_page;
+$sql = "select a.id, a.birthday, a.birth, a.expectbirth, a.recall, a.vaccine, a.doctorid, b.id as petid, b.name as petname, c.name as customer, c.phone from `" . VAC_PREFIX . "_usg` a inner join `" . VAC_PREFIX . "_pet` b on a.petid = b.id inner join `" . VAC_PREFIX . "_customer` c on b.customerid = c.id where (c.name like '%$keyword%' or c.phone like '%$keyword%') and birthday > 0 order by birthday " . $limit_page;
 $query = $db->sql_query($sql);
 $list = fetchall($db, $query);
 $i = ($page - 1) * $limit + 1;
 
 foreach ($list as $usg_row) {
+  // var_dump($usg_row);die();
   if ($usg_row["doctorid"]) {
     $usg_row["doctor"] = $doctor[$usg_row["doctorid"]];
   }
@@ -95,12 +103,30 @@ foreach ($list as $usg_row) {
   // $query = $db->sql_query($sql);
   // $customer_row = $db->sql_fetch_assoc($query);
     $xtpl->assign("index", $i);
+    $xtpl->assign("id", $usg_row["id"]);
+    $xtpl->assign("confirm", $lang_module["confirm_" . $usg_row["vaccine"]]);
+    switch ($usg_row["vaccine"]) {
+      case '1':
+        $xtpl->assign("color", "orange");
+        break;
+      case '2':
+        $xtpl->assign("color", "green");
+        break;
+      default:
+        $xtpl->assign("color", "red");
+    }
+
+    $xtpl->assign("petid", $usg_row["petid"]);
     $xtpl->assign("petname", $usg_row["petname"]);
     $xtpl->assign("customer", $usg_row["customer"]);
     $xtpl->assign("phone", $usg_row["phone"]);
     $xtpl->assign("doctor", $usg_row["doctor"]);
     $xtpl->assign("birth", $usg_row["birth"]);
+    $xtpl->assign("exbirth", $usg_row["expectbirth"]);
     $xtpl->assign("birthday", date("d/m/Y", $usg_row["birthday"]));
+    if ($usg_row["vaccine"] == 2 && $usg_row["recall"] == 0) {
+      $xtpl->parse("main.list.recall_link");
+    }
     $xtpl->parse("main.list");
     $i ++;
 }
