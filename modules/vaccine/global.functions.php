@@ -179,7 +179,7 @@ function filter($vaclist, $path, $lang, $fromtime, $amount_time, $sort, $order) 
     $xtpl->assign("confirm", $lang["confirm_" . $vaclist[$value]["status"]]);
 
     // var_dump($vaclist[$value]); die();
-    if (!($vaclist[$value]["status"] == 2 || empty($vaclist[$value]["recall"]))) {
+    if ($vaclist[$value]["status"] > 1) {
       $xtpl->parse("disease.vac_body.recall_link");
     }
     switch ($vaclist[$value]["status"]) {
@@ -188,6 +188,9 @@ function filter($vaclist, $path, $lang, $fromtime, $amount_time, $sort, $order) 
         break;
       case '2':
         $xtpl->assign("color", "green");
+        break;
+      case '4':
+        $xtpl->assign("color", "gray");
         break;
       default:
         $xtpl->assign("color", "red");
@@ -216,7 +219,7 @@ function filter($vaclist, $path, $lang, $fromtime, $amount_time, $sort, $order) 
     $xtpl->assign("disease", $vaclist[$value]["disease"]);
     $xtpl->assign("note", $vaclist[$value]["note"]);
     $xtpl->assign("confirm", $lang["confirm_" . $vaclist[$value]["status"]]);
-    if (!($vaclist[$value]["status"] == 2 || empty($vaclist[$value]["recall"]))) {
+    if ($vaclist[$value]["status"] > 1) {
       $xtpl->parse("disease.vac_body.recall_link");
     }
     switch ($vaclist[$value]["status"]) {
@@ -225,6 +228,9 @@ function filter($vaclist, $path, $lang, $fromtime, $amount_time, $sort, $order) 
         break;
       case '2':
         $xtpl->assign("color", "green");
+        break;
+      case '4':
+        $xtpl->assign("color", "gray");
         break;
       default:
         $xtpl->assign("color", "red");
@@ -335,9 +341,9 @@ function filterVac($fromtime, $amount_time, $sort, $keyword) {
 
   $where = "where b.name like '%$keyword%' or c.name like '%$keyword%' or c.phone like '%$keyword%'";
 
-  $sql = "select a.id, a.note, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, status, diseaseid, dd.name as disease from " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_pet b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id inner join " . VAC_PREFIX . "_disease dd on a.diseaseid = dd.id $where " . $order;
+  $sql = "select a.id, a.note, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, recall, status, diseaseid, dd.name as disease from " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_pet b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id inner join " . VAC_PREFIX . "_disease dd on a.diseaseid = dd.id $where " . $order;
   $result = $db->sql_query($sql);
-  $sql = "select a.id, a.note, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, status, diseaseid, dd.name as disease from " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_pet b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id inner join (select 0 as id, 'Siêu Âm' as name from DUAL) dd on a.diseaseid = dd.id where " . $order;
+  $sql = "select a.id, a.note, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, recall, status, diseaseid, dd.name as disease from " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_pet b on calltime between " . $fromtime . " and " . $endtime . " and a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id inner join (select 0 as id, 'Siêu Âm' as name from DUAL) dd on a.diseaseid = dd.id where " . $order;
   $result2 = $db->sql_query($sql);
   $ret = array();
   while ($row = $db->sql_fetch_assoc($result)) {

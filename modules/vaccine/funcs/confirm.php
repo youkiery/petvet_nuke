@@ -33,6 +33,10 @@ if(!(empty($act) || empty($value) || empty($vacid)) && $diseaseid >= 0) {
 					case '2':
 						$color = "green";
 						break;
+					case '4':
+						$color = "white";
+						$ret["data"]["value"] = "Đã lưu tái chủng";
+						break;
 					default:
 						$color = "red";
 				}

@@ -40,7 +40,7 @@
         </tr>
         <tr>
           <td colspan="2" style="text-align: center">
-            <input type="button" style="height: 2em; padding: 4px;" onclick="save_form()" value="{lang.save}">
+            <input id="btn_save_vaccine" type="button" style="height: 2em; padding: 4px;" onclick="save_form()" value="{lang.save}">
           </td>
         </tr>
       </tbody>
@@ -120,6 +120,8 @@
   function recall(index, vacid, petid, diseaseid) {
     $("#reman").fadeIn();
     $("#vac_panel").fadeIn();
+    $("#btn_save_vaccine").attr("disabled", true);
+
     $.post(
 			link + "main&act=post",
       {action: "getrecall", vacid: vacid, diseaseid: diseaseid},
@@ -130,28 +132,19 @@
 				g_petid = petid
 				g_index = index
 				if (data["status"]) {
-					$("#confirm_recall").val(data["data"]["recall"]);
-					$("#doctor_select").val(data["data"]["doctor"]);
-					$("#confirm_recall").attr("disabled", true);
-					$("#doctor_select").attr("disabled", true);
-				} else {
-					var now = new Date(Number(new Date()) + 3 * 7 * 24 * 60 * 60 * 1000);
-					timestring = now.getFullYear() + "-" + (((now.getMonth() + 1) < 10 ? "0" : "") + (now.getMonth() + 1)) + "-" + (now.getDate() < 10 ? "0" : "") + now.getDate();
-					var html = "";
-
-					$("#confirm_recall").val(timestring);
-					data["data"].forEach((doctor, index) => {
-						html += "<option value='" + index + "'>" + doctor["doctor"] + "</option>";
-					})
-					$("#confirm_recall").attr("disabled", false);
-					$("#doctor_select").attr("disabled", false);
+          if (data["data"]["doctor"]) {
+            $("#doctor_select").html(data["data"]["doctor"]);
+            $("#confirm_recall").val(data["data"]["calltime"]);
+            if (data["data"]["recall"] == 0) {
+              $("#btn_save_vaccine").attr("disabled", false);
+            }
+          }
 				}
 			}
     )
   }
 
   function search() {
-
     var key = document.getElementById("customer_key").value;
     fetch(link + "search&key=" + key, []).then(response => {
       document.getElementById("disease_display").innerHTML = response;

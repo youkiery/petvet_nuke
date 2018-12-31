@@ -27,25 +27,33 @@ if (!empty($action)) {
       break;
     case 'getrecall':
       $vacid = $nv_Request->get_string('vacid', 'post', '');
-      $diseaseid = $nv_Request->get_string('diseaseid', 'post', '');
-      $sql = "select a.recall, b.doctor from `" . VAC_PREFIX . "_vaccine` a inner join `" . VAC_PREFIX . "_vaccine` b on id = $vacid where a.doctorid = b.id";
-
+      $sql = "select * from `" . VAC_PREFIX . "_vaccine` where id = $vacid";
       $result = $db->sql_query($sql);
       $check = true;
       $row = $db->sql_fetch_assoc($result);
-      if ($row["recall"]) {
-        $ret["status"] = 1;
-        $ret["data"] = $row;
-      } else {
-        $sql = "select * from `" . VAC_PREFIX . "_doctor`";
-        $result = $db->sql_query($sql);
-        $doctor = array();
-        while ($row = $db->sql_fetch_assoc($result)) {
-          $doctor[] = $row;
-        }
-        $ret["data"] = $doctor;
-      }
 
+      $sql = "select * from `" . VAC_PREFIX . "_doctor`";
+      $result = $db->sql_query($sql);
+      $doctor = "";
+      while ($row2 = $db->sql_fetch_assoc($result)) {
+        $select = "";
+        if ($row2["id"] == $row["doctorid"]) {
+          $select = "selected";
+        }
+        $doctor .= "<option value='$row2[id]'>$row2[name]</option>";
+      }
+      if ($row["recall"]) {
+        $row["calltime"] = date("Y-m-d", $row["calltime"]);
+      }
+      else {
+        $calltime = $row["calltime"] + 30 * 24 * 60 * 60;
+        $row["calltime"] = date("Y-m-d", $calltime);
+      }
+      $row["calltime"];
+      $row["doctor"] = $doctor;
+      $ret["status"] = 1;
+      $ret["data"] = $row;
+      
       echo json_encode($ret);
       break;
     case 'save':
@@ -59,7 +67,7 @@ if (!empty($action)) {
         $cometime = time();
         $calltime = strtotime($recall);
 
-        $sql = "update `" . VAC_PREFIX . "_vaccine` set recall = $calltime, doctorid = $doctor where id = $vacid;";
+        $sql = "update `" . VAC_PREFIX . "_vaccine` set status = 4, recall = $calltime, doctorid = $doctor where id = $vacid;";
         if ($db->sql_query($sql)) {
           $sql = "insert into `" . VAC_PREFIX . "_vaccine` (petid, diseaseid, cometime, calltime, status, note, recall, doctorid) values ($petid, $diseaseid, $cometime, $calltime, 0, '', 0, 0);";
           if ($db->sql_query($sql)) {
@@ -151,7 +159,7 @@ if (!empty($action)) {
           $query = $db->sql_query($sql);
           $x = array();
           $row = $db->sql_fetch_assoc($query);
-          $sql = "update " . VAC_PREFIX . "_vaccine set status = 2, recall = $calltime where id = $row[id]";
+          $sql = "update " . VAC_PREFIX . "_vaccine set status = 4, recall = $calltime where id = $row[id]";
           // echo($sql); die();
           $db->sql_query($sql);
 

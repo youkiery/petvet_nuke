@@ -35,12 +35,6 @@ $lang_module["update"] = "Cập nhật";
 $lang_module["yes"] = "Đã xong";
 $lang_module["no"] = "Chưa xong";
 
-$lang_module["confirm_value"][0] = "Chưa gọi";
-$lang_module["confirm_value"][1] = "Đã gọi";
-$lang_module["confirm_value"][2] = "Đã tiêm";
-$lang_module["lasttime"] = "Lần cuối";
-$lang_module["lastname"] = "Loại tiêm phòng";
-
 $lang_module["filter"] = "Lọc";
 $lang_module["config"] = "Cấu hình";
 $lang_module["doctor_title"] = "Danh mục bác sĩ";
@@ -96,9 +90,14 @@ $lang_module["d_sort"] = "Sắp xếp mặc định";
 $lang_module["d_time"] = "Thời gian hiển thị danh sách";
 $lang_module["d_expert"] = "Thời gian dự sinh";
 
+$lang_module["confirm_0"] = "Chưa gọi";
+$lang_module["confirm_1"] = "Đã gọi";
+$lang_module["confirm_2"] = "Đã tiêm";
+$lang_module["confirm_4"] = "Đã lưu";
 $lang_module["confirm_value"][0] = "Chưa Gọi";
 $lang_module["confirm_value"][1] = "Đã Gọi";
 $lang_module["confirm_value"][2] = "Đã Tiêm";
+$lang_module["confirm_value"][4] = "Đã lưu";
 $lang_module["confirm_value2"][0] = "Chưa Gọi";
 $lang_module["confirm_value2"][1] = "Đã Gọi";
 $lang_module["confirm_value2"][2] = "Đã Siêu Âm";

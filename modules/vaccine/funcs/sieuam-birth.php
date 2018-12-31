@@ -112,6 +112,9 @@ foreach ($list as $usg_row) {
       case '2':
         $xtpl->assign("color", "green");
         break;
+      case '4':
+        $xtpl->assign("color", "gray");
+        break;
       default:
         $xtpl->assign("color", "red");
     }
@@ -124,7 +127,7 @@ foreach ($list as $usg_row) {
     $xtpl->assign("birth", $usg_row["birth"]);
     $xtpl->assign("exbirth", $usg_row["expectbirth"]);
     $xtpl->assign("birthday", date("d/m/Y", $usg_row["birthday"]));
-    if ($usg_row["vaccine"] == 2 && $usg_row["recall"] == 0) {
+    if ($usg_row["vaccine"] > 1) {
       $xtpl->parse("main.list.recall_link");
     }
     $xtpl->parse("main.list");

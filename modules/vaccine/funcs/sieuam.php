@@ -24,6 +24,65 @@ $action = $nv_Request->get_string('action', 'get/post', '');
         }
       }
       break;
+      case "getbirth":
+        $id = $nv_Request->get_string('id', 'post', '');
+        if ($id > 0) {
+          $sql = "select * from `" . VAC_PREFIX . "_usg` where id = $id";
+          $query = $db->sql_query($sql);
+          $usg = $db->sql_fetch_assoc($query);
+
+          $sql = "select * from `" . VAC_PREFIX . "_doctor`";
+          $query = $db->sql_query($sql);
+          $doctor = "";
+          while ($row = $db->sql_fetch_assoc($query)) {
+            $check = "";
+            if ($row["id"] == $usg["doctorid"]) {
+              $check = "selected";
+            }
+            $doctor .= "<option value='$row[id]' $check>$row[name]</option>";
+          }
+
+          if ($usg) {
+            $ret["data"]["birth"] = $usg["birth"];
+            $ret["data"]["birthday"] = date("Y-m-d", $usg["birthday"]);
+            $ret["data"]["doctor"] = $doctor;
+            $ret["status"] = 1;
+          }
+        }
+      break;
+      case 'getbirthrecall':
+        $vacid = $nv_Request->get_string('vacid', 'post', '');
+        $sql = "select * from `" . VAC_PREFIX . "_usg` where id = $vacid";
+        $result = $db->sql_query($sql);
+        $usg = $db->sql_fetch_assoc($result);
+
+        $sql = "select * from `" . VAC_PREFIX . "_vaccine` where petid = $usg[childid]";
+        $result = $db->sql_query($sql);
+        $vaccine = $db->sql_fetch_assoc($result);
+  
+        $sql = "select * from `" . VAC_PREFIX . "_doctor`";
+        $result = $db->sql_query($sql);
+        $doctor = "";
+        while ($drow = $db->sql_fetch_assoc($result)) {
+          $select = "";
+          if (!empty($vaccine["doctorid"]) && $drow["id"] == $vaccine["doctorid"]) {
+            $select = "selected";
+          }
+          $doctor .= "<option value='$drow[id]'>$drow[name]</option>";
+        }
+        if ($usg["recall"]) {
+          $usg["calltime"] = date("Y-m-d", $usg["recall"]);
+        }
+        else {
+          $calltime = strtotime(date("Y-m-d")) + 30 * 24 * 60 * 60;
+          $usg["calltime"] = date("Y-m-d", $calltime);
+        }
+        $usg["calltime"];
+        $usg["doctor"] = $doctor;
+        $ret["status"] = 1;
+        $ret["data"] = $usg;
+        
+        break;
       case "birth":
       $id = $nv_Request->get_string('id', 'post', '');
       $petid = $nv_Request->get_string('petid', 'post', '');
@@ -43,21 +102,27 @@ $action = $nv_Request->get_string('action', 'get/post', '');
         }
         $birthday = strtotime($birthday);
         $recall = $birthday + 60 * 60 * 24 * 60;
+        $sql = "select * from " . VAC_PREFIX . "_usg where id = $id";
+        $query = $db->sql_query($sql);
+        $usg = $db->sql_fetch_assoc($query);
+
         $sql = "select * from " . VAC_PREFIX . "_pet where id = $petid";
         $query = $db->sql_query($sql);
         $customer = $db->sql_fetch_assoc($query);
 
         $sql = "update `" . VAC_PREFIX . "_usg` set birth = '$birth', birthday = " . $birthday . ", doctorid = $doctor where id = $id";
         $result = $db->sql_query($sql);
-        
-        $sql = "select * from " . VAC_PREFIX . "_usg where id = $id";
-        $query = $db->sql_query($sql);
-        $usg = $db->sql_fetch_assoc($query);
+        if ($usg["childid"] == 0) {
+          $sql = "insert into " . VAC_PREFIX . "_pet (name, customerid) values('" . date("d/m/Y", $birthday) . "', $customer[id])";
+          $pet_id = $db->sql_query_insert_id($sql);
 
-        $sql = "insert into " . VAC_PREFIX . "_pet (name, customerid) values('" . date("d/m/Y", $birthday) . "', $customer[id])";
-        $pet_query = $db->sql_query($sql);
+          if ($pet_id > 0) {
+            $sql = "update `" . VAC_PREFIX . "_usg` set childid = $pet_id where id = $id";
+            $query = $db->sql_query($sql);
+          }
+        }
         
-        if ($result && $pet_query) {
+        if ($result && $query) {
           $ret["status"] = 1;
           $ret["data"]["birth"] = $birth;
         }
@@ -83,6 +148,7 @@ $action = $nv_Request->get_string('action', 'get/post', '');
       }
       break;
       case "cvsieuam":
+        // confirm vaccine usg
         $value = $nv_Request->get_string('value', 'get', '');
         $vacid = $nv_Request->get_string('vacid', 'get', '');
         $act = $nv_Request->get_string('act', 'get', '');
@@ -134,7 +200,7 @@ $action = $nv_Request->get_string('action', 'get/post', '');
         $cometime = time();
         $calltime = strtotime($recall);
 
-        $sql = "update `" . VAC_PREFIX . "_usg` set recall = $calltime where id = $vacid;";
+        $sql = "update `" . VAC_PREFIX . "_usg` set status = 4, recall = $calltime where id = $vacid;";
         // echo $sql;
         if ($db->sql_query($sql)) {
           $sql = "insert into `" . VAC_PREFIX . "_vaccine` (petid, diseaseid, cometime, calltime, status, note, recall, doctorid) values ($petid, 0, $cometime, $calltime, 0, '', 0, 0);";

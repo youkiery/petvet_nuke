@@ -46,7 +46,7 @@
         </tr>
         <tr>
           <td colspan="2" style="text-align: center;">
-            <button>
+            <button id="btn_save_birth">
               {lang.save}
             </button>
           </td>
@@ -206,6 +206,21 @@
     $("#birthday").val("")
     $("#vac_info2").fadeIn();
     $("#reman").show();
+    $("#btn_save_birth").attr("disable", true);
+
+    $.post(
+        link + "sieuam",
+        {action: "getbirth", id: vacid},
+        (response, status) => {
+          data = JSON.parse(response);
+          if (data["status"]) {
+            $("#birthnumber").val(data["data"]["birth"])
+            $("#birthday").val(data["data"]["birthday"])
+            $("#doctor_select").html(data["data"]["doctor"])
+            $("#btn_save_birth").attr("disable", false);
+          }
+        }
+      )
 
     g_index = index
     g_id = vacid
@@ -221,8 +236,7 @@
         (response, status) => {
           data = JSON.parse(response);
           if (data["status"]) {
-            var x = $("#birth_" + index).children()[0]
-            x.innerText = data["data"]["birth"]
+            var x = $("#birth_" + index).children()[0].innerText = data["data"]["birth"]
           }
         }
       )
@@ -233,11 +247,11 @@
     event.preventDefault()
       $.post(
         link + "sieuam",
-        {action: "birth", id: g_id, petid: g_petid, birth: $("#birthnumber").val(), birthday: $("#birthday").val(), doctor: $("doctor_select").val()},
+        {action: "birth", id: g_id, petid: g_petid, birth: $("#birthnumber").val(), birthday: $("#birthday").val(), doctor: $("#doctor_select").val()},
         (response, status) => {
           data = JSON.parse(response);
           if (data["status"]) {
-            $("#birth_" + g_index).text(data["data"]["birth"])
+            $("#birth_" + g_index).children()[0].innerText = data["data"]["birth"]
             // $("#birth_" + g_index).attr("disabled", "true")
             g_index = -1
             g_id = -1

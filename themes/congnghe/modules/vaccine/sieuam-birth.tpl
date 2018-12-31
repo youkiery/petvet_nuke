@@ -37,7 +37,7 @@
         </tr>
         <tr>
           <td colspan="2" style="text-align: center">
-            <input type="button" style="height: 2em; padding: 4px;" onclick="save_form()" value="{lang.save}">
+            <input id="btn_save_birth" type="button" style="height: 2em; padding: 4px;" onclick="save_form()" value="{lang.save}">
           </td>
         </tr>
       </tbody>
@@ -114,16 +114,16 @@
       <td class="sieuam">
         {birthday}
       </td>    
-      <td>
+      <td style="text-align: center;">
         <button style="float: left;" onclick="confirm_lower({index}, {id}, {petid})">
           &lt;
         </button>
-        <span id="vac_confirm_{index}" style="color: {color};">
-          {confirm}
-        </span>
         <button style="float: right;" onclick="confirm_upper({index}, {id}, {petid})">
           &gt;
         </button>
+        <p id="vac_confirm_{index}" style="color: {color};">
+          {confirm}
+        </p>
         <!-- BEGIN: recall_link -->
         <button id="recall_{index}" onclick="recall({index}, {id}, {petid})">
           {lang.recall}
@@ -172,8 +172,10 @@
       e.innerText = response["data"]["value"];
       e.style.color = response["data"]["color"];
         
-      if (response["data"]["color"] == "green" && !response["data"]["recall"] == 0) {
-        e.parentElement.innerHTML += '<button id="recall_' + index + '" onclick="recall('+index+', '+id+', '+petid+')">';
+      if (response["data"]["color"] == "green" && response["data"]["recall"] == "0") {
+        console.log(e);
+        
+        e.parentElement.innerHTML += '<button id="recall_' + index + '" onclick="recall('+index+', '+vacid+', '+petid+')">Tái chủng</button>';
       } else {
         $("#recall_" + index).remove();
       }
@@ -183,30 +185,23 @@
   function recall(index, vacid, petid) {
     $("#reman").fadeIn();
     $("#vac_panel").fadeIn();
+    $("#btn_save_birth").attr("disabled", true);
     $.post(
-			link + "main&act=post",
-      {action: "getrecall", vacid: vacid},
+			link + "sieuam&act=post",
+      {action: "getbirthrecall", vacid: vacid},
       (data, status) => {
 				data = JSON.parse(data);
 				g_vacid = vacid
 				g_petid = petid
 				g_index = index
+        console.log(data);
+        
 				if (data["status"]) {
-					$("#confirm_recall").val(data["data"]["recall"]);
-					$("#doctor_select").val(data["data"]["doctor"]);
-					$("#confirm_recall").attr("disabled", true);
-					$("#doctor_select").attr("disabled", true);
-				} else {
-					var now = new Date(Number(new Date()) + 3 * 7 * 24 * 60 * 60 * 1000);
-					timestring = now.getFullYear() + "-" + (((now.getMonth() + 1) < 10 ? "0" : "") + (now.getMonth() + 1)) + "-" + (now.getDate() < 10 ? "0" : "") + now.getDate();
-					var html = "";
-
-					$("#confirm_recall").val(timestring);
-					data["data"].forEach((doctor, index) => {
-						html += "<option value='" + index + "'>" + doctor["doctor"] + "</option>";
-					})
-					$("#confirm_recall").attr("disabled", false);
-					$("#doctor_select").attr("disabled", false);
+          $("#confirm_recall").val(data["data"]["calltime"])
+          $("#doctor_select").html(data["data"]["doctor"])
+          if (data["data"]["recall"] == 0) {
+            $("#btn_save_birth").attr("disabled", false);
+          }
 				}
 			}
     )
