@@ -182,9 +182,9 @@ while ($revert) {
 	$from = $tpage * $filter;
 	$to = $from + $filter;
 // 	$sql = "select a.id, a.cometime, a.calltime, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone, d.name as doctor, a.diseaseid, dd.name as disease from " .  VAC_PREFIX . "_vaccine a inner join " .  VAC_PREFIX . "_pet b on a.petid = b.id inner join " .  VAC_PREFIX . "_customer c on b.customerid = c.id inner join " .  VAC_PREFIX . "_doctor d on a.doctorid = d.id inner join (select * from " . VAC_PREFIX . "_disease union (select 0 as id, 'Siêu Âm' as name from DUAL)) dd on a.diseaseid = dd.id $where $order[$sort] limit $from, $to";
-	$sql = "select a.id, a.cometime, a.calltime, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone, d.name as doctor, a.diseaseid, dd.name as disease from " .  VAC_PREFIX . "_vaccine a inner join " .  VAC_PREFIX . "_pet b on a.petid = b.id inner join " .  VAC_PREFIX . "_customer c on b.customerid = c.id inner join " .  VAC_PREFIX . "_doctor d on a.doctorid = d.id inner join " . VAC_PREFIX . "_disease dd on a.diseaseid = dd.id $where $order[$sort] limit $from, $to";
+	$sql = "select a.id, a.cometime, a.calltime, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone, d.name as doctor, a.diseaseid, dd.name as disease from " .  VAC_PREFIX . "_vaccine a inner join " .  VAC_PREFIX . "_pet b on a.petid = b.id inner join " .  VAC_PREFIX . "_customer c on b.customerid = c.id inner join " .  VAC_PREFIX . "_doctor d on a.doctorid = d.id inner join " . VAC_PREFIX . "_disease dd on a.diseaseid = dd.id $where $order[$sort] limit $filter offset $from";
 	$result = $db->sql_query($sql);
-	$sql = "select a.id, a.cometime, a.calltime, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone, d.name as doctor, a.diseaseid, dd.name as disease from " .  VAC_PREFIX . "_vaccine a inner join " .  VAC_PREFIX . "_pet b on a.petid = b.id inner join " .  VAC_PREFIX . "_customer c on b.customerid = c.id inner join " .  VAC_PREFIX . "_doctor d on a.doctorid = d.id inner join (select 0 as id, 'Siêu Âm' as name from DUAL) dd on a.diseaseid = dd.id $where $order[$sort] limit $from, $to";
+	$sql = "select a.id, a.cometime, a.calltime, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone, d.name as doctor, a.diseaseid, dd.name as disease from " .  VAC_PREFIX . "_vaccine a inner join " .  VAC_PREFIX . "_pet b on a.petid = b.id inner join " .  VAC_PREFIX . "_customer c on b.customerid = c.id inner join " .  VAC_PREFIX . "_doctor d on a.doctorid = d.id inner join (select 0 as id, 'Siêu Âm' as name from DUAL) dd on a.diseaseid = dd.id $where $order[$sort] limit $filter offset $from";
 	$result2 = $db->sql_query($sql);
 	$display_list = array();
 	while ($row = $db->sql_fetch_assoc($result)) {
@@ -242,6 +242,7 @@ function displayRed($list, $path, $lang_module, $index, $nav) {
 	// echo $path; die();
 	$stt = $index;
 	foreach ($list as $key => $row) {
+		// echo $row["calltime"]. ", ";
 		// var_dump($row); die();
 		$xtpl->assign("stt", $stt);
 		$xtpl->assign("id", $row["id"]);
@@ -254,6 +255,7 @@ function displayRed($list, $path, $lang_module, $index, $nav) {
 		$xtpl->assign("disease", $row["disease"]);
 		$xtpl->assign("cometime", date("d/m/Y", $row["cometime"]));
 		$xtpl->assign("calltime", date("d/m/Y", $row["calltime"]));
+		// $xtpl->assign("calltime2", $row["calltime"]);
 		$xtpl->assign("nav_link", $nav);
 		// $xtpl->assign("delete_link", "");
 

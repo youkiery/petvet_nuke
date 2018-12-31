@@ -24,6 +24,15 @@
 				{lang.usgcall}
 			</th>
 			<th>
+				{lang.exbirth}
+			</th>
+			<th>
+				{lang.birth}
+			</th>
+			<th>
+				{lang.vaccine}
+			</th>
+			<th>
 			
 			</th>
 		</tr>
@@ -55,6 +64,15 @@
 			</td>
 			<td>
 				{calltime}
+			</td>
+			<td>
+				{exbirth}
+			</td>
+			<td>
+				{birth}
+			</td>
+			<td>
+				{recall} {vacname}
 			</td>
 			<td>
 				<button onclick="xoasieuam({id})">

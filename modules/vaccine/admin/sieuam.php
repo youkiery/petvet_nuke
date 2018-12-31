@@ -118,14 +118,25 @@ if ($action) {
 				$sql = "select * from " .  VAC_PREFIX . "_usg where id = $id";
 				$result = $db->sql_query($sql);
 
-				
 				if ($result) {
 					$row = $db->sql_fetch_assoc($result);
 					$sql = "select * from " .  VAC_PREFIX . "_pet where id = $row[petid]";
 					$result = $db->sql_query($sql);
 					$row2 = $db->sql_fetch_assoc($result);
 					$ret["status"] = 1;
-					$ret["data"] = array("calltime" => date("Y-m-d", $row["calltime"]), "cometime" => date("Y-m-d", $row["cometime"]), "doctorid" => $row["doctorid"], "note" => $row["note"], "image" => $row["image"], "customerid" => $row2["customerid"], "petid" => $row["petid"]);
+					$recall = 0;
+					if ($row["recall"]) {
+						$recall = date("Y-m-d", $row["recall"]);
+					}
+					$vaccine = "";
+					foreach ($lang_module["confirm_value"] as $key => $value) {
+						$select = "";
+						if ($row["vaccine"] == $key) {
+							$select = "selected";
+						}
+						$vaccine .= "<option value='$key' $select>$value</option>";
+					}
+					$ret["data"] = array("calltime" => date("Y-m-d", $row["calltime"]), "cometime" => date("Y-m-d", $row["cometime"]), "doctorid" => $row["doctorid"], "note" => $row["note"], "image" => $row["image"], "customerid" => $row2["customerid"], "petid" => $row["petid"], "birth" => $row["birth"], "exbirth" => $row["expectbirth"], "recall" => $recall, "vaccine" => $vaccine, "vacid" => $row["vaccine"]);
 				}
 				echo json_encode($ret);
 			}
@@ -135,14 +146,54 @@ if ($action) {
 			$cometime = $nv_Request->get_string('cometime', 'post', "");
 			$calltime = $nv_Request->get_string('calltime', 'post', "");
 			$doctorid = $nv_Request->get_string('doctorid', 'post', "");
+			$birth = $nv_Request->get_string('birth', 'post', "");
+			$exbirth = $nv_Request->get_string('exbirth', 'post', "");
+			$recall = $nv_Request->get_string('recall', 'post', "");
+			$vaccine = $nv_Request->get_int('vaccine', 'post', 0);
 			$note = $nv_Request->get_string('note', 'post', "");
 			$image = $nv_Request->get_string('image', 'post', "");
+			$customer = $nv_Request->get_string('customer', 'post', "");
 			if (!(empty($id) || empty($cometime) || empty($calltime) || empty($doctorid))) {
 				$cometime = strtotime($cometime);
 				$calltime = strtotime($calltime);
-				$sql = "update " .  VAC_PREFIX . "_usg set cometime = $cometime, calltime = $calltime, doctorid = $doctorid, note = '$note', image = '$image' where id = $id";
+				$sql = "select * from `" . VAC_PREFIX . "_usg` where id = $id";
+				$query = $db->sql_query($sql);
+				$usg = $db->sql_fetch_assoc($query);
+				// var_dump($usg);
+				if ($usg["childid"] == 0) {
+					$birth = 0;
+				} 
+				if ($usg["vaccine"] < 4 && $vaccine == 0) {
+					$exbirth = 0;
+				}
+				if ($usg["vaccine"] == 4) {
+					$vaccine = 4;
+				}
+				if ($vaccine == 4) {
+					if ($recall == 0) {
+						$recall = strtotime(date("Y-m-d"));
+					}
+					else {
+						$recall = strtotime($recall);
+					}
+					if ($usg["childid"] == 0 && $customer > 0) {
+						$sql = "insert into " . VAC_PREFIX . "_pet (name, customerid) values('" . date("d/m/Y", $calltime) . "', $customer)";
+						$pet_id = $db->sql_query_insert_id($sql);
+	
+						if ($pet_id > 0) {
+							$sql = "update `" . VAC_PREFIX . "_usg` set childid = $pet_id where id = $id";
+							$query = $db->sql_query($sql);
+						}
+							
+						$sql = "insert into `" . VAC_PREFIX . "_vaccine` (petid, diseaseid, cometime, calltime, status, note, recall, doctorid) values ($pet_id, 0, $calltime, $recall, 0, '', 0, $doctorid);";
+						$query = $db->sql_query($sql);
+					}
+				}
+				if ($recall == 0) {
+					$recall = 0;
+				}
+				$sql = "update " .  VAC_PREFIX . "_usg set cometime = $cometime, calltime = $calltime, doctorid = $doctorid, note = '$note', image = '$image', birth = $birth, expectbirth = $exbirth, recall = $recall, vaccine = $vaccine where id = $id";
 				$result = $db->sql_query($sql);
-				
 				if ($result) {
 					$ret["status"] = 1;
 				}
@@ -170,7 +221,7 @@ while ($revert) {
 	if ($tpage <= 0) $revert = false;
 	$from = $tpage * $filter;
 	$to = $from + $filter;
-	$sql = "select a.id, a.cometime, a.calltime, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone, d.name as doctor from " .  VAC_PREFIX . "_usg a inner join " .  VAC_PREFIX . "_pet b on a.petid = b.id inner join " .  VAC_PREFIX . "_customer c on b.customerid = c.id inner join " .  VAC_PREFIX . "_doctor d on a.doctorid = d.id $where $order[$sort] limit $from, $to";
+	$sql = "select a.id, a.cometime, a.calltime, a.birth, a.expectbirth, a.vaccine, a.recall, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone, d.name as doctor from " .  VAC_PREFIX . "_usg a inner join " .  VAC_PREFIX . "_pet b on a.petid = b.id inner join " .  VAC_PREFIX . "_customer c on b.customerid = c.id inner join " .  VAC_PREFIX . "_doctor d on a.doctorid = d.id $where $order[$sort] limit $from, $to";
 	$result = $db->sql_query($sql);
 	$display_list = array();
 	while ($row = $db->sql_fetch_assoc($result)) {
@@ -231,8 +282,19 @@ function displayRed($list, $path, $lang_module, $index, $nav) {
 		$xtpl->assign("customer_link", $link . "customer&customerid=" . $row["customerid"]);
 		$xtpl->assign("phone", $row["phone"]);
 		$xtpl->assign("doctor", $row["doctor"]);
+		$xtpl->assign("birth", $row["birth"]);
+		$xtpl->assign("exbirth", $row["expectbirth"]);
 		$xtpl->assign("cometime", date("d/m/Y", $row["cometime"]));
 		$xtpl->assign("calltime", date("d/m/Y", $row["calltime"]));
+		$recall = $row["recall"];
+		if ($recall > 0 && $row["vaccine"] > 2) {
+			$xtpl->assign("recall", date("d/m/Y", $recall));
+			$xtpl->assign("vacname", "");
+		}
+		else {
+			$xtpl->assign("recall", $lang_module["norecall"]);
+			$xtpl->assign("vacname", " / " . $lang_module["confirm_value"][$row["vaccine"]]);
+		}
 		$xtpl->assign("nav_link", $nav);
 		// $xtpl->assign("delete_link", "");
 

@@ -62,6 +62,9 @@
 			<td>
 				{calltime}
 			</td>
+			<!-- <td>
+				{calltime2}
+			</td> -->
 			<td>
 				<button onclick="xoasieuam({id})">
 					{lang.remove}

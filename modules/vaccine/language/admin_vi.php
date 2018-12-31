@@ -111,3 +111,8 @@ $lang_module["treat_title"] = "Thêm khách lưu bệnh";
 $lang_module["pet_status"] = "Sức khỏe";
 $lang_module["insult"] = "Kết quả điều trị";
 
+$lang_module["birth"] = "Số con";
+$lang_module["exbirth"] = "Số thai dự kiến";
+$lang_module["norecall"] = "Chưa tái chủng";
+$lang_module["vaccine"] = "Tiêm phòng";
+

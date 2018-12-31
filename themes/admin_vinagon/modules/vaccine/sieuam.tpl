@@ -21,27 +21,58 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td colspan="2">
+						<td>
 							{lang.usgcome}
 						</td>
 						<td>
 							{lang.usgcall}
 						</td>
+						<td>
+							{lang.vaccine}
+						</td>
 					</tr>
 					<!-- pet input -->
 					<tr>
-						<td colspan="2">
+						<td>
 							<input class="input" id="cometime2" type="date" name="ngaysieuam" value="{now}">
 						</td>
 						<td>
 							<input class="input" id="calltime2" type="date" name="calltime" value="{dusinh}">
 						</td>
+						<td>
+							<input class="input" id="recall" type="date" name="recall">
+						</td>
 					<!-- hình ảnh -->
 					<tr>
 						<td colspan="2">
-							{lang.doctor}
+							{lang.birth}
 						</td>
 						<td>
+							{lang.exbirth}
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<input class="input" id="birth" type="number" name="calltime">
+						</td>
+						<td>
+							<input class="input" id="exbirth" type="number" name="calltime">
+						</td>
+					</tr>
+					<tr>
+						<td>
+							{lang.vaccine}
+						</td>
+						<td colspan="2">
+							<select id="vaccine_status">
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							{lang.doctor}
+						</td>
+						<td colspan="2">
 							<select name="doctor" id="doctor2" style="width: 90%;">
 								<!-- BEGIN: doctor3 -->
 								<option value="{doctor_value}">{doctor_name}</option>
@@ -50,10 +81,10 @@
 						</td>
 					</tr>
 					<tr>
-						<td colspan="2">
+						<td>
 							{lang.image}
 						</td>
-						<td>
+						<td colspan="2">
 							<input class="input inmax" type="text" name="hinhanh" id="image2" style="width: 80%;" disabled>
 							<div class="icon upload" type="button" value="{lang.chonanh}" name="selectimg" ></div>
 						</td>
@@ -69,7 +100,7 @@
 							<textarea id="note2" rows="3" style="width: 98%;"></textarea>
 						</td>
 						<td>
-							<input type="submit" value="{lang.submit}">
+							<input id="btn_usg_update" type="submit" value="{lang.submit}">
 						</td>
 					</tr>
 				</tbody>
@@ -231,6 +262,15 @@
 	var suggest_name = document.getElementById("customer_name_suggest");
 	var suggest_phone = document.getElementById("customer_phone_suggest");
 
+	$("#vaccine_status").change((e) => {
+		if (e.currentTarget.value == 4) {
+			$("#recall").attr("disabled", false);
+		}
+		else {
+			$("#recall").attr("disabled", true);
+		}
+	})
+
 	function xoasieuam(id) {
 		var answer = confirm("Xóa bản ghi này?");
 		if (answer) {
@@ -252,7 +292,7 @@
 
 		$.post(
 			adlink + "sieuam",
-			{action: "update_usg", id: g_id, cometime: $("#cometime2").val(), calltime: $("#calltime2").val(), doctorid: $("#doctor2").val(), note: $("#note2").val(), image: $("#image2").val()},
+			{action: "update_usg", id: g_id, cometime: $("#cometime2").val(), calltime: $("#calltime2").val(), doctorid: $("#doctor2").val(), note: $("#note2").val(), image: $("#image2").val(), birth: $("#birth").val(), exbirth: $("#exbirth").val(), recall: $("#recall").val(), vaccine: $("#vaccine_status").val(), customer: g_customerid},
 			(response, status) => {
 				var data = JSON.parse(response)
 				if (data["status"]) {
@@ -294,24 +334,35 @@
 
 	function update(e, id) {
 		g_id = id
+		console.log(g_id);
+		
+		$("#btn_usg_update").attr("disabled", true);
+		$("#recall").attr("disabled", true);
+		$("#vac_info").fadeIn();
+		$("#reman").show();
 		$.post(
 			adlink + "sieuam",
 			{action: "usg_info", id: g_id},
 			(response, status) => {
 				var data = JSON.parse(response);
 				if (data["status"]) {
-					$("#vac_info").fadeIn();
-					$("#reman").show();
+					$("#btn_usg_update").attr("disabled", false);
 					g_customerid = data["data"]["customerid"]
 					g_petid = data["data"]["petid"]
-					.log(e);
 					
 					g_pet = trim(e.target.parentElement.parentElement.children[1].innerText)
+					$("#vaccine_status").html(data["data"]["vaccine"])					
 					$("#cometime2").val(data["data"]["cometime"])					
 					$("#calltime2").val(data["data"]["calltime"])					
 					$("#doctor2").val(data["data"]["doctorid"])					
 					$("#note2").val(data["data"]["note"])					
 					$("#image2").val(data["data"]["image"])					
+					$("#birth").val(data["data"]["birth"])					
+					$("#exbirth").val(data["data"]["exbirth"])					
+					if (data["data"]["recall"] > 0 || data["data"]["vacid"] == 4) {
+						$("#recall").val(data["data"]["recall"])					
+						$("#recall").attr("disabled", false);
+					}
 				}
 			}
 		)
